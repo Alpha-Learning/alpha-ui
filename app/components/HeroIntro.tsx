@@ -16,6 +16,7 @@ export default function HeroIntro({
   const [overlayDone, setOverlayDone] = useState(false);
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState<"enter" | "hold" | "exit">("enter");
+  const [headerExit, setHeaderExit] = useState(false);
   const holdTimer = useRef<number | null>(null);
   const completedRef = useRef(false);
   const prevIndexRef = useRef(0);
@@ -32,17 +33,25 @@ export default function HeroIntro({
     if (phase === "enter") {
       holdTimer.current = window.setTimeout(() => setPhase("hold"), 600);
     } else if (phase === "hold") {
-      holdTimer.current = window.setTimeout(() => setPhase("exit"), 1600);
+      holdTimer.current = window.setTimeout(() => setPhase("exit"), 600);
     } else if (phase === "exit") {
       holdTimer.current = window.setTimeout(() => {
         setIndex((prev) => (prev + 1) % letters.length);
         setPhase("enter");
-      }, 600);
+      }, 450);
     }
     return () => {
       if (holdTimer.current) window.clearTimeout(holdTimer.current);
     };
   }, [overlayDone, phase, letters.length]);
+
+  // When the last character starts exiting upward, flow the header text downward
+  useEffect(() => {
+    if (!overlayDone) return;
+    if (index === letters.length - 1 && phase === "exit") {
+      setHeaderExit(true);
+    }
+  }, [overlayDone, index, phase, letters.length]);
 
   // Notify parent once after the first full cycle completes
   useEffect(() => {
@@ -73,8 +82,8 @@ export default function HeroIntro({
         {words.map((w, i) => (
           <div
             key={i}
-            className="opacity-0 line-enter"
-            style={{ animationDelay: `${1.9 + i * 0.25}s` }}
+            className={headerExit ? "line-exit-down" : "opacity-0 line-enter"}
+            style={headerExit ? undefined : { animationDelay: `${1.9 + i * 0.25}s` }}
           >
             {w}
           </div>
@@ -83,21 +92,25 @@ export default function HeroIntro({
 
       <div className="flex items-center justify-center h-screen">
         <div className="relative w-[72vw] max-w-[300px] h-[42vh] overflow-hidden">
-          <span
-            key={`${index}-${phase}`}
-            className={`char absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-[32vh] md:text-[34vh] leading-none font-black text-black ${
-              phase === "enter" ? "char-enter" : phase === "exit" ? "char-exit" : ""
-            }`}
-          >
-            {currentLetter}
-          </span>
-          <span
-            className={`absolute top-2 right-3 text-black text-xs md:text-sm font-semibold select-none ${
-              phase === "enter" ? "char-enter" : phase === "exit" ? "char-exit" : ""
-            }`}
-          >
-            {currentLabel}
-          </span>
+          {overlayDone && (
+            <>
+              <span
+                key={`${index}-${phase}`}
+                className={`char absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-[32vh] md:text-[34vh] leading-none font-black text-black ${
+                  phase === "enter" ? "char-enter" : phase === "exit" ? "char-exit" : ""
+                }`}
+              >
+                {currentLetter}
+              </span>
+              <span
+                className={`absolute top-2 right-3 text-black text-xs md:text-sm font-semibold select-none ${
+                  phase === "enter" ? "char-enter" : phase === "exit" ? "char-exit" : ""
+                }`}
+              >
+                {currentLabel}
+              </span>
+            </>
+          )}
         </div>
       </div>
     </div>
