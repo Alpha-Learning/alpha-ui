@@ -8,8 +8,8 @@ type HeroIntroProps = {
 };
 
 export default function HeroIntro({
-  words = ["Innovation,", "Friendly,", "Stable,", "Accessible"],
-  sequence = "central",
+  words = ["Innovation,", "Friendly, Stable,", "Accessible"],
+  sequence = "CBDC",
 }: HeroIntroProps) {
   const [overlayDone, setOverlayDone] = useState(false);
   const [index, setIndex] = useState(0);
@@ -26,14 +26,14 @@ export default function HeroIntro({
   useEffect(() => {
     if (!overlayDone) return;
     if (phase === "enter") {
-      holdTimer.current = window.setTimeout(() => setPhase("hold"), 300);
+      holdTimer.current = window.setTimeout(() => setPhase("hold"), 600);
     } else if (phase === "hold") {
-      holdTimer.current = window.setTimeout(() => setPhase("exit"), 1000);
+      holdTimer.current = window.setTimeout(() => setPhase("exit"), 1600);
     } else if (phase === "exit") {
       holdTimer.current = window.setTimeout(() => {
         setIndex((prev) => (prev + 1) % letters.length);
         setPhase("enter");
-      }, 300);
+      }, 600);
     }
     return () => {
       if (holdTimer.current) window.clearTimeout(holdTimer.current);
@@ -46,12 +46,12 @@ export default function HeroIntro({
     <div className="relative min-h-screen overflow-hidden bg-white">
       {!overlayDone && <div className="intro-overlay" />}
 
-      <div className="absolute top-6 left-6 space-y-1 text-black text-sm font-semibold leading-tight">
+      <div className="absolute top-6 left-6 space-y-1 text-black font-extrabold tracking-tight leading-tight text-xl md:text-xl">
         {words.map((w, i) => (
           <div
             key={i}
-            className="opacity-0 tl-line"
-            style={{ animationDelay: `${0.6 + i * 0.15}s` }}
+            className="opacity-0 line-enter"
+            style={{ animationDelay: `${1.9 + i * 0.25}s` }}
           >
             {w}
           </div>
@@ -59,14 +59,19 @@ export default function HeroIntro({
       </div>
 
       <div className="flex items-center justify-center h-screen">
-        <span
-          key={`${index}-${phase}`}
-          className={`char text-[25vw] md:text-[18vw] leading-none font-black text-black ${
-            phase === "enter" ? "char-enter" : phase === "exit" ? "char-exit" : ""
-          }`}
-        >
-          {currentLetter}
-        </span>
+        <div className="relative w-[72vw] max-w-[300px] h-[42vh] overflow-hidden">
+          <span
+            key={`${index}-${phase}`}
+            className={`char absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-[32vh] md:text-[34vh] leading-none font-black text-black ${
+              phase === "enter" ? "char-enter" : phase === "exit" ? "char-exit" : ""
+            }`}
+          >
+            {currentLetter}
+          </span>
+          <span className="absolute top-2 right-3 text-black text-xs md:text-sm font-semibold select-none">
+            central
+          </span>
+        </div>
       </div>
     </div>
   );

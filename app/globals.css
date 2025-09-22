@@ -32,18 +32,18 @@ body {
 }
 
 @keyframes tl-slide-in {
-  0% { opacity: 0; transform: translate(-16px, -16px); }
-  100% { opacity: 1; transform: translate(0, 0); }
+  0% { opacity: 0; transform: translateX(-16px); }
+  100% { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes char-enter-up {
-  0% { opacity: 0; transform: translateY(40%); }
+  0% { opacity: 0; transform: translateY(80%); }
   100% { opacity: 1; transform: translateY(0%); }
 }
 
 @keyframes char-exit-up {
   0% { opacity: 1; transform: translateY(0%); }
-  100% { opacity: 0; transform: translateY(-40%); }
+  100% { opacity: 0; transform: translateY(-110%); }
 }
 
 .intro-overlay {
@@ -64,9 +64,14 @@ body {
 }
 
 .char-enter {
-  animation: char-enter-up 400ms ease both;
+  animation: char-enter-up 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .char-exit {
-  animation: char-exit-up 400ms ease both;
+  animation: char-exit-up 900ms cubic-bezier(0.55, 0, 0.45, 1) both;
+}
+
+/* Top-left line entrance from bottom */
+.line-enter {
+  animation: char-enter-up 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
