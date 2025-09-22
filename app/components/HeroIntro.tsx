@@ -41,6 +41,8 @@ export default function HeroIntro({
   }, [overlayDone, phase, letters.length]);
 
   const currentLetter = letters[index];
+  const labelWords = useMemo(() => ["CRI", "BEO", "DEET", "CEEL"], []);
+  const currentLabel = labelWords[index % labelWords.length];
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-white">
@@ -68,8 +70,12 @@ export default function HeroIntro({
           >
             {currentLetter}
           </span>
-          <span className="absolute top-2 right-3 text-black text-xs md:text-sm font-semibold select-none">
-            central
+          <span
+            className={`absolute top-2 right-3 text-black text-xs md:text-sm font-semibold select-none ${
+              phase === "enter" ? "char-enter" : phase === "exit" ? "char-exit" : ""
+            }`}
+          >
+            {currentLabel}
           </span>
         </div>
       </div>
