@@ -75,3 +75,123 @@ body {
 .line-enter {
   animation: char-enter-up 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+/* Right slide-in for next section */
+@keyframes slide-in-right {
+  0% { opacity: 0; transform: translateX(100%); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+.slide-in-right {
+  animation: slide-in-right 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Slightly rounded angled white corner overlay bottom-left */
+.angle-corner {
+  clip-path: polygon(0 55%, 30% 100%, 0 100%);
+  border-top-right-radius: 16px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Header delayed fade-in */
+@keyframes fade-down-in {
+  0% { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.fade-down-in {
+  animation: fade-down-in 700ms ease both;
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.fade-in {
+  animation: fade-in 800ms ease both;
+}
+
+/* Circular progress using conic-gradient */
+.progress-circle {
+  --progress: 0deg;
+  width: 84px;
+  height: 84px;
+  border-radius: 9999px;
+  background:
+    radial-gradient(closest-side, rgba(255,255,255,0) 68%, rgba(255,255,255,0.35) 70%, rgba(255,255,255,0.35) 72%, rgba(255,255,255,0) 73%),
+    conic-gradient(#ffffff var(--progress), rgba(255,255,255,0.25) 0);
+}
+
+/* Loader slide from bottom then exit to top */
+@keyframes rise-in {
+  0% { opacity: 0; transform: translateY(40%); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rise-out {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-40%); }
+}
+
+.rise-in {
+  animation: rise-in 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.rise-out {
+  animation: rise-out 700ms cubic-bezier(0.55, 0, 0.45, 1) both;
+}
+
+/* Left drawer */
+@keyframes slide-in-left {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(0%); }
+}
+
+@keyframes slide-out-left {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-100%); }
+}
+
+.slide-in-left { animation: slide-in-left 500ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.slide-out-left { animation: slide-out-left 450ms cubic-bezier(0.55, 0, 0.45, 1) both; }
+
+/* Page push when drawer opens */
+.push-container {
+  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.push-right { transform: translateX(86vw) scale(0.98); }
+
+@media (min-width: 768px) {
+  .push-right { transform: translateX(420px) scale(0.985); }
+}
+
+/* Form styles for drawer */
+.soft-input {
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 18px;
+  background: white;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
+}
+
+/* Notched corners: left-bottom and right-top */
+.input-notched {
+  border-radius: 20px;
+  clip-path: polygon(
+    0% 0%, 100% 0%, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0% 100%, 0% 18px, 18px 0%
+  );
+}
+
+.btn-notched {
+  border-radius: 18px;
+  background-image: linear-gradient(90deg, #7dd3fc 0%, #1d4ed8 100%);
+  color: white;
+  position: relative;
+  clip-path: polygon(0% 14%, 10% 100%, 100% 100%, 100% 0%, 90% 0%, 85% 10%, 15% 10%, 10% 0%);
+}
+
+.btn-notched:active { filter: brightness(0.95); }

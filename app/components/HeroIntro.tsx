@@ -5,16 +5,20 @@ import { useEffect, useMemo, useRef, useState } from "react";
 type HeroIntroProps = {
   words?: string[];
   sequence?: string;
+  onCompleteOnce?: () => void;
 };
 
 export default function HeroIntro({
   words = ["Innovation,", "Friendly, Stable,", "Accessible"],
   sequence = "CBDC",
+  onCompleteOnce,
 }: HeroIntroProps) {
   const [overlayDone, setOverlayDone] = useState(false);
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState<"enter" | "hold" | "exit">("enter");
   const holdTimer = useRef<number | null>(null);
+  const completedRef = useRef(false);
+  const prevIndexRef = useRef(0);
 
   const letters = useMemo(() => sequence.split(""), [sequence]);
 
@@ -39,6 +43,23 @@ export default function HeroIntro({
       if (holdTimer.current) window.clearTimeout(holdTimer.current);
     };
   }, [overlayDone, phase, letters.length]);
+
+  // Notify parent once after the first full cycle completes
+  useEffect(() => {
+    if (!overlayDone) return;
+    const prev = prevIndexRef.current;
+    // Detect wrap from last -> 0
+    if (
+      prev === letters.length - 1 &&
+      index === 0 &&
+      !completedRef.current &&
+      phase === "enter"
+    ) {
+      completedRef.current = true;
+      onCompleteOnce?.();
+    }
+    prevIndexRef.current = index;
+  }, [index, phase, overlayDone, onCompleteOnce, letters.length]);
 
   const currentLetter = letters[index];
   const labelWords = useMemo(() => ["CRI", "BEO", "DEET", "CEEL"], []);
