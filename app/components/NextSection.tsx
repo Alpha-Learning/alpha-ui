@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import SectionHeader from "./SectionHeader";
 import LeftInputSection from "./LeftInputSection";
 
 export default function NextSection() {
@@ -13,6 +14,7 @@ export default function NextSection() {
   const [progress, setProgress] = useState(0);
   const [loaderDone, setLoaderDone] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [borderStep, setBorderStep] = useState(0);
 
   // Ensure video keeps playing
   const ensurePlaying = () => {
@@ -80,17 +82,31 @@ export default function NextSection() {
     return () => cancelAnimationFrame(raf);
   }, [showLoader]);
 
+  // When final content becomes visible, animate borders in sequence
+  useEffect(() => {
+    if (!showFinalContent) return;
+    setBorderStep(0);
+    const t1 = window.setTimeout(() => setBorderStep(1), 150);
+    const t2 = window.setTimeout(() => setBorderStep(2), 350);
+    const t3 = window.setTimeout(() => setBorderStep(3), 550);
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      window.clearTimeout(t3);
+    };
+  }, [showFinalContent]);
+
   return (
-    <section className={`relative w-full h-screen p-4 bg-white slide-in-right`}>
+    <section className={`relative w-full h-screen  bg-white slide-in-right`}>
       <div
-        className={`w-full h-full p-4 md:p-6 push-container ${
+        className={`w-full h-full p-2 push-container ${
           drawerOpen ? "push-right" : ""
         }`}
       >
         <div className="relative w-full h-full rounded-2xl md:rounded-[28px] overflow-hidden bg-white">
           <video
             ref={videoRef}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity  duration-700 ${
               ready ? "opacity-100" : "opacity-0"
             }`}
             src="/videos/original-e8f92507edede186d6fa91bf0aec6760.mp4"
@@ -114,30 +130,8 @@ export default function NextSection() {
               showInitialContent ? "fade-in" : "opacity-0"
             }`}
           />
-          <div
-            className={`absolute top-4 left-0 right-0 flex items-center justify-between px-6 md:px-10 ${
-              showHeader ? "fade-down-in" : "opacity-0"
-            }`}
-            style={{ animationDelay: "800ms" }}
-            onAnimationEnd={() => {}}
-          >
-            <div className="text-white font-semibold text-sm">ALS</div>
-            <nav className="hidden md:flex gap-6 text-white/80 text-sm bg-white/10 backdrop-blur-xl px-4 py-4 rounded-lg">
-              <span className="bg-white/25 text-white px-3 py-1 rounded-lg">
-                Home
-              </span>
-              <span>How to use</span>
-              <span>About</span>
-              <span>Advantages</span>
-            </nav>
-            <button
-              className="text-sm font-semibold cursor-pointer text-black bg-white rounded-lg px-4 py-4 flex justify-between items-center w-36 shadow-ms"
-              onClick={() => setDrawerOpen(true)}
-            >
-              <span>Request</span>
-              <span>→</span>
-            </button>
-          </div>
+
+          <SectionHeader show={showHeader} onRequestClick={setDrawerOpen} />
 
           {/* Initial content - shown when section loads */}
           {showInitialContent && !showFinalContent && (
@@ -147,7 +141,7 @@ export default function NextSection() {
                 <div className="text-lg font-semibold mb-2">
                   Digital Innovation
                 </div>
-                <div className="text-sm opacity-80 max-w-[300px]">
+                <div className="text-sm max-w-[300px]">
                   Transforming traditional banking with cutting-edge technology
                   and seamless user experiences.
                 </div>
@@ -158,7 +152,7 @@ export default function NextSection() {
                 <div className="text-lg font-semibold mb-2">
                   Secure & Reliable
                 </div>
-                <div className="text-sm opacity-80 max-w-[300px]">
+                <div className="text-sm max-w-[300px]">
                   Built with enterprise-grade security protocols ensuring your
                   transactions are always protected.
                 </div>
@@ -170,7 +164,7 @@ export default function NextSection() {
           {showFinalContent && (
             <>
               {/* Left title block */}
-              <div className="absolute left-8 md:left-16 top-[18vh] text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)] content-return-up">
+              <div className="absolute left-8 md:left-16 top-[18vh] text-white content-return-up">
                 <div className="text-3xl md:text-5xl font-extrabold leading-tight">
                   <div>Alpha</div>
                   <div>Learning</div>
@@ -195,9 +189,9 @@ export default function NextSection() {
                       text: "CBDC functions like transfers, and remittances.",
                     },
                   ].map((item, i) => (
-                    <div className="relative min-h-[250px]">
-                      <div className="absolute inset-0 bg-transparent border-t-2 border-r-2 border-gray-200 rounded-tr-xl"></div>
-                      <div className="relative flex flex-col justify-start p-5 pt-3">
+                    <div key={i} className="relative min-h-[250px]">
+                      <div className={`absolute inset-0 bg-transparent border-t-2 border-r-2 rounded-tr-xl transition-colors duration-500 ${i < borderStep ? "border-gray-200" : "border-transparent"}`}></div>
+                      <div className="relative text-white  flex flex-col justify-start p-5 pt-3">
                         <div className="font-bold text-2xl mb-4">{item.title}</div>
                         <div className="text-xs md:text-sm leading-relaxed opacity-90 mt-2 md:mt-3">{item.text}</div>
                       </div>

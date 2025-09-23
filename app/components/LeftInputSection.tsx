@@ -6,12 +6,12 @@ export default function LeftInputSection({
   setDrawerOpen: (open: boolean) => void;
 }) {
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-50 ">
       <div
-        className="absolute inset-0 bg-black/40"
+        className="absolute inset-0 bg-black/40 "
         onClick={() => setDrawerOpen(false)}
       />
-      <div className="absolute left-0 top-0 h-full w-[86vw] max-w-[420px] p-3">
+      <div className="absolute left-0 top-0 h-full w-[86vw] max-w-[420px] m-2 mt-[14px] pb-7">
         <div className="h-full bg-white rounded-2xl shadow-xl slide-in-left">
           <div className="p-4 flex items-center  justify-between gap-3 border-b">
             <div className="font-semibold rounded-full border border-gray-300 w-5 flex items-center justify-center h-5">
