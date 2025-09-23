@@ -153,16 +153,19 @@ export default function NextSection() {
                       text: "CBDC functions like physical cash in digital form, enabling everyday transactions such as payments, transfers, and remittances.",
                     },
                   ].map((item, i) => (
-                    <div
-                      key={i}
-                      className="relative border-r-2 border-t-2 border-white/40 text-white p-5 md:p-6"
-                    >
-                      <div className="absolute -top-4 left-6 bg-white/20 rounded-2xl px-4 py-2 text-base md:text-lg font-semibold">
-                        {item.title}
-                      </div>
+                      <div
+                        key={i}
+                        className="relative [clip-path:polygon(30%_0%,70%_0%,100%_30%,100%_70%,70%_100%,30%_100%,0%_70%,0%_30%)] p-2 bg-gray-300 text-white "
+                      >
+                        <div className=" [clip-path:polygon(30%_0%,70%_0%,100%_30%,100%_70%,70%_100%,30%_100%,0%_70%,0%_30%)] p-10 bg-transparent ">
+
+                       <div className="absolute -top-4 left-16 mt-5  rounded-2xl px-4 py-2 text-base md:text-lg font-semibold">
+                         {item.title}
+                       </div>
                       <div className="text-xs md:text-sm leading-relaxed opacity-90 mt-6">
                         {item.text}
                       </div>
+                        </div>
                     </div>
                   ))}
                 </div>
