@@ -99,9 +99,9 @@ body {
 /* Slightly rounded angled white corner overlay bottom-left */
 .angle-corner {
   clip-path: polygon(0 55%, 30% 100%, 0 100%);
-  border-top-right-radius: 16px;
+  border-top-right-radius: 20px;
   border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+  border-bottom-left-radius: 10;
   border-bottom-right-radius: 0;
 }
 
@@ -264,3 +264,5 @@ body {
 }
 
 .btn-notched:active { filter: brightness(0.95); }
+
+
