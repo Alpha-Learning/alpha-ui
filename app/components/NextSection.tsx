@@ -82,6 +82,19 @@ export default function NextSection() {
     return () => cancelAnimationFrame(raf);
   }, [showLoader]);
 
+  // Lock scrolling when drawer is open
+  useEffect(() => {
+    const original = document.body.style.overflow;
+    if (drawerOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = original || "";
+    }
+    return () => {
+      document.body.style.overflow = original || "";
+    };
+  }, [drawerOpen]);
+
   // When final content becomes visible, animate borders in sequence
   useEffect(() => {
     if (!showFinalContent) return;
@@ -97,12 +110,8 @@ export default function NextSection() {
   }, [showFinalContent]);
 
   return (
-    <section className={`relative w-full h-screen  bg-white slide-in-right`}>
-      <div
-        className={`w-full h-full p-2 push-container ${
-          drawerOpen ? "push-right" : ""
-        }`}
-      >
+    <section className={`relative w-full h-screen bg-white slide-in-right`}>
+      <div className={`w-full h-full p-2 push-container ${drawerOpen ? "push-right" : ""}`}>
         <div className="relative w-full h-full rounded-2xl md:rounded-[28px] overflow-hidden bg-white">
           <video
             ref={videoRef}
