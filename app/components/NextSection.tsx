@@ -147,8 +147,8 @@ export default function NextSection() {
           {showInitialContent && !showFinalContent && (
             <>
               {/* Bottom left content */}
-              <div className="absolute left-8 md:left-16 bottom-24 text-white fade-in">
-                <div className="text-lg font-semibold mb-2">
+              <div className="absolute left-8 md:left-22 bottom-24 text-white fade-in">
+                <div className="text-lg font-semibold ml-10 mb-2">
                   Digital Innovation
                 </div>
                 <div className="text-sm max-w-[300px]">

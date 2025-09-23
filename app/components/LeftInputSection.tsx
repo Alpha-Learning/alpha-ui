@@ -14,15 +14,16 @@ export default function LeftInputSection({
       <div className="absolute left-0 top-0 h-full w-[86vw] max-w-[420px] m-2 mt-[14px] pb-7">
         <div className="h-full bg-white rounded-2xl shadow-xl slide-in-left">
           <div className="p-4 flex items-center  justify-between gap-3 border-b">
-            <div className="font-semibold rounded-full border border-gray-300 w-5 flex items-center justify-center h-5">
+            <div className="font-semibold rounded-full border border-gray-400 text-gray-400 w-5 flex items-center justify-center h-5">
               ?
             </div>
             <button
-              className="px-2 py-1 text-gray-300 cursor-pointer text-sm"
+              className="px-2 py-1 text-gray-400 cursor-pointer text-sm"
               onClick={() => setDrawerOpen(false)}
             >
               ✕
             </button>
+            <div className="w-[9px] h-44 rotate-132 absolute -top-12 right-14  bg-[#939597] "></div>
             {/* <div className='w-2 h-20 rotate-135 absolute top-0 right-0  bg-gray-300 '></div> */}
           </div>
 
@@ -33,7 +34,7 @@ export default function LeftInputSection({
                 Enter your phone number
               </label>
               <input className="w-full border border-gray-300  rounded-lg px-3 placeholder:text-black py-3 mb-4 text-black" />
-              <button className="w-full cursor-pointer py-3 flex justify-between bg-gradient-to-r from-sky-400 to-blue-600 text-white rounded-lg px-4 ">
+              <button className=" [clip-path:polygon(0%_0%,95%_0%,100%_28%,100%_100%,6%_100%,0%_65%)] w-full cursor-pointer py-3 flex justify-between bg-gradient-to-r from-sky-400 to-blue-600 text-white rounded-lg px-4 ">
                 Send Request <span>→</span>
               </button>
             </div>

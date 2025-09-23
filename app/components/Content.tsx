@@ -29,9 +29,9 @@ export default function Content({borderStep}: {borderStep: number}) {
             text: "CBDC functions like transfers, and remittancesCBDC functions like transfers, and remittances CBDC functions like transfers, and remittances CBDC functions like transfers, and remittances.",
           },
         ].map((item, i) => (
-          <div key={i} className="relative min-h-[260px] w-2/3 [clip-path:polygon(0%_0%,65%_0%,100%_28%,100%_100%,6%_100%,0%_65%)] ">
+          <div key={i} className="relative min-h-[260px] w-2/3 [clip-path:polygon(0%_0%,67%_0%,100%_28%,100%_100%,6%_100%,0%_65%)] ">
             <div className={`absolute inset-0 bg-transparent border-t-2 border-r-2 rounded-tr-xl transition-colors duration-500 ${i < borderStep ? "border-gray-200" : "border-transparent"}`}></div>
-            <hr className="absolute bottom-56 w-58 left-42 rotate-220 right-0 h-[2px] bg-white rounded-full" />
+            <hr className="absolute bottom-56 w-58 left-43 rotate-220 right-0 h-[2px] bg-white rounded-full" />
             <div className="relative  text-white  flex flex-col gap-y-10 justify-between p-5 pt-3">
               <div className="font-bold text-3xl mb-4">{item.title}</div>
               <div className="text-xs sm:text-[17px] leading-relaxed opacity-90 mt-2 md:mt-3">{item.text}</div>
