@@ -6,22 +6,23 @@ export default function NextSection() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [ready, setReady] = useState(false);
   const [showHeader, setShowHeader] = useState(false);
-  const [showContent, setShowContent] = useState(false);
+  const [showInitialContent, setShowInitialContent] = useState(false);
+  const [showFinalContent, setShowFinalContent] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [progress, setProgress] = useState(0);
   const [loaderDone, setLoaderDone] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // New sequence: section slides in → text fades in → loader rises from bottom → loader exits to top
+  // New sequence: section slides in with initial content → loader appears → loader completes → final content replaces initial content
   useEffect(() => {
     if (!ready) return;
     
-    // After video is ready, show text content
-    const t1 = window.setTimeout(() => setShowHeader(true), 500);
-    const t2 = window.setTimeout(() => setShowContent(true), 1000);
+    // Show header and initial content immediately when section loads
+    const t1 = window.setTimeout(() => setShowHeader(true), 200);
+    const t2 = window.setTimeout(() => setShowInitialContent(true), 400);
     
-    // After text is visible, show loader from bottom
-    const t3 = window.setTimeout(() => setShowLoader(true), 2000);
+    // Show loader after initial content is visible
+    const t3 = window.setTimeout(() => setShowLoader(true), 1500);
     
     return () => {
       window.clearTimeout(t1);
@@ -34,7 +35,7 @@ export default function NextSection() {
   useEffect(() => {
     const fallback = window.setTimeout(() => {
       setShowHeader(true);
-      setShowContent(true);
+      setShowInitialContent(true);
       setShowLoader(true);
     }, 6000);
     return () => window.clearTimeout(fallback);
@@ -54,8 +55,11 @@ export default function NextSection() {
       if (pct < 100) {
         raf = requestAnimationFrame(step);
       } else {
-        // When loading completes, exit loader to top
-        setTimeout(() => setLoaderDone(true), 500);
+        // When loading completes, exit loader to top and show final content
+        setTimeout(() => {
+          setLoaderDone(true);
+          setShowFinalContent(true);
+        }, 500);
       }
     };
     raf = requestAnimationFrame(step);
@@ -79,7 +83,7 @@ export default function NextSection() {
             preload="auto"
             onCanPlay={() => setReady(true)}
           />
-          <div className={`absolute left-0 bottom-0 w-[45vw] rounded-md h-[40vh] bg-white/85 angle-corner ${showContent ? "fade-in" : "opacity-0"}`} />
+          <div className={`absolute left-0 bottom-0 w-[45vw] rounded-md h-[40vh] bg-white/85 angle-corner ${showInitialContent ? "fade-in" : "opacity-0"}`} />
           <div
             className={`absolute top-4 left-0 right-0 flex items-center justify-between px-6 md:px-10 ${
               showHeader ? "fade-down-in" : "opacity-0"
@@ -99,15 +103,72 @@ export default function NextSection() {
             </button>
           </div>
 
-          {/* Left title block */}
-          <div className={`absolute left-8 md:left-16 top-[18vh] text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)] ${showContent ? "fade-in" : "opacity-0"}`}>
-            <div className="text-3xl md:text-5xl font-extrabold leading-tight">
-              <div>The Basics of</div>
-              <div>Central Bank Digital</div>
-              <div>Currency</div>
-            </div>
-            <div className="mt-8 h-px w-[56vw] max-w-[720px] bg-white/60" />
-          </div>
+          {/* Initial content - shown when section loads */}
+          {showInitialContent && !showFinalContent && (
+            <>
+              {/* Bottom left content */}
+              <div className="absolute left-8 md:left-16 bottom-24 text-white fade-in">
+                <div className="text-lg font-semibold mb-2">Digital Innovation</div>
+                <div className="text-sm opacity-80 max-w-[300px]">
+                  Transforming traditional banking with cutting-edge technology and seamless user experiences.
+                </div>
+              </div>
+
+              {/* Bottom right content */}
+              <div className="absolute right-8 md:right-16 bottom-24 text-white text-right fade-in">
+                <div className="text-lg font-semibold mb-2">Secure & Reliable</div>
+                <div className="text-sm opacity-80 max-w-[300px]">
+                  Built with enterprise-grade security protocols ensuring your transactions are always protected.
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Final content - shown after loading completes */}
+          {showFinalContent && (
+            <>
+              {/* Left title block */}
+              <div className="absolute left-8 md:left-16 top-[18vh] text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)] content-return-up">
+                <div className="text-3xl md:text-5xl font-extrabold leading-tight">
+                  <div>The Basics of</div>
+                  <div>Central Bank Digital</div>
+                  <div>Currency</div>
+                </div>
+              </div>
+
+              {/* Bottom info panels */}
+              <div className="absolute left-0 right-0 bottom-8 md:bottom-10 px-6 md:px-10 content-return-up">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                  {[
+                    {
+                      title: "About",
+                      text: "CBDC is a digital form of fiat currency issued and regulated by central banks.",
+                    },
+                    {
+                      title: "Storing",
+                      text: "CBDC can be stored in digital wallets and accessed using a mobile phone or other electronic device.",
+                    },
+                    {
+                      title: "Functions",
+                      text: "CBDC functions like physical cash in digital form, enabling everyday transactions such as payments, transfers, and remittances.",
+                    },
+                  ].map((item, i) => (
+                    <div
+                      key={i}
+                      className="relative border-r-2 border-t-2 border-white/40 text-white p-5 md:p-6"
+                    >
+                      <div className="absolute -top-4 left-6 bg-white/20 rounded-2xl px-4 py-2 text-base md:text-lg font-semibold">
+                        {item.title}
+                      </div>
+                      <div className="text-xs md:text-sm leading-relaxed opacity-90 mt-6">
+                        {item.text}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Center loading card */}
           {showLoader && !loaderDone && (
@@ -123,40 +184,6 @@ export default function NextSection() {
             </div>
           )}
 
-          {/* Bottom info panels */}
-          <div className={`absolute left-0 right-0 bottom-8 md:bottom-10 px-6 md:px-10 ${showContent ? "fade-in" : "opacity-0"}`}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-              {[
-                {
-                  title: "About",
-                  text:
-                    "CBDC is a digital form of fiat currency issued and regulated by central banks.",
-                },
-                {
-                  title: "Storing",
-                  text:
-                    "CBDC can be stored in digital wallets and accessed using a mobile phone or other electronic device.",
-                },
-                {
-                  title: "Functions",
-                  text:
-                    "CBDC functions like physical cash in digital form, enabling everyday transactions such as payments, transfers, and remittances.",
-                },
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  className="relative border-r border-white/40 bg-white/10 backdrop-blur-xl text-white p-5 md:p-6"
-                >
-                  <div className="absolute -top-4 left-6 bg-white/20 rounded-2xl px-4 py-2 text-base md:text-lg font-semibold">
-                    {item.title}
-                  </div>
-                  <div className="text-xs md:text-sm leading-relaxed opacity-90 mt-6">
-                    {item.text}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
 
