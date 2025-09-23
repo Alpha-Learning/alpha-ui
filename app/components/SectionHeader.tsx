@@ -17,7 +17,7 @@ export default function SectionHeader({ show, onRequestClick }: SectionHeaderPro
       onAnimationEnd={() => {}}
     >
       <div className="text-white font-semibold text-sm ">ALS</div>
-      <nav className="hidden md:flex gap-4 py-3 [clip-path:polygon(0%_0%,95%_0%,100%_28%,100%_100%,6%_100%,0%_65%)] bg-gray-300 px-2 text-white/80 text-sm backdrop-blur-xl rounded-xl ring-1 ring-white/25">
+      <nav className="hidden md:flex gap-4 py-3  [clip-path:polygon(0%_0%,95%_0%,100%_28%,100%_100%,6%_100%,0%_65%)] bg-gray-300 px-2 text-white/80 text-sm backdrop-blur-xl rounded-xl ring-1 ring-white/25">
         <span className="px-3 hover:bg-gray-200 py-3 hover:[clip-path:polygon(0%_0%,85%_0%,100%_38%,100%_100%,16%_100%,0%_56%)] rounded-md bg-gray-300/50  active:bg-gray-300/70 cursor-pointer transition-colors">Home</span>
         <span className="px-3 hover:bg-gray-200 py-3 hover:[clip-path:polygon(0%_0%,85%_0%,100%_38%,100%_100%,16%_100%,0%_56%)] rounded-md  active:bg-gray-300/50 cursor-pointer transition-colors">How to use</span>
         <span className="px-3 hover:bg-gray-200 py-3 hover:[clip-path:polygon(0%_0%,85%_0%,100%_38%,100%_100%,16%_100%,0%_56%)] rounded-md  active:bg-gray-300/50 cursor-pointer transition-colors">About</span>

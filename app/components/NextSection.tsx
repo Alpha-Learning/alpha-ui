@@ -113,7 +113,7 @@ export default function NextSection() {
   return (
     <section className={`relative w-full h-screen bg-white slide-in-right`}>
       <div className={`w-full h-full p-2 push-container ${drawerOpen ? "push-right" : ""}`}>
-        <div className="relative w-full h-full rounded-2xl md:rounded-[28px] overflow-hidden bg-white">
+        <div className=" relative w-full h-full rounded-2xl md:rounded-[28px] overflow-hidden bg-white">
           <video
             ref={videoRef}
             className={`absolute inset-0 w-full h-full object-cover transition-opacity  duration-700 ${
