@@ -159,10 +159,10 @@ export default function NextSection() {
 
               {/* Bottom right content */}
               <div className="absolute right-8 md:right-16 bottom-24 text-white text-right fade-in">
-                <div className="text-lg font-semibold mb-2">
+                <div className="text-3xl font-semibold mb-2">
                   Secure & Reliable
                 </div>
-                <div className="text-sm max-w-[300px]">
+                <div className="text-lg max-w-[300px]">
                   Built with enterprise-grade security protocols ensuring your
                   transactions are always protected.
                 </div>
