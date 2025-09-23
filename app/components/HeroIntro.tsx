@@ -10,7 +10,7 @@ type HeroIntroProps = {
 
 export default function HeroIntro({
   words = ["Innovation,", "Friendly, Stable,", "Accessible"],
-  sequence = "CBDC",
+  sequence = "ALS",
   onCompleteOnce,
 }: HeroIntroProps) {
   const [overlayDone, setOverlayDone] = useState(false);
@@ -71,7 +71,7 @@ export default function HeroIntro({
   }, [index, phase, overlayDone, onCompleteOnce, letters.length]);
 
   const currentLetter = letters[index];
-  const labelWords = useMemo(() => ["CRI", "BEO", "DEET", "CEEL"], []);
+  const labelWords = useMemo(() => ["ALPHA", "LEARNING", "SYSTEM"], []);
   const currentLabel = labelWords[index % labelWords.length];
 
   return (

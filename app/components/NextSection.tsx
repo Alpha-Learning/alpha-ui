@@ -7,48 +7,60 @@ export default function NextSection() {
   const [ready, setReady] = useState(false);
   const [showHeader, setShowHeader] = useState(false);
   const [showContent, setShowContent] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
   const [progress, setProgress] = useState(0);
   const [loaderDone, setLoaderDone] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // Reveal header and content only after the loader completes
+  // New sequence: section slides in → text fades in → loader rises from bottom → loader exits to top
   useEffect(() => {
     if (!ready) return;
-    if (progress < 73) return;
-    const t1 = window.setTimeout(() => setShowHeader(true), 200);
-    const t2 = window.setTimeout(() => setShowContent(true), 600);
-    const t3 = window.setTimeout(() => setLoaderDone(true), 50);
+    
+    // After video is ready, show text content
+    const t1 = window.setTimeout(() => setShowHeader(true), 500);
+    const t2 = window.setTimeout(() => setShowContent(true), 1000);
+    
+    // After text is visible, show loader from bottom
+    const t3 = window.setTimeout(() => setShowLoader(true), 2000);
+    
     return () => {
       window.clearTimeout(t1);
       window.clearTimeout(t2);
       window.clearTimeout(t3);
     };
-  }, [ready, progress]);
+  }, [ready]);
 
   // Fallback: if video readiness is slow, force reveal after 6s
   useEffect(() => {
     const fallback = window.setTimeout(() => {
       setShowHeader(true);
       setShowContent(true);
-      setLoaderDone(true);
+      setShowLoader(true);
     }, 6000);
     return () => window.clearTimeout(fallback);
   }, []);
 
-  // Fake loading progress to 73%
+  // Start loading progress when loader becomes visible
   useEffect(() => {
+    if (!showLoader) return;
+    
     let raf = 0;
     let start = 0;
     const step = (ts: number) => {
       if (!start) start = ts;
       const elapsed = ts - start;
-      const pct = Math.min(73, Math.round(elapsed / 15));
+      const pct = Math.min(100, Math.round(elapsed / 20));
       setProgress(pct);
-      if (pct < 73) raf = requestAnimationFrame(step);
+      if (pct < 100) {
+        raf = requestAnimationFrame(step);
+      } else {
+        // When loading completes, exit loader to top
+        setTimeout(() => setLoaderDone(true), 500);
+      }
     };
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [showLoader]);
 
   return (
     <section className={`relative w-full h-screen p-4 bg-white slide-in-right`}>
@@ -98,8 +110,8 @@ export default function NextSection() {
           </div>
 
           {/* Center loading card */}
-          {!loaderDone && (
-            <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/25 backdrop-blur-xl rounded-[28px] px-10 py-8 text-white text-center shadow-[0_10px_40px_rgba(0,0,0,0.25)] ${progress < 73 ? "rise-in" : "rise-out"}`}>
+          {showLoader && !loaderDone && (
+            <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/25 backdrop-blur-xl rounded-[28px] px-10 py-8 text-white text-center shadow-[0_10px_40px_rgba(0,0,0,0.25)] ${progress < 100 ? "rise-in" : "rise-out"}`}>
               <div className="text-3xl font-extrabold mb-4">{progress}%</div>
               <div
                 className="progress-circle mx-auto mb-4"
