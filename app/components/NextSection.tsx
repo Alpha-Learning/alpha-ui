@@ -17,13 +17,15 @@ export default function NextSection() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [borderStep, setBorderStep] = useState(0);
 
-  // Ensure video keeps playing
+  // Ensure video keeps playing infinitely
   const ensurePlaying = () => {
     const v = videoRef.current;
     if (!v) return;
     if (v.paused) {
       v.play().catch(() => {});
     }
+    // Force loop to ensure infinite playback
+    v.loop = true;
   };
 
   // New sequence: section slides in with initial content → loader appears → loader completes → final content replaces initial content
@@ -56,6 +58,19 @@ export default function NextSection() {
       ensurePlaying();
     }, 6000);
     return () => window.clearTimeout(fallback);
+  }, []);
+
+  // Periodic check to ensure video keeps playing infinitely
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const v = videoRef.current;
+      if (v && (v.paused || v.ended)) {
+        v.currentTime = 0;
+        v.play().catch(() => {});
+      }
+    }, 1000); // Check every second
+
+    return () => clearInterval(interval);
   }, []);
 
   // Start loading progress when loader becomes visible
@@ -112,11 +127,11 @@ export default function NextSection() {
 
   return (
     <section className={`relative w-full h-screen bg-white slide-in-right`}>
-      <div className={`w-full h-full p-2 push-container ${drawerOpen ? "push-right" : ""}`}>
-        <div style={{backgroundImage: "url('/image.png')", backgroundSize: "cover", backgroundPosition: "center"}} className=" relative w-full h-full rounded-2xl md:rounded-[28px] overflow-hidden bg-white">
+      <div className={`w-full h-full p-1 sm:p-2 md:p-3 lg:p-2 push-container ${drawerOpen ? "push-right" : ""}`}>
+        <div style={{backgroundImage: "url('/image.png')",  backgroundPosition: "center"}} className="bg-cover relative w-full h-full rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[28px] overflow-hidden bg-white">
           <video
             ref={videoRef}
-            className={`absolute inset-0 w-full h-full object-contain transition-opacity  duration-700 ${
+            className={`flex absolute inset-0 w-full h-full object-cover sm:object-contain transition-opacity duration-700 ${
               ready ? "opacity-100" : "opacity-0"
             }`}
             src="/videos/original-e8f92507edede186d6fa91bf0aec6760.mp4"
@@ -130,13 +145,44 @@ export default function NextSection() {
               setReady(true);
               ensurePlaying();
             }}
-            onEnded={ensurePlaying}
-            onPause={ensurePlaying}
-            onStalled={ensurePlaying}
-            onError={ensurePlaying}
+            onEnded={() => {
+              // Force restart when video ends
+              const v = videoRef.current;
+              if (v) {
+                v.currentTime = 0;
+                v.play().catch(() => {});
+              }
+            }}
+            onPause={() => {
+              // Immediately resume if paused
+              const v = videoRef.current;
+              if (v && v.paused) {
+                v.play().catch(() => {});
+              }
+            }}
+            onStalled={() => {
+              // Restart if stalled
+              const v = videoRef.current;
+              if (v) {
+                v.load();
+                v.play().catch(() => {});
+              }
+            }}
+            onError={() => {
+              // Retry on error
+              const v = videoRef.current;
+              if (v) {
+                v.load();
+                v.play().catch(() => {});
+              }
+            }}
+            onTimeUpdate={() => {
+              // Ensure it's still playing
+              ensurePlaying();
+            }}
           />
           <div
-            className={`absolute left-0 r bottom-0 w-[45vw] rounded-md h-[40vh] bg-white angle-corner ${
+            className={`absolute left-0 bottom-0 w-[65vw] sm:w-[55vw] md:w-[50vw] lg:w-[45vw] xl:w-[40vw] rounded-md h-[30vh] sm:h-[35vh] md:h-[38vh] lg:h-[40vh] xl:h-[42vh] bg-white angle-corner ${
               showInitialContent ? "fade-in" : "opacity-0"
             }`}
           />
@@ -146,25 +192,58 @@ export default function NextSection() {
           {/* Initial content - shown when section loads */}
           {showInitialContent && !showFinalContent && (
             <>
-              {/* Bottom left content */}
-              <div className="absolute left-8 md:left-22 bottom-24 text-white fade-in">
-                <div className="text-lg font-semibold ml-10 mb-2">
-                  Digital Innovation
-                </div>
-                <div className="text-sm max-w-[300px]">
-                  Transforming traditional banking with cutting-edge technology
-                  and seamless user experiences.
+              {/* Mobile: Vertical layout like final content */}
+              <div className="block sm:hidden absolute left-0 right-0 bottom-2 px-4 content-return-up">
+                <div className="grid grid-cols-1 gap-4">
+                  {[
+                    {
+                      title: "Digital Innovation",
+                      text: "Transforming traditional banking with cutting-edge technology and seamless user experiences.",
+                    },
+                    {
+                      title: "Secure & Reliable", 
+                      text: "Built with enterprise-grade security protocols ensuring your transactions are always protected.",
+                    },
+                  ].map((item, i) => (
+                    <div key={i} className="relative min-h-[120px] w-full max-w-sm mx-auto">
+                      {/* Connected pentagon border */}
+                      <div className="absolute inset-0 transition-colors duration-500 border-gray-200">
+                        {/* Top border */}
+                        <div className="absolute top-0 left-0 right-0 h-[1px] bg-current"></div>
+                        {/* Right border */}
+                        <div className="absolute top-0 right-0 bottom-0 w-[1px] bg-current"></div>
+                      </div>
+                      <div className="relative text-white flex flex-col gap-y-2 justify-between p-3 pt-2">
+                        <div className="font-bold text-lg mb-1">{item.title}</div>
+                        <div className="text-xs leading-relaxed opacity-90 mt-1">{item.text}</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              {/* Bottom right content */}
-              <div className="absolute right-8 md:right-16 bottom-24 text-white text-right fade-in">
-                <div className="text-3xl font-semibold mb-2">
-                  Secure & Reliable
+              {/* Desktop: Original side-by-side layout */}
+              <div className="hidden sm:block">
+                {/* Bottom left content */}
+                <div className="absolute left-2 md:left-4 lg:left-8 xl:left-22 bottom-16 md:bottom-20 lg:bottom-24 text-white fade-in">
+                  <div className="text-sm md:text-base lg:text-lg font-semibold ml-4 md:ml-6 lg:ml-10 mb-1 md:mb-2">
+                    Digital Innovation
+                  </div>
+                  <div className="text-xs md:text-sm max-w-[180px] md:max-w-[220px] lg:max-w-[250px] xl:max-w-[300px] leading-relaxed">
+                    Transforming traditional banking with cutting-edge technology
+                    and seamless user experiences.
+                  </div>
                 </div>
-                <div className="text-lg max-w-[300px]">
-                  Built with enterprise-grade security protocols ensuring your
-                  transactions are always protected.
+
+                {/* Bottom right content */}
+                <div className="absolute right-2 md:right-4 lg:right-8 xl:right-16 bottom-16 md:bottom-20 lg:bottom-24 text-white text-right fade-in">
+                  <div className="text-xl md:text-2xl lg:text-3xl font-semibold mb-1 md:mb-2">
+                    Secure & Reliable
+                  </div>
+                  <div className="text-sm md:text-base lg:text-lg max-w-[180px] md:max-w-[220px] lg:max-w-[250px] xl:max-w-[300px] leading-relaxed">
+                    Built with enterprise-grade security protocols ensuring your
+                    transactions are always protected.
+                  </div>
                 </div>
               </div>
             </>
@@ -178,18 +257,18 @@ export default function NextSection() {
           {/* Center loading card */}
           {showLoader && !loaderDone && (
             <div
-              className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/25 backdrop-blur-xl rounded-[28px] px-10 py-8 text-white text-center shadow-[0_10px_40px_rgba(0,0,0,0.25)] ${
+              className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/25 backdrop-blur-xl rounded-md sm:rounded-lg md:rounded-xl lg:rounded-2xl xl:rounded-[28px] px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 py-3 sm:py-4 md:py-6 lg:py-8 text-white text-center shadow-[0_8px_32px_rgba(0,0,0,0.2)] sm:shadow-[0_10px_40px_rgba(0,0,0,0.25)] ${
                 progress < 100 ? "rise-in" : "rise-out"
               }`}
             >
-              <div className="text-3xl font-extrabold mb-4">{progress}%</div>
+              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-extrabold mb-1 sm:mb-2 md:mb-3 lg:mb-4">{progress}%</div>
               <div
-                className="progress-circle mx-auto mb-4"
+                className="progress-circle mx-auto mb-1 sm:mb-2 md:mb-3 lg:mb-4 scale-60 sm:scale-75 md:scale-90 lg:scale-100"
                 style={{
                   ["--progress" as any]: `${(progress / 100) * 360}deg`,
                 }}
               />
-              <div className="text-[11px] max-w-[260px]">
+              <div className="text-[9px] sm:text-[10px] md:text-[11px] max-w-[160px] sm:max-w-[180px] md:max-w-[200px] lg:max-w-[240px] xl:max-w-[260px] leading-relaxed">
                 Reducing the cost of cash handling through the implementation of
                 CBDC.
               </div>

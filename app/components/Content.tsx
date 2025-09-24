@@ -4,8 +4,8 @@ export default function Content({borderStep}: {borderStep: number}) {
   return (
     <>
     {/* Left title block */}
-    <div className="absolute ml-15 left-8 md:left-16 top-[18vh] text-white content-return-up">
-      <div className="text-3xl md:text-5xl font-extrabold leading-tight">
+    <div className="absolute left-4 sm:left-8 md:left-16 top-[8vh] sm:top-[12vh] md:top-[15vh] lg:top-[18vh] text-white content-return-up z-10">
+      <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-tight">
         <div>Alpha</div>
         <div>Learning</div>
         <div>System</div>
@@ -13,8 +13,8 @@ export default function Content({borderStep}: {borderStep: number}) {
     </div>
 
     {/* Bottom info panels */}
-    <div className="ml-15 absolute left-0 right-0 bottom-8 md:bottom-10 px-6 md:px-10 content-return-up">
-      <div className="grid grid-cols-1  md:grid-cols-3 gap-14 md:gap-6">
+    <div className="absolute left-0 right-0 bottom-2 sm:bottom-4 md:bottom-6 lg:bottom-8 xl:bottom-10 px-4 sm:px-6 md:px-8 lg:px-10 content-return-up">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-6">
         {[
           {
             title: "About",
@@ -29,19 +29,19 @@ export default function Content({borderStep}: {borderStep: number}) {
             text: "CBDC functions like transfers, and remittancesCBDC functions like transfers, and remittances CBDC functions like transfers, and remittances CBDC functions like transfers, and remittances.",
           },
         ].map((item, i) => (
-          <div key={i} className="relative min-h-[260px] w-2/3">
+          <div key={i} className="relative min-h-[160px] sm:min-h-[180px] md:min-h-[200px] lg:min-h-[220px] xl:min-h-[260px] w-full max-w-sm mx-auto sm:mx-0">
             {/* Connected pentagon border */}
             <div className={`absolute inset-0 transition-colors duration-500 ${i < borderStep ? "border-gray-200" : "border-transparent"}`}>
               {/* Top border */}
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-current"></div>
+              <div className="absolute top-0 left-0 right-0 h-[1px] bg-current"></div>
               {/* Right border */}
-              <div className="absolute top-0 right-0 bottom-0 w-[2px] bg-current"></div>
+              <div className="absolute top-0 right-0 bottom-0 w-[1px] bg-current"></div>
               {/* Diagonal connecting border */}
               {/* <div className="absolute top-0 right-0 w-[20px] h-[2px] bg-current transform origin-top-right rotate-[28deg]"></div> */}
             </div>
-            <div className="relative text-white flex flex-col gap-y-10 justify-between p-5 pt-3">
-              <div className="font-bold text-3xl mb-4">{item.title}</div>
-              <div className="text-xs sm:text-[17px] leading-relaxed opacity-90 mt-2 md:mt-3">{item.text}</div>
+            <div className="relative text-white flex flex-col gap-y-2 sm:gap-y-4 md:gap-y-6 lg:gap-y-8 xl:gap-y-10 justify-between p-3 sm:p-4 md:p-5 pt-2 sm:pt-3">
+              <div className="font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl mb-1 sm:mb-2 md:mb-3 lg:mb-4">{item.title}</div>
+              <div className="text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed opacity-90 mt-1 sm:mt-2 md:mt-3">{item.text}</div>
             </div>
           </div>
         ))}
