@@ -2,9 +2,9 @@ import React from 'react'
 
 export default function Content({borderStep}: {borderStep: number}) {
   return (
-    <>
+    <div className=''>
     {/* Left title block */}
-    <div className="absolute left-4 sm:left-8 md:left-16 top-[8vh] sm:top-[12vh] md:top-[15vh] lg:top-[18vh] text-white content-return-up z-10">
+    <div className="absolute left-4 sm:left-8 md:left-32 top-[8vh] sm:top-[12vh] md:top-[15vh] lg:top-[18vh] text-white content-return-up z-10">
       <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-tight">
         <div>Alpha</div>
         <div>Learning</div>
@@ -13,7 +13,7 @@ export default function Content({borderStep}: {borderStep: number}) {
     </div>
 
     {/* Bottom info panels */}
-    <div className="absolute left-0 right-0 bottom-2 sm:bottom-4 md:bottom-6 lg:bottom-8 xl:bottom-10 px-4 sm:px-6 md:px-8 lg:px-10 content-return-up">
+    <div className="absolute left-0 right-0 sm:left-8 md:left-20  bottom-2 sm:bottom-4 md:bottom-6 lg:bottom-8 xl:bottom-10 px-4 sm:px-6 md:px-8 lg:px-10 content-return-up">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-6">
         {[
           {
@@ -47,6 +47,6 @@ export default function Content({borderStep}: {borderStep: number}) {
         ))}
       </div>
     </div>
-  </>
+  </div>
   )
 }
