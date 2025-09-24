@@ -1,0 +1,40 @@
+"use client";
+
+import React from "react";
+import { FieldError } from "react-hook-form";
+
+type FormFieldProps = {
+  label: string;
+  htmlFor: string;
+  children: React.ReactNode;
+  error?: FieldError;
+  hint?: string;
+};
+
+export function FormField({ label, htmlFor, children, error, hint }: FormFieldProps) {
+  return (
+    <div className="space-y-1">
+      <label htmlFor={htmlFor} className="block text-sm font-medium text-slate-800">
+        {label}
+      </label>
+      {children}
+      {hint && !error && <p className="text-xs text-slate-500">{hint}</p>}
+      {error && <p className="text-xs text-red-600">{error.message}</p>}
+    </div>
+  );
+}
+
+type InputProps = React.InputHTMLAttributes<HTMLInputElement> & { error?: boolean };
+
+export function Input({ className = "", error, ...props }: InputProps) {
+  return (
+    <input
+      {...props}
+      className={`w-full rounded-xl border px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition ${
+        error ? "border-red-300" : "border-slate-300"
+      } ${className}`}
+    />
+  );
+}
+
+

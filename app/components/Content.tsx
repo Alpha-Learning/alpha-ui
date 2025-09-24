@@ -4,41 +4,50 @@ export default function Content({borderStep}: {borderStep: number}) {
   return (
     <div className=''>
     {/* Left title block */}
-    <div className="absolute left-4 sm:left-8 md:left-32 top-[8vh] sm:top-[12vh] md:top-[15vh] lg:top-[18vh] text-white content-return-up z-10">
-      <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-tight">
+    {/* <div className="absolute left-4 sm:left-8 md:left-32 top-[8vh] sm:top-[12vh] md:top-[15vh] lg:top-[18vh] text-white content-return-up z-10">
+      <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight">
         <div>Alpha</div>
         <div>Learning</div>
         <div>System</div>
       </div>
-    </div>
+    </div> */}
 
     {/* Bottom info panels */}
     <div className="absolute left-0 right-0 sm:left-8 md:left-20  bottom-2 sm:bottom-4 md:bottom-6 lg:bottom-8 xl:bottom-10 px-4 sm:px-6 md:px-8 lg:px-10 content-return-up">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-6">
         {[
           {
-            title: "About",
-            text: "CBDC is a digital form CBDC functions like transfers, and remittances of fiat currency issued .",
+            title: "Story",
+            text:
+              "Alphera Academy is not just a school, it’s the first real-world implementation of the Alpha Learning System, a future facing education model designed over 15 years of research and development. In a world rapidly shaped by artificial intelligence. Alphera Academy prepares children not only to succeed in core academics, but to thrive as emotionally intelligent, adaptable, creative and self driven human beings.",
           },
           {
-            title: "Storing",
-            text: "CBDC can be stored CBDC functions like transfers, and remittancesCBDC functions like transfers, and remittances in digital wallets and accessed using a",
+            title: "Mission",
+            text:
+              "To become the world’s most pioneering education hub where the full spectrum of human potential is awakened, nurtured and elevated. At Alphera Academy, we do not teach to the test. We cultivate future-ready humans. Our mission goes beyond education. We strive to become the architects of human potential, creating the appropriate conditions for the next generations to thrive.",
           },
           {
-            title: "Functions",
-            text: "CBDC functions like transfers, and remittancesCBDC functions like transfers, and remittances CBDC functions like transfers, and remittances CBDC functions like transfers, and remittances.",
+            title: "Waiting List",
+            text:
+              "As the first institution to implement the Alpha Learning System, we exist to lead a global transformation in education—anchored in emotional intelligence, cognitive agility, real-world purpose and biometric insight. We aim to lead the revolution in the educational framework and redefine how children grow, learn, and thrive mentally, emotionally, socially and physically — all while reading the whole child in real time.",
           },
         ].map((item, i) => (
           <div key={i} className="relative min-h-[160px] sm:min-h-[180px] md:min-h-[200px] lg:min-h-[220px] xl:min-h-[260px] w-full max-w-sm mx-auto sm:mx-0">
             {/* Connected border overlay that reveals sequentially */}
             <div
-              className={`absolute inset-0 z-10 pointer-events-none transition-all duration-500 ease-out rounded-tr-2xl md:rounded-tr-4xl border-t border-r ${
+              className={`absolute inset-0 z-10 pointer-events-none transition-all duration-700 ease-out rounded-tr-2xl md:rounded-tr-4xl border-t border-r ${
                 i < borderStep ? "opacity-100 border-gray-200" : "opacity-0 border-transparent"
               }`}
+              style={{ transitionDelay: `${i * 160}ms` }}
             />
-            <div className="relative z-0 text-white flex flex-col gap-y-2 sm:gap-y-4 md:gap-y-6 lg:gap-y-8 xl:gap-y-10 justify-between p-3 sm:p-4 md:p-5 pt-2 sm:pt-3">
-              <div className="font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl mb-1 sm:mb-2 md:mb-3 lg:mb-4">{item.title}</div>
-              <div className="text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed opacity-90 mt-1 sm:mt-2 md:mt-3">{item.text}</div>
+            <div
+              className={`relative z-0 text-[#142954] flex flex-col gap-y-2 sm:gap-y-4 md:gap-y-6 lg:gap-y-8 xl:gap-y-0 justify-between p-3 sm:p-4 md:p-5 pt-2 sm:pt-3 transition-all duration-700 ease-out ${
+                i < borderStep ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+              }`}
+              style={{ transitionDelay: `${i * 160 + 60}ms` }}
+            >
+              <div className="font-semibold text-lg sm:text-xl md:text-2xl lg:text-3xl mb-1 sm:mb-2 md:mb-3 lg:mb-4">{item.title}</div>
+              <div className="text-xs sm:text-sm md:text-base lg:text-md leading-relaxed opacity-90 mt-1 sm:mt-2 md:mt-3">{item.text}</div>
             </div>
           </div>
         ))}

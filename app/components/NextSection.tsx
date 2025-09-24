@@ -16,6 +16,7 @@ export default function NextSection() {
   const [loaderDone, setLoaderDone] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [borderStep, setBorderStep] = useState(0);
+  const initialExiting = showLoader && progress >= 90;
 
   // Ensure video keeps playing infinitely
   const ensurePlaying = () => {
@@ -28,26 +29,18 @@ export default function NextSection() {
     v.loop = true;
   };
 
-  // New sequence: section slides in with initial content → loader appears → loader completes → final content replaces initial content
+  // Slide in and reveal content immediately on mount (no waiting for video)
   useEffect(() => {
-    if (!ready) return;
-
-    // Attempt to start playback when ready
     ensurePlaying();
-
-    // Show header and initial content immediately when section loads
-    const t1 = window.setTimeout(() => setShowHeader(true), 200);
-    const t2 = window.setTimeout(() => setShowInitialContent(true), 400);
-
-    // Show loader after initial content is visible
-    const t3 = window.setTimeout(() => setShowLoader(true), 1500);
-
+    const t1 = window.setTimeout(() => setShowHeader(true), 150);
+    const t2 = window.setTimeout(() => setShowInitialContent(true), 300);
+    const t3 = window.setTimeout(() => setShowLoader(true), 1400);
     return () => {
       window.clearTimeout(t1);
       window.clearTimeout(t2);
       window.clearTimeout(t3);
     };
-  }, [ready]);
+  }, []);
 
   // Fallback: if video readiness is slow, force reveal after 6s
   useEffect(() => {
@@ -193,7 +186,7 @@ export default function NextSection() {
           {showInitialContent && !showFinalContent && (
             <>
               {/* Mobile: Vertical layout like final content */}
-              <div className="block sm:hidden absolute left-0 right-0 bottom-2 px-4 content-return-up">
+              <div className={`block sm:hidden absolute left-0 right-0 bottom-2 px-4 ${initialExiting ? "content-exit-down" : "content-return-up"}`}>
                 <div className="grid grid-cols-1 gap-4">
                   {[
                     {
@@ -205,7 +198,7 @@ export default function NextSection() {
                       text: "Built with enterprise-grade security protocols ensuring your transactions are always protected.",
                     },
                   ].map((item, i) => (
-                    <div key={i} className="relative min-h-[120px] w-full max-w-sm mx-auto">
+                    <div key={i} className={`relative min-h-[120px] w-full max-w-sm mx-auto ${initialExiting ? "content-exit-down" : "fade-in"}`} style={{ animationDelay: !initialExiting ? `${i * 120}ms` : undefined }}>
                       {/* Connected pentagon border */}
                       <div className="absolute inset-0 transition-colors duration-500 border-gray-200">
                         {/* Top border */}
@@ -213,9 +206,9 @@ export default function NextSection() {
                         {/* Right border */}
                         <div className="absolute top-0 right-0 bottom-0 w-[1px] bg-current"></div>
                       </div>
-                      <div className="relative text-white flex flex-col gap-y-2 justify-between p-3 pt-2">
-                        <div className="font-bold text-lg mb-1">{item.title}</div>
-                        <div className="text-xs leading-relaxed opacity-90 mt-1">{item.text}</div>
+                      <div className="relative text-[#142954] flex flex-col gap-y-2 justify-between p-3 pt-2">
+                        <div className="font-bold text-[#142954] text-lg mb-1">{item.title}</div>
+                        <div className="text-xs text-[#142954] leading-relaxed opacity-90 mt-1">{item.text}</div>
                       </div>
                     </div>
                   ))}
@@ -225,22 +218,22 @@ export default function NextSection() {
               {/* Desktop: Original side-by-side layout */}
               <div className="hidden sm:block">
                 {/* Bottom left content */}
-                <div className="absolute left-2 md:left-4 lg:left-8 xl:left-22 bottom-16 md:bottom-20 lg:bottom-24 text-white fade-in">
-                  <div className="text-sm md:text-base lg:text-lg font-semibold ml-4 md:ml-6 lg:ml-10 mb-1 md:mb-2">
+                <div className={`absolute left-2 md:left-4 lg:left-8 xl:left-22 bottom-16 md:bottom-20 lg:bottom-24 text-white ${initialExiting ? "content-exit-down" : "fade-in"}`}>
+                  <div className="text-sm md:text-base text-[#142954] lg:text-lg font-semibold ml-4 md:ml-6 lg:ml-10 mb-1 md:mb-2">
                     Digital Innovation
                   </div>
-                  <div className="text-xs md:text-sm max-w-[180px] md:max-w-[220px] lg:max-w-[250px] xl:max-w-[300px] leading-relaxed">
+                  <div className="text-xs text-[#142954] md:text-sm max-w-[180px] md:max-w-[220px] lg:max-w-[250px] xl:max-w-[300px] leading-relaxed">
                     Transforming traditional banking with cutting-edge technology
                     and seamless user experiences.
                   </div>
                 </div>
 
                 {/* Bottom right content */}
-                <div className="absolute right-2 md:right-4 lg:right-8 xl:right-16 bottom-16 md:bottom-20 lg:bottom-24 text-white text-right fade-in">
-                  <div className="text-xl md:text-2xl lg:text-3xl font-semibold mb-1 md:mb-2">
+                <div className={`absolute right-2 md:right-4 lg:right-8 xl:right-16 bottom-16 md:bottom-20 lg:bottom-24 text-white text-right ${initialExiting ? "content-exit-down" : "fade-in"}`}>
+                  <div className="text-xl text-[#142954] md:text-2xl lg:text-3xl font-semibold mb-1 md:mb-2">
                     Secure & Reliable
                   </div>
-                  <div className="text-sm md:text-base lg:text-lg max-w-[180px] md:max-w-[220px] lg:max-w-[250px] xl:max-w-[300px] leading-relaxed">
+                  <div className="text-sm text-[#142954] md:text-base lg:text-lg max-w-[180px] md:max-w-[220px] lg:max-w-[250px] xl:max-w-[300px] leading-relaxed">
                     Built with enterprise-grade security protocols ensuring your
                     transactions are always protected.
                   </div>
@@ -268,7 +261,7 @@ export default function NextSection() {
                   ["--progress" as any]: `${(progress / 100) * 360}deg`,
                 }}
               />
-              <div className="text-[9px] sm:text-[10px] md:text-[11px] max-w-[160px] sm:max-w-[180px] md:max-w-[200px] lg:max-w-[240px] xl:max-w-[260px] leading-relaxed">
+              <div className="text-[9px] text-[#142954] sm:text-[10px] md:text-[11px] max-w-[160px] sm:max-w-[180px] md:max-w-[200px] lg:max-w-[240px] xl:max-w-[260px] leading-relaxed">
                 Reducing the cost of cash handling through the implementation of
                 CBDC.
               </div>

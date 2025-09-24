@@ -5,9 +5,10 @@ import NextSection from "./components/NextSection";
 
 export default function Home() {
   const [showNext, setShowNext] = useState(false);
-  return showNext ? (
+  return (  
     <NextSection />
-  ) : (
-    <HeroIntro onCompleteOnce={() => setShowNext(true)} />
-  );
+  )
+  // ) : (
+  //   <HeroIntro onCompleteOnce={() => setShowNext(true)} />
+  // );
 }
