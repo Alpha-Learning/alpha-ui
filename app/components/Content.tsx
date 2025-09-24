@@ -30,16 +30,13 @@ export default function Content({borderStep}: {borderStep: number}) {
           },
         ].map((item, i) => (
           <div key={i} className="relative min-h-[160px] sm:min-h-[180px] md:min-h-[200px] lg:min-h-[220px] xl:min-h-[260px] w-full max-w-sm mx-auto sm:mx-0">
-            {/* Connected pentagon border */}
-            <div className={`absolute inset-0 transition-colors duration-500 ${i < borderStep ? "border-gray-200" : "border-transparent"}`}>
-              {/* Top border */}
-              <div className="absolute top-0 left-0 right-0 h-[1px] bg-current"></div>
-              {/* Right border */}
-              <div className="absolute top-0 right-0 bottom-0 w-[1px] bg-current"></div>
-              {/* Diagonal connecting border */}
-              {/* <div className="absolute top-0 right-0 w-[20px] h-[2px] bg-current transform origin-top-right rotate-[28deg]"></div> */}
-            </div>
-            <div className="relative text-white flex flex-col gap-y-2 sm:gap-y-4 md:gap-y-6 lg:gap-y-8 xl:gap-y-10 justify-between p-3 sm:p-4 md:p-5 pt-2 sm:pt-3">
+            {/* Connected border overlay that reveals sequentially */}
+            <div
+              className={`absolute inset-0 z-10 pointer-events-none transition-all duration-500 ease-out rounded-tr-2xl md:rounded-tr-4xl border-t border-r ${
+                i < borderStep ? "opacity-100 border-gray-200" : "opacity-0 border-transparent"
+              }`}
+            />
+            <div className="relative z-0 text-white flex flex-col gap-y-2 sm:gap-y-4 md:gap-y-6 lg:gap-y-8 xl:gap-y-10 justify-between p-3 sm:p-4 md:p-5 pt-2 sm:pt-3">
               <div className="font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl mb-1 sm:mb-2 md:mb-3 lg:mb-4">{item.title}</div>
               <div className="text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed opacity-90 mt-1 sm:mt-2 md:mt-3">{item.text}</div>
             </div>

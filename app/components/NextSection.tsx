@@ -126,12 +126,12 @@ export default function NextSection() {
   }, [showFinalContent]);
 
   return (
-    <section className={`relative w-full h-screen bg-white slide-in-right`}>
-      <div className={`w-full h-full p-1 sm:p-2 md:p-3 lg:p-2 push-container ${drawerOpen ? "push-right" : ""}`}>
-        <div style={{backgroundImage: "url('/image.png')",  backgroundPosition: "center"}} className="bg-cover relative w-full h-full rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[28px] overflow-hidden bg-white">
+    <section className={`relative w-full h-screen bg-white slide-in-right p-2`}>
+      <div className={`w-full h-full p-1 sm:p-2 md:p-3 lg:p-2 push-container   ${drawerOpen ? "push-right" : ""}`}>
+        {/* <div style={{backgroundImage: "url('/image.png')",  backgroundPosition: "center"}} className="bg-cover relative w-full h-full rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[28px] overflow-hidden bg-white"> */}
           <video
             ref={videoRef}
-            className={`flex absolute inset-0 w-full h-full object-cover sm:object-contain transition-opacity duration-700 ${
+            className={`flex  rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[28px]  absolute inset-0 w-full h-full object-cover sm:object-cover transition-opacity duration-700 ${
               ready ? "opacity-100" : "opacity-0"
             }`}
             src="/videos/original-e8f92507edede186d6fa91bf0aec6760.mp4"
@@ -274,7 +274,7 @@ export default function NextSection() {
               </div>
             </div>
           )}
-        </div>
+        {/* </div> */}
       </div>
 
       {/* Left request drawer */}
