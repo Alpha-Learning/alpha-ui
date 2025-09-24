@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -45,7 +45,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-export default function PreAssessmentFormPage() {
+function PreAssessmentInner() {
   const params = useSearchParams();
   const router = useRouter();
   const emailFromQuery = params.get("email") || "";
@@ -210,6 +210,14 @@ export default function PreAssessmentFormPage() {
         </form>
       </div>
     </main>
+  );
+}
+
+export default function PreAssessmentFormPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-slate-600">Loading…</div>}>
+      <PreAssessmentInner />
+    </Suspense>
   );
 }
 
