@@ -46,8 +46,8 @@ export default function Content({borderStep}: {borderStep: number}) {
               }`}
               style={{ transitionDelay: `${i * 160 + 60}ms` }}
             >
-              <div className="font-semibold text-lg sm:text-xl md:text-2xl lg:text-3xl mb-1 sm:mb-2 md:mb-3 lg:mb-4">{item.title}</div>
-              <div className="text-xs sm:text-sm md:text-base lg:text-md leading-relaxed opacity-90 mt-1 sm:mt-2 md:mt-3">{item.text}</div>
+              <div className="font-semibold text-lg sm:text-xl md:text-2xl lg:text-3xl mb-1 sm:mb-2 md:mb-3 lg:mb-2">{item.title}</div>
+              <div className="text-xs sm:text-sm md:text-base lg:text-md leading-relaxed opacity-90 mt-1 sm:mt-2 md:mt-2">{item.text}</div>
             </div>
           </div>
         ))}

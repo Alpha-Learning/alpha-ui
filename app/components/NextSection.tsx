@@ -183,9 +183,8 @@ export default function NextSection() {
           <SectionHeader show={showHeader} onRequestClick={setDrawerOpen} />
 
           {/* Initial content - shown when section loads */}
-          {showInitialContent && !showFinalContent && (
+          {/* {showInitialContent && !showFinalContent && (
             <>
-              {/* Mobile: Vertical layout like final content */}
               <div className={`block sm:hidden absolute left-0 right-0 bottom-2 px-4 ${initialExiting ? "content-exit-down" : "content-return-up"}`}>
                 <div className="grid grid-cols-1 gap-4">
                   {[
@@ -199,11 +198,8 @@ export default function NextSection() {
                     },
                   ].map((item, i) => (
                     <div key={i} className={`relative min-h-[120px] w-full max-w-sm mx-auto ${initialExiting ? "content-exit-down" : "fade-in"}`} style={{ animationDelay: !initialExiting ? `${i * 120}ms` : undefined }}>
-                      {/* Connected pentagon border */}
                       <div className="absolute inset-0 transition-colors duration-500 border-gray-200">
-                        {/* Top border */}
                         <div className="absolute top-0 left-0 right-0 h-[1px] bg-current"></div>
-                        {/* Right border */}
                         <div className="absolute top-0 right-0 bottom-0 w-[1px] bg-current"></div>
                       </div>
                       <div className="relative text-[#142954] flex flex-col gap-y-2 justify-between p-3 pt-2">
@@ -215,9 +211,7 @@ export default function NextSection() {
                 </div>
               </div>
 
-              {/* Desktop: Original side-by-side layout */}
               <div className="hidden sm:block">
-                {/* Bottom left content */}
                 <div className={`absolute left-2 md:left-4 lg:left-8 xl:left-22 bottom-16 md:bottom-20 lg:bottom-24 text-white ${initialExiting ? "content-exit-down" : "fade-in"}`}>
                   <div className="text-sm md:text-base text-[#142954] lg:text-lg font-semibold ml-4 md:ml-6 lg:ml-10 mb-1 md:mb-2">
                     Digital Innovation
@@ -228,7 +222,6 @@ export default function NextSection() {
                   </div>
                 </div>
 
-                {/* Bottom right content */}
                 <div className={`absolute right-2 md:right-4 lg:right-8 xl:right-16 bottom-16 md:bottom-20 lg:bottom-24 text-white text-right ${initialExiting ? "content-exit-down" : "fade-in"}`}>
                   <div className="text-xl text-[#142954] md:text-2xl lg:text-3xl font-semibold mb-1 md:mb-2">
                     Secure & Reliable
@@ -240,7 +233,7 @@ export default function NextSection() {
                 </div>
               </div>
             </>
-          )}
+          )} */}
 
           {/* Final content - shown after loading completes */}
           {showFinalContent && (
