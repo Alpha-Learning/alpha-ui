@@ -32,7 +32,7 @@ export default function SectionHeader({ show, onRequestClick }: SectionHeaderPro
         </h1>
       </div>
       <button
-        className="text-xs sm:text-sm bg-white font-semibold [clip-path:polygon(0%_0%,85%_0%,100%_38%,100%_100%,16%_100%,0%_56%)] cursor-pointer  text-[#142954] rounded-lg md:rounded-xl px-2 sm:px-3 md:px-6 py-2 sm:py-3 md:py-4 flex justify-between items-center w-24 sm:w-28 md:w-38 lg:w-40 shadow-ms ring-1 ring-black/10 transition-colors hover:bg-gray-100 active:bg-gray-200"
+        className="text-xs sm:text-sm bg-[#142954]  font-semibold [clip-path:polygon(0%_0%,85%_0%,100%_38%,100%_100%,16%_100%,0%_56%)] cursor-pointer   rounded-lg md:rounded-xl px-2 sm:px-3 md:px-6 py-2 sm:py-3 md:py-4 flex justify-between items-center w-24 sm:w-28 md:w-38 lg:w-40 shadow-ms ring-1 ring-black/10 transition-colors "
         onClick={onRequestClick}
       >
         <span>Waitlist</span>

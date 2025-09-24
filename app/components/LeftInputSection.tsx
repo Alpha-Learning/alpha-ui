@@ -23,7 +23,7 @@ export default function LeftInputSection({
     }
     setError(null);
     setDrawerOpen(false);
-    router.push(`/auth/login?email=${encodeURIComponent(email)}`);
+    router.push(`/form/pre-assessment?email=${encodeURIComponent(email)}`);
   };
   return (
     <div className="fixed inset-0 z-50">
@@ -73,17 +73,17 @@ export default function LeftInputSection({
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 mb-2 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
               />
               {error && <p className="text-xs text-red-600 mb-2">{error}</p>}
-              <button onClick={handleSubmit} className="[clip-path:polygon(0%_0%,95%_0%,100%_28%,100%_100%,6%_100%,0%_65%)] w-full cursor-pointer py-3 flex justify-between items-center bg-gradient-to-r from-sky-400 to-blue-600 text-white rounded-lg px-4 hover:from-sky-500 hover:to-blue-700 transition-all">
+              <button onClick={handleSubmit} className="[clip-path:polygon(0%_0%,95%_0%,100%_28%,100%_100%,6%_100%,0%_65%)] w-full cursor-pointer py-3 flex justify-between items-center bg-gradient-to-r from-[#8EC0C2] to-[#142954] text-white rounded-lg px-4 hover:brightness-[1.05] active:brightness-95 transition-all">
                 <span className="font-semibold">Continue</span>
                 <span className="text-lg">→</span>
               </button>
-              <Link className="text-blue-600 hover:text-blue-800 font-sm text-center mt-4 block" href="/auth/login">Already registered? Login here</Link>
+              <Link className="text-[#142954] font-sm text-center mt-4 block" href="/auth/login">Already registered? Login here</Link>
             </div>
           </div>
 
           {/* Footer */}
           <div className="p-6 pt-0">
-            <p className="text-xs text-gray-500 text-center leading-relaxed">
+            <p className="text-xs text-[#142954] text-center leading-relaxed">
               By continuing, you accept the Regulations and the Privacy Policy.
             </p>
           </div>
