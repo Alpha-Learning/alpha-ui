@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { apiService } from "@/app/utils";
 import DataTable, { TableColumn } from "react-data-table-component";
+import Link from "next/link";
 
 type PaidItem = {
   id: string;
@@ -27,6 +28,7 @@ export default function PaidUsersPage() {
     { name: "Child", selector: r => r.childFullName, sortable: true },
     { name: "Amount", selector: r => `$${r.paymentAmount ?? 150}` },
     { name: "Paid At", selector: r => (r.paidAt ? new Date(r.paidAt).toLocaleString() : "-") },
+    { name: "View", cell: r => (<Link className="text-blue-600 hover:underline" href={`/admin/applications/${r.id}`}>Open</Link>), ignoreRowClick: true },
   ], []);
 
   const load = async () => {

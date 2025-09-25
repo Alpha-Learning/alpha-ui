@@ -42,6 +42,10 @@ model Application {
   paymentAmount  Int?
   paidAt         DateTime?
 
+  // Application progress
+  currentStage   Int      @default(1)
+  totalStages    Int      @default(10)
+
   // Parent/Guardian Information
   parentFullName    String
   parentEmail       String
