@@ -18,10 +18,12 @@ export async function GET(req: Request) {
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const status = searchParams.get("status") || undefined;
+    const paid = searchParams.get("paid");
     const q = (searchParams.get("q") || "").trim();
 
     const where: any = {};
     if (status) where.status = status;
+    if (paid === 'true') where.isPaid = true;
     if (q) {
       const query = q.toLowerCase();
       where.OR = [

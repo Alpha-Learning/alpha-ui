@@ -75,6 +75,8 @@ export interface UserApplication {
   lastUpdated: string;
   type: string;
   description: string;
+  adminComment?: string;
+  isPaid?: boolean;
 }
 
 export interface UserApplicationsResponse {

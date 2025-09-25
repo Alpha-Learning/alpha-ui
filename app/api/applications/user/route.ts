@@ -50,6 +50,7 @@ export async function GET(req: Request) {
         select: {
           id: true,
           status: true,
+          adminComment: true,
           createdAt: true,
           updatedAt: true,
           parentFullName: true,
@@ -57,6 +58,9 @@ export async function GET(req: Request) {
           childFullName: true,
           childAge: true,
           childSchoolYear: true,
+          isPaid: true,
+          paymentAmount: true,
+          paidAt: true,
         }
       }),
       prisma.application.count({ where: whereClause })
@@ -85,6 +89,10 @@ export async function GET(req: Request) {
       childAge: app.childAge,
       childGrade: app.childSchoolYear,
       status: app.status,
+      adminComment: app.adminComment || undefined,
+      isPaid: app.isPaid,
+      paymentAmount: app.paymentAmount,
+      paidAt: app.paidAt,
       submittedAt: app.createdAt.toISOString(),
       lastUpdated: app.updatedAt.toISOString(),
       type: "Application Review Request",
@@ -101,6 +109,9 @@ export async function GET(req: Request) {
         childFullName: "",
         childAge: null,
         childGrade: "",
+        isPaid: false,
+        paymentAmount: null,
+        paidAt: null,
         status: req.status,
         submittedAt: req.createdAt.toISOString(),
         lastUpdated: req.updatedAt.toISOString(),

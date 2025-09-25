@@ -37,6 +37,11 @@ model Application {
   updatedAt DateTime @updatedAt
   adminComment String?
 
+  // Payment
+  isPaid         Boolean  @default(false)
+  paymentAmount  Int?
+  paidAt         DateTime?
+
   // Parent/Guardian Information
   parentFullName    String
   parentEmail       String

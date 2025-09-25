@@ -119,6 +119,7 @@ export default function RequestsPage() {
     );
   }
 
+  console.log("applications===========> ",applications);
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
@@ -147,10 +148,33 @@ export default function RequestsPage() {
                     <p className="text-xs text-slate-400">
                       Submitted: {new Date(application.submittedAt).toLocaleDateString()}
                     </p>
+                    {application.status === 'rejected' && application.adminComment && (
+                      <p className="text-xs text-red-700 mt-1">Comment: {application.adminComment}</p>
+                    )}
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(application.status)}`}>
-                    {getStatusText(application.status)}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(application.status)}`}>
+                      {getStatusText(application.status)}
+                    </span>
+                    {application.status === 'completed' && !application.isPaid && (
+                      <button
+                        onClick={async () => {
+                          try {
+                            await apiService.post('/api/applications/pay', { id: application.id });
+                            window.location.reload();
+                          } catch (e) {
+                            console.error(e);
+                          }
+                        }}
+                        className="px-3 py-1 rounded-lg bg-green-600 text-white cursor-pointer"
+                      >
+                        Pay $150
+                      </button>
+                    )}
+                    {application.isPaid  && (
+                      <span className="text-xs text-green-700">Paid</span>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
