@@ -1,7 +1,9 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import ProtectedRoute from "@/app/components/ProtectedRoute";
 import { useAuth } from "@/app/contexts/AuthContext";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
@@ -46,9 +48,43 @@ export default function AdminRootLayout({ children }: { children: React.ReactNod
             </button>
           </div>
         </aside>
-        <main className="flex-1 p-4 sm:p-6 overflow-y-auto">{children}</main>
+        <main className="flex-1 overflow-y-auto">
+          <AdminHeader />
+          <div className="p-4 sm:p-6">{children}</div>
+        </main>
       </div>
     </ProtectedRoute>
+  );
+}
+
+function AdminHeader() {
+  const pathname = usePathname();
+  const crumbs = useMemo(() => {
+    const parts = (pathname || "/admin").split("/").filter(Boolean);
+    const adminIdx = parts.indexOf("admin");
+    const slice = adminIdx >= 0 ? parts.slice(adminIdx) : parts;
+    const links = slice.map((seg, idx) => {
+      const href = "/" + slice.slice(0, idx + 1).join("/");
+      const label = seg.charAt(0).toUpperCase() + seg.slice(1);
+      return { href, label };
+    });
+    return links;
+  }, [pathname]);
+
+  return (
+    <div className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b">
+      <div className="px-4 sm:px-6 py-3 flex items-center justify-between">
+        <nav className="text-sm text-slate-500 flex items-center gap-2">
+          {crumbs.map((c, i) => (
+            <span key={c.href} className="flex items-center gap-2">
+              {i > 0 && <span className="text-slate-400">/</span>}
+              <Link href={c.href} className={`hover:text-slate-700 ${i === crumbs.length - 1 ? "text-slate-900 font-medium pointer-events-none" : ""}`}>{c.label}</Link>
+            </span>
+          ))}
+        </nav>
+        <div className="text-xs text-slate-500 hidden sm:block">Admin Panel</div>
+      </div>
+    </div>
   );
 }
 
