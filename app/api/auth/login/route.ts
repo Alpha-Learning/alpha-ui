@@ -10,6 +10,7 @@ const loginSchema = z.object({
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+    console.log("body", body);
     const parsed = loginSchema.safeParse(body);
     console.log("parsed", parsed);
     if (!parsed.success) {
@@ -25,6 +26,7 @@ export async function POST(req: Request) {
     // Authenticate user against database
     const user = await authenticateUser(email, password);
 
+    console.log("user", user);
     if (!user) {
       return NextResponse.json({
         success: false,

@@ -35,6 +35,7 @@ model Application {
   status    String   @default("submitted") // submitted, processing, completed, rejected
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  adminComment String?
 
   // Parent/Guardian Information
   parentFullName    String

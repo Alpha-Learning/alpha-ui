@@ -24,7 +24,7 @@ export default function RequestsPage() {
         }
         
         console.log('Loading user applications with token:', token ? 'Present' : 'Missing');
-        const response: UserApplicationsResponse = await apiService.get("/applications/user");
+        const response: UserApplicationsResponse = await apiService.get("/api/applications/user");
         
         if (response.success && response.data) {
           setApplications(response.data.applications);
