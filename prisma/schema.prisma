@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model for authentication
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String
+  role      String   @default("user")
+  phone     String?
+  city      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  applications Application[]
+  requests     UserRequest[]
+
+  @@map("users")
+}
+
+// Application model for pre-assessment forms
+model Application {
+  id        String   @id @default(cuid())
+  status    String   @default("submitted") // submitted, processing, completed, rejected
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Parent/Guardian Information
+  parentFullName    String
+  parentEmail       String
+  parentPhone       String?
+  relationToChild   String?
+  parentCity        String?
+  parentEthnicity   String?
+
+  // Child Information
+  childFullName        String
+  childDateOfBirth     DateTime?
+  childAge             Int?
+  childGender          String?
+  childEthnicity       String?
+  childSchoolYear      String?
+  childCurrentSchool   String?
+  childSchoolType      String?
+  childSchoolTypeOther String?
+  childDiagnosedNeeds  String?
+
+  // Caregiver/Nanny Information
+  caregiverFullName String?
+  caregiverPhone    String?
+
+  // Parent Questions
+  qExcitesMost         String
+  qNonTraditionalReason String
+  qBiggestHope         String
+  enjoysTech           String
+  enjoysHandsOn        String
+
+  // Consent
+  consentContact   Boolean
+  consentUpdates   Boolean
+  consentBiometric Boolean?
+
+  // Relations
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("applications")
+}
+
+// User Applications/Requests tracking
+model UserRequest {
+  id          String   @id @default(cuid())
+  type        String   // "Application Review Request", "Password Setup", "Profile Information"
+  description String
+  status      String   @default("pending") // pending, completed, rejected
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_requests")
+}

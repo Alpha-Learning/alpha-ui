@@ -29,7 +29,7 @@ export default function Content({borderStep}: {borderStep: number}) {
           {
             title: "Waiting List",
             text:
-              "As the first institution to implement the Alpha Learning System, we exist to lead a global transformation in education—anchored in emotional intelligence, cognitive agility, real-world purpose and biometric insight. We aim to lead the revolution in the educational framework and redefine how children grow, learn, and thrive mentally, emotionally, socially and physically — all while reading the whole child in real time.",
+              "At Alphera Academy, our waiting list is not just a line, it is a pathway into our learning community. Families who join it are showing their commitment into securing a place in a forward thinking environment where every seat is an opportunity to grow, learn, innovate and thrive.",
           },
         ].map((item, i) => (
           <div key={i} className="relative min-h-[160px] sm:min-h-[180px] md:min-h-[200px] lg:min-h-[220px] xl:min-h-[260px] w-full max-w-sm mx-auto sm:mx-0">

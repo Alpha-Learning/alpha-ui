@@ -4,7 +4,6 @@ import Modal from './Modal';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import toast from 'react-hot-toast';
 import { FormField, Input } from './forms/FormField';
 
 const passwordSchema = z.object({
@@ -21,7 +20,7 @@ type PasswordFormData = z.infer<typeof passwordSchema>;
 interface PasswordSetupModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (password: string) => Promise<void>;
+  onSubmit: any;
   userEmail: string;
 }
 
@@ -37,42 +36,46 @@ const PasswordSetupModal = ({ isOpen, onClose, onSubmit, userEmail }: PasswordSe
     resolver: zodResolver(passwordSchema)
   });
 
-  const handleFormSubmit = async (data: PasswordFormData) => {
-    setIsSubmitting(true);
-    try {
-      // Call the API to set the password
-      const response = await fetch('/api/auth/set-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: userEmail,
-          password: data.password,
-        }),
-      });
+  // const handleFormSubmit = async (data: PasswordFormData) => {
+  //   setIsSubmitting(true);
+  //   try {
+  //     // Call the API to set the password
+  //     const response = await fetch('/api/auth/set-password', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         email: userEmail,
+  //         password: data.password,
+  //       }),
+  //     });
 
-      const result = await response.json();
+  //     const result = await response.json();
 
-      if (result.success) {
-        await onSubmit(data.password);
-        toast.success("Password set successfully!");
-        reset();
-        onClose();
-      } else {
-        throw new Error(result.message || 'Failed to set password');
-      }
-    } catch (error) {
-      toast.error("Failed to set password. Please try again.");
-      console.error('Password setup error:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  //     if (result.success) {
+  //       await onSubmit(data.password);
+  //       toast.success("Password set successfully!");
+  //       reset();
+  //       onClose();
+  //     } else {
+  //       throw new Error(result.message || 'Failed to set password');
+  //     }
+  //   } catch (error) {
+  //     toast.error("Failed to set password. Please try again.");
+  //     console.error('Password setup error:', error);
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
 
   const handleClose = () => {
     reset();
     onClose();
+  };
+
+  const handleFormSubmit = (data: PasswordFormData) => {
+    return onSubmit(data.password);
   };
 
   return (

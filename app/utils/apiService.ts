@@ -23,7 +23,7 @@ class ApiService {
   getAuthToken() {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('authToken');
-      // console.log('Auth token retrieved:', token ? 'Token exists' : 'No token');
+      console.log('Auth token retrieved:', token ? 'Token exists' : 'No token');
       return token;
     }
     return null;
@@ -48,6 +48,13 @@ class ApiService {
       ...options,
       headers: this.getHeaders(options.headers),
     };
+
+    console.log('Making API request:', {
+      url,
+      method: (config as any).method || 'GET',
+      headers: config.headers,
+      hasAuth: !!(config.headers as Record<string, string>)['Authorization']
+    });
 
     // console.log('Making API request:', {
     //   url,

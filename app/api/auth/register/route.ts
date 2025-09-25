@@ -1,17 +1,20 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { authenticateUser, generateToken } from "@/app/lib/auth";
+import { createUser, generateToken } from "@/app/lib/auth";
+import { prisma } from "@/app/lib/db";
 
-const loginSchema = z.object({
+const registerSchema = z.object({
   email: z.string().email("Invalid email format"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  name: z.string().min(1, "Name is required"),
+  role: z.enum(["user", "admin"]).optional().default("user"),
 });
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const parsed = loginSchema.safeParse(body);
-    console.log("parsed", parsed);
+    const parsed = registerSchema.safeParse(body);
+    
     if (!parsed.success) {
       return NextResponse.json({
         success: false,
@@ -20,17 +23,22 @@ export async function POST(req: Request) {
       }, { status: 400 });
     }
 
-    const { email, password } = parsed.data;
+    const { email, password, name, role } = parsed.data;
 
-    // Authenticate user against database
-    const user = await authenticateUser(email, password);
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email }
+    });
 
-    if (!user) {
+    if (existingUser) {
       return NextResponse.json({
         success: false,
-        message: "Invalid credentials",
-      }, { status: 401 });
+        message: "User with this email already exists",
+      }, { status: 409 });
     }
+
+    // Create new user
+    const user = await createUser(email, password, name, role);
 
     const token = generateToken({
       id: user.id,
@@ -52,8 +60,16 @@ export async function POST(req: Request) {
       access_token: token
     });
 
-  } catch (error) {
-    console.error("Login error:", error);
+  } catch (error: any) {
+    // Handle Prisma unique constraint error (race condition safety)
+    if (error && (error.code === 'P2002' || error?.meta?.target?.includes?.('email'))) {
+      return NextResponse.json({
+        success: false,
+        message: "Email already registered",
+      }, { status: 409 });
+    }
+
+    console.error("Registration error:", error);
     return NextResponse.json({
       success: false,
       message: "Internal server error",

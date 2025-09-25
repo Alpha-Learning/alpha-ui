@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { prisma } from "@/app/lib/db";
+import { hashPassword } from "@/app/lib/auth";
 
 const setPasswordSchema = z.object({
   email: z.string().email("Invalid email format"),
@@ -22,24 +24,25 @@ export async function POST(req: Request) {
 
     const { email, password } = parsed.data;
 
-    // TODO: In a real application, you would:
-    // 1. Hash the password using bcrypt or similar
-    // 2. Store the hashed password in your database
-    // 3. Update the user record with the password
-    // 4. Send a confirmation email
-    
-    console.log("Setting password for:", email);
-    console.log("Password hash would be stored here");
+    // Find user by email
+    const user = await prisma.user.findFirst({ where: {  email } });
+    if (!user) {
+      return NextResponse.json({
+        success: false,
+        message: "User not found",
+      }, { status: 404 });
+    }
 
-    // Mock response
+    // Hash and update password
+    const hashed = await hashPassword(password);
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashed },
+    });
+
     return NextResponse.json({
       success: true,
       message: "Password set successfully",
-      data: {
-        email,
-        passwordSet: true,
-        timestamp: new Date().toISOString(),
-      },
     });
 
   } catch (error) {

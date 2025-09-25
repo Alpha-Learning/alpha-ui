@@ -62,6 +62,37 @@ export interface CreateApplicationDto {
   consentBiometric?: boolean;
 }
 
+// User Application types
+export interface UserApplication {
+  id: string;
+  parentFullName: string;
+  parentEmail: string;
+  childFullName?: string;
+  childAge?: number;
+  childGrade?: string;
+  status: 'submitted' | 'processing' | 'completed' | 'rejected' | 'pending';
+  submittedAt: string;
+  lastUpdated: string;
+  type: string;
+  description: string;
+}
+
+export interface UserApplicationsResponse {
+  success: boolean;
+  data?: {
+    applications: UserApplication[];
+    meta: {
+      page: number;
+      limit: number;
+      total: number;
+      totalPages: number;
+      hasNext: boolean;
+      hasPrev: boolean;
+    };
+  };
+  message?: string;
+}
+
 // API Response types
 export interface ApplicationResponse {
   success: boolean;
