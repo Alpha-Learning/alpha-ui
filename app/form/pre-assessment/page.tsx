@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -9,6 +9,7 @@ import { FormField, Input } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
 import Toaster from "@/app/components/Toaster";
 import toast from "react-hot-toast";
+import PasswordSetupModal from "@/app/components/PasswordSetupModal";
 
 const schema = z.object({
   // Parent/Guardian Information
@@ -54,6 +55,8 @@ function PreAssessmentInner() {
   const params = useSearchParams();
   const router = useRouter();
   const emailFromQuery = params.get("email") || "";
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState<string>("");
 
   const {
     register,
@@ -77,18 +80,43 @@ function PreAssessmentInner() {
   const schoolType = watch("childSchoolType");
 
   const onSubmit = async (data: FormValues) => {
-    // Placeholder submit — replace with API call
-
-    console.log("data ", data);
-    const result = await apiService.post("/applications",(data))
-    if(result.success){
-      toast.success("Application submitted successfully");
-    } else {
+    try {
+      console.log("data ", data);
+      const result = await apiService.post("/applications", data);
+      
+      if (result.success) {
+        toast.success("Application submitted successfully");
+        setSubmittedEmail(data.parentEmail);
+        setShowPasswordModal(true);
+      } else {
+        toast.error("Application submission failed");
+      }
+      console.log("result ", result);
+    } catch (error) {
+      console.error('Form submission failed:', error instanceof Error ? error.message : 'Unknown error');
       toast.error("Application submission failed");
     }
-    console.log("result ", result);
-    // console.log("Pre-Assessment submission", data);
-    // router.push("/form/thanks");
+  };
+
+  const handlePasswordSubmit = async (password: string) => {
+    try {
+      // Here you would typically call an API to set the password
+      // For now, we'll simulate the API call
+      const result = await apiService.post("/auth/reset-password", { email: submittedEmail, password });
+      // await new Promise(resolve => setTimeout(resolve, 1000));
+      if(result.success) {
+        // console.log("Password set for:", submittedEmail);
+        // console.log("Password:", password);
+        toast.success("Password set successfully");
+      } else {
+        toast.error("Password setup failed");
+      }
+      // After password is set, redirect to thanks page
+      router.push("/form/thanks");
+    } catch (error) {
+      console.error('Password setup failed:', error);
+      throw error;
+    }
   };
 
   return (
@@ -253,6 +281,14 @@ function PreAssessmentInner() {
           </div>
         </form>
       </div>
+
+      {/* Password Setup Modal */}
+      <PasswordSetupModal
+        isOpen={showPasswordModal}
+        onClose={() => setShowPasswordModal(false)}
+        onSubmit={handlePasswordSubmit}
+        userEmail={submittedEmail}
+      />
     </main>
   );
 }
