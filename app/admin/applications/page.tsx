@@ -2,13 +2,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { apiService } from "@/app/utils";
 import Modal from "@/app/components/Modal";
-import {
-  ColumnDef,
-  getCoreRowModel,
-  getPaginationRowModel,
-  flexRender,
-  useReactTable,
-} from "@tanstack/react-table";
+import DataTable, { TableColumn } from "react-data-table-component";
 
 type AdminApp = {
   id: string;
@@ -38,60 +32,40 @@ export default function AdminApplicationsPage() {
   const [sheet, setSheet] = useState<{ id: string; open: boolean }>({ id: "", open: false });
 
   const filtered = useMemo(() => {
-    let data = statusFilter ? items.filter(i => i.status === statusFilter) : items;
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      data = data.filter(i =>
-        i.parentFullName.toLowerCase().includes(q) ||
-        i.parentEmail.toLowerCase().includes(q) ||
-        i.childFullName.toLowerCase().includes(q) ||
-        (i.childSchoolYear?.toLowerCase().includes(q) ?? false)
-      );
-    }
-    return data;
-  }, [items, statusFilter, search]);
+    // When doing API-side search/filtering, just show items as-is
+    return items;
+  }, [items]);
 
-  const columns = useMemo<ColumnDef<AdminApp>[]>(() => [
-    { header: "Parent", accessorKey: "parentFullName" },
-    { header: "Email", accessorKey: "parentEmail" },
-    { header: "Child", accessorKey: "childFullName" },
-    { header: "Age", accessorKey: "childAge" },
-    { header: "Year", accessorKey: "childSchoolYear" },
+  const columns = useMemo<TableColumn<AdminApp>[]>(() => [
+    { name: "Parent", selector: row => row.parentFullName, sortable: true, grow: 1 },
+    { name: "Email", selector: row => row.parentEmail, sortable: true, grow: 1 },
+    { name: "Child", selector: row => row.childFullName, sortable: true },
+    { name: "Age", selector: row => String(row.childAge ?? ""), width: "80px" },
+    { name: "Year", selector: row => row.childSchoolYear ?? "", sortable: true },
     {
-      header: "Status",
-      accessorKey: "status",
-      cell: ({ row }) => {
-        const s = row.original.status;
-        const cls = getStatusClasses(s);
-        return (
-          <button
-            onClick={() => openBottomSheet(row.original.id, row.original.status, row.original.adminComment)}
-            className={`px-3 py-1 rounded-full text-xs font-medium ${cls} cursor-pointer`}
-            title="Change status"
-          >
-            {s}
-          </button>
-        );
-      }
+      name: "Status",
+      cell: (row) => (
+        <button
+          onClick={() => openBottomSheet(row.id, row.status, row.adminComment)}
+          className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusClasses(row.status)} cursor-pointer`}
+          title="Change status"
+        >
+          {row.status}
+        </button>
+      ),
+      sortable: true,
     },
-    { header: "Comment", accessorKey: "adminComment" },
+    { name: "Comment", selector: row => row.adminComment ?? "" },
     {
-      header: "Actions",
-      cell: ({ row }) => (
-        <button onClick={() => openModal(row.original.id, row.original.status, row.original.adminComment)} className="px-2 py-1 rounded-md bg-blue-600 text-white cursor-pointer">Change</button>
-      )
+      name: "Actions",
+      cell: (row) => (
+        <button onClick={() => openModal(row.id, row.status, row.adminComment)} className="px-2 py-1 rounded-md bg-blue-600 text-white cursor-pointer">Change</button>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
     },
   ], []);
-
-  const table = useReactTable({
-    data: filtered,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    manualPagination: true,
-    pageCount: Math.max(1, Math.ceil(total / limit)),
-    state: { pagination: { pageIndex, pageSize: limit } },
-  });
 
   const load = async () => {
     try {
@@ -99,10 +73,12 @@ export default function AdminApplicationsPage() {
       setError(null);
       const params = new URLSearchParams();
       if (statusFilter) params.set('status', statusFilter);
+      if (search.trim()) params.set('q', search.trim());
       params.set('page', String(pageIndex + 1));
       params.set('limit', String(limit));
       const qs = params.toString() ? `?${params.toString()}` : "";
       const res = await apiService.get(`/api/admin/applications${qs}`);
+      console.log("res===========> ",res);
       if (res.success) {
         setItems(res.data.applications);
         setTotal(res.data.meta?.total ?? res.data.applications.length);
@@ -116,7 +92,7 @@ export default function AdminApplicationsPage() {
     }
   };
 
-  useEffect(() => { load(); }, [statusFilter, pageIndex]);
+  useEffect(() => { load(); }, [statusFilter, search, pageIndex]);
 
   const openModal = (id: string, currentStatus: string, currentComment?: string | null) => {
     setModal({ id, open: true });
@@ -132,7 +108,7 @@ export default function AdminApplicationsPage() {
 
   const submitStatus = async () => {
     try {
-      const payload: any = { id: modal.id, status: newStatus };
+      const payload: any = { id: modal.id || sheet.id, status: newStatus };
       if (newStatus === "rejected") payload.adminComment = comment.trim();
       const res = await apiService.post(`/api/admin/applications/status`, payload);
       if (res.success) {
@@ -161,58 +137,39 @@ export default function AdminApplicationsPage() {
             className="w-56 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 placeholder:text-slate-400"
           />
           <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="border border-slate-300 rounded-lg px-3 py-2 text-slate-900">
-          <option value="">All</option>
-          {['submitted','processing','completed','rejected'].map(s => (
-            <option key={s} value={s}>{s}</option>
-          ))}
+            <option value="">All</option>
+            {['submitted','processing','completed','rejected'].map(s => (
+              <option key={s} value={s}>{s}</option>
+            ))}
           </select>
         </div>
       </div>
 
-      {loading ? (
-        <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">Loading…</div>
-      ) : error ? (
+      {error && (
         <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6 text-red-600">{error}</div>
-      ) : (
-        <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-4">
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm text-slate-900">
-              <thead className="text-left text-slate-900 bg-slate-100">
-                {table.getHeaderGroups().map(hg => (
-                  <tr key={hg.id}>
-                    {hg.headers.map(header => (
-                      <th key={header.id} className="px-3 py-3 font-semibold">
-                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody className="text-slate-900">
-                {table.getRowModel().rows.map(row => (
-                  <tr key={row.id} className="hover:bg-slate-100">
-                    {row.getVisibleCells().map(cell => (
-                      <td key={cell.id} className="px-3 py-2">
-                        {cell.column.columnDef.cell
-                          ? flexRender(cell.column.columnDef.cell, cell.getContext())
-                          : String(cell.getValue() ?? '')}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="flex items-center justify-between mt-4">
-            <div className="text-xs text-slate-900">Page {pageIndex + 1} of {Math.max(1, Math.ceil(total / limit))}</div>
-            <div className="flex gap-2">
-              <button className="px-3 py-1 border border-slate-300 rounded text-slate-900 hover:bg-slate-50 disabled:opacity-50" onClick={() => setPageIndex(p => Math.max(0, p - 1))} disabled={pageIndex === 0}>Prev</button>
-              <button className="px-3 py-1 border border-slate-300 rounded text-slate-900 hover:bg-slate-50 disabled:opacity-50" onClick={() => setPageIndex(p => p + 1)} disabled={(pageIndex + 1) >= Math.max(1, Math.ceil(total / limit))}>Next</button>
-            </div>
-          </div>
-        </div>
       )}
+
+      <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-2">
+        <DataTable
+          columns={columns}
+          data={filtered}
+          progressPending={loading}
+          highlightOnHover
+          pointerOnHover
+          // dense
+          customStyles={{
+            headRow: { style: { backgroundColor: '#f1f5f9' } },
+            headCells: { style: { fontWeight: 600, color: '#0f172a' } },
+            rows: { style: { color: '#0f172a' } },
+          }}
+          pagination
+          paginationServer
+          paginationTotalRows={total}
+          paginationPerPage={limit}
+          paginationDefaultPage={pageIndex + 1}
+          onChangePage={(p) => setPageIndex(p - 1)}
+        />
+      </div>
 
       {modal.open && (
         <Modal isOpen={modal.open} onClose={() => setModal({ id: '', open: false })} title="Update Status">

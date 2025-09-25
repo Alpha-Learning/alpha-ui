@@ -18,36 +18,34 @@ export async function GET(req: Request) {
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const status = searchParams.get("status") || undefined;
+    const q = (searchParams.get("q") || "").trim();
 
     const where: any = {};
     if (status) where.status = status;
+    if (q) {
+      const query = q.toLowerCase();
+      where.OR = [
+        { parentFullName: { contains: query, mode: 'insensitive' } },
+        { parentEmail: { contains: query, mode: 'insensitive' } },
+        { childFullName: { contains: query, mode: 'insensitive' } },
+        { childSchoolYear: { contains: query, mode: 'insensitive' } },
+      ];
+    }
 
-    const [applications, total] = await Promise.all([
+    const [applications, totalCount] = await Promise.all([
       prisma.application.findMany({
         where,
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * limit,
         take: limit,
-        select: {
-          id: true,
-          status: true,
-          adminComment: true,
-          createdAt: true,
-          updatedAt: true,
-          parentFullName: true,
-          parentEmail: true,
-          parentPhone: true,
-          parentCity: true,
-          childFullName: true,
-          childAge: true,
-          childSchoolYear: true,
-        },
       }),
       prisma.application.count({ where }),
     ]);
+    const total = await prisma.application.count();
 
     return NextResponse.json({
       success: true,
+
       data: {
         applications,
         meta: {

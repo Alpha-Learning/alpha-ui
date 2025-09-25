@@ -107,10 +107,8 @@ function PreAssessmentInner() {
       // Here you would typically call an API to set the password
       // For now, we'll simulate the API call
       const result = await apiService.post("/api/auth/set-password", { email: submittedEmail, password });
-      // await new Promise(resolve => setTimeout(resolve, 1000));
       if(result.success) {
-        // console.log("Password set for:", submittedEmail);
-        // console.log("Password:", password);
+
         toast.success("Password set successfully");
       } else {
         toast.error("Password setup failed");

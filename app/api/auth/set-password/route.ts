@@ -42,7 +42,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      message: "Password set successfully",
+      // message: "Password set successfully",
     });
 
   } catch (error) {
