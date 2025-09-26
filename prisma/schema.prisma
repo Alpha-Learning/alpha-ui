@@ -89,6 +89,7 @@ model Application {
   parentGuardianQuestionnaire ParentGuardianQuestionnaire?
   caregiverQuestionnaire CaregiverQuestionnaire?
   outsiderQuestionnaire OutsiderQuestionnaire?
+  facilityWalkthroughChecklist FacilityWalkthroughChecklist?
 
   @@map("applications")
 }
@@ -296,4 +297,43 @@ model OutsiderQuestionnaire {
   application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   @@map("outsider_questionnaires")
+}
+
+// Facility Walkthrough Checklist model
+model FacilityWalkthroughChecklist {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // General Information
+  examinerName String
+  date         DateTime
+
+  // Checklist Items
+  welcomeOverviewCompleted Boolean @default(false)
+  tourLearningZonesCompleted Boolean @default(false)
+  technologyDemonstrationCompleted Boolean @default(false)
+  safetySecurityMeasuresCompleted Boolean @default(false)
+  qaSessionCompleted Boolean @default(false)
+  scheduleAssessmentDatesCompleted Boolean @default(false)
+
+  // Additional Notes
+  welcomeOverviewNotes String
+  tourLearningZonesNotes String
+  technologyDemonstrationNotes String
+  safetySecurityMeasuresNotes String
+  qaSessionNotes String
+  scheduleAssessmentDatesNotes String
+ 
+
+  // Office Use Only
+  applicationNumber     String?
+  loggedToSystemDate   String?
+  loggedBy             String?
+
+  // Relations
+  applicationId String  @unique
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("facility_walkthrough_checklists")
 }

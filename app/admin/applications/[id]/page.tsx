@@ -167,6 +167,7 @@ export default function AdminApplicationDetailPage() {
             const hrefMap: Record<number, string> = {
               1: `/admin/applications/${data.id}`,
               2: `/admin/applications/${data.id}/screening-call`,
+              4: `/admin/applications/${data.id}/facility-walkthrough-checklist`,
             };
             const href = hrefMap[stageNumber];
             
