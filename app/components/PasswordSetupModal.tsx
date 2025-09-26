@@ -74,8 +74,15 @@ const PasswordSetupModal = ({ isOpen, onClose, onSubmit, userEmail }: PasswordSe
     onClose();
   };
 
-  const handleFormSubmit = (data: PasswordFormData) => {
-    return onSubmit(data.password);
+  const handleFormSubmit = async (data: PasswordFormData) => {
+    setIsSubmitting(true);
+    try {
+      await onSubmit(data.password);
+    } catch (error) {
+      console.error('Password submission error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

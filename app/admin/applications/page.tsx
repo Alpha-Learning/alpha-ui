@@ -63,8 +63,6 @@ export default function AdminApplicationsPage() {
         <button onClick={() => openModal(row.id, row.status, row.adminComment)} className="px-2 py-1 rounded-md bg-blue-600 text-white cursor-pointer">Change</button>
       ),
       ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
     },
     {
       name: "View",
@@ -185,8 +183,8 @@ export default function AdminApplicationsPage() {
         <Modal isOpen={modal.open} onClose={() => setModal({ id: '', open: false })} title="Update Status">
           <div className="p-5 space-y-4 text-slate-900">
             <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)} className="w-full border rounded-lg px-3 py-2">
-              {['submitted','processing','completed','rejected'].map(s => (
-                <option key={s} value={s}>{s}</option>
+              {['completed','rejected'].map(s => (
+                <option key={s} value={s}>{s=="completed"?"Accept":"Reject"}</option>
               ))}
             </select>
             {newStatus === 'rejected' && (

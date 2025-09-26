@@ -129,6 +129,7 @@ export default function NextSection() {
               ready ? "opacity-100" : "opacity-30"
             }`}
             src="/videos/original-e8f92507edede186d6fa91bf0aec6760.mp4"
+            // src="/videos/animated.mp4"
             autoPlay
             muted
             loop

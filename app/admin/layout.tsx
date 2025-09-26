@@ -36,10 +36,10 @@ export default function AdminRootLayout({ children }: { children: React.ReactNod
               <span className="w-8 text-center">👥</span>
               <span className="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity">Users</span>
             </a> */}
-            <Link href="/admin/paid" className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-100 text-slate-700">
+            {/* <Link href="/admin/paid" className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-100 text-slate-700">
               <span className="w-8 text-center">💳</span>
               <span className="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity">Paid Users</span>
-            </Link>
+            </Link> */}
             {/* <a href="/admin/requests" className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-100 text-slate-700">
               <span className="w-8 text-center">📩</span>
               <span className="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity">Requests</span>

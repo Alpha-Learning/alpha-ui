@@ -4,8 +4,8 @@ import { FiArrowRight, FiUser, FiCheckCircle } from "react-icons/fi";
 
 export default function ThanksPage() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-50 p-6">
-      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-10 text-center max-w-lg">
+    <main className="min-h-screen flex items-center justify-center sm:bg-slate-50 p-6">
+      <div className="bg-white rounded-2xl sm:shadow-sm sm:ring-1 sm:ring-black/5 p-10 text-center max-w-lg">
         <div className="mb-6">
           <FiCheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">Thank you!</h1>

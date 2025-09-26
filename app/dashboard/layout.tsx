@@ -30,8 +30,8 @@ export default function UserDashboardLayout({
   const sidebarItems = [
     { id: 'overview', label: 'Overview', icon: FiHome, href: '/dashboard/user' },
     { id: 'requests', label: 'Requests', icon: FiFileText, href: '/dashboard/user/requests' },
-    { id: 'profile', label: 'Profile', icon: FiUser, href: '/dashboard/user/profile' },
-    { id: 'settings', label: 'Settings', icon: FiSettings, href: '/dashboard/user/settings' },
+    // { id: 'profile', label: 'Profile', icon: FiUser, href: '/dashboard/user/profile' },
+    // { id: 'settings', label: 'Settings', icon: FiSettings, href: '/dashboard/user/settings' },
   ];
 
   const getPageTitle = () => {
@@ -129,7 +129,8 @@ export default function UserDashboardLayout({
           </nav>
 
           {/* Sidebar Footer */}
-          <div className="p-4 border-t border-slate-200">
+          <div className="p-4 border-t border-slate-200 space-y-3">
+            {/* User Info */}
             <div className="flex items-center">
               <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center">
                 <span className="text-sm font-medium text-slate-600">
@@ -147,6 +148,17 @@ export default function UserDashboardLayout({
                 </div>
               )}
             </div>
+
+            {/* Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center px-3 py-2 rounded-lg text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors"
+            >
+              <FiLogOut className="w-5 h-5 flex-shrink-0" />
+              {sidebarExpanded && (
+                <span className="ml-3 text-sm font-medium">Logout</span>
+              )}
+            </button>
           </div>
         </div>
       </div>
