@@ -7,7 +7,7 @@ import Content from "./Content";
 
 export default function NextSection() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(true); // Start as ready to show video immediately
   const [showHeader, setShowHeader] = useState(false);
   const [showInitialContent, setShowInitialContent] = useState(false);
   const [showFinalContent, setShowFinalContent] = useState(false);
@@ -29,11 +29,12 @@ export default function NextSection() {
     v.loop = true;
   };
 
-  // Slide in and reveal content immediately on mount (no waiting for video)
+  // Slide in and reveal content with proper timing
   useEffect(() => {
     ensurePlaying();
-    const t1 = window.setTimeout(() => setShowHeader(true), 150);
-    const t2 = window.setTimeout(() => setShowInitialContent(true), 300);
+    // Show video first, then content
+    const t1 = window.setTimeout(() => setShowHeader(true), 100);
+    const t2 = window.setTimeout(() => setShowInitialContent(true), 800);
     const t3 = window.setTimeout(() => setShowLoader(true), 1400);
     return () => {
       window.clearTimeout(t1);
@@ -119,13 +120,13 @@ export default function NextSection() {
   }, [showFinalContent]);
 
   return (
-    <section className={`relative w-full h-screen bg-white slide-in-right p-2`}>
+    <section className={`relative w-full h-screen bg-white slide-in-right p-0 ${drawerOpen && 'p-3'} sm:p-2`}>
       <div className={`w-full h-full p-1 sm:p-2 md:p-3 lg:p-2 push-container   ${drawerOpen ? "push-right" : ""}`}>
         {/* <div style={{backgroundImage: "url('/image.png')",  backgroundPosition: "center"}} className="bg-cover relative w-full h-full rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[28px] overflow-hidden bg-white"> */}
           <video
             ref={videoRef}
-            className={`flex  rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[28px]  absolute inset-0 w-full h-full object-cover sm:object-cover transition-opacity duration-700 ${
-              ready ? "opacity-100" : "opacity-0"
+            className={`flex  rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[28px]  absolute inset-0 w-full h-full object-cover sm:object-cover transition-opacity duration-500 ${
+              ready ? "opacity-100" : "opacity-30"
             }`}
             src="/videos/original-e8f92507edede186d6fa91bf0aec6760.mp4"
             autoPlay
@@ -134,9 +135,17 @@ export default function NextSection() {
             playsInline
             preload="auto"
             controls={false}
+            onLoadStart={() => {
+              // Show video immediately when loading starts
+              setReady(true);
+            }}
             onCanPlay={() => {
               setReady(true);
               ensurePlaying();
+            }}
+            onLoadedData={() => {
+              // Video data is loaded, ensure it's visible
+              setReady(true);
             }}
             onEnded={() => {
               // Force restart when video ends
@@ -175,7 +184,7 @@ export default function NextSection() {
             }}
           />
           <div
-            className={`absolute left-0 bottom-0 w-[65vw] sm:w-[55vw] md:w-[50vw] lg:w-[45vw] xl:w-[40vw] rounded-md h-[30vh] sm:h-[35vh] md:h-[38vh] lg:h-[40vh] xl:h-[42vh] bg-white angle-corner ${
+            className={`hidden md:flex absolute left-0 bottom-0 w-[65vw] sm:w-[55vw] md:w-[50vw] lg:w-[45vw] xl:w-[40vw] rounded-md h-[30vh] sm:h-[35vh] md:h-[38vh] lg:h-[40vh] xl:h-[42vh] bg-white angle-corner ${
               showInitialContent ? "fade-in" : "opacity-0"
             }`}
           />
