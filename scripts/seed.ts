@@ -198,6 +198,41 @@ async function main() {
   console.log('📝 Sample application:', application.id)
   console.log('📞 Sample screening call:', screeningCall.id)
   console.log('📝 Additional applications:', application2.id, application3.id)
+
+  // Create sample Parent Guardian Questionnaire
+  const parentGuardianQuestionnaire = await prisma.parentGuardianQuestionnaire.create({
+    data: {
+      applicationId: application.id,
+      fullName: 'John Smith',
+      childName: 'Sarah Smith',
+      date: new Date('2024-01-20'),
+      typicalWeekday: 'Sarah wakes up at 7 AM, has breakfast, goes to school from 8 AM to 3 PM, comes home, does homework, plays with toys, has dinner at 6 PM, and goes to bed at 8:30 PM.',
+      screenTimeHours: 'Sarah uses screens for about 2-3 hours per day, mostly for educational games and watching educational videos. We limit recreational screen time.',
+      homeActivities: 'Sarah enjoys reading books, drawing, playing with LEGO blocks, building puzzles, playing board games, and outdoor activities like cycling.',
+      culturalBackground: 'We are a multicultural family with Middle Eastern and European heritage. We value education, respect for elders, and maintaining our cultural traditions while embracing new learning opportunities.',
+      rulesDisciplineApproach: 'We use positive reinforcement and clear boundaries. We believe in explaining the reasons behind rules and encouraging independence while maintaining structure.',
+      supportWhenStruggling: 'When Sarah struggles, we provide emotional support, break tasks into smaller steps, offer encouragement, and help her develop problem-solving skills rather than giving direct answers.',
+      strengthsInterests: 'Sarah shows strong interest in mathematics, science experiments, art, and storytelling. She is naturally curious and asks thoughtful questions about how things work.',
+      challengingAreas: 'Sarah sometimes finds reading comprehension challenging and can get frustrated with tasks that require sustained attention. She benefits from visual aids and hands-on learning.',
+      learningApproach: 'Sarah learns best through visual and kinesthetic methods. She enjoys interactive activities, experiments, and learning through play. She needs movement breaks and variety in activities.',
+      previousEducationalExperience: 'Sarah attended a traditional preschool and is currently in a conventional elementary school. She has experienced both structured learning and some Montessori-inspired activities at home.',
+      covidLearningExperience: 'During COVID, Sarah adapted well to online learning initially, but missed social interaction with peers. We supplemented with educational apps and hands-on activities at home.',
+      supportiveLearningEnvironment: 'A supportive learning environment includes a quiet space for focused work, access to various learning materials, encouragement to ask questions, and recognition of individual learning styles.',
+      responseToFrustration: 'When frustrated, Sarah initially shows signs of withdrawal or tears, but with support, she learns to express her feelings and work through challenges step by step.',
+      peerInteraction: 'Sarah is generally social and enjoys group activities. She can be shy initially but warms up quickly. She shows empathy towards others and enjoys collaborative projects.',
+      emotionalBehavioralConcerns: 'Sarah sometimes experiences anxiety with new situations and can be perfectionistic. We are working on building her confidence and teaching her that mistakes are part of learning.',
+      seekingHelp: 'Sarah is learning to ask for help when needed. She sometimes tries to solve problems independently first, which is good, but we encourage her to seek support when appropriate.',
+      educationalHopesGoals: 'We hope Sarah develops critical thinking skills, creativity, confidence, and a love for learning. We want her to be prepared for future challenges while maintaining her natural curiosity.',
+      creativityMovementEmotionalRole: 'We believe creativity, movement, and emotional development are essential. Children learn better when they can express themselves creatively, move their bodies, and understand their emotions.',
+      parentingStyle: 'We practice authoritative parenting - setting clear expectations while being responsive to Sarah\'s needs. We encourage independence while providing guidance and support.',
+      technologyConcerns: 'We are concerned about excessive screen time and the potential for technology to replace hands-on learning. We want technology to enhance rather than replace traditional learning methods.',
+      applicationNumber: 'APP-2024-001',
+      loggedToSystemDate: '2024-01-20',
+      loggedBy: 'Emma Wilson'
+    }
+  })
+
+  console.log('📋 Parent Guardian Questionnaire created:', parentGuardianQuestionnaire.id)
 }
 
 main()

@@ -4,6 +4,91 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { apiService } from "@/app/utils";
 
+// Stage 3 Dropdown Component
+function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: { 
+  applicationId: string; 
+  isCompleted: boolean; 
+  stageTitle: string; 
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
+
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+  const forms = [
+    {
+      name: "Parent/Guardian Form",
+      url: `${baseUrl}/admin/applications/${applicationId}/parent-guardian-form`,
+      color: "blue"
+    },
+    {
+      name: "Caregiver Form", 
+      url: `${baseUrl}/admin/applications/${applicationId}/caregiver-form`,
+      color: "green"
+    },
+    {
+      name: "Outsider Form",
+      url: `${baseUrl}/admin/applications/${applicationId}/outsider-form`,
+      color: "purple"
+    }
+  ];
+
+  const copyToClipboard = async (url: string, formName: string) => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(formName);
+      setTimeout(() => setCopied(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  };
+
+  return (
+    <div className="relative">
+      <div 
+        className={`p-3 rounded-lg border cursor-pointer ${isCompleted ? 'bg-green-50 border-green-200' : 'bg-slate-50 border-slate-200'} hover:opacity-95`}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <div className="text-sm font-medium text-slate-900">{stageTitle}</div>
+        <div className="text-xs text-slate-600 flex items-center justify-between">
+          <span>{isCompleted ? 'Completed' : 'Pending'}</span>
+          <span className="text-blue-600">▼ Forms</span>
+        </div>
+      </div>
+      
+      {isOpen && (
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-10">
+          <div className="p-2">
+            <div className="text-xs font-medium text-slate-700 mb-2 px-2">Share Forms:</div>
+            {forms.map((form, index) => (
+              <div key={index} className="flex items-center justify-between p-2 hover:bg-slate-50 rounded">
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full bg-${form.color}-500`}></div>
+                  <span className="text-sm text-slate-700">{form.name}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => copyToClipboard(form.url, form.name)}
+                    className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                  >
+                    {copied === form.name ? 'Copied!' : 'Copy'}
+                  </button>
+                  <Link
+                    href={form.url}
+                    className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200"
+                    target="_blank"
+                  >
+                    Open
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 type AppDetail = {
   id: string;
   parentFullName: string;
@@ -84,6 +169,19 @@ export default function AdminApplicationDetailPage() {
               2: `/admin/applications/${data.id}/screening-call`,
             };
             const href = hrefMap[stageNumber];
+            
+            // Special handling for stage 3 with dropdown
+            if (stageNumber === 3) {
+              return (
+                <Stage3Dropdown 
+                  key={idx} 
+                  applicationId={data.id} 
+                  isCompleted={stageNumber <= data.currentStage}
+                  stageTitle={stageTitles[idx]}
+                />
+              );
+            }
+            
             const inner = (
               <div className={`p-3 rounded-lg border ${stageNumber <= data.currentStage ? 'bg-green-50 border-green-200' : 'bg-slate-50 border-slate-200'}`}>
                 <div className="text-sm font-medium text-slate-900">{stageTitles[idx] ?? `Form ${stageNumber}`}</div>

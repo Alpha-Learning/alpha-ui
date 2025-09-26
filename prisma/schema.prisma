@@ -86,6 +86,9 @@ model Application {
   userId Int?
   user   User? @relation(fields: [userId], references: [id], onDelete: SetNull)
   screeningCall ScreeningCall?
+  parentGuardianQuestionnaire ParentGuardianQuestionnaire?
+  caregiverQuestionnaire CaregiverQuestionnaire?
+  outsiderQuestionnaire OutsiderQuestionnaire?
 
   @@map("applications")
 }
@@ -157,4 +160,140 @@ model ScreeningCall {
   application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   @@map("screening_calls")
+}
+
+// Parent Guardian Questionnaire model
+model ParentGuardianQuestionnaire {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // General Information
+  fullName        String
+  childName       String
+  date            DateTime
+
+  // Family Environment & Routine
+  typicalWeekday      String
+  screenTimeHours     String
+  homeActivities      String
+
+  // Cultural Background
+  culturalBackground  String
+
+  // Rules and Discipline
+  rulesDisciplineApproach String
+  supportWhenStruggling   String
+
+  // Learning and Development
+  strengthsInterests           String
+  challengingAreas             String
+  learningApproach             String
+  previousEducationalExperience String
+
+  // COVID Learning Experience
+  covidLearningExperience      String
+  supportiveLearningEnvironment String
+
+  // Emotional and Social Awareness
+  responseToFrustration        String
+  peerInteraction              String
+  emotionalBehavioralConcerns  String
+  seekingHelp                  String
+
+  // Educational Philosophy
+  educationalHopesGoals                String
+  creativityMovementEmotionalRole      String
+  parentingStyle                        String
+  technologyConcerns                   String
+
+  // Office Use Only
+  applicationNumber     String?
+  loggedToSystemDate   String?
+  loggedBy             String?
+
+  // Relations
+  applicationId String  @unique
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("parent_guardian_questionnaires")
+}
+
+// Caregiver Questionnaire model
+model CaregiverQuestionnaire {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // General Information
+  fullName        String
+  childName       String
+  date            DateTime
+
+  // Daily Care Context
+  careDuration    String
+  regularActivities String
+  behaviorWithoutParent String
+
+  // Learning and Play Behaviour
+  toysGamesTasksEnjoyed String
+  preferences String
+  responseToDifficulties String
+  engagementWithChosenActivity String
+  engagementWithAssignedActivity String
+
+  // Social & Emotional Response
+  interactionWithChildren String
+  seekingHelpComfort String
+  emotionalRegulationStrategies String
+  emotionalStrengthsVulnerabilities String
+
+  // Office Use Only
+  applicationNumber     String?
+  loggedToSystemDate   String?
+  loggedBy             String?
+
+  // Relations
+  applicationId String  @unique
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("caregiver_questionnaires")
+}
+
+// Outsider Questionnaire model
+model OutsiderQuestionnaire {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // General Information
+  fullName        String
+  childName       String
+  date            DateTime
+
+  // Relationship Context
+  relationshipToChild String
+  interactionContext String
+
+  // Learning Traits & Emotional Presentation
+  learningTendenciesCuriosity String
+  emotionalTraits String
+  adaptationToChanges String
+
+  // Social Behaviour & Communication
+  communicationSkills String
+  groupBehavior String
+  concernsNotes String
+  emotionalStrengthsVulnerabilities String
+
+  // Office Use Only
+  applicationNumber     String?
+  loggedToSystemDate   String?
+  loggedBy             String?
+
+  // Relations
+  applicationId String  @unique
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("outsider_questionnaires")
 }
