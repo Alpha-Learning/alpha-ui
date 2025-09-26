@@ -90,6 +90,7 @@ model Application {
   caregiverQuestionnaire CaregiverQuestionnaire?
   outsiderQuestionnaire OutsiderQuestionnaire?
   facilityWalkthroughChecklist FacilityWalkthroughChecklist?
+  initialObservationForm InitialObservationForm?
 
   @@map("applications")
 }
@@ -336,4 +337,99 @@ model FacilityWalkthroughChecklist {
   application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   @@map("facility_walkthrough_checklists")
+}
+
+// Initial Observation Form model
+model InitialObservationForm {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Child Information
+  fullName String
+  age      String
+
+  // Zone-Based Engagement Grid
+  zoneATimeSpent String
+  zoneASelfDirected String
+  zoneAObservations String
+  zoneAEngagementLevel String
+  zoneAKeyBehavioursNotes String
+
+  zoneBTimeSpent String
+  zoneBSelfDirected String
+  zoneBObservations String
+  zoneBEngagementLevel String
+  zoneBKeyBehavioursNotes String
+
+  zoneCTimeSpent String
+  zoneCSelfDirected String
+  zoneCObservations String
+  zoneCEngagementLevel String
+  zoneCKeyBehavioursNotes String
+
+  zoneDTimeSpent String
+  zoneDSelfDirected String
+  zoneDObservations String
+  zoneDEngagementLevel String
+  zoneDKeyBehavioursNotes String
+
+  // Meta Learning Skill Indicators
+  selfRegulationObserved String
+  selfRegulationBehaviourNotes String
+  curiosityObserved String
+  curiosityBehaviourNotes String
+  socialEngagementObserved String
+  socialEngagementBehaviourNotes String
+  emotionalRegulationObserved String
+  emotionalRegulationBehaviourNotes String
+  confidenceAutonomyObserved String
+  confidenceAutonomyBehaviourNotes String
+
+  // Learning Preference & Intelligence Summary
+  linguisticEvidence String
+  linguisticSupportingObservation String
+  logicalMathematicalEvidence String
+  logicalMathematicalSupportingObservation String
+  spatialEvidence String
+  spatialSupportingObservation String
+  bodilyKinestheticEvidence String
+  bodilyKinestheticSupportingObservation String
+  musicalEvidence String
+  musicalSupportingObservation String
+  interpersonalEvidence String
+  interpersonalSupportingObservation String
+  intrapersonalEvidence String
+  intrapersonalSupportingObservation String
+  naturalisticEvidence String
+  naturalisticSupportingObservation String
+
+  // Parent-Child Dynamic Snapshot
+  parentProximity String
+  parentInterventionLevel String
+  parentInterventionStyle String
+  childIndependenceLevel String
+  childEmotionalPresentationWithParent String
+  childIndependenceWhenParentEngaged String
+  emotionalRegulationWithParentPresent String
+
+  // Examiner Summary (Qualitative)
+  mostEngagedZone String
+  dominantObservedIntelligences String
+  initialLearningStyleImpressions String
+  earlyFlagsNeedsFollowUp String
+  selfDirectedVsSeekingGuidance String
+  flagIndicators String
+  additionalNotesObservations String
+
+  // Office Use Only
+  applicationNumber     String?
+  loggedToSystemDate   String?
+  loggedBy             String?
+
+  // Relations
+  applicationId String  @unique
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("initial_observation_forms")
 }
