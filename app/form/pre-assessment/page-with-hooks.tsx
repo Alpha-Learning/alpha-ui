@@ -7,7 +7,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, Input } from "@/app/components/forms/FormField";
 import { useApiMutation } from "@/app/hooks/useApi";
-import { apiService } from "@/app/services/api";
+import { apiService } from "@/app/utils/apiService";
 
 const schema = z.object({
   // Parent/Guardian
@@ -76,7 +76,10 @@ function PreAssessmentInnerWithHooks() {
     loading: isSubmitting, 
     error: submitError,
     data: submitResult 
-  } = useApiMutation((data: FormValues) => apiService.submitPreAssessment(data));
+  } = useApiMutation((data?: FormValues) => {
+    if (!data) throw new Error('Form data is required');
+    return apiService.post("/api/application", data);
+  });
 
   useEffect(() => {
     if (emailFromQuery) setValue("parentEmail", emailFromQuery);

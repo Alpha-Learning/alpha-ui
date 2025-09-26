@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
 import { verifyToken } from "@/app/lib/auth";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const auth = req.headers.get('authorization');
     if (!auth?.startsWith('Bearer ')) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
@@ -10,7 +10,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     const user = verifyToken(token);
     if (!user || user.role !== 'admin') return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
 
-    const id = params.id;
+    const { id } = await params;
     const app = await prisma.application.findUnique({ where: { id } });
     if (!app) return NextResponse.json({ success: false, message: 'Not found' }, { status: 404 });
 
