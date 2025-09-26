@@ -15,10 +15,10 @@ const schema = z.object({
   // Parent/Guardian Information
   parentFullName: z.string().min(1, "Parent full name is required"),
   parentEmail: z.string().email("Invalid email format"),
-  parentPhone: z.string().optional(),
-  relationToChild: z.string().optional(),
-  parentCity: z.string().optional(),
-  parentEthnicity: z.string().optional(),
+  parentPhone: z.string().min(1, "Phone number is required"),
+  relationToChild: z.string().min(1, "Relation to child is required"),
+  parentCity: z.string().min(1, "City/Location is required"),
+  parentEthnicity: z.string().min(1, "Ethnicity is required"),
 
   // Child Information
   childFullName: z.string().min(1, "Child full name is required"),
@@ -32,9 +32,9 @@ const schema = z.object({
   childSchoolTypeOther: z.string().optional(),
   childDiagnosedNeeds: z.string().optional(),
 
-  // Caregiver/Nanny Information (optional)
-  caregiverFullName: z.string().optional(),
-  caregiverPhone: z.string().optional(),
+  // Caregiver/Nanny Information (required as per request)
+  caregiverFullName: z.string().min(1, "Caregiver full name is required"),
+  caregiverPhone: z.string().min(1, "Caregiver phone number is required"),
 
   // Parent Questions
   qExcitesMost: z.string().min(1, "This field is required"),
@@ -122,7 +122,7 @@ function PreAssessmentInner() {
   };
 
   return (
-    <div className="relative w-full h-screen bg-white slide-in-right p-2">
+    <div className="relative w-full h-screen overflow-hidden bg-white slide-in-right p-2">
 
     <div
       className="relative rounded-xl overflow-hidden bg-gradient-to-r from-[#C9D0D5] to-[#A7CFE6]"
@@ -131,15 +131,15 @@ function PreAssessmentInner() {
       <div className="absolute left-0 bottom-0 z-10 w-[65vw] sm:w-[55vw] md:w-[50vw] lg:w-[45vw] xl:w-[40vw] h-[30vh] sm:h-[35vh] md:h-[38vh] lg:h-[40vh] xl:h-[42vh] bg-white angle-corner" />
 
       <div className="relative z-20 h-screen flex items-center justify-center p-1 sm:p-2 md:p-3 lg:p-2">
-        <div className="w-full max-w-6xl h-[90vh] bg-white rounded-2xl shadow-sm ring-1 ring-black/5 flex flex-col overflow-hidden">
-          <div className="p-6 sm:p-8 border-b flex-shrink-0">
+        <div className="w-full h-[90vh] rounded-2xl  flex flex-col overflow-hidden">
+          <div className="px-4 border-b flex-shrink-0">
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">Pre-Assessment Phase Form</h1>
             <p className="text-slate-600 mt-2">Please complete the following form to help us better understand your child and family's needs.</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex-1 flex flex-col overflow-hidden">
             {/* Single scrollable content area */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+            <div className="flex-1 overflow-y-auto scroll-invisible p-4 sm:p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Left column */}
                 <div>
@@ -249,13 +249,13 @@ function PreAssessmentInner() {
                   <h2 className="text-2xl font-bold text-slate-900 mb-4">Parent Questions</h2>
                   <div className="grid grid-cols-1 gap-4">
                     <FormField label="What excites you most about this school?" htmlFor="qExcitesMost" error={errors.qExcitesMost}>
-                      <textarea id="qExcitesMost" rows={4} className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600" {...register("qExcitesMost")} />
+                      <textarea id="qExcitesMost" rows={4} className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600" {...register("qExcitesMost")} />
                     </FormField>
                     <FormField label="What makes you consider a non-traditional education model?" htmlFor="qNonTraditionalReason" error={errors.qNonTraditionalReason}>
-                      <textarea id="qNonTraditionalReason" rows={4} className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600" {...register("qNonTraditionalReason")} />
+                      <textarea id="qNonTraditionalReason" rows={4} className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600" {...register("qNonTraditionalReason")} />
                     </FormField>
                     <FormField label="What is your biggest hope for your child's future?" htmlFor="qBiggestHope" error={errors.qBiggestHope}>
-                      <textarea id="qBiggestHope" rows={4} className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600" {...register("qBiggestHope")} />
+                      <textarea id="qBiggestHope" rows={4} className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600" {...register("qBiggestHope")} />
                     </FormField>
                   </div>
 
@@ -295,7 +295,9 @@ function PreAssessmentInner() {
                   <h2 className="text-2xl font-bold text-slate-900 mb-2">Consent</h2>
                   <div className="space-y-2 text-sm text-slate-700">
                     <label className="flex items-start gap-3"><input type="checkbox" {...register("consentContact")} /> <span>I agree to be contacted by a member of the admissions team</span></label>
+                    {errors.consentContact && <p className="text-xs text-red-600">{errors.consentContact.message}</p>}
                     <label className="flex items-start gap-3"><input type="checkbox" {...register("consentUpdates")} /> <span>I give permission to receive updates about the school</span></label>
+                    {errors.consentUpdates && <p className="text-xs text-red-600">{errors.consentUpdates.message}</p>}
                     <label className="flex items-start gap-3"><input type="checkbox" {...register("consentBiometric")} /> <span>I consent to the use of biometric data for learning optimization (optional)</span></label>
                   </div>
                 </section>
@@ -303,7 +305,7 @@ function PreAssessmentInner() {
             </div>
 
             {/* Bottom fixed submit bar inside container */}
-            <div className="border-t bg-white p-4 sm:p-6 flex-shrink-0">
+            <div className="p-4 sm:p-6 flex-shrink-0">
               <div className="flex justify-end">
                 <button
                   type="submit"

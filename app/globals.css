@@ -273,3 +273,12 @@ body {
     75% 20%, 80% 10%, 90% 5%, 100% 0%
   );
 }
+
+/* Hide scrollbar while keeping scroll functionality */
+.scroll-invisible {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;    /* Firefox */
+}
+.scroll-invisible::-webkit-scrollbar {
+  display: none;            /* Chrome, Safari, Opera */
+}

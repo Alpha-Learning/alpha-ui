@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { apiService } from "@/app/utils";
 import Modal from "@/app/components/Modal";
 import DataTable, { TableColumn } from "react-data-table-component";
+import Link from "next/link";
 
 type AdminApp = {
   id: string;
@@ -64,6 +65,15 @@ export default function AdminApplicationsPage() {
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
+    },
+    {
+      name: "View",
+      cell: (row) => (
+        <Link className="text-blue-600 hover:underline" href={`/admin/applications/${row.id}`}>
+          Open
+        </Link>
+      ),
+      ignoreRowClick: true,
     },
   ], []);
 

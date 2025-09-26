@@ -45,16 +45,16 @@ export default function AdminApplicationDetailPage() {
 
   const pct = Math.round((data.currentStage / data.totalStages) * 100);
   const stageTitles = [
-    "Application form",
-    "Screening call and flow script",
-    "Parent/Guardian/Outsider question",
-    "Facility walkthrough checklist",
-    "Initial observation form",
-    "Guided observation procedures",
-    "KS1 interview / KS2 interview question",
-    "Examiner Form: Peer Dynamic Observation",
-    "Parent-Child Dynamic Observation",
-    "Understanding The Learning Comprehensive Profile Sheet",
+    "1. Application form",
+    "2. Screening call and flow script",
+    "3. Parent/Guardian/Outsider question",
+    "4. Facility walkthrough checklist",
+    "5. Initial observation form",
+    "6. Guided observation procedures",
+    "7. KS1 interview / KS2 interview question",
+    "8. Examiner Form: Peer Dynamic Observation",
+    "9. Parent-Child Dynamic Observation",
+    "10. Understanding The Learning Comprehensive Profile Sheet",
   ];
 
   return (

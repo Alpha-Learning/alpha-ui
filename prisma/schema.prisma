@@ -85,6 +85,7 @@ model Application {
   // Relations
   userId Int?
   user   User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  screeningCall ScreeningCall?
 
   @@map("applications")
 }
@@ -103,4 +104,57 @@ model UserRequest {
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_requests")
+}
+
+// Screening Call model for storing screening call data
+model ScreeningCall {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // General Information
+  fullName        String
+  childName       String
+  date            DateTime
+  callerName      String
+  crmLeadTag      String? // Hot, Warm, Cold
+
+  // Introduction
+  recordingPermission String? // Yes, No
+  introductionNotes   String?
+
+  overviewNotes String?
+
+  // Parent Warm-Up Questions
+  applicationReason     String?
+  currentSchoolIssues   String?
+  techResponseAtHome     String?
+  parentWarmUpNotes     String?
+
+  // Fit Clarification
+  flexibleModelOpenness String?
+  childFreeTime         String?
+  adaptiveTechComfort   String?
+  fitClarificationNotes String?
+
+  // General Notes
+  generalNotes String?
+
+  // Parent Reactions
+  parentReactionsNotes String?
+
+  // Next Steps
+  comprehensiveQuestionnaires Boolean @default(false)
+  guidebookInfo               Boolean @default(false)
+  walkthroughDate             String?
+  assessmentInvite            String?
+  additionalNotes             String?
+
+  // Relations
+  applicationId String  @unique
+  loggedToSystemDate String?
+  loggedBy String?
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("screening_calls")
 }

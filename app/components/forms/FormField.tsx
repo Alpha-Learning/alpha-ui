@@ -30,10 +30,35 @@ export function Input({ className = "", error, ...props }: InputProps) {
   return (
     <input
       {...props}
-      className={`w-full rounded-xl border px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition ${
+      className={`w-full rounded-xl border px-4 py-3 bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition ${
         error ? "border-red-300" : "border-slate-300"
       } ${className}`}
     />
+  );
+}
+
+
+type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & { error?: boolean };
+
+export function Textarea({ className = "", error, ...props }: TextareaProps) {
+  return (
+    <textarea
+      {...props}
+      className={`w-full rounded-xl border px-4 py-3 bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition ${
+        error ? "border-red-300" : "border-slate-300"
+      } ${className}`}
+    />
+  );
+}
+
+type FormSectionHeaderProps = { title: string; bgClassName?: string; className?: string };
+
+export function FormSectionHeader({ title, bgClassName = "bg-transparent", className = "" }: FormSectionHeaderProps) {
+  const hasBackground = !bgClassName.includes("transparent");
+  return (
+    <div className={`text-sm font-semibold px-3 py-2 rounded ${bgClassName} ${hasBackground ? "text-white" : "text-slate-900"} ${className}`}>
+      {title}
+    </div>
   );
 }
 
