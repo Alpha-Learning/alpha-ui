@@ -31,6 +31,7 @@ export default function AdminApplicationsPage() {
   const [total, setTotal] = useState(0);
   const limit = 10;
   const [sheet, setSheet] = useState<{ id: string; open: boolean }>({ id: "", open: false });
+  const [saving, setSaving] = useState(false);
 
   const filtered = useMemo(() => {
     // When doing API-side search/filtering, just show items as-is
@@ -47,9 +48,12 @@ export default function AdminApplicationsPage() {
       name: "Status",
       cell: (row) => (
         <button
-          onClick={() => openBottomSheet(row.id, row.status, row.adminComment)}
-          className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusClasses(row.status)} cursor-pointer`}
-          title="Change status"
+          onClick={() => row.status !== 'completed' && openBottomSheet(row.id, row.status, row.adminComment)}
+          disabled={row.status === 'completed'}
+          className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusClasses(row.status)} ${
+            row.status === 'completed' ? 'cursor-not-allowed' : 'cursor-pointer'
+          }`}
+          title={row.status === 'completed' ? 'Status cannot be changed' : 'Change status'}
         >
           {row.status}
         </button>
@@ -60,16 +64,32 @@ export default function AdminApplicationsPage() {
     {
       name: "Actions",
       cell: (row) => (
-        <button onClick={() => openModal(row.id, row.status, row.adminComment)} className="px-2 py-1 rounded-md bg-blue-600 text-white cursor-pointer">Change</button>
+        <button 
+          onClick={() => openModal(row.id, row.status, row.adminComment)} 
+          disabled={row.status === 'completed'}
+          className={`px-2 py-1 rounded-md text-white cursor-pointer ${
+            row.status === 'completed' 
+              ? 'bg-gray-400 cursor-not-allowed' 
+              : 'bg-blue-600 hover:bg-blue-700'
+          }`}
+        >
+          {row.status === 'completed' ? 'Completed' : 'Change'}
+        </button>
       ),
       ignoreRowClick: true,
     },
     {
       name: "View",
       cell: (row) => (
-        <Link className="text-blue-600 hover:underline" href={`/admin/applications/${row.id}`}>
-          Open
-        </Link>
+        row.status === 'completed' ? (
+          <Link className="text-blue-600 hover:underline" href={`/admin/applications/${row.id}`}>
+            Open
+          </Link>
+        ) : (
+          <span className="text-gray-400 cursor-not-allowed" title="View available only for completed applications">
+            -
+          </span>
+        )
       ),
       ignoreRowClick: true,
     },
@@ -103,12 +123,14 @@ export default function AdminApplicationsPage() {
   useEffect(() => { load(); }, [statusFilter, search, pageIndex]);
 
   const openModal = (id: string, currentStatus: string, currentComment?: string | null) => {
+    console.log("Opening modal for:", { id, currentStatus, currentComment });
     setModal({ id, open: true });
     setNewStatus(currentStatus);
     setComment(currentComment || "");
   };
 
   const openBottomSheet = (id: string, currentStatus: string, currentComment?: string | null) => {
+    console.log("Opening bottom sheet for:", { id, currentStatus, currentComment });
     setSheet({ id, open: true });
     setNewStatus(currentStatus);
     setComment(currentComment || "");
@@ -116,8 +138,15 @@ export default function AdminApplicationsPage() {
 
   const submitStatus = async () => {
     try {
-      const payload: any = { id: modal.id || sheet.id, status: newStatus };
-      if (newStatus === "rejected") payload.adminComment = comment.trim();
+      setSaving(true);
+      const payload: any = { 
+        id: modal.id || sheet.id, 
+        status: newStatus,
+        adminComment: comment.trim() || undefined
+      };
+      
+      console.log("Sending payload:", payload);
+      
       const res = await apiService.post(`/api/admin/applications/status`, payload);
       if (res.success) {
         setModal({ id: "", open: false });
@@ -128,7 +157,10 @@ export default function AdminApplicationsPage() {
         alert(res.message || "Failed to update");
       }
     } catch (e: any) {
+      console.error("Status update error:", e);
       alert(e?.message || "Failed to update");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -146,7 +178,7 @@ export default function AdminApplicationsPage() {
           />
           <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="border border-slate-300 rounded-lg px-3 py-2 text-slate-900">
             <option value="">All</option>
-            {['submitted','processing','completed','rejected'].map(s => (
+            {['submitted','completed','rejected'].map(s => (
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
@@ -182,17 +214,38 @@ export default function AdminApplicationsPage() {
       {modal.open && (
         <Modal isOpen={modal.open} onClose={() => setModal({ id: '', open: false })} title="Update Status">
           <div className="p-5 space-y-4 text-slate-900">
-            <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)} className="w-full border rounded-lg px-3 py-2">
-              {['completed','rejected'].map(s => (
-                <option key={s} value={s}>{s=="completed"?"Accept":"Reject"}</option>
+            <select value={newStatus} onChange={(e) => {
+              console.log("Modal status changed to:", e.target.value);
+              setNewStatus(e.target.value);
+            }} className="w-full border rounded-lg px-3 py-2">
+              {['submitted','completed','rejected'].map(s => (
+                <option key={s} value={s}>{s === "completed" ? "Accept" : s === "rejected" ? "Reject" : s}</option>
               ))}
             </select>
             {newStatus === 'rejected' && (
               <textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Add rejection comment" rows={4} className="w-full border rounded-lg px-3 py-2" />
             )}
             <div className="flex justify-end gap-2">
-              <button onClick={() => setModal({ id: '', open: false })} className="px-3 py-2 rounded-lg border">Cancel</button>
-              <button onClick={submitStatus} className="px-3 py-2 rounded-lg bg-blue-600 text-white cursor-pointer">Save</button>
+              <button 
+                onClick={() => setModal({ id: '', open: false })} 
+                disabled={saving}
+                className="px-3 py-2 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={submitStatus} 
+                disabled={saving}
+                className="px-3 py-2 rounded-lg bg-blue-600 text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                {saving && (
+                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                )}
+                {saving ? 'Saving...' : 'Save'}
+              </button>
             </div>
           </div>
         </Modal>
@@ -204,8 +257,11 @@ export default function AdminApplicationsPage() {
           <div className="absolute inset-x-0 bottom-0 bg-white rounded-t-2xl p-5 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="text-slate-900 text-lg font-semibold mb-3">Update Status</div>
             <div className="space-y-4">
-              <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)} className="w-full border rounded-lg px-3 py-2 text-slate-900">
-                {['submitted','processing','completed','rejected'].map(s => (
+              <select value={newStatus} onChange={(e) => {
+                console.log("Bottom sheet status changed to:", e.target.value);
+                setNewStatus(e.target.value);
+              }} className="w-full border rounded-lg px-3 py-2 text-slate-900">
+                {['submitted','completed','rejected'].map(s => (
                   <option key={s} value={s}>{s}</option>
                 ))}
               </select>
@@ -213,8 +269,26 @@ export default function AdminApplicationsPage() {
                 <textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Add rejection comment" rows={4} className="w-full border rounded-lg px-3 py-2 text-slate-900" />
               )}
               <div className="flex justify-end gap-2">
-                <button onClick={() => setSheet({ id: '', open: false })} className="px-3 py-2 rounded-lg border">Cancel</button>
-                <button onClick={submitStatus} className="px-3 py-2 rounded-lg bg-blue-600 text-white cursor-pointer">Save</button>
+                <button 
+                  onClick={() => setSheet({ id: '', open: false })} 
+                  disabled={saving}
+                  className="px-3 py-2 rounded-lg border disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={submitStatus} 
+                  disabled={saving}
+                  className="px-3 py-2 rounded-lg bg-blue-600 text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {saving && (
+                    <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  )}
+                  {saving ? 'Saving...' : 'Save'}
+                </button>
               </div>
             </div>
           </div>

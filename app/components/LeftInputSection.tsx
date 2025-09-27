@@ -39,7 +39,7 @@ export default function LeftInputSection({
         className="absolute inset-0 bg-black/40"
         onClick={() => setDrawerOpen(false)}
       />
-      <div className="absolute left-0 top-0 h-full w-[90vw] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] xl:w-[50vw] max-w-[420px] m-1 sm:m-2 md:m-3 lg:m-4 mt-2 sm:mt-[14px] md:mt-4 lg:mt-6 pb-4 sm:pb-7">
+      <div className="absolute left-0 top-0 h-full w-[90vw] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] xl:w-[50vw] max-w-[420px] m-1 sm:m-2 md:m-3 lg:m-2 mt-2 sm:mt-[14px] md:mt-4 lg:mt-4 pb-4 sm:pb-7">
         <div className="h-full bg-white rounded-2xl sm:rounded-3xl shadow-xl slide-in-left flex flex-col">
           {/* Header */}
           <div className="p-3 sm:p-4 md:p-5 lg:p-6 flex items-center justify-between gap-2 sm:gap-3">
@@ -51,7 +51,7 @@ export default function LeftInputSection({
               className="px-2 py-1 text-gray-400 hover:text-gray-600 cursor-pointer text-lg font-bold"
               
             > */}
-             <RiCloseFill className="text-gray-600 cursor-pointer w-5 h-5 sm:w-6 sm:h-6" onClick={() => setDrawerOpen(false)} />
+             <RiCloseFill className="text-gray-600 m cursor-pointer w-5 h-5 sm:w-6 sm:h-6" onClick={() => setDrawerOpen(false)} />
             {/* </button> */}
             {/* Decorative element */}
             <div
@@ -63,7 +63,7 @@ export default function LeftInputSection({
                   78% 18%, 84% 6%, 92% 3%, 100% 0%
                 )`,
               }}
-              className="w-[12px] sm:w-[16px] h-8 sm:h-33 rotate-[132deg] absolute -top-5 sm:-top-7 right-6 sm:right-9 hidden md:flex bg-[#9A9A9A]"
+              className=" w-[14px] sm:w-[16px] h-8 sm:h-39 rotate-[132deg] absolute -top-5 sm:-top-8 right-7 sm:right-11 hidden xl:flex bg-[#9A9A9A]"
             />
           </div>
 

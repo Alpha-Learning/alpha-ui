@@ -5,7 +5,7 @@ import { z } from "zod";
 
 const schema = z.object({
   id: z.string().min(1),
-  status: z.enum(["submitted", "processing", "completed", "rejected"]),
+  status: z.enum(["submitted", "completed", "rejected"]),
   adminComment: z.string().optional(),
 });
 
@@ -22,16 +22,23 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
+    console.log("Received payload:", body);
+    
     const parsed = schema.safeParse(body);
     if (!parsed.success) {
+      console.log("Validation failed:", parsed.error.flatten().fieldErrors);
       return NextResponse.json({ success: false, message: "Validation failed", errors: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
 
     const { id, status, adminComment } = parsed.data;
+    console.log("Parsed data:", { id, status, adminComment });
 
     const updated = await prisma.application.update({
       where: { id },
-      data: { status, adminComment: status === "rejected" ? adminComment ?? "Rejected" : adminComment },
+      data: { 
+        status, 
+        adminComment: adminComment || (status === "rejected" ? "Rejected" : null)
+      },
       select: { id: true, status: true, adminComment: true, updatedAt: true },
     });
 
