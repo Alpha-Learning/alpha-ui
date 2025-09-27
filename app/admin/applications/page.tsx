@@ -16,6 +16,7 @@ type AdminApp = {
   childFullName: string;
   childAge?: number | null;
   childSchoolYear?: string | null;
+  isPaid?: boolean;
 };
 
 export default function AdminApplicationsPage() {
@@ -23,6 +24,7 @@ export default function AdminApplicationsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>("");
+  const [paymentFilter, setPaymentFilter] = useState<string>("");
   const [search, setSearch] = useState<string>("");
   const [modal, setModal] = useState<{ id: string; open: boolean }>({ id: "", open: false });
   const [newStatus, setNewStatus] = useState<string>("submitted");
@@ -59,6 +61,30 @@ export default function AdminApplicationsPage() {
         </button>
       ),
       sortable: true,
+    },
+    {
+      name: "Payment",
+      cell: (row) => (
+        <div className="flex items-center justify-center">
+          {row.isPaid ? (
+            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 whitespace-nowrap">
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Paid
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800 whitespace-nowrap">
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              Unpaid
+            </span>
+          )}
+        </div>
+      ),
+      width: "110px",
+      center: true,
     },
     { name: "Comment", selector: row => row.adminComment ?? "" },
     {
@@ -101,6 +127,7 @@ export default function AdminApplicationsPage() {
       setError(null);
       const params = new URLSearchParams();
       if (statusFilter) params.set('status', statusFilter);
+      if (paymentFilter) params.set('payment', paymentFilter);
       if (search.trim()) params.set('q', search.trim());
       params.set('page', String(pageIndex + 1));
       params.set('limit', String(limit));
@@ -120,7 +147,7 @@ export default function AdminApplicationsPage() {
     }
   };
 
-  useEffect(() => { load(); }, [statusFilter, search, pageIndex]);
+  useEffect(() => { load(); }, [statusFilter, paymentFilter, search, pageIndex]);
 
   const openModal = (id: string, currentStatus: string, currentComment?: string | null) => {
     console.log("Opening modal for:", { id, currentStatus, currentComment });
@@ -177,10 +204,15 @@ export default function AdminApplicationsPage() {
             className="w-56 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 placeholder:text-slate-400"
           />
           <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="border border-slate-300 rounded-lg px-3 py-2 text-slate-900">
-            <option value="">All</option>
+            <option value="">All Status</option>
             {['submitted','completed','rejected'].map(s => (
               <option key={s} value={s}>{s}</option>
             ))}
+          </select>
+          <select value={paymentFilter} onChange={(e) => setPaymentFilter(e.target.value)} className="border border-slate-300 rounded-lg px-3 py-2 text-slate-900">
+            <option value="">All Payments</option>
+            <option value="paid">Paid</option>
+            <option value="unpaid">Unpaid</option>
           </select>
         </div>
       </div>
