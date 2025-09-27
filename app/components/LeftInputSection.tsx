@@ -51,7 +51,7 @@ export default function LeftInputSection({
               className="px-2 py-1 text-gray-400 hover:text-gray-600 cursor-pointer text-lg font-bold"
               
             > */}
-             <RiCloseFill className="text-gray-600 m cursor-pointer w-5 h-5 sm:w-6 sm:h-6" onClick={() => setDrawerOpen(false)} />
+             <RiCloseFill className="text-gray-600 cursor-pointer w-5 h-5 sm:w-6 sm:h-6" onClick={() => setDrawerOpen(false)} />
             {/* </button> */}
             {/* Decorative element */}
             <div

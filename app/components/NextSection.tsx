@@ -128,8 +128,8 @@ export default function NextSection() {
             className={`flex  rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[28px]  absolute inset-0 w-full h-full object-cover sm:object-cover transition-opacity duration-500 ${
               ready ? "opacity-100" : "opacity-30"
             }`}
-            src="/videos/original-e8f92507edede186d6fa91bf0aec6760.mp4"
-            // src="/videos/animated.mp4"
+            // src="/videos/original-e8f92507edede186d6fa91bf0aec6760.mp4"
+            src="/videos/animated.mp4"
             autoPlay
             muted
             loop
