@@ -32,7 +32,7 @@ export default function Content({borderStep}: {borderStep: number}) {
               "At Alphera Academy, our waiting list is not just a line, it is a pathway into our learning community. Families who join it are showing their commitment into securing a place in a forward thinking environment where every seat is an opportunity to grow, learn, innovate and thrive.",
           },
         ].map((item, i) => (
-          <div key={i} className="bg-white/40 rounded-tr-4xl backdrop-sepia-20  relative backdrop-blur-xl min-h-[160px] sm:min-h-[180px] md:min-h-[200px] lg:min-h-[220px] xl:min-h-[260px] w-full max-w-sm mx-auto sm:mx-0">
+          <div key={i} className="bg-white/30 rounded-tr-4xl backdrop-sepia-20  relative backdrop-blur-[3px] min-h-[160px] sm:min-h-[180px] md:min-h-[200px] lg:min-h-[220px] xl:min-h-[260px] w-full max-w-sm mx-auto sm:mx-0">
             {/* Connected border overlay that reveals sequentially */}
             <div
               className={`absolute inset-0 z-10 pointer-events-none transition-all duration-700 ease-out rounded-tr-2xl md:rounded-tr-4xl border-t border-r ${

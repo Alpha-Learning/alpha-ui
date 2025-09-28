@@ -1,13 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import SectionHeader from "./SectionHeader";
 import LeftInputSection from "./LeftInputSection";
 import Content from "./Content";
 
 export default function NextSection() {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [ready, setReady] = useState(true); // Start as ready to show video immediately
   const [showHeader, setShowHeader] = useState(false);
   const [showInitialContent, setShowInitialContent] = useState(false);
   const [showFinalContent, setShowFinalContent] = useState(false);
@@ -18,21 +16,9 @@ export default function NextSection() {
   const [borderStep, setBorderStep] = useState(0);
   const initialExiting = showLoader && progress >= 90;
 
-  // Ensure video keeps playing infinitely
-  const ensurePlaying = () => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (v.paused) {
-      v.play().catch(() => {});
-    }
-    // Force loop to ensure infinite playback
-    v.loop = true;
-  };
-
   // Slide in and reveal content with proper timing
   useEffect(() => {
-    ensurePlaying();
-    // Show video first, then content
+    // Show content with proper timing
     const t1 = window.setTimeout(() => setShowHeader(true), 100);
     const t2 = window.setTimeout(() => setShowInitialContent(true), 800);
     const t3 = window.setTimeout(() => setShowLoader(true), 1400);
@@ -43,28 +29,14 @@ export default function NextSection() {
     };
   }, []);
 
-  // Fallback: if video readiness is slow, force reveal after 6s
+  // Fallback: force reveal after 6s if needed
   useEffect(() => {
     const fallback = window.setTimeout(() => {
       setShowHeader(true);
       setShowInitialContent(true);
       setShowLoader(true);
-      ensurePlaying();
     }, 6000);
     return () => window.clearTimeout(fallback);
-  }, []);
-
-  // Periodic check to ensure video keeps playing infinitely
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const v = videoRef.current;
-      if (v && (v.paused || v.ended)) {
-        v.currentTime = 0;
-        v.play().catch(() => {});
-      }
-    }, 1000); // Check every second
-
-    return () => clearInterval(interval);
   }, []);
 
   // Start loading progress when loader becomes visible
@@ -122,68 +94,7 @@ export default function NextSection() {
   return (
     <section className={`relative w-full h-screen bg-white slide-in-right p-0 ${drawerOpen && 'p-3'} sm:p-2`}>
       <div className={`w-full h-full p-1 sm:p-2 md:p-3 lg:p-2 push-container   ${drawerOpen ? "push-right" : ""}`}>
-        {/* <div style={{backgroundImage: "url('/image.png')",  backgroundPosition: "center"}} className="bg-cover relative w-full h-full rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[28px] overflow-hidden bg-white"> */}
-          <video
-            ref={videoRef}
-            className={`flex  rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[28px]  absolute inset-0 w-full h-full object-cover sm:object-cover transition-opacity duration-500 ${
-              ready ? "opacity-100" : "opacity-30"
-            }`}
-            // src="/videos/original-e8f92507edede186d6fa91bf0aec6760.mp4"
-            src="/videos/animated.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            controls={false}
-            onLoadStart={() => {
-              // Show video immediately when loading starts
-              setReady(true);
-            }}
-            onCanPlay={() => {
-              setReady(true);
-              ensurePlaying();
-            }}
-            onLoadedData={() => {
-              // Video data is loaded, ensure it's visible
-              setReady(true);
-            }}
-            onEnded={() => {
-              // Force restart when video ends
-              const v = videoRef.current;
-              if (v) {
-                v.currentTime = 0;
-                v.play().catch(() => {});
-              }
-            }}
-            onPause={() => {
-              // Immediately resume if paused
-              const v = videoRef.current;
-              if (v && v.paused) {
-                v.play().catch(() => {});
-              }
-            }}
-            onStalled={() => {
-              // Restart if stalled
-              const v = videoRef.current;
-              if (v) {
-                v.load();
-                v.play().catch(() => {});
-              }
-            }}
-            onError={() => {
-              // Retry on error
-              const v = videoRef.current;
-              if (v) {
-                v.load();
-                v.play().catch(() => {});
-              }
-            }}
-            onTimeUpdate={() => {
-              // Ensure it's still playing
-              ensurePlaying();
-            }}
-          />
+        <div style={{backgroundImage: "url('/bg.jpg')",  backgroundPosition: "center", backgroundSize: "cover"}} className="relative w-full h-full rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[28px] overflow-hidden bg-white">
           <div
             className={`hidden md:flex absolute left-0 bottom-0 w-[65vw] sm:w-[55vw] md:w-[50vw] lg:w-[45vw] xl:w-[40vw] rounded-md h-[30vh] sm:h-[35vh] md:h-[38vh] lg:h-[40vh] xl:h-[42vh] bg-white angle-corner ${
               showInitialContent ? "fade-in" : "opacity-0"
@@ -270,7 +181,7 @@ export default function NextSection() {
               </div>
             </div>
           )}
-        {/* </div> */}
+        </div>
       </div>
 
       {/* Left request drawer */}
