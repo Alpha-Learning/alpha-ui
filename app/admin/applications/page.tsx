@@ -107,15 +107,9 @@ export default function AdminApplicationsPage() {
     {
       name: "View",
       cell: (row) => (
-        row.status === 'completed' ? (
-          <Link className="text-blue-600 hover:underline" href={`/admin/applications/${row.id}`}>
-            Open
-          </Link>
-        ) : (
-          <span className="text-gray-400 cursor-not-allowed" title="View available only for completed applications">
-            -
-          </span>
-        )
+        <Link className="text-blue-600 hover:underline" href={`/admin/applications/${row.id}`}>
+          Open
+        </Link>
       ),
       ignoreRowClick: true,
     },
@@ -133,7 +127,6 @@ export default function AdminApplicationsPage() {
       params.set('limit', String(limit));
       const qs = params.toString() ? `?${params.toString()}` : "";
       const res = await apiService.get(`/api/admin/applications${qs}`);
-      console.log("res===========> ",res);
       if (res.success) {
         setItems(res.data.applications);
         setTotal(res.data.meta?.total ?? res.data.applications.length);

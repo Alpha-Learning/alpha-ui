@@ -30,8 +30,8 @@ export function Input({ className = "", error, ...props }: InputProps) {
   return (
     <input
       {...props}
-      className={`w-full rounded-xl border px-4 py-3 bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition ${
-        error ? "border-red-300" : "border-slate-300"
+      className={`w-full rounded-xl border px-4 py-3 bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent transition ${
+        error ? "border-red-300" : "border-slate-400"
       } ${className}`}
     />
   );
@@ -44,8 +44,8 @@ export function Textarea({ className = "", error, ...props }: TextareaProps) {
   return (
     <textarea
       {...props}
-      className={`w-full rounded-xl border px-4 py-3 bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition ${
-        error ? "border-red-300" : "border-slate-300"
+      className={`w-full rounded-xl border px-4 py-3 bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent transition ${
+        error ? "border-red-300" : "border-slate-400"
       } ${className}`}
     />
   );

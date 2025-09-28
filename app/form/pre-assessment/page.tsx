@@ -122,7 +122,7 @@ function PreAssessmentInner() {
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-white slide-in-right p-2">
+    <div className="relative w-full h-screen overflow-hidden  bg-white slide-in-right p-2">
 
     <div
       className="relative rounded-xl overflow-hidden bg-gradient-to-r from-[#C9D0D5] to-[#A7CFE6]"
@@ -148,7 +148,7 @@ function PreAssessmentInner() {
                     <h2 className="text-xl font-bold text-slate-900 mb-4">Parent/Guardian Information</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <FormField label="Full Name" htmlFor="parentFullName" error={errors.parentFullName}>
-                        <Input id="parentFullName" placeholder="Jane Doe" {...register("parentFullName")} error={!!errors.parentFullName} />
+                        <Input id="parentFullName" placeholder="Jane Doe" {...register("parentFullName")} error={!!errors.parentFullName} className="" />
                       </FormField>
                       <FormField label="Email Address" htmlFor="parentEmail" error={errors.parentEmail}>
                         <Input id="parentEmail" type="email" placeholder="you@example.com" {...register("parentEmail")} error={!!errors.parentEmail} />
@@ -249,13 +249,13 @@ function PreAssessmentInner() {
                   <h2 className="text-2xl font-bold text-slate-900 mb-4">Parent Questions</h2>
                   <div className="grid grid-cols-1 gap-4">
                     <FormField label="What excites you most about this school?" htmlFor="qExcitesMost" error={errors.qExcitesMost}>
-                      <textarea id="qExcitesMost" rows={4} className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600" {...register("qExcitesMost")} />
+                      <textarea id="qExcitesMost" rows={4} className="w-full rounded-xl border border-slate-500 px-4 py-3 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-gray-600" {...register("qExcitesMost")} />
                     </FormField>
                     <FormField label="What makes you consider a non-traditional education model?" htmlFor="qNonTraditionalReason" error={errors.qNonTraditionalReason}>
-                      <textarea id="qNonTraditionalReason" rows={4} className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600" {...register("qNonTraditionalReason")} />
+                      <textarea id="qNonTraditionalReason" rows={4} className="w-full rounded-xl border border-slate-500 px-4 py-3 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-gray-600" {...register("qNonTraditionalReason")} />
                     </FormField>
                     <FormField label="What is your biggest hope for your child's future?" htmlFor="qBiggestHope" error={errors.qBiggestHope}>
-                      <textarea id="qBiggestHope" rows={4} className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600" {...register("qBiggestHope")} />
+                      <textarea id="qBiggestHope" rows={4} className="w-full rounded-xl border border-slate-500 px-4 py-3 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-gray-600" {...register("qBiggestHope")} />
                     </FormField>
                   </div>
 

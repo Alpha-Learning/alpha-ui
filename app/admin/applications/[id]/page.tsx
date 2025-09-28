@@ -165,7 +165,7 @@ export default function AdminApplicationDetailPage() {
           {Array.from({ length: data.totalStages }, (_, i) => i).map((idx) => {
             const stageNumber = idx + 1;
             const hrefMap: Record<number, string> = {
-              1: `/admin/applications/${data.id}`,
+              1: `/admin/applications/${data.id}/initial-form`,
               2: `/admin/applications/${data.id}/screening-call`,
               4: `/admin/applications/${data.id}/facility-walkthrough-checklist`,
               5: `/admin/applications/${data.id}/initial-observation-form`,
