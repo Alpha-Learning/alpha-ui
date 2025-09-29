@@ -2,18 +2,8 @@ import React from 'react'
 
 export default function Content({borderStep}: {borderStep: number}) {
   return (
-    <div className=''>
-    {/* Left title block */}
-    {/* <div className="absolute left-4 sm:left-8 md:left-32 top-[8vh] sm:top-[12vh] md:top-[15vh] lg:top-[18vh] text-white content-return-up z-10">
-      <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight">
-        <div>Alpha</div>
-        <div>Learning</div>
-        <div>System</div>
-      </div>
-    </div> */}
-
-    {/* Bottom info panels */}
-    <div className="absolute left-0 right-0 sm:left-8 md:left-29 top-16 sm:top-20 md:top-auto lg:top-auto xl:top-auto bottom-2 sm:bottom-4 md:bottom-6 lg:bottom-8 xl:bottom-10 px-4 sm:px-6 md:px-8 lg:px-10 content-return-up overflow-y-auto scroll-invisible">
+   
+    <div className="absolute  left-0 right-0 sm:left-8 md:left-29 top-16 sm:top-20 md:top-auto lg:top-auto xl:top-auto bottom-2 sm:bottom-4 md:bottom-6 lg:bottom-8 xl:bottom-10 px-4 sm:px-6 md:px-8 lg:px-10 content-return-up overflow-y-auto scroll-invisible ">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-6">
         {[
           {
@@ -32,7 +22,9 @@ export default function Content({borderStep}: {borderStep: number}) {
               "At Alphera Academy, our waiting list is not just a line, it is a pathway into our learning community. Families who join it are showing their commitment into securing a place in a forward thinking environment where every seat is an opportunity to grow, learn, innovate and thrive.",
           },
         ].map((item, i) => (
-          <div key={i} className="bg-white/30 rounded-tr-4xl backdrop-sepia-30  relative backdrop-blur-[3px] min-h-[160px] sm:min-h-[180px] md:min-h-[200px] lg:min-h-[220px] xl:min-h-[260px] w-full max-w-sm mx-auto sm:mx-0">
+          <div key={i} 
+          className="relative bg-white/40 backdrop-blur-sm rounded-tr-4xl min-h-[180px] sm:min-h-[200px] md:min-h-[220px] lg:min-h-[240px] w-full max-w-sm mx-auto sm:mx-0 shadow-lg border border-white/30"
+          >
             {/* Connected border overlay that reveals sequentially */}
             <div
               className={`absolute inset-0 z-10 pointer-events-none transition-all duration-700 ease-out rounded-tr-2xl md:rounded-tr-4xl border-t border-r ${
@@ -53,6 +45,5 @@ export default function Content({borderStep}: {borderStep: number}) {
         ))}
       </div>
     </div>
-  </div>
   )
 }

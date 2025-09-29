@@ -6,10 +6,11 @@ import LeftInputSection from "./LeftInputSection";
 import Content from "./Content";
 
 export default function NextSection() {
-  const [showHeader, setShowHeader] = useState(false);
-  const [showInitialContent, setShowInitialContent] = useState(false);
-  const [showFinalContent, setShowFinalContent] = useState(false);
-  const [showLoader, setShowLoader] = useState(false);
+  const LOADER_DISABLED = true;
+  const [showHeader, setShowHeader] = useState(LOADER_DISABLED ? true : false);
+  const [showInitialContent, setShowInitialContent] = useState(LOADER_DISABLED ? true : false);
+  const [showFinalContent, setShowFinalContent] = useState(LOADER_DISABLED ? true : false);
+  const [showLoader, setShowLoader] = useState(LOADER_DISABLED ? false : false);
   const [progress, setProgress] = useState(0);
   const [loaderDone, setLoaderDone] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -18,6 +19,7 @@ export default function NextSection() {
 
   // Slide in and reveal content with proper timing
   useEffect(() => {
+    if (LOADER_DISABLED) return;
     // Show content with proper timing
     const t1 = window.setTimeout(() => setShowHeader(true), 100);
     const t2 = window.setTimeout(() => setShowInitialContent(true), 800);
@@ -31,16 +33,18 @@ export default function NextSection() {
 
   // Fallback: force reveal after 6s if needed
   useEffect(() => {
+    if (LOADER_DISABLED) return;
     const fallback = window.setTimeout(() => {
       setShowHeader(true);
       setShowInitialContent(true);
       setShowLoader(true);
-    }, 6000);
+    }, 500);
     return () => window.clearTimeout(fallback);
   }, []);
 
   // Start loading progress when loader becomes visible
   useEffect(() => {
+    if (LOADER_DISABLED) return;
     if (!showLoader) return;
 
     let raf = 0;
@@ -94,7 +98,7 @@ export default function NextSection() {
   return (
     <section className={`relative w-full h-screen bg-white slide-in-right p-0 ${drawerOpen && 'p-3'} sm:p-2`}>
       <div className={`w-full h-full p-1 sm:p-2 md:p-3 lg:p-2 push-container   ${drawerOpen ? "push-right" : ""}`}>
-        <div style={{backgroundImage: "url('/bg.jpg')",  backgroundPosition: "center", backgroundSize: "cover"}} className="relative w-full h-full rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[28px] overflow-hidden bg-white">
+        <div style={{backgroundImage: "url('/bg.jpg')",  backgroundPosition: "center", backgroundSize: "cover"}} className="relative w-full h-full rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[28px] overflow-hidden bg-white isolate">
           <div
             className={`hidden md:flex absolute left-0 bottom-0 w-[65vw] sm:w-[55vw] md:w-[50vw] lg:w-[45vw] xl:w-[40vw] rounded-md h-[30vh] sm:h-[35vh] md:h-[38vh] lg:h-[40vh] xl:h-[42vh] bg-white angle-corner ${
               showInitialContent ? "fade-in" : "opacity-0"
@@ -162,7 +166,7 @@ export default function NextSection() {
           )}
 
           {/* Center loading card */}
-          {showLoader && !loaderDone && (
+          {/* {showLoader && !loaderDone && (
             <div
               className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/25 backdrop-blur-xl rounded-md sm:rounded-lg md:rounded-xl lg:rounded-2xl xl:rounded-[28px] px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 py-3 sm:py-4 md:py-6 lg:py-8 text-white text-center shadow-[0_8px_32px_rgba(0,0,0,0.2)] sm:shadow-[0_10px_40px_rgba(0,0,0,0.25)] ${
                 progress < 100 ? "rise-in" : "rise-out"
@@ -180,7 +184,7 @@ export default function NextSection() {
                 CBDC.
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </div>
 
