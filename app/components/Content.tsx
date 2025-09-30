@@ -3,7 +3,7 @@ import React from 'react'
 export default function Content({borderStep}: {borderStep: number}) {
   return (
    
-    <div className="absolute  left-0 right-0 sm:left-8 md:left-29 top-16 sm:top-20 md:top-auto lg:top-auto xl:top-auto bottom-2 sm:bottom-4 md:bottom-6 lg:bottom-8 xl:bottom-10 px-4 sm:px-6 md:px-8 lg:px-10 content-return-up overflow-y-auto scroll-invisible ">
+    <div className="absolute  left-0 right-0 sm:left-8 md:left-49 top-16 sm:top-20 md:top-auto lg:top-auto xl:top-auto bottom-2 sm:bottom-4 md:bottom-6 lg:bottom-8 xl:bottom-10 px-4 sm:px-6 md:px-8 lg:px-10 content-return-up overflow-y-auto scroll-invisible ">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-6">
         {[
           {
@@ -23,7 +23,7 @@ export default function Content({borderStep}: {borderStep: number}) {
           },
         ].map((item, i) => (
           <div key={i} 
-          className="relative bg-white/40 backdrop-blur-sm rounded-tr-4xl min-h-[180px] sm:min-h-[200px] md:min-h-[220px] lg:min-h-[240px] w-full max-w-sm mx-auto sm:mx-0 shadow-lg border border-white/30 slide-up-slow"
+          className="relative bg-white/40 backdrop-blur-sm rounded-tr-4xl min-h-[180px] sm:min-h-[200px] md:min-h-[220px] lg:min-h-[240px] w-full max-w-sm mx-auto sm:mx-0 shadow-lg  slide-up-slow"
           style={{ animationDelay: `${i * 200}ms` }}
           >
             {/* Connected border overlay that reveals sequentially */}
