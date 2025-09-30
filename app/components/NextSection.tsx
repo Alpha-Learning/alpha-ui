@@ -96,8 +96,8 @@ export default function NextSection() {
   }, [showFinalContent]);
 
   return (
-    <section className={`relative w-full h-screen bg-white slide-in-right p-0 ${drawerOpen && 'p-3'} sm:p-2`}>
-      <div className={`w-full h-full p-1 sm:p-2 md:p-3 lg:p-2 push-container   ${drawerOpen ? "push-right" : ""}`}>
+    <section className={`relative w-full h-screen bg-white slide-in-right m- p-0 ${drawerOpen && 'p-3'} sm:p-0`}>
+      <div className={`w-full h-full p-1  sm:p-2 md:p-3 lg:p-2 push-container   ${drawerOpen ? "push-right" : ""}`}>
         <div style={{backgroundImage: "url('/bg.jpg')",  backgroundPosition: "center", backgroundSize: "cover"}} className="relative w-full h-full rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[28px] overflow-hidden bg-white isolate">
           <div
             className={`hidden md:flex absolute left-0 bottom-0 w-[65vw] sm:w-[55vw] md:w-[50vw] lg:w-[45vw] xl:w-[40vw] rounded-md h-[30vh] sm:h-[35vh] md:h-[38vh] lg:h-[40vh] xl:h-[42vh] bg-white angle-corner ${

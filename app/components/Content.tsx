@@ -23,7 +23,8 @@ export default function Content({borderStep}: {borderStep: number}) {
           },
         ].map((item, i) => (
           <div key={i} 
-          className="relative bg-white/40 backdrop-blur-sm rounded-tr-4xl min-h-[180px] sm:min-h-[200px] md:min-h-[220px] lg:min-h-[240px] w-full max-w-sm mx-auto sm:mx-0 shadow-lg border border-white/30"
+          className="relative bg-white/40 backdrop-blur-sm rounded-tr-4xl min-h-[180px] sm:min-h-[200px] md:min-h-[220px] lg:min-h-[240px] w-full max-w-sm mx-auto sm:mx-0 shadow-lg border border-white/30 slide-up-slow"
+          style={{ animationDelay: `${i * 200}ms` }}
           >
             {/* Connected border overlay that reveals sequentially */}
             <div

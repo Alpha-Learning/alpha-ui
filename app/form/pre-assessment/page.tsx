@@ -131,7 +131,7 @@ function PreAssessmentInner() {
       <div className="hidden sm:flex absolute left-0 bottom-0 z-10 w-[65vw] sm:w-[55vw] md:w-[50vw] lg:w-[45vw] xl:w-[40vw] h-[30vh] sm:h-[35vh] md:h-[38vh] lg:h-[40vh] xl:h-[42vh] bg-white angle-corner" />
 
       <div className="relative z-20 h-screen flex items-center justify-center p-1 sm:p-2 md:p-3 lg:p-2">
-        <div className="w-full h-[90vh] rounded-2xl  flex flex-col overflow-hidden">
+        <div className="w-full h-[calc(100vh-2rem)] sm:h-[calc(100vh-1rem)] md:h-[calc(100vh-1.5rem)] lg:h-[calc(100vh-1rem)] rounded-2xl flex flex-col overflow-hidden">
           <div className="px-4 border-b flex-shrink-0">
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">Pre-Assessment Phase Form</h1>
             <p className="text-slate-600 mt-2">Please complete the following form to help us better understand your child and family's needs.</p>

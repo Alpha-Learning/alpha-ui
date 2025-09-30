@@ -39,9 +39,9 @@ export default function SectionHeader({ show, onRequestClick }: SectionHeaderPro
         className="text-xs sm:text-sm bg-[#142954] font-semibold [clip-path:polygon(0%_0%,85%_0%,100%_38%,100%_100%,16%_100%,0%_56%)] cursor-pointer rounded-lg md:rounded-xl px-1 sm:px-3 md:px-6 py-2 sm:py-3 md:py-4 flex justify-between items-center w-20 sm:w-28 md:w-38 lg:w-40 shadow-ms ring-1 ring-black/10 transition-colors"
         onClick={onRequestClick}
       >
-        <span className=" px-2 text-[11px] pl-3 sm:pl-0 sm:text-lg sm:inline">Waitlist</span>
+        <span className=" px-2 text-[11px] pl-3 sm:pl-0 text-white sm:text-lg sm:inline">Waitlist</span>
         {/* <span className="sm:hidden">List</span> */}
-        <span className="hidden sm:flex">→</span>
+        <span className="hidden text-white sm:flex">→</span>
       </button>
     </div>
   );
