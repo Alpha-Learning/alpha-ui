@@ -122,10 +122,10 @@ function PreAssessmentInner() {
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden  bg-white slide-in-right p-2">
-
+    <div className="relative w-full h-screen overflow-hidden lg:[clip-path:polygon(0%_0%,100%_0%,100%_3%,100%_100%,18%_100%,0%_77%)]  xl:[clip-path:polygon(0%_0%,100%_0%,100%_3%,100%_100%,12%_100%,0%_77%)]  bg-white slide-in-right p-2">
+      
     <div
-      className="relative rounded-xl overflow-hidden bg-gradient-to-r from-[#C9D0D5] to-[#A7CFE6]"
+      className="relative rounded-xl overflow-hidden bg-gradient-to-r  from-[#C9D0D5] to-[#A7CFE6]"
     >
       {/* bottom-left angled white corner like main page */}
       <div className="hidden sm:flex absolute left-0 bottom-0 z-10 w-[65vw] sm:w-[55vw] md:w-[50vw] lg:w-[45vw] xl:w-[40vw] h-[30vh] sm:h-[35vh] md:h-[38vh] lg:h-[40vh] xl:h-[42vh] bg-white angle-corner" />
@@ -303,6 +303,7 @@ function PreAssessmentInner() {
                 </section>
               </div>
             </div>
+            {/* 9746215919, 9847463335 */}
 
             {/* Bottom fixed submit bar inside container */}
             <div className="p-4 sm:p-6 flex-shrink-0">
@@ -310,7 +311,7 @@ function PreAssessmentInner() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="[clip-path:polygon(0%_0%,95%_0%,100%_28%,100%_100%,6%_100%,0%_65%)]  w-full md:w-auto min-w-40 cursor-pointer bg-gradient-to-r from-[#8EC0C2] to-[#142954] text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 font-semibold"
+                  className="[clip-path:polygon(0%_0%,95%_0%,100%_28%,100%_100%,6%_100%,0%_65%)]  w-full sm:w-auto min-w-40 cursor-pointer bg-gradient-to-r from-[#8EC0C2] to-[#142954] text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 font-semibold"
                 >
                   {isSubmitting ? "Submitting…" : "Submit"}
                 </button>
