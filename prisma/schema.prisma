@@ -111,6 +111,7 @@ model Application {
   guidedObservationsProcedure GuidedObservationsProcedure?
   ks1InterviewQuestions KS1InterviewQuestions?
   ks2InterviewQuestions KS2InterviewQuestions?
+  peerDynamicObservation PeerDynamicObservation?
 
   @@map("applications")
 }
@@ -738,4 +739,122 @@ model KS2InterviewQuestions {
   updatedAt DateTime @updatedAt
   
   @@map("ks2_interview_questions")
+}
+
+model PeerDynamicObservation {
+  id                String   @id @default(cuid())
+  applicationId     String   @unique
+  application       Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  
+  // Observation Details
+  childName         String?
+  date              String?
+  examiner          String?
+  age               String?
+  sessionStartTime  String?
+  sessionEndTime    String?
+  
+  // Behavioural Skill Assessment (1-5 ratings)
+  leadershipRating        Int?
+  leadershipNotes        String?
+  collaborationRating    Int?
+  collaborationNotes     String?
+  conflictResolutionRating Int?
+  conflictResolutionNotes String?
+  communicationRating    Int?
+  communicationNotes     String?
+  emotionalRegulationRating Int?
+  emotionalRegulationNotes String?
+  empathyRating          Int?
+  empathyNotes           String?
+  adaptabilityRating     Int?
+  adaptabilityNotes      String?
+  initiativeRating       Int?
+  initiativeNotes        String?
+  
+  // Meta Learning Skill Alignment (Yes/No observations)
+  curiosityObserved       Boolean @default(false)
+  curiosityNotes          String?
+  confidenceObserved      Boolean @default(false)
+  confidenceNotes         String?
+  selfRegulationObserved  Boolean @default(false)
+  selfRegulationNotes     String?
+  collaborationObserved   Boolean @default(false)
+  collaborationObservedNotes String?
+  emotionalAwarenessObserved Boolean @default(false)
+  emotionalAwarenessNotes String?
+  leadershipObserved      Boolean @default(false)
+  leadershipObservedNotes String?
+  problemSolvingObserved  Boolean @default(false)
+  problemSolvingNotes     String?
+  perspectiveTakingObserved Boolean @default(false)
+  perspectiveTakingNotes  String?
+  
+  // Learning Preference & Intelligence Inference
+  linguisticObserved      Boolean @default(false)
+  linguisticStronglyEvident Boolean @default(false)
+  linguisticNotes          String?
+  logicalMathematicalObserved Boolean @default(false)
+  logicalMathematicalStronglyEvident Boolean @default(false)
+  logicalMathematicalNotes String?
+  spatialObserved          Boolean @default(false)
+  spatialStronglyEvident   Boolean @default(false)
+  spatialNotes             String?
+  bodilyKinestheticObserved Boolean @default(false)
+  bodilyKinestheticStronglyEvident Boolean @default(false)
+  bodilyKinestheticNotes   String?
+  musicalObserved          Boolean @default(false)
+  musicalStronglyEvident   Boolean @default(false)
+  musicalNotes             String?
+  interpersonalObserved    Boolean @default(false)
+  interpersonalStronglyEvident Boolean @default(false)
+  interpersonalNotes      String?
+  intrapersonalObserved   Boolean @default(false)
+  intrapersonalStronglyEvident Boolean @default(false)
+  intrapersonalNotes       String?
+  naturalisticObserved     Boolean @default(false)
+  naturalisticStronglyEvident Boolean @default(false)
+  naturalisticNotes        String?
+  existentialObserved      Boolean @default(false)
+  existentialStronglyEvident Boolean @default(false)
+  existentialNotes         String?
+  
+  // Learning Style Clues
+  visualObserved           Boolean @default(false)
+  visualNotes              String?
+  auditoryObserved         Boolean @default(false)
+  auditoryNotes            String?
+  kinestheticObserved      Boolean @default(false)
+  kinestheticNotes         String?
+  verbalObserved           Boolean @default(false)
+  verbalNotes              String?
+  socialObserved           Boolean @default(false)
+  socialNotes              String?
+  solitaryObserved         Boolean @default(false)
+  solitaryNotes            String?
+  
+  // Social Role Tendency (multiple selections allowed)
+  leaderRole               Boolean @default(false)
+  withdrawnRole            Boolean @default(false)
+  problemSolverRole        Boolean @default(false)
+  followerRole             Boolean @default(false)
+  initiatorRole            Boolean @default(false)
+  bridgerRole              Boolean @default(false)
+  observerRole             Boolean @default(false)
+  supporterRole            Boolean @default(false)
+  challengerRole           Boolean @default(false)
+  mediatorRole             Boolean @default(false)
+  
+  // Summary Reflections
+  notableStrengths         String?
+  areasOfConcern           String?
+  situationsChildThrived   String?
+  situationsChallenging   String?
+  suggestedFollowUp        String?
+  caregiverInteraction     String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("peer_dynamic_observation")
 }
