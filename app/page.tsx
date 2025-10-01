@@ -1,5 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import FirstSection from "./components/landing/FirstSection";
+import SecondSection from "./components/landing/SecondSection";
+import ThirdSection from "./components/landing/ThirdSection";
+import LocationMap from "./components/landing/LocationMap";
+import InteractiveFooter from "./components/landing/InteractiveFooter";
 
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
@@ -28,7 +34,31 @@ export default function Home() {
     }
   }, []);
 
-  return (
+  useEffect(() => {
+    // Observe reveal elements
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const target = entry.target as HTMLElement;
+          if (entry.isIntersecting) {
+            const delayAttr = target.getAttribute('data-reveal-delay');
+            const delay = delayAttr ? parseInt(delayAttr, 10) : 0;
+            setTimeout(() => target.classList.add('is-visible'), delay);
+            observer.unobserve(target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    document
+      .querySelectorAll('.reveal-from-bottom')
+      .forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (  
     <div className="min-h-screen bg-white">
       {/* Modern Animated Header */}
       <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300" 
@@ -139,183 +169,50 @@ export default function Home() {
           Your browser does not support the video tag.
         </video>
         <div className="relative z-10 text-center text-white">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in">
+          <motion.h1
+            className="text-5xl md:text-7xl font-bold mb-6"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
             Welcome to ALS Workflow
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 animate-fade-in-delay">
+          </motion.h1>
+          <motion.p
+            className="text-xl md:text-2xl mb-8"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.15 }}
+          >
             Transforming Learning Through Comprehensive Assessment
-          </p>
-          <button className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors animate-fade-in-delay-2">
+          </motion.p>
+          <motion.button
+            className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
+          >
             Get Started
-          </button>
+          </motion.button>
         </div>
         <div className="absolute inset-0 bg-black/30"></div>
       </section>
 
       {/* First Content Section - Images Left, Text Right */}
-      <section id="about" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Images Left */}
-            <div className="relative">
-              <div 
-                className="space-y-8"
-                style={{
-                  transform: `translateY(${scrollY * 0.1}px)`,
-                }}
-              >
-                <div className="relative">
-                  <img
-                    src="/a.jpeg"
-                    alt="Assessment Process"
-                    className="w-full h-64 object-cover rounded-lg shadow-lg"
-                  />
-                  <div className="absolute inset-0 bg-teal-600/20 rounded-lg"></div>
-                </div>
-                <div className="relative ml-8">
-                  <img
-                    src="/b.png"
-                    alt="Learning Environment"
-                    className="w-full h-48 object-cover rounded-lg shadow-lg"
-                  />
-                  <div className="absolute inset-0 bg-blue-600/20 rounded-lg"></div>
-                </div>
-                <div className="relative ml-4">
-                  <img
-                    src="/c.png"
-                    alt="Child Development"
-                    className="w-full h-56 object-cover rounded-lg shadow-lg"
-                  />
-                  <div className="absolute inset-0 bg-purple-600/20 rounded-lg"></div>
-                </div>
-              </div>
-            </div>
+      <FirstSection scrollY={scrollY} />
 
-            {/* Text Right */}
-            <div className="space-y-6">
-              <h2 className="text-4xl font-bold text-gray-900">
-                Comprehensive Learning Assessment
-              </h2>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                Our innovative approach combines multiple assessment methodologies to create a complete 
-                picture of each child's learning profile. Through careful observation, structured 
-                interviews, and dynamic interactions, we uncover the unique strengths and areas for growth.
-              </p>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-teal-600 rounded-full"></div>
-                  <span className="text-gray-700">Multi-dimensional cognitive assessment</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-teal-600 rounded-full"></div>
-                  <span className="text-gray-700">Parent-child dynamic observation</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-teal-600 rounded-full"></div>
-                  <span className="text-gray-700">Peer interaction analysis</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-teal-600 rounded-full"></div>
-                  <span className="text-gray-700">Personalized learning recommendations</span>
-                </div>
-              </div>
-              <button className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-lg transition-colors">
-                Learn More
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Second Content Section - extracted component, full viewport height */}
+      <SecondSection scrollY={scrollY} />
 
-      {/* Second Content Section - Text Left, Images Right */}
-      <section id="services" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Text Left */}
-            <div className="space-y-6">
-              <h2 className="text-4xl font-bold text-gray-900">
-                Evidence-Based Learning Solutions
-              </h2>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                Our comprehensive assessment framework integrates cutting-edge research with practical 
-                application. We provide detailed insights into cognitive development, learning preferences, 
-                and social-emotional growth to support optimal educational outcomes.
-              </p>
-              <div className="grid grid-cols-2 gap-6">
-                <div className="text-center p-6 bg-gray-50 rounded-lg">
-                  <div className="text-3xl font-bold text-teal-600 mb-2">10+</div>
-                  <div className="text-gray-700">Assessment Stages</div>
-                </div>
-                <div className="text-center p-6 bg-gray-50 rounded-lg">
-                  <div className="text-3xl font-bold text-teal-600 mb-2">100%</div>
-                  <div className="text-gray-700">Personalized Approach</div>
-                </div>
-              </div>
-              <button className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-lg transition-colors">
-                View Our Process
-              </button>
-            </div>
+      {/* Third Content Section - Text Left, Images Right */}
+      {/* <ThirdSection scrollY={scrollY} /> */}
 
-            {/* Images Right */}
-            <div className="relative">
-              <div 
-                className="space-y-8"
-                style={{
-                  transform: `translateY(${-scrollY * 0.1}px)`,
-                }}
-              >
-                <div className="relative ml-8">
-                  <img
-                    src="/c.png"
-                    alt="Assessment Tools"
-                    className="w-full h-56 object-cover rounded-lg shadow-lg"
-                  />
-                  <div className="absolute inset-0 bg-purple-600/20 rounded-lg"></div>
-                </div>
-                <div className="relative ml-4">
-                  <img
-                    src="/a.jpeg"
-                    alt="Learning Environment"
-                    className="w-full h-48 object-cover rounded-lg shadow-lg"
-                  />
-                  <div className="absolute inset-0 bg-teal-600/20 rounded-lg"></div>
-                </div>
-                <div className="relative">
-                  <img
-                    src="/b.png"
-                    alt="Child Development"
-                    className="w-full h-64 object-cover rounded-lg shadow-lg"
-                  />
-                  <div className="absolute inset-0 bg-blue-600/20 rounded-lg"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Location Map Section */}
+      <LocationMap />
 
-      {/* Contact Section */}
-      <section id="contact" className="py-20 bg-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to Begin?</h2>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Start your child's comprehensive learning assessment journey today. 
-            Our expert team is ready to provide personalized insights and recommendations.
-          </p>
-          <button className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
-            Start Assessment
-          </button>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <p className="text-gray-400">&copy; 2024 ALS Workflow. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      {/* Interactive Footer */}
+      <InteractiveFooter />
     </div>
   );
 }
