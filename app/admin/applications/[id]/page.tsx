@@ -283,6 +283,7 @@ export default function AdminApplicationDetailPage() {
               6: `/admin/applications/${data.id}/guided-observations-procedure`,
               8: `/admin/applications/${data.id}/peer-dynamic-observation`,
               9: `/admin/applications/${data.id}/parent-child-dynamic-observation`,
+              10: `/admin/applications/${data.id}/comprehensive-profile-sheet`,
             };
             const href = hrefMap[stageNumber];
             

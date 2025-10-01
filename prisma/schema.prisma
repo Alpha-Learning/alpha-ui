@@ -113,6 +113,7 @@ model Application {
   ks2InterviewQuestions KS2InterviewQuestions?
   peerDynamicObservation PeerDynamicObservation?
   parentChildDynamicObservation ParentChildDynamicObservation?
+  comprehensiveProfileSheet ComprehensiveProfileSheet?
 
   @@map("applications")
 }
@@ -986,4 +987,200 @@ model ParentChildDynamicObservation {
   updatedAt DateTime @updatedAt
   
   @@map("parent_child_dynamic_observation")
+}
+
+model ComprehensiveProfileSheet {
+  id                String   @id @default(cuid())
+  applicationId     String   @unique
+  application       Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  
+  // Child Information
+  childName         String?
+  childAge          String?
+  assessmentDate    String?
+  recommendedPlacement String?
+  examiner          String?
+  
+  // Cognitive Skills Profile
+  processingSpeedSteadyReflective     Boolean @default(false)
+  processingSpeedFlexibleAdaptive    Boolean @default(false)
+  processingSpeedRapidResponsive     Boolean @default(false)
+  
+  workingMemoryAreaOfGrowth          Boolean @default(false)
+  workingMemoryDeveloping            Boolean @default(false)
+  workingMemoryConsistentConfident   Boolean @default(false)
+  
+  attentionFocusVariable             Boolean @default(false)
+  attentionFocusFocusedWithCues      Boolean @default(false)
+  attentionFocusSelfDirected         Boolean @default(false)
+  
+  verbalReasoningExploring           Boolean @default(false)
+  verbalReasoningDeveloping          Boolean @default(false)
+  verbalReasoningFluentCommunicator  Boolean @default(false)
+  
+  phonologicalAwarenessExploring     Boolean @default(false)
+  phonologicalAwarenessLinking       Boolean @default(false)
+  phonologicalAwarenessConfident     Boolean @default(false)
+  
+  visualSpatialSkillsExploring       Boolean @default(false)
+  visualSpatialSkillsDeveloping     Boolean @default(false)
+  visualSpatialSkillsConfident      Boolean @default(false)
+  
+  numericalPatternConcrete           Boolean @default(false)
+  numericalPatternEmergingAbstract  Boolean @default(false)
+  numericalPatternFlexibleThinker    Boolean @default(false)
+  
+  additionalCognitiveNotes           String?
+  
+  // Learning Style Preference
+  visualObserved                     Boolean @default(false)
+  visualObservedEvidence             String?
+  auditoryObserved                   Boolean @default(false)
+  auditoryObservedEvidence           String?
+  kinestheticTactileObserved         Boolean @default(false)
+  kinestheticTactileObservedEvidence String?
+  readingWritingObserved             Boolean @default(false)
+  readingWritingObservedEvidence     String?
+  verbalLinguisticObserved           Boolean @default(false)
+  verbalLinguisticObservedEvidence   String?
+  logicalMathematicalObserved        Boolean @default(false)
+  logicalMathematicalObservedEvidence String?
+  socialInterpersonalObserved        Boolean @default(false)
+  socialInterpersonalObservedEvidence String?
+  solitaryIntrapersonalObserved      Boolean @default(false)
+  solitaryIntrapersonalObservedEvidence String?
+  multimodalObserved                 Boolean @default(false)
+  multimodalObservedEvidence         String?
+  
+  // Dominant Intelligence Types
+  linguisticObserved                  Boolean @default(false)
+  linguisticStronglyEvident          Boolean @default(false)
+  linguisticNotes                    String?
+  logicalMathematicalObservedInt     Boolean @default(false)
+  logicalMathematicalStronglyEvidentInt Boolean @default(false)
+  logicalMathematicalNotesInt        String?
+  spatialObserved                    Boolean @default(false)
+  spatialStronglyEvident             Boolean @default(false)
+  spatialNotes                       String?
+  bodilyKinestheticObserved          Boolean @default(false)
+  bodilyKinestheticStronglyEvident  Boolean @default(false)
+  bodilyKinestheticNotes            String?
+  musicalObserved                    Boolean @default(false)
+  musicalStronglyEvident             Boolean @default(false)
+  musicalNotes                       String?
+  interpersonalObserved              Boolean @default(false)
+  interpersonalStronglyEvident       Boolean @default(false)
+  interpersonalNotes                 String?
+  intrapersonalObserved              Boolean @default(false)
+  intrapersonalStronglyEvident       Boolean @default(false)
+  intrapersonalNotes                 String?
+  naturalisticObserved               Boolean @default(false)
+  naturalisticStronglyEvident        Boolean @default(false)
+  naturalisticNotes                  String?
+  existentialObserved                Boolean @default(false)
+  existentialStronglyEvident        Boolean @default(false)
+  existentialNotes                   String?
+  
+  // Meta-Learning Pillars & Soft Skills Profile
+  summaryInsightLearnerType          String?
+  summaryInsightLearningEnvironments String?
+  
+  selfRegulationEmerging             Boolean @default(false)
+  selfRegulationDeveloping           Boolean @default(false)
+  selfRegulationStrong               Boolean @default(false)
+  selfRegulationNotesEvidence        String?
+  
+  emotionalIntelligenceEmerging      Boolean @default(false)
+  emotionalIntelligenceDeveloping    Boolean @default(false)
+  emotionalIntelligenceStrong        Boolean @default(false)
+  emotionalIntelligenceNotesEvidence String?
+  
+  socialCommunicationEmerging        Boolean @default(false)
+  socialCommunicationDeveloping      Boolean @default(false)
+  socialCommunicationStrong          Boolean @default(false)
+  socialCommunicationNotesEvidence   String?
+  
+  cognitiveFlexibilityEmerging       Boolean @default(false)
+  cognitiveFlexibilityDeveloping     Boolean @default(false)
+  cognitiveFlexibilityStrong         Boolean @default(false)
+  cognitiveFlexibilityNotesEvidence  String?
+  
+  resilienceConfidenceEmerging      Boolean @default(false)
+  resilienceConfidenceDeveloping     Boolean @default(false)
+  resilienceConfidenceStrong         Boolean @default(false)
+  resilienceConfidenceNotesEvidence  String?
+  
+  creativityExpressionEmerging       Boolean @default(false)
+  creativityExpressionDeveloping     Boolean @default(false)
+  creativityExpressionStrong         Boolean @default(false)
+  creativityExpressionNotesEvidence  String?
+  
+  softSkillSummaryNotes             String?
+  
+  // Academic & Digital Readiness
+  englishCurrentLevel                String?
+  englishNotes                       String?
+  mathsCurrentLevel                  String?
+  mathsNotes                         String?
+  scienceCurrentLevel                String?
+  scienceNotes                       String?
+  
+  technologyUseLow                   Boolean @default(false)
+  technologyUseModerate              Boolean @default(false)
+  technologyUseHigh                  Boolean @default(false)
+  technologyUseExceptional           Boolean @default(false)
+  
+  academicNotes                      String?
+  
+  // Interview-Based Verbal Assessment Summary
+  zonesADPreferredZones              String?
+  zonesADSelfDirectedOrReliant       String?
+  zonesADResponseToChallenge         String?
+  zonesADEvidenceDominantIntelligence String?
+  
+  peerSessionInitiateOrFollow        String?
+  peerSessionRoleAdopted             String?
+  peerSessionConflictHandled         String?
+  
+  parentChildEmotionalTone           String?
+  parentChildFacilitativeVsDirective String?
+  parentChildResponseWorkingSolo     String?
+  
+  ks1Score                           Int?
+  ks1InterpretationEmerging          Boolean @default(false)
+  ks1InterpretationBasic             Boolean @default(false)
+  ks1InterpretationStrong            Boolean @default(false)
+  ks1InterpretationExceptional       Boolean @default(false)
+  ks1SuggestedAction                 String?
+  
+  ks2Score                           Int?
+  ks2InterpretationEmerging          Boolean @default(false)
+  ks2InterpretationBasic             Boolean @default(false)
+  ks2InterpretationStrong            Boolean @default(false)
+  ks2InterpretationExceptional       Boolean @default(false)
+  ks2SuggestedAction                 String?
+  
+  qualitativeInsightsVerbalResponses String?
+  
+  // Component Recommendations
+  aiCurriculumEntryPoint             String?
+  peerEngagementGroupLearning        Boolean @default(false)
+  peerEngagementNeedsScaffolding     Boolean @default(false)
+  peerEngagementMonitorConflict      Boolean @default(false)
+  mentorshipLeadershipPotential      Boolean @default(false)
+  mentorshipRecommendOneOnOne        Boolean @default(false)
+  mentorshipNotApplicable            Boolean @default(false)
+  homeSupportTips                    String?
+  
+  // Final Summary Statement
+  finalSummaryStrengths              String?
+  finalSummaryApproaches             String?
+  finalSummaryTargetedSupport        String?
+  compiledBy                         String?
+  compiledDate                       String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("comprehensive_profile_sheet")
 }

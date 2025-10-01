@@ -35,7 +35,7 @@ export function determineApplicationStatus(application: ApplicationWithCompletio
     { name: 'Guided Observations Procedure', completed: application.isSeventhFormCompleted },
     { name: 'Initial Form', completed: application.isEighthFormCompleted },
     { name: 'Parent-Child Dynamic Observation', completed: application.isNinthFormCompleted },
-    { name: 'Form 10', completed: application.isTenthFormCompleted },
+    { name: 'Understanding The Learning Comprehensive Profile Sheet', completed: application.isTenthFormCompleted },
   ];
 
   const completedForms = formStatuses.filter(f => f.completed).map(f => f.name);
