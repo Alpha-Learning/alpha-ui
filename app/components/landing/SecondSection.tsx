@@ -24,16 +24,16 @@ export default function SecondSection({ scrollY }: { scrollY: number }) {
     }
   };
   return (
-    <section id="services" className="min-h-screen py-12 sm:py-16 lg:py-20 bg-white flex items-center relative overflow-hidden">
+    <section id="services" className="min-h-[80vh] sm:min-h-[85vh] lg:min-h-screen py-10 sm:py-16 lg:py-20 bg-white flex items-center relative overflow-hidden">
       {/* Animated background orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-10 right-1/4 w-40 h-40 bg-gradient-to-r from-teal-200 to-teal-300 rounded-full opacity-30 animate-pulse"></div>
-        <div className="absolute top-20 left-1/5 w-28 h-28 bg-gradient-to-r from-blue-200 to-blue-300 rounded-full opacity-25 animate-pulse" style={{animationDelay: '0.8s'}}></div>
-        <div className="absolute bottom-12 right-1/3 w-20 h-20 bg-gradient-to-r from-purple-200 to-purple-300 rounded-full opacity-25 animate-pulse" style={{animationDelay: '1.6s'}}></div>
+        <div className="hidden sm:block absolute -top-10 right-1/4 w-40 h-40 bg-gradient-to-r from-teal-200 to-teal-300 rounded-full opacity-30 animate-pulse"></div>
+        <div className="hidden sm:block absolute top-20 left-1/5 w-28 h-28 bg-gradient-to-r from-blue-200 to-blue-300 rounded-full opacity-25 animate-pulse" style={{animationDelay: '0.8s'}}></div>
+        <div className="hidden sm:block absolute bottom-12 right-1/3 w-20 h-20 bg-gradient-to-r from-purple-200 to-purple-300 rounded-full opacity-25 animate-pulse" style={{animationDelay: '1.6s'}}></div>
         {/* tiny floating particles */}
-        <div className="absolute top-1/3 right-1/4 w-1.5 h-1.5 bg-teal-400/40 rounded-full animate-bounce" style={{animationDelay: '0.3s'}}></div>
-        <div className="absolute top-1/2 left-1/3 w-1 h-1 bg-blue-400/40 rounded-full animate-bounce" style={{animationDelay: '0.9s'}}></div>
-        <div className="absolute bottom-1/3 right-1/5 w-1.5 h-1.5 bg-purple-400/40 rounded-full animate-bounce" style={{animationDelay: '1.4s'}}></div>
+        <div className="hidden sm:block absolute top-1/3 right-1/4 w-1.5 h-1.5 bg-teal-400/40 rounded-full animate-bounce" style={{animationDelay: '0.3s'}}></div>
+        <div className="hidden sm:block absolute top-1/2 left-1/3 w-1 h-1 bg-blue-400/40 rounded-full animate-bounce" style={{animationDelay: '0.9s'}}></div>
+        <div className="hidden sm:block absolute bottom-1/3 right-1/5 w-1.5 h-1.5 bg-purple-400/40 rounded-full animate-bounce" style={{animationDelay: '1.4s'}}></div>
       </div>
       <div className="w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

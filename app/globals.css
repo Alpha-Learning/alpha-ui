@@ -25,6 +25,26 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Smooth scrolling with reduced motion fallback */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Offset anchor scroll to account for fixed header */
+:root {
+  --header-offset: 88px;
+}
+
+[id] {
+  scroll-margin-top: var(--header-offset);
+}
+
 /* Intro animations */
 @keyframes intro-fade-out {
   0% { opacity: 1; visibility: visible; }

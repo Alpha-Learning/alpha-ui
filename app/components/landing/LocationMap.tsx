@@ -17,16 +17,16 @@ export default function LocationMap() {
   };
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-white relative overflow-hidden">
+    <section className="py-10 sm:py-16 lg:py-20 bg-white relative overflow-hidden">
       {/* Animated background orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-6 left-1/4 w-36 h-36 bg-gradient-to-r from-teal-200 to-teal-300 rounded-full opacity-30 animate-pulse"></div>
-        <div className="absolute top-24 right-1/5 w-28 h-28 bg-gradient-to-r from-blue-200 to-blue-300 rounded-full opacity-25 animate-pulse" style={{animationDelay: '0.8s'}}></div>
-        <div className="absolute bottom-16 left-1/3 w-20 h-20 bg-gradient-to-r from-purple-200 to-purple-300 rounded-full opacity-25 animate-pulse" style={{animationDelay: '1.6s'}}></div>
+        <div className="hidden sm:block absolute -top-6 left-1/4 w-36 h-36 bg-gradient-to-r from-teal-200 to-teal-300 rounded-full opacity-30 animate-pulse"></div>
+        <div className="hidden sm:block absolute top-24 right-1/5 w-28 h-28 bg-gradient-to-r from-blue-200 to-blue-300 rounded-full opacity-25 animate-pulse" style={{animationDelay: '0.8s'}}></div>
+        <div className="hidden sm:block absolute bottom-16 left-1/3 w-20 h-20 bg-gradient-to-r from-purple-200 to-purple-300 rounded-full opacity-25 animate-pulse" style={{animationDelay: '1.6s'}}></div>
         {/* tiny floating particles */}
-        <div className="absolute top-1/4 left-1/3 w-1.5 h-1.5 bg-teal-400/40 rounded-full animate-bounce" style={{animationDelay: '0.3s'}}></div>
-        <div className="absolute top-1/2 right-1/4 w-1 h-1 bg-blue-400/40 rounded-full animate-bounce" style={{animationDelay: '0.9s'}}></div>
-        <div className="absolute bottom-1/3 left-1/5 w-1.5 h-1.5 bg-purple-400/40 rounded-full animate-bounce" style={{animationDelay: '1.4s'}}></div>
+        <div className="hidden sm:block absolute top-1/4 left-1/3 w-1.5 h-1.5 bg-teal-400/40 rounded-full animate-bounce" style={{animationDelay: '0.3s'}}></div>
+        <div className="hidden sm:block absolute top-1/2 right-1/4 w-1 h-1 bg-blue-400/40 rounded-full animate-bounce" style={{animationDelay: '0.9s'}}></div>
+        <div className="hidden sm:block absolute bottom-1/3 left-1/5 w-1.5 h-1.5 bg-purple-400/40 rounded-full animate-bounce" style={{animationDelay: '1.4s'}}></div>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
