@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
+import { updateApplicationStatus } from "@/app/utils/applicationStatus";
 
 export async function POST(request: NextRequest) {
   try {
@@ -253,11 +254,17 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Update application current stage to 5 after successful form submission
+    // Update application current stage to 5 and mark initial observation form as completed
     await prisma.application.update({
       where: { id: applicationId },
-      data: { currentStage: 5 }
+      data: { 
+        // currentStage: 5,
+        isFifthFormCompleted: true
+      }
     });
+
+    // Update application status based on all form completions
+    await updateApplicationStatus(applicationId, prisma);
 
     return NextResponse.json({
       success: true,

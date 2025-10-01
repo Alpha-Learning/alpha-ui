@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
+import { updateApplicationStatus } from "@/app/utils/applicationStatus";
 
 export async function POST(request: NextRequest) {
   try {
@@ -104,13 +105,25 @@ export async function POST(request: NextRequest) {
       where: { applicationId },
     });
 
-    // Only advance to stage 3 if all three questionnaires are completed
+    // Mark caregiver questionnaire as completed (individual flag)
+    await prisma.application.update({
+      where: { id: applicationId },
+      data: { isCaregiverFormCompleted: true }
+    });
+
+    // Check if all three questionnaires are completed and set isThirdFormCompleted
     if (parentQuestionnaire && caregiverQuestionnaire && outsiderQuestionnaire) {
       await prisma.application.update({
         where: { id: applicationId },
-        data: { currentStage: 3 }
+        data: { 
+          currentStage: 3,
+          isThirdFormCompleted: true
+        }
       });
     }
+
+    // Update application status based on all form completions
+    await updateApplicationStatus(applicationId, prisma);
 
     return NextResponse.json({
       success: true,

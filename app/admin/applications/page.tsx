@@ -17,6 +17,22 @@ type AdminApp = {
   childAge?: number | null;
   childSchoolYear?: string | null;
   isPaid?: boolean;
+  currentStage?: number;
+  // Form completion status
+  isFirstFormCompleted?: boolean;
+  isSecondFormCompleted?: boolean;
+  isThirdFormCompleted?: boolean;
+  isFourthFormCompleted?: boolean;
+  isFifthFormCompleted?: boolean;
+  isSixthFormCompleted?: boolean;
+  isSeventhFormCompleted?: boolean;
+  isEighthFormCompleted?: boolean;
+  isNinthFormCompleted?: boolean;
+  isTenthFormCompleted?: boolean;
+  // Individual questionnaire completion flags
+  isParentGuardianFormCompleted?: boolean;
+  isCaregiverFormCompleted?: boolean;
+  isOutsiderFormCompleted?: boolean;
 };
 
 export default function AdminApplicationsPage() {
@@ -84,6 +100,36 @@ export default function AdminApplicationsPage() {
         </div>
       ),
       width: "110px",
+      center: true,
+    },
+    {
+      name: "Forms",
+      cell: (row) => {
+        const completedForms = [
+          { name: "Screening", completed: row.isFirstFormCompleted },
+          { name: "Parent", completed: row.isParentGuardianFormCompleted },
+          { name: "Caregiver", completed: row.isCaregiverFormCompleted },
+          { name: "Outsider", completed: row.isOutsiderFormCompleted },
+          { name: "Stage 3", completed: row.isThirdFormCompleted },
+          { name: "Walkthrough", completed: row.isFifthFormCompleted },
+          { name: "Initial Obs", completed: row.isSixthFormCompleted },
+          { name: "Guided Obs", completed: row.isSeventhFormCompleted },
+          { name: "Initial Form", completed: row.isEighthFormCompleted },
+          { name: "Form 9", completed: row.isNinthFormCompleted },
+          { name: "Form 10", completed: row.isTenthFormCompleted },
+        ];
+        
+        const completedCount = completedForms.filter(f => f.completed).length;
+        const totalCount = completedForms.length;
+        
+        return (
+          <div className="text-xs">
+            <div className="font-medium">{completedCount}/{totalCount}</div>
+            <div className="text-gray-500">completed</div>
+          </div>
+        );
+      },
+      width: "100px",
       center: true,
     },
     { name: "Comment", selector: row => row.adminComment ?? "" },

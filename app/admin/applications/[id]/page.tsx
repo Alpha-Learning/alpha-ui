@@ -100,6 +100,21 @@ type AppDetail = {
   paidAt?: string | null;
   currentStage: number;
   totalStages: number;
+  // Form completion status
+  isFirstFormCompleted?: boolean;
+  isSecondFormCompleted?: boolean;
+  isThirdFormCompleted?: boolean;
+  isFourthFormCompleted?: boolean;
+  isFifthFormCompleted?: boolean;
+  isSixthFormCompleted?: boolean;
+  isSeventhFormCompleted?: boolean;
+  isEighthFormCompleted?: boolean;
+  isNinthFormCompleted?: boolean;
+  isTenthFormCompleted?: boolean;
+  // Individual questionnaire completion flags
+  isParentGuardianFormCompleted?: boolean;
+  isCaregiverFormCompleted?: boolean;
+  isOutsiderFormCompleted?: boolean;
 };
 
 export default function AdminApplicationDetailPage() {
@@ -128,7 +143,22 @@ export default function AdminApplicationDetailPage() {
   if (error) return <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6 text-red-600">{error}</div>;
   if (!data) return null;
 
-  const pct = Math.round((data.currentStage / data.totalStages) * 100);
+  // Calculate completion based on individual form completion fields
+  const completionFields = [
+    data.isFirstFormCompleted,
+    data.isSecondFormCompleted,
+    data.isThirdFormCompleted,
+    data.isFourthFormCompleted,
+    data.isFifthFormCompleted,
+    data.isSixthFormCompleted,
+    data.isSeventhFormCompleted,
+    data.isEighthFormCompleted,
+    data.isNinthFormCompleted,
+    data.isTenthFormCompleted,
+  ];
+  const completedCount = completionFields.filter(Boolean).length;
+  const pct = Math.round((completedCount / data.totalStages) * 100);
+  
   const stageTitles = [
     "1. Application form",
     "2. Screening call and flow script",
@@ -158,12 +188,13 @@ export default function AdminApplicationDetailPage() {
           <div className="h-3 bg-slate-200 rounded-full overflow-hidden">
             <div className="h-full bg-blue-600" style={{ width: `${pct}%` }} />
           </div>
-          <div className="text-xs text-slate-500 mt-1">{data.currentStage} / {data.totalStages} ({pct}%)</div>
+          <div className="text-xs text-slate-500 mt-1">{completedCount} / {data.totalStages} ({pct}%)</div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {Array.from({ length: data.totalStages }, (_, i) => i).map((idx) => {
             const stageNumber = idx + 1;
+            const isCompleted = completionFields[idx] || false;
             const hrefMap: Record<number, string> = {
               1: `/admin/applications/${data.id}/initial-form`,
               2: `/admin/applications/${data.id}/screening-call`,
@@ -179,16 +210,16 @@ export default function AdminApplicationDetailPage() {
                 <Stage3Dropdown 
                   key={idx} 
                   applicationId={data.id} 
-                  isCompleted={stageNumber <= data.currentStage}
+                  isCompleted={isCompleted}
                   stageTitle={stageTitles[idx]}
                 />
               );
             }
             
             const inner = (
-              <div className={`p-3 rounded-lg border ${stageNumber <= data.currentStage ? 'bg-green-50 border-green-200' : 'bg-slate-50 border-slate-200'}`}>
+              <div className={`p-3 rounded-lg border ${isCompleted ? 'bg-green-50 border-green-200' : 'bg-slate-50 border-slate-200'}`}>
                 <div className="text-sm font-medium text-slate-900">{stageTitles[idx] ?? `Form ${stageNumber}`}</div>
-                <div className="text-xs text-slate-600">{stageNumber <= data.currentStage ? 'Completed' : 'Pending'}</div>
+                <div className="text-xs text-slate-600">{isCompleted ? 'Completed' : 'Pending'}</div>
               </div>
             );
             return href ? (

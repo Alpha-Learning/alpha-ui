@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
+import { updateApplicationStatus } from "@/app/utils/applicationStatus";
 
 export async function POST(request: NextRequest) {
   try {
@@ -126,11 +127,17 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Update application current stage to 2 after successful screening call submission
+    // Update application current stage to 2 and mark screening call as completed
     await prisma.application.update({
       where: { id: applicationId },
-      data: { currentStage: 2 }
+      data: { 
+        // currentStage: 2,
+        isSecondFormCompleted: true
+      }
     });
+
+    // Update application status based on all form completions
+    await updateApplicationStatus(applicationId, prisma);
 
     return NextResponse.json({
       success: true,

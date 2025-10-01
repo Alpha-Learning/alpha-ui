@@ -45,6 +45,23 @@ model Application {
   // Application progress
   currentStage   Int      @default(1)
   totalStages    Int      @default(10)
+  
+  // Individual form completion status
+  isFirstFormCompleted                    Boolean @default(false)
+  isSecondFormCompleted                   Boolean @default(false)
+  isThirdFormCompleted                    Boolean @default(false)
+  isFourthFormCompleted                   Boolean @default(false)
+  isFifthFormCompleted                    Boolean @default(false)
+  isSixthFormCompleted                      Boolean @default(false)
+  isSeventhFormCompleted                      Boolean @default(false)
+  isEighthFormCompleted                       Boolean @default(false)
+  isNinthFormCompleted                        Boolean @default(false)
+  isTenthFormCompleted                        Boolean @default(false)
+  
+  // Individual questionnaire completion flags (for Stage 3 combination)
+  isParentGuardianFormCompleted           Boolean @default(false)
+  isCaregiverFormCompleted                Boolean @default(false)
+  isOutsiderFormCompleted                 Boolean @default(false)
 
   // Parent/Guardian Information
   parentFullName    String

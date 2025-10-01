@@ -122,6 +122,7 @@ export async function POST(req: Request) {
         consentUpdates: parsed.data.consentUpdates,
         consentBiometric: parsed.data.consentBiometric,
         userId: user.id,
+        isFirstFormCompleted: true,
       }
     });
 

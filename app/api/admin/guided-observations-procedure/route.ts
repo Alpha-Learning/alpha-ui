@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
+import { updateApplicationStatus } from "@/app/utils/applicationStatus";
 
 export async function POST(request: NextRequest) {
   try {
@@ -215,8 +216,17 @@ export async function POST(request: NextRequest) {
       record = await model.create({ data: { applicationId, ...payload } });
     }
 
-    // advance stage to 6
-    await prisma.application.update({ where: { id: applicationId }, data: { currentStage: 6 } });
+    // advance stage to 6 and mark form as completed
+    await prisma.application.update({ 
+      where: { id: applicationId }, 
+      data: { 
+        // currentStage: 6,
+        isSixthFormCompleted: true
+      } 
+    });
+
+    // Update application status based on all form completions
+    await updateApplicationStatus(applicationId, prisma);
 
     return NextResponse.json({ success: true, data: record });
   } catch (error) {
