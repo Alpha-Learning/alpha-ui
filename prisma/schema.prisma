@@ -109,6 +109,7 @@ model Application {
   facilityWalkthroughChecklist FacilityWalkthroughChecklist?
   initialObservationForm InitialObservationForm?
   guidedObservationsProcedure GuidedObservationsProcedure?
+  ks1InterviewQuestions KS1InterviewQuestions?
 
   @@map("applications")
 }
@@ -571,4 +572,77 @@ model GuidedObservationsProcedure {
   application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   @@map("guided_observations_procedures")
+}
+
+// KS1 Interview Questions (Stage 7a)
+model KS1InterviewQuestions {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Child Information
+  fullName String
+  age      String
+
+  // Interview Questions (1-14)
+  whatDoYouDoSomethingHard Int? // Growth mindset & perseverance
+  whatDoYouDoSomethingHardNotes String?
+  
+  howDoYouFeelWhenTryNew Int? // Emotional awareness & regulation
+  howDoYouFeelWhenTryNewNotes String?
+  
+  whatWouldYouDoIfFriendSad Int? // Empathy & social reasoning
+  whatWouldYouDoIfFriendSadNotes String?
+  
+  tellMeAboutFavouriteStory Int? // Narrative & communication skills
+  tellMeAboutFavouriteStoryNotes String?
+  
+  favouriteThingToLearn Int? // (Question 5 details from image)
+  favouriteThingToLearnNotes String?
+  
+  whatElseUcanDoWithASpoonOtherThanEat Int? // (Question 6 details from image)
+  whatElseUcanDoWithASpoonOtherThanEatNotes String?
+  
+  howShareCookiesBetweenFriends Int? // Problem-solving & fairness
+  howShareCookiesBetweenFriendsNotes String?
+  
+  puzzleActivity Int? // (Question 8 details from image)
+  puzzleActivityNotes String?
+  
+  tableInteraction Int? // (Question 9 details from image)
+  tableInteractionNotes String?
+  
+  drawSomethingYouInvent Int? // Imagination & expression
+  drawSomethingYouInventNotes String?
+  
+  doYouLikeLearnByListening String? // Learning preference awareness (not scored)
+  
+  canYouSortShapesByColor Int? // Motor coordination & logic
+  canYouSortShapesByColorNotes String?
+  
+  canYouTeachMeDrawMummy Int? // Communication clarity & social confidence
+  canYouTeachMeDrawMummyNotes String?
+  
+  doYouLikePlayingWithFriends Int? // Social openness & preference
+  doYouLikePlayingWithFriendsNotes String?
+
+  // Parental Interference
+  parentalInterferenceFlagged Boolean @default(false)
+  parentalInterferenceNotes   String?
+
+  // Total Score
+  totalScore Int?
+
+  // Office Use Only
+  applicationNumber String?
+  observerName      String?
+  assessmentDate    String?
+  loggedToSystemDate String?
+  loggedBy          String?
+
+  // Relation
+  applicationId String @unique
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("ks1_interview_questions")
 }
