@@ -169,6 +169,7 @@ export default function AdminApplicationDetailPage() {
               2: `/admin/applications/${data.id}/screening-call`,
               4: `/admin/applications/${data.id}/facility-walkthrough-checklist`,
               5: `/admin/applications/${data.id}/initial-observation-form`,
+              6: `/admin/applications/${data.id}/guided-observations-procedure`,
             };
             const href = hrefMap[stageNumber];
             

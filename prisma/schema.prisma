@@ -91,6 +91,7 @@ model Application {
   outsiderQuestionnaire OutsiderQuestionnaire?
   facilityWalkthroughChecklist FacilityWalkthroughChecklist?
   initialObservationForm InitialObservationForm?
+  guidedObservationsProcedure GuidedObservationsProcedure?
 
   @@map("applications")
 }
@@ -432,4 +433,125 @@ model InitialObservationForm {
   application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   @@map("initial_observation_forms")
+}
+
+// Guided Observations Procedure (Stage 6)
+model GuidedObservationsProcedure {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Child Information
+  fullName String
+  age      String
+
+  // Ratings Grid (per zone)
+  zoneAScore String
+  zoneANotes String
+  zoneBScore String
+  zoneBNotes String
+  zoneCScore String
+  zoneCNotes String
+  zoneDScore String
+  zoneDNotes String
+
+  // Guiding Questions answers
+  // Legacy kept for compatibility
+  guidingQ1 String?
+  guidingQ2 String?
+  guidingQ3 String?
+  guidingQ4 String?
+  guidingQ5 String?
+  // New semantic fields
+  areaLikeBest         String?
+  whatMakesInteresting String?
+  hardButFun           String?
+  feelWhenTryingNew    String?
+  teachGame            String?
+
+  // Meta Learning Skill Indicators (scores 1-5 + notes optional)
+  metaSelfReg String
+  metaNotesSelfReg String?
+  metaCuriosity String
+  metaNotesCuriosity String?
+  metaSocial String
+  metaNotesSocial String?
+  metaEmotional String
+  metaNotesEmotional String?
+  metaConfidence String
+  metaNotesConfidence String?
+
+  // Intelligence & Learning Type Check‑In (supporting observation notes)
+  intelLinguistic String?
+  intelLogical String?
+  intelSpatial String?
+  intelBodily String?
+  intelMusical String?
+  intelInterpersonal String?
+  intelIntrapersonal String?
+  intelNaturalistic String?
+  intelExistential String?
+  // Intelligence evidence flags (✓ moderate, + strong)
+  intelLinguisticEvidenceModerate Boolean? @default(false)
+  intelLinguisticEvidenceStrong   Boolean? @default(false)
+  intelLogicalEvidenceModerate    Boolean? @default(false)
+  intelLogicalEvidenceStrong      Boolean? @default(false)
+  intelSpatialEvidenceModerate    Boolean? @default(false)
+  intelSpatialEvidenceStrong      Boolean? @default(false)
+  intelBodilyEvidenceModerate     Boolean? @default(false)
+  intelBodilyEvidenceStrong       Boolean? @default(false)
+  intelMusicalEvidenceModerate    Boolean? @default(false)
+  intelMusicalEvidenceStrong      Boolean? @default(false)
+  intelInterpersonalEvidenceModerate Boolean? @default(false)
+  intelInterpersonalEvidenceStrong   Boolean? @default(false)
+  intelIntrapersonalEvidenceModerate Boolean? @default(false)
+  intelIntrapersonalEvidenceStrong   Boolean? @default(false)
+  intelNaturalisticEvidenceModerate  Boolean? @default(false)
+  intelNaturalisticEvidenceStrong    Boolean? @default(false)
+  intelExistentialEvidenceModerate   Boolean? @default(false)
+  intelExistentialEvidenceStrong     Boolean? @default(false)
+
+  // Parent–Child Dynamic Snapshot
+  parentProximity String?
+  parentInterventionLevel String?
+  parentInterventionStyle String?
+  childIndependenceLevel String?
+  childEmotionalWithParent String?
+  childIndependenceWhenParentEngaged String?
+  emotionalRegulationWithParentPresent String?
+
+  // Examiner Final Comments
+  mostEngagedZone String?
+  dominantObservedIntelligences String?
+  initialLearningStyleImpressions String?
+  earlyFlagsNeedsFollowUp String?
+  selfDirectedVsSeekingGuidance String?
+  finalAdditionalNotes String?
+
+  // Interaction summary table (Stage 6 continued)
+  interactionPreferredZone String?
+  interactionInitialBehaviour String?
+  interactionOpennessToAdultGuidance String?
+  interactionMostRevealingActivity String?
+  interactionCrossRefStep5 String?
+  interactionCuriosityExploration String?
+  interactionFocusAttention String?
+  interactionEngagementWithAdult String?
+  interactionResilienceInChallenge String?
+  interactionEmotionRegulationSignals String?
+  interactionCaregiverInteractionStyle String?
+  interactionRecommendations String?
+
+  // Office Use Only
+  applicationNumber     String?
+  observerName          String?
+  assessmentDate        String?
+  loggedToSystemDate    String?
+  loggedBy              String?
+
+  // Relation
+  applicationId String @unique
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("guided_observations_procedures")
 }
