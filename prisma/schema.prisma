@@ -110,6 +110,7 @@ model Application {
   initialObservationForm InitialObservationForm?
   guidedObservationsProcedure GuidedObservationsProcedure?
   ks1InterviewQuestions KS1InterviewQuestions?
+  ks2InterviewQuestions KS2InterviewQuestions?
 
   @@map("applications")
 }
@@ -645,4 +646,96 @@ model KS1InterviewQuestions {
   application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   @@map("ks1_interview_questions")
+}
+
+model KS2InterviewQuestions {
+  id                String   @id @default(cuid())
+  applicationId     String   @unique
+  application       Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  
+  // Child Information
+  fullName          String?
+  age               String?
+  
+  // Interview Questions (1-20)
+  // Questions 1-6
+  somethingAlwaysWantedToLearn Int?
+  somethingAlwaysWantedToLearnNotes String?
+  
+  fiveThingsWithPaperclip Int?
+  fiveThingsWithPaperclipNotes String?
+  
+  finishSchoolworkEarly Int?
+  finishSchoolworkEarlyNotes String?
+  
+  logicChallenge Int?
+  logicChallengeNotes String?
+  
+  somethingHard Int?
+  somethingHardNotes String?
+  
+  answerIsWrong Int?
+  answerIsWrongNotes String?
+  
+  // Questions 7-14
+  favouriteThingOnComputer Int?
+  favouriteThingOnComputerNotes String?
+  
+  likeWorkingWithOthers Int?
+  likeWorkingWithOthersNotes String?
+  
+  drawMachineInvention Int?
+  drawMachineInventionNotes String?
+  
+  confidenceTryingNewThings Int?
+  confidenceTryingNewThingsNotes String?
+  
+  helpedSomeoneLearn Int?
+  helpedSomeoneLearnNotes String?
+  
+  magicWandMakesSmarter Int?
+  magicWandMakesSmarterNotes String?
+  
+  explainInternetToPast Int?
+  explainInternetToPastNotes String?
+  
+  inChargeOfWorld Int?
+  inChargeOfWorldNotes String?
+  
+  // Questions 15-20
+  threeThingsGoodAt Int?
+  threeThingsGoodAtNotes String?
+  
+  somethingGetBetterAt Int?
+  somethingGetBetterAtNotes String?
+  
+  inventJobDoesntExist Int?
+  inventJobDoesntExistNotes String?
+  
+  learningPreference String? // Not scored - record answer
+  
+  digitalTasks Int?
+  digitalTasksNotes String?
+  
+  playingWithFriends Int?
+  playingWithFriendsNotes String?
+  
+  // Parental Interference
+  parentalInterferenceFlagged Boolean @default(false)
+  parentalInterferenceNotes String?
+  
+  // Total Score
+  totalScore Int?
+  
+  // Office Use Only
+  applicationNumber String?
+  observerName String?
+  assessmentDate String?
+  loggedToSystemDate String?
+  loggedBy String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("ks2_interview_questions")
 }
