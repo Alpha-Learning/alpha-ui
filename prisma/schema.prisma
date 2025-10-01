@@ -112,6 +112,7 @@ model Application {
   ks1InterviewQuestions KS1InterviewQuestions?
   ks2InterviewQuestions KS2InterviewQuestions?
   peerDynamicObservation PeerDynamicObservation?
+  parentChildDynamicObservation ParentChildDynamicObservation?
 
   @@map("applications")
 }
@@ -857,4 +858,132 @@ model PeerDynamicObservation {
   updatedAt DateTime @updatedAt
   
   @@map("peer_dynamic_observation")
+}
+
+model ParentChildDynamicObservation {
+  id                String   @id @default(cuid())
+  applicationId     String   @unique
+  application       Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  
+  // Child Information
+  childFullName     String?
+  childAge          String?
+  
+  // Joint Story Creation (10 minutes)
+  sharedIdeaExchangeRating     Int?
+  sharedIdeaExchangeNotes      String?
+  emotionalWarmthRating        Int?
+  emotionalWarmthNotes         String?
+  balanceOfLeadershipRating    Int?
+  balanceOfLeadershipNotes     String?
+  communicationStyleRating     Int?
+  communicationStyleNotes      String?
+  mutualCreativityRating      Int?
+  mutualCreativityNotes       String?
+  
+  // Separation - Child Continues Solo (10 minutes)
+  independenceRating           Int?
+  independenceNotes            String?
+  confidenceHesitationRating   Int?
+  confidenceHesitationNotes   String?
+  taskEngagementRating        Int?
+  taskEngagementNotes         String?
+  creativeExpansionRating     Int?
+  creativeExpansionNotes       String?
+  
+  // Teaching Moment - Comic Strip (10 minutes)
+  teachingStyleRating          Int?
+  teachingStyleNotes           String?
+  patienceEncouragementRating  Int?
+  patienceEncouragementNotes  String?
+  parentClarityRating          Int?
+  parentClarityNotes           String?
+  childEngagementRating       Int?
+  childEngagementNotes         String?
+  
+  // Parenting Style & Dynamic Insights
+  parentDominantStyleDirective     Boolean @default(false)
+  parentDominantStyleSupportive    Boolean @default(false)
+  parentDominantStyleDetached      Boolean @default(false)
+  parentDominantStyleFacilitative  Boolean @default(false)
+  
+  emotionalAttunementHigh      Boolean @default(false)
+  emotionalAttunementModerate  Boolean @default(false)
+  emotionalAttunementLow       Boolean @default(false)
+  
+  encouragementStylePraiseFocused     Boolean @default(false)
+  encouragementStyleProcessFocused    Boolean @default(false)
+  encouragementStyleCorrectionFocused Boolean @default(false)
+  
+  attachmentSignalSecure      Boolean @default(false)
+  attachmentSignalAnxious     Boolean @default(false)
+  attachmentSignalAvoidant    Boolean @default(false)
+  attachmentSignalDisengaged  Boolean @default(false)
+  
+  // Child Meta-Skills During Assessment
+  confidenceAutonomyObserved  Boolean @default(false)
+  confidenceAutonomyNotes     String?
+  emotionalRegulationObserved Boolean @default(false)
+  emotionalRegulationNotes     String?
+  curiosityObserved            Boolean @default(false)
+  curiosityNotes               String?
+  creativityExpressionObserved Boolean @default(false)
+  creativityExpressionNotes    String?
+  selfDirectedLearningObserved Boolean @default(false)
+  selfDirectedLearningNotes    String?
+  communicationObserved        Boolean @default(false)
+  communicationNotes           String?
+
+  // Learning Type & Intelligence Clues
+  linguisticObserved           Boolean @default(false)
+  linguisticStronglyEvident    Boolean @default(false)
+  linguisticNotes              String?
+  logicalMathematicalObserved Boolean @default(false)
+  logicalMathematicalStronglyEvident Boolean @default(false)
+  logicalMathematicalNotes     String?
+  spatialObserved              Boolean @default(false)
+  spatialStronglyEvident       Boolean @default(false)
+  spatialNotes                 String?
+  bodilyKinestheticObserved    Boolean @default(false)
+  bodilyKinestheticStronglyEvident Boolean @default(false)
+  bodilyKinestheticNotes       String?
+  musicalObserved              Boolean @default(false)
+  musicalStronglyEvident       Boolean @default(false)
+  musicalNotes                 String?
+  interpersonalObserved        Boolean @default(false)
+  interpersonalStronglyEvident Boolean @default(false)
+  interpersonalNotes           String?
+  intrapersonalObserved        Boolean @default(false)
+  intrapersonalStronglyEvident Boolean @default(false)
+  intrapersonalNotes           String?
+  naturalisticObserved         Boolean @default(false)
+  naturalisticStronglyEvident  Boolean @default(false)
+  naturalisticNotes            String?
+  existentialObserved          Boolean @default(false)
+  existentialStronglyEvident   Boolean @default(false)
+  existentialNotes             String?
+  
+  // Dynamic Summary & Reflection
+  parentChildDynamicStandout  String?
+  childExpressiveWithWithoutParent String?
+  parentGuidanceHindrance     String?
+  
+  // Red Flags or Follow-up Needs
+  emotionalDistressFlag       Boolean @default(false)
+  parentOverDirectionFlag     Boolean @default(false)
+  confidenceIssueFlag         Boolean @default(false)
+  noFlagsFlag                 Boolean @default(false)
+  redFlagsNotes               String?
+  
+  // Office Use Only
+  applicationNumber            String?
+  observerName                String?
+  assessmentDate              String?
+  loggedToSystemDate          String?
+  loggedBy                    String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("parent_child_dynamic_observation")
 }

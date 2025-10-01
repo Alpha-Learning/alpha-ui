@@ -34,7 +34,7 @@ export function determineApplicationStatus(application: ApplicationWithCompletio
     { name: 'Initial Observation Form', completed: application.isSixthFormCompleted },
     { name: 'Guided Observations Procedure', completed: application.isSeventhFormCompleted },
     { name: 'Initial Form', completed: application.isEighthFormCompleted },
-    { name: 'Form 9', completed: application.isNinthFormCompleted },
+    { name: 'Parent-Child Dynamic Observation', completed: application.isNinthFormCompleted },
     { name: 'Form 10', completed: application.isTenthFormCompleted },
   ];
 
