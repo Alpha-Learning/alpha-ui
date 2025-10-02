@@ -77,12 +77,12 @@ export default function Home() {
       {/* Hero Video Section */}
       <section id="home" className="relative pt-16 sm:pt-20 min-h-[70vh] sm:min-h-[80vh] md:h-screen flex items-center justify-center overflow-hidden">
         {/* Fallback background image */}
-        <div 
+        {/* <div 
           className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: "url('/image-Photoroom.png')",
           }}
-        ></div>
+        ></div> */}
         
         {/* Video overlay */}
         <video
@@ -95,10 +95,10 @@ export default function Home() {
           onLoadedData={() => console.log('Video loaded successfully')}
           onError={(e) => console.log('Video error:', e)}
         >
-          <source src="/videos/animated.mp4" type="video/mp4" />
+          <source src="/videos/bg.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        <div className="relative z-10 text-center text-white px-4">
+        {/* <div className="relative z-10 text-center text-white px-4">
           <motion.h1
             className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 leading-tight"
             initial={{ opacity: 0, y: 24 }}
@@ -125,8 +125,11 @@ export default function Home() {
           >
             Get Started
           </motion.button>
-        </div>
+        </div> */}
         <div className="absolute inset-0 bg-black/10"></div>
+        
+        {/* Bottom fade gradient overlay */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none"></div>
       </section>
 
       {/* First Content Section - Images Left, Text Right */}

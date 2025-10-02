@@ -56,7 +56,7 @@ export default function Header() {
         <img 
           src="/logo.png" 
           alt="logo" 
-          width={58} 
+          width={68} 
           height={58} 
           style={{ transform: `scale(${1 - Math.min(scrollY, 200) * 0.00025})` }}
         />
@@ -76,35 +76,28 @@ export default function Header() {
   {/* Navigation */}
   <nav className="hidden lg:flex items-center space-x-1">
     {[
-      { href: '#home', label: 'Home', icon: '🏠' },
-      { href: '#about', label: 'About', icon: '📋' },
-      { href: '#services', label: 'Services', icon: '⚙️' },
-      { href: '#contact', label: 'Contact', icon: '📞' }
+      { href: '#home', label: 'Home' },
+      { href: '#about', label: 'About' },
+      { href: '#services', label: 'Services' },
+      { href: '#contact', label: 'Contact' }
     ].map((item, index) => (
-      <a
-        key={item.href}
-        href={item.href}
-        className={`relative px-6 py-3 transition-all duration-300 group ${scrollY > 160 ? 'text-gray-800 hover:text-teal-600' : 'text-white hover:text-teal-200'}`}
-        style={{
-          animationDelay: `${index * 0.1}s`
-        }}
-      >
-        <span className="relative z-10 flex items-center space-x-2">
-          <span className="text-lg group-hover:scale-110 transition-transform duration-300">{item.icon}</span>
-          <span className="font-medium">{item.label}</span>
-        </span>
-        <div className="absolute inset-0 bg-gradient-to-r from-teal-50 to-teal-100 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        <div className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-gradient-to-r from-teal-500 to-teal-700 group-hover:w-full group-hover:left-0 transition-all duration-300"></div>
-      </a>
+        <a
+          key={item.href}
+          href={item.href}
+          className={`relative px-6 py-3 text-gray-500 hover:text-[#18215e] transition-all duration-300 group rounded-lg`}
+          style={{
+            animationDelay: `${index * 0.1}s`
+          }}
+        >
+          <span className="relative z-10 font-[4px">{item.label}</span>
+        </a>
     ))}
   </nav>
 
   {/* CTA Button */}
   <div className="hidden md:flex items-center space-x-4">
-    <button className="relative px-6 py-3 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group overflow-hidden">
-      <span className="relative z-10">Get Started</span>
-      <div className="absolute inset-0 bg-gradient-to-r from-teal-700 to-teal-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-      <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+    <button className="relative cursor-pointer px-6 py-3 bg-[#18215e] hover:bg-[#18215e]/80 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group overflow-hidden">
+      Get Started
     </button>
   </div>
 
@@ -144,7 +137,7 @@ export default function Header() {
       ))}
     </nav>
     <div className="p-4 border-t border-gray-200">
-      <button className="w-full px-5 py-3 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transform active:scale-[0.99] transition-all">
+      <button className="w-full px-5 py-3 bg-[#18215e] text-white rounded-full font-semibold shadow-lg hover:shadow-xl transform active:scale-[0.99] transition-all">
         Get Started
       </button>
     </div>

@@ -74,17 +74,6 @@ export default function InteractiveFooter() {
         boxShadow: scrollY > 50 ? '0 -4px 20px rgba(0, 0, 0, 0.1)' : 'none'
       }}
     >
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-32 h-32 bg-gradient-to-r from-teal-500/10 to-teal-600/10 rounded-full animate-pulse"></div>
-        <div className="absolute top-0 right-1/4 w-24 h-24 bg-gradient-to-r from-blue-500/10 to-blue-600/10 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-0 left-1/2 w-16 h-16 bg-gradient-to-r from-purple-500/10 to-purple-600/10 rounded-full animate-pulse" style={{animationDelay: '2s'}}></div>
-        
-        {/* Floating particles */}
-        <div className="absolute top-1/4 left-1/3 w-2 h-2 bg-teal-400/30 rounded-full animate-bounce" style={{animationDelay: '0.5s'}}></div>
-        <div className="absolute top-1/2 right-1/3 w-1 h-1 bg-blue-400/40 rounded-full animate-bounce" style={{animationDelay: '1.5s'}}></div>
-        <div className="absolute bottom-1/3 left-1/4 w-1.5 h-1.5 bg-purple-400/30 rounded-full animate-bounce" style={{animationDelay: '2.5s'}}></div>
-      </div>
 
       <div className="relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
