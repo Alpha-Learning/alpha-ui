@@ -291,7 +291,7 @@ function PreAssessmentInner() {
                   </div>
                 </section>
 
-                <section className="pt-2 border-t">
+                <section className="pt-2 border-t lg:pb-20">
                   <h2 className="text-2xl font-bold text-slate-900 mb-2">Consent</h2>
                   <div className="space-y-2 text-sm text-slate-700">
                     <label className="flex items-start gap-3"><input type="checkbox" {...register("consentContact")} /> <span>I agree to be contacted by a member of the admissions team</span></label>

@@ -219,7 +219,7 @@ export default function KS1InterviewQuestionsPage() {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Child Information */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
             title="Child Information"
             bgClassName="bg-teal-700"
@@ -239,7 +239,7 @@ export default function KS1InterviewQuestionsPage() {
         </section>
 
         {/* Interview Questions */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
             title="Interview Questions"
             bgClassName="bg-teal-700"
@@ -914,7 +914,7 @@ export default function KS1InterviewQuestionsPage() {
         </section>
 
         {/* Total Score Interpretation */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
             title="Total Score Interpretation"
             bgClassName="bg-teal-700"
@@ -956,7 +956,7 @@ export default function KS1InterviewQuestionsPage() {
         </section>
 
         {/* Office Use Only */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
             title="Office Use Only"
             bgClassName="bg-teal-700"

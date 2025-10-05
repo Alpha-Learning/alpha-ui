@@ -287,7 +287,7 @@ export default function ParentChildDynamicObservationPage() {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Child Information */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Child Information"
             bgClassName="bg-teal-700"
@@ -307,7 +307,7 @@ export default function ParentChildDynamicObservationPage() {
         </section>
 
         {/* Joint Story Creation (10 minutes) */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Joint Story Creation (10 minutes)"
             bgClassName="bg-teal-700"
@@ -490,7 +490,7 @@ export default function ParentChildDynamicObservationPage() {
         </section>
 
         {/* Separation - Child Continues Solo (10 minutes) */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Separation - Child Continues Solo (10 minutes)"
             bgClassName="bg-teal-700"
@@ -639,7 +639,7 @@ export default function ParentChildDynamicObservationPage() {
         </section>
 
         {/* Teaching Moment - Comic Strip (10 minutes) */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Teaching Moment - Comic Strip (10 minutes)"
             bgClassName="bg-teal-700"
@@ -788,7 +788,7 @@ export default function ParentChildDynamicObservationPage() {
         </section>
 
         {/* Parenting Style & Dynamic Insights */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Parenting Style & Dynamic Insights"
             bgClassName="bg-teal-700"
@@ -1036,7 +1036,7 @@ export default function ParentChildDynamicObservationPage() {
         </section>
 
         {/* Child Meta-Skills During Assessment */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Child Meta-Skills During Assessment"
             bgClassName="bg-teal-700"
@@ -1247,7 +1247,7 @@ export default function ParentChildDynamicObservationPage() {
         </section>
 
         {/* Learning Type & Intelligence Clues */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Learning Type & Intelligence Clues"
             bgClassName="bg-teal-700"
@@ -1674,13 +1674,13 @@ export default function ParentChildDynamicObservationPage() {
         </section>
 
         {/* Dynamic Summary & Reflection */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Dynamic Summary & Reflection"
             bgClassName="bg-teal-700"
           />
           
-          <div className="space-y-4">
+          <div className="space-y-4 mt-2">
             <FormField label="1. What stood out in the parent-child dynamic?" htmlFor="parentChildDynamicStandout">
               <Textarea
                 rows={5}
@@ -1708,13 +1708,13 @@ export default function ParentChildDynamicObservationPage() {
         </section>
 
         {/* Red Flags or Follow-up Needs */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Red Flags or Follow-up Needs"
             bgClassName="bg-teal-700"
           />
           
-          <div className="space-y-4">
+          <div className="space-y-4 mt-3">
             <div className="flex flex-wrap gap-4">
               <Controller
                 name="emotionalDistressFlag"
@@ -1789,13 +1789,13 @@ export default function ParentChildDynamicObservationPage() {
         </section>
 
         {/* Office Use Only */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Office Use Only"
             bgClassName="bg-teal-700"
           />
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
             <FormField label="Application Number" htmlFor="applicationNumber">
               <Input id="applicationNumber" {...register("applicationNumber")} />
             </FormField>

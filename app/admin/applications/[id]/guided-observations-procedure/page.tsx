@@ -328,7 +328,7 @@ export default function GuidedObservationsProcedurePage() {
       </section>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader title="Child Information" bgClassName="bg-teal-700" />
           <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField label="Full Name" htmlFor="fullName" error={errors.fullName as any}><Input id="fullName" {...register("fullName")} /></FormField>
@@ -337,7 +337,7 @@ export default function GuidedObservationsProcedurePage() {
         </section>
 
         {/* Guided Activity Ratings */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader title="Guided Activity Ratings" bgClassName="bg-teal-700" />
           {[
             { k: "A", t: "Engineering & Building", s: "zoneAScore", n: "zoneANotes", skills: ["Problem‑solving","Creativity","Spatial reasoning","Focus"] },
@@ -374,7 +374,7 @@ export default function GuidedObservationsProcedurePage() {
         </section>
 
         {/* Meta Learning Skill Indicators */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader title="Meta Learning Skill Indicators" bgClassName="bg-teal-700" />
           {[
             { k: 'metaSelfReg', l: 'Self‑Regulation', n: 'metaNotesSelfReg' },
@@ -405,7 +405,7 @@ export default function GuidedObservationsProcedurePage() {
         </section>
 
         {/* Parent–Child Dynamic Snapshot */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader title="Parent–Child Dynamic Snapshot" bgClassName="bg-teal-700" />
           <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField label="Parent Proximity" htmlFor="parentProximity">
@@ -437,7 +437,7 @@ export default function GuidedObservationsProcedurePage() {
         </section>
 
         {/* Intelligence & Learning Type Check‑In */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader title="Intelligence & Learning Type Check‑In" bgClassName="bg-teal-700" />
           <div className="mt-3 text-slate-700">Confirm or update intelligence type from initial observations.</div>
           <div className="mt-3 overflow-x-auto">
@@ -498,7 +498,7 @@ export default function GuidedObservationsProcedurePage() {
         </section>
 
         {/* Examiner Final Comments (last section) */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader title="Examiner Final Comments (Qualitative)" bgClassName="bg-teal-700" />
           <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField label="Most engaged zone" htmlFor="mostEngagedZone">
@@ -534,7 +534,7 @@ export default function GuidedObservationsProcedurePage() {
         </section>
 
         {/* Interaction Description table (final section) */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader title="Interaction Summary" bgClassName="bg-teal-700" />
           <div className="mt-3 overflow-x-auto">
             <table className="min-w-full border border-slate-300 text-sm">
@@ -599,7 +599,7 @@ export default function GuidedObservationsProcedurePage() {
         </section>
 
         {/* Office Use Only (last section) */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader title="Office Use Only" bgClassName="bg-teal-700" />
           <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField label="Application Number" htmlFor="applicationNumber">

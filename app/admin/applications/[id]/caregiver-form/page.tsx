@@ -425,7 +425,7 @@ export default function CaregiverFormPage() {
                 <p>Owner: SY Holdings WLL</p>
                 <p>Prepared by: Meta Learning Systems Implementation Unit</p>
                 <p>Confidentiality Level: Internal Operational Use</p>
-                <p>Page 3 of 4</p>
+                {/* <p>Page 3 of 4</p> */}
               </div>
             </section>
           </div>

@@ -281,7 +281,7 @@ export default function PeerDynamicObservationPage() {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Observation Details */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Observation Details"
             bgClassName="bg-teal-700"
@@ -313,7 +313,7 @@ export default function PeerDynamicObservationPage() {
         </section>
 
         {/* Behavioural Skill Assessment */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Behavioural Skill Assessment"
             bgClassName="bg-teal-700"
@@ -600,7 +600,7 @@ export default function PeerDynamicObservationPage() {
         </section>
 
         {/* Meta Learning Skill Alignment */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Meta Learning Skill Alignment"
             bgClassName="bg-teal-700"
@@ -879,7 +879,7 @@ export default function PeerDynamicObservationPage() {
         </section>
 
         {/* Learning Preference & Intelligence Inference */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Learning Preference & Intelligence Inference"
             bgClassName="bg-teal-700"
@@ -1236,7 +1236,7 @@ export default function PeerDynamicObservationPage() {
         </section>
 
         {/* Learning Style Clues, Social Role Tendency */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Learning Style Clues, Social Role Tendency, and Summary Reflections"
             bgClassName="bg-teal-700"
@@ -1523,7 +1523,7 @@ export default function PeerDynamicObservationPage() {
         </section>
 
         {/* Summary Reflections */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Summary Reflections"
             bgClassName="bg-teal-700"

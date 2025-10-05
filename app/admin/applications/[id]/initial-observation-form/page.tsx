@@ -1535,7 +1535,7 @@ export default function InitialObservationFormPage() {
                 <p>Owner: SY Holdings WLL</p>
                 <p>Prepared by: Meta Learning Systems Implementation Unit</p>
                 <p>Confidentiality Level: Internal Operational Use</p>
-                <p>Page 4 of 5</p>
+                {/* <p>Page 4 of 5</p> */}
               </div>
             </section>
 

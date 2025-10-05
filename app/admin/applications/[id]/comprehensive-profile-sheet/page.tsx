@@ -405,7 +405,7 @@ export default function ComprehensiveProfileSheetPage() {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Child Information */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
             title="Child Information"
             bgClassName="bg-teal-700"
@@ -434,7 +434,7 @@ export default function ComprehensiveProfileSheetPage() {
         </section>
 
         {/* Cognitive Skills Profile */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
             title="Cognitive Skills Profile"
             bgClassName="bg-teal-700"
@@ -819,7 +819,7 @@ export default function ComprehensiveProfileSheetPage() {
         </section>
 
         {/* Learning Style Preference */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
             title="Learning Style Preference"
             bgClassName="bg-teal-700"
@@ -1066,7 +1066,7 @@ export default function ComprehensiveProfileSheetPage() {
         </section>
 
         {/* Dominant Intelligence Types */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
             title="Dominant Intelligence Types"
             bgClassName="bg-teal-700"
@@ -1466,7 +1466,7 @@ export default function ComprehensiveProfileSheetPage() {
         </section>
 
         {/* Meta-Learning Pillars & Soft Skills Profile */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
             title="Meta-Learning Pillars & Soft Skills Profile"
             bgClassName="bg-teal-700"
@@ -1859,7 +1859,7 @@ export default function ComprehensiveProfileSheetPage() {
         </section>
 
         {/* Academic & Digital Readiness */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
             title="Academic & Digital Readiness"
             bgClassName="bg-teal-700"
@@ -1966,7 +1966,7 @@ export default function ComprehensiveProfileSheetPage() {
         </section>
 
         {/* Observational Insights by Setting / Task */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
             title="Observational Insights by Setting / Task"
             bgClassName="bg-teal-700"
@@ -2030,7 +2030,7 @@ export default function ComprehensiveProfileSheetPage() {
         </section>
 
         {/* Interview-Based Verbal Assessment Summary */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
             title="Interview-Based Verbal Assessment Summary"
             bgClassName="bg-teal-700"
@@ -2198,7 +2198,7 @@ export default function ComprehensiveProfileSheetPage() {
         </section>
 
         {/* Profile Score Range & Placement Interpretation */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Profile Score Range & Placement Interpretation"
             bgClassName="bg-teal-700"
@@ -2347,7 +2347,7 @@ export default function ComprehensiveProfileSheetPage() {
         </section>
 
         {/* Component Recommendations */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
             title="Component Recommendations"
             bgClassName="bg-teal-700"
@@ -2470,7 +2470,7 @@ export default function ComprehensiveProfileSheetPage() {
         </section>
 
         {/* Final Summary Statement */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Final Summary Statement"
             bgClassName="bg-teal-700"
