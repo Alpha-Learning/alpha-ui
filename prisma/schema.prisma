@@ -1152,6 +1152,10 @@ model ComprehensiveProfileSheet {
   ks1InterpretationStrong            Boolean @default(false)
   ks1InterpretationExceptional       Boolean @default(false)
   ks1SuggestedAction                 String?
+  ks1ScoreRange1325Action           String?
+  ks1ScoreRange2640Action           String?
+  ks1ScoreRange4155Action           String?
+  ks1ScoreRange5665Action           String?
   
   ks2Score                           Int?
   ks2InterpretationEmerging          Boolean @default(false)
@@ -1159,6 +1163,10 @@ model ComprehensiveProfileSheet {
   ks2InterpretationStrong            Boolean @default(false)
   ks2InterpretationExceptional       Boolean @default(false)
   ks2SuggestedAction                 String?
+  ks2ScoreRange2044Action           String?
+  ks2ScoreRange4569Action           String?
+  ks2ScoreRange7089Action           String?
+  ks2ScoreRange9095Action           String?
   
   qualitativeInsightsVerbalResponses String?
   
