@@ -124,10 +124,16 @@ export default function KS1InterviewQuestionsPage() {
   console.log("form errors  ", errors);
   useEffect(() => {
     (async () => {
+      // Load existing form data
       const res = await apiService.get(
         `/api/admin/ks1-interview-questions?applicationId=${params.id}`
       );
-      if (res.success && res.data)
+      
+      // Load application data for auto-filling
+      const appRes = await apiService.getApplicationData(params.id);
+      
+      if (res.success && res.data) {
+        // Use existing form data
         reset({
           fullName: res.data.fullName || "",
           age: res.data.age || "",
@@ -181,6 +187,49 @@ export default function KS1InterviewQuestionsPage() {
           loggedToSystemDate: res.data.loggedToSystemDate || "",
           loggedBy: res.data.loggedBy || "",
         });
+      } else if (appRes.success && appRes.data) {
+        // Auto-fill with application data if no existing form data
+        const appData = appRes.data;
+        reset({
+          fullName: appData.childFullName || "",
+          age: appData.childAge ? appData.childAge.toString() : "",
+          whatDoYouDoSomethingHard: "",
+          whatDoYouDoSomethingHardNotes: "",
+          howDoYouFeelWhenTryNew: "",
+          howDoYouFeelWhenTryNewNotes: "",
+          whatWouldYouDoIfFriendSad: "",
+          whatWouldYouDoIfFriendSadNotes: "",
+          tellMeAboutFavouriteStory: "",
+          tellMeAboutFavouriteStoryNotes: "",
+          favouriteThingToLearn: "",
+          favouriteThingToLearnNotes: "",
+          whatElseUcanDoWithASpoonOtherThanEat: "",
+          whatElseUcanDoWithASpoonOtherThanEatNotes: "",
+          howShareCookiesBetweenFriends: "",
+          howShareCookiesBetweenFriendsNotes: "",
+          puzzleActivity: "",
+          puzzleActivityNotes: "",
+          tableInteraction: "",
+          tableInteractionNotes: "",
+          drawSomethingYouInvent: "",
+          drawSomethingYouInventNotes: "",
+          doYouLikeLearnByListening: "",
+          canYouSortShapesByColor: "",
+          canYouSortShapesByColorNotes: "",
+          canYouTeachMeDrawMummy: "",
+          canYouTeachMeDrawMummyNotes: "",
+          doYouLikePlayingWithFriends: "",
+          doYouLikePlayingWithFriendsNotes: "",
+          parentalInterferenceFlagged: false,
+          parentalInterferenceNotes: "",
+          totalScore: "",
+          applicationNumber: params.id,
+          observerName: "",
+          assessmentDate: "",
+          loggedToSystemDate: "",
+          loggedBy: "",
+        });
+      }
     })();
   }, [params.id, reset]);
 

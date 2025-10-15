@@ -293,12 +293,12 @@ export default function AdminApplicationDetailPage() {
     "1. Application form",
     "2. Screening call and flow script",
     "3. Parent/Guardian/Outsider question",
-    "4. Facility walkthrough checklist",
-    "5. Initial observation form",
-    "6. Guided observation procedures",
-    "7. KS1 interview / KS2 interview question",
-    "8. Examiner Form: Peer Dynamic Observation",
-    "9. Parent-Child Dynamic Observation",
+    "4. Initial observation form",
+    "5. KS1 interview / KS2 interview question",
+    "6. Parent-Child Dynamic Observation",
+    "7. Examiner Form: Peer Dynamic Observation",
+    "8. Facility walkthrough checklist",
+    "9. UTL Comprehensive Profile Sheet",
     "10. Understanding The Learning Comprehensive Profile Sheet",
   ];
 
@@ -422,16 +422,16 @@ export default function AdminApplicationDetailPage() {
             {Array.from({ length: data.totalStages }, (_, i) => i).map((idx) => {
               const stageNumber = idx + 1;
               const isCompleted = completionFields[idx] || false;
-              const hrefMap: Record<number, string> = {
-                1: `/admin/applications/${data.id}/initial-form`,
-                2: `/admin/applications/${data.id}/screening-call`,
-                4: `/admin/applications/${data.id}/facility-walkthrough-checklist`,
-                5: `/admin/applications/${data.id}/initial-observation-form`,
-                6: `/admin/applications/${data.id}/guided-observations-procedure`,
-                8: `/admin/applications/${data.id}/peer-dynamic-observation`,
-                9: `/admin/applications/${data.id}/parent-child-dynamic-observation`,
-                10: `/admin/applications/${data.id}/comprehensive-profile-sheet`,
-              };
+               const hrefMap: Record<number, string> = {
+                 1: `/admin/applications/${data.id}/initial-form`,
+                 2: `/admin/applications/${data.id}/screening-call`,
+                 4: `/admin/applications/${data.id}/initial-observation-form`,
+                 6: `/admin/applications/${data.id}/parent-child-dynamic-observation`,
+                 7: `/admin/applications/${data.id}/peer-dynamic-observation`,
+                 8: `/admin/applications/${data.id}/facility-walkthrough-checklist`,
+                 9: `/admin/applications/${data.id}/comprehensive-profile-sheet`,
+                 10: `/admin/applications/${data.id}/comprehensive-profile-sheet`,
+               };
               const href = hrefMap[stageNumber];
               
               // Special handling for stage 3 with dropdown
@@ -446,17 +446,17 @@ export default function AdminApplicationDetailPage() {
                 );
               }
               
-              // Special handling for stage 7 with dropdown
-              if (stageNumber === 7) {
-                return (
-                  <Stage7Dropdown 
-                    key={idx} 
-                    applicationId={data.id} 
-                    isCompleted={isCompleted}
-                    stageTitle={stageTitles[idx]}
-                  />
-                );
-              }
+               // Special handling for stage 5 with dropdown (KS1/KS2 Interview)
+               if (stageNumber === 5) {
+                 return (
+                   <Stage7Dropdown 
+                     key={idx} 
+                     applicationId={data.id} 
+                     isCompleted={isCompleted}
+                     stageTitle={stageTitles[idx]}
+                   />
+                 );
+               }
               
               const inner = (
                 <div className={`p-4 rounded-lg border-2 transition-all duration-200 ${

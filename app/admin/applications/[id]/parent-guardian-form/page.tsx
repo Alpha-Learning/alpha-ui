@@ -60,7 +60,13 @@ export default function ParentGuardianFormPage() {
   const loadFormData = async () => {
     try {
       setLoading(true);
+      
+      // Load existing form data
       const res = await apiService.get(`/api/admin/parent-guardian-form?applicationId=${params.id}`);
+      
+      // Load application data for auto-filling
+      const appRes = await apiService.getApplicationData(params.id);
+      
       if (res.success && res.data) {
         const data = res.data;
         reset({
@@ -90,6 +96,37 @@ export default function ParentGuardianFormPage() {
           applicationNumber: data.applicationNumber || "",
           loggedToSystemDate: data.loggedToSystemDate || "",
           loggedBy: data.loggedBy || "",
+        });
+      } else if (appRes.success && appRes.data) {
+        // Auto-fill with application data if no existing form data
+        const appData = appRes.data;
+        reset({
+          fullName: appData.parentFullName || "",
+          childName: appData.childFullName || "",
+          date: new Date().toISOString().split('T')[0], // Today's date as default
+          typicalWeekday: "",
+          screenTimeHours: "",
+          homeActivities: "",
+          culturalBackground: "",
+          rulesDisciplineApproach: "",
+          supportWhenStruggling: "",
+          strengthsInterests: "",
+          challengingAreas: "",
+          learningApproach: "",
+          previousEducationalExperience: "",
+          covidLearningExperience: "",
+          supportiveLearningEnvironment: "",
+          responseToFrustration: "",
+          peerInteraction: "",
+          emotionalBehavioralConcerns: "",
+          seekingHelp: "",
+          educationalHopesGoals: "",
+          creativityMovementEmotionalRole: "",
+          parentingStyle: "",
+          technologyConcerns: "",
+          applicationNumber: params.id,
+          loggedToSystemDate: "",
+          loggedBy: "",
         });
       }
     } catch (error: any) {

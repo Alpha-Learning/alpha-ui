@@ -81,8 +81,15 @@ export default function FacilityWalkthroughChecklistPage() {
   const loadFormData = async () => {
     try {
       setLoading(true);
+      
+      // Load existing form data
       const res = await apiService.get(`/api/admin/facility-walkthrough-checklist?applicationId=${params.id}`);
+      
+      // Load application data for auto-filling
+      const appRes = await apiService.getApplicationData(params.id);
+      
       if (res.success && res.data) {
+        // Use existing form data
         const data = res.data;
         reset({
           examinerName: data.examinerName || "",
@@ -99,9 +106,31 @@ export default function FacilityWalkthroughChecklistPage() {
           safetySecurityMeasuresNotes: data.safetySecurityMeasuresNotes || "",
           qaSessionNotes: data.qaSessionNotes || "",
           scheduleAssessmentDatesNotes: data.scheduleAssessmentDatesNotes || "",
-          applicationNumber: data.applicationNumber || "",
+          applicationNumber: data.applicationNumber || params.id,
           loggedToSystemDate: data.loggedToSystemDate || "",
           loggedBy: data.loggedBy || "",
+        });
+      } else if (appRes.success && appRes.data) {
+        // Auto-fill with application data if no existing form data
+        const appData = appRes.data;
+        reset({
+          examinerName: "",
+          date: new Date().toISOString().split('T')[0], // Today's date as default
+          welcomeOverviewCompleted: false,
+          tourLearningZonesCompleted: false,
+          technologyDemonstrationCompleted: false,
+          safetySecurityMeasuresCompleted: false,
+          qaSessionCompleted: false,
+          scheduleAssessmentDatesCompleted: false,
+          welcomeOverviewNotes: "",
+          tourLearningZonesNotes: "",
+          technologyDemonstrationNotes: "",
+          safetySecurityMeasuresNotes: "",
+          qaSessionNotes: "",
+          scheduleAssessmentDatesNotes: "",
+          applicationNumber: params.id,
+          loggedToSystemDate: "",
+          loggedBy: "",
         });
       }
     } catch (error: any) {

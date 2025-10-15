@@ -12,6 +12,8 @@ const initialObservationFormSchema = z.object({
   // Child Information
   fullName: z.string().min(1, "Full name is required"),
   age: z.string().min(1, "Age is required"),
+  date: z.string().min(1, "Date is required"),
+  examiner: z.string().min(1, "Examiner is required"),
   
   // Zone-Based Engagement Grid
   zoneATimeSpent: z.string().min(1, "Zone A time spent is required"),
@@ -61,6 +63,8 @@ const initialObservationFormSchema = z.object({
   bodilyKinestheticSupportingObservation: z.string().min(1, "Bodily-kinesthetic supporting observation is required"),
   musicalEvidence: z.array(z.string()).min(1, "Musical evidence is required"),
   musicalSupportingObservation: z.string().min(1, "Musical supporting observation is required"),
+  existentialEvidence: z.array(z.string()).min(1, "Existential evidence is required"),
+  existentialSupportingObservation: z.string().min(1, "Existential supporting observation is required"),
   interpersonalEvidence: z.array(z.string()).min(1, "Interpersonal evidence is required"),
   interpersonalSupportingObservation: z.string().min(1, "Interpersonal supporting observation is required"),
   intrapersonalEvidence: z.array(z.string()).min(1, "Intrapersonal evidence is required"),
@@ -112,6 +116,8 @@ export default function InitialObservationFormPage() {
       // Child Information
       fullName: "",
       age: "",
+      date: "",
+      examiner: "",
       // Zone-Based Engagement Grid
       zoneATimeSpent: "",
       zoneASelfDirected: "",
@@ -155,6 +161,8 @@ export default function InitialObservationFormPage() {
       bodilyKinestheticSupportingObservation: "",
       musicalEvidence: [],
       musicalSupportingObservation: "",
+      existentialEvidence: [],
+      existentialSupportingObservation: "",
       interpersonalEvidence: [],
       interpersonalSupportingObservation: "",
       intrapersonalEvidence: [],
@@ -192,13 +200,21 @@ export default function InitialObservationFormPage() {
   const loadFormData = async () => {
     try {
       setLoading(true);
+      
+      // Load existing form data
       const res = await apiService.get(`/api/admin/initial-observation-form?applicationId=${params.id}`);
+      
+      // Load application data for auto-filling
+      const appRes = await apiService.getApplicationData(params.id);
+      
       if (res.success && res.data) {
         const data = res.data;
         reset({
           // Child Information
           fullName: data.fullName || "",
           age: data.age || "",
+          date: data.date || "",
+          examiner: data.examiner || "",
           // Zone-Based Engagement Grid
           zoneATimeSpent: data.zoneATimeSpent || "",
           zoneASelfDirected: data.zoneASelfDirected || "",
@@ -242,6 +258,8 @@ export default function InitialObservationFormPage() {
           bodilyKinestheticSupportingObservation: data.bodilyKinestheticSupportingObservation || "",
           musicalEvidence: data.musicalEvidence ? data.musicalEvidence.split(',') : [],
           musicalSupportingObservation: data.musicalSupportingObservation || "",
+          existentialEvidence: data.existentialEvidence ? data.existentialEvidence.split(',') : [],
+          existentialSupportingObservation: data.existentialSupportingObservation || "",
           interpersonalEvidence: data.interpersonalEvidence ? data.interpersonalEvidence.split(',') : [],
           interpersonalSupportingObservation: data.interpersonalSupportingObservation || "",
           intrapersonalEvidence: data.intrapersonalEvidence ? data.intrapersonalEvidence.split(',') : [],
@@ -268,6 +286,87 @@ export default function InitialObservationFormPage() {
           applicationNumber: data.applicationNumber || "",
           loggedToSystemDate: data.loggedToSystemDate || "",
           loggedBy: data.loggedBy || "",
+        });
+      } else if (appRes.success && appRes.data) {
+        // Auto-fill with application data if no existing form data
+        const appData = appRes.data;
+        reset({
+          // Child Information
+          fullName: appData.childFullName || "",
+          age: appData.childAge ? appData.childAge.toString() : "",
+          date: new Date().toISOString().split('T')[0],
+          examiner: "",
+          // Zone-Based Engagement Grid
+          zoneATimeSpent: "",
+          zoneASelfDirected: "",
+          zoneAObservations: [],
+          zoneAEngagementLevel: "",
+          zoneAKeyBehavioursNotes: "",
+          zoneBTimeSpent: "",
+          zoneBSelfDirected: "",
+          zoneBObservations: [],
+          zoneBEngagementLevel: "",
+          zoneBKeyBehavioursNotes: "",
+          zoneCTimeSpent: "",
+          zoneCSelfDirected: "",
+          zoneCObservations: [],
+          zoneCEngagementLevel: "",
+          zoneCKeyBehavioursNotes: "",
+          zoneDTimeSpent: "",
+          zoneDSelfDirected: "",
+          zoneDObservations: [],
+          zoneDEngagementLevel: "",
+          zoneDKeyBehavioursNotes: "",
+          // Meta Learning Skill Indicators
+          selfRegulationObserved: "",
+          selfRegulationBehaviourNotes: "",
+          curiosityObserved: "",
+          curiosityBehaviourNotes: "",
+          socialEngagementObserved: "",
+          socialEngagementBehaviourNotes: "",
+          emotionalRegulationObserved: "",
+          emotionalRegulationBehaviourNotes: "",
+          confidenceAutonomyObserved: "",
+          confidenceAutonomyBehaviourNotes: "",
+          // Learning Preference & Intelligence Summary
+          linguisticEvidence: [],
+          linguisticSupportingObservation: "",
+          logicalMathematicalEvidence: [],
+          logicalMathematicalSupportingObservation: "",
+          spatialEvidence: [],
+          spatialSupportingObservation: "",
+          bodilyKinestheticEvidence: [],
+          bodilyKinestheticSupportingObservation: "",
+          musicalEvidence: [],
+          musicalSupportingObservation: "",
+          existentialEvidence: [],
+          existentialSupportingObservation: "",
+          interpersonalEvidence: [],
+          interpersonalSupportingObservation: "",
+          intrapersonalEvidence: [],
+          intrapersonalSupportingObservation: "",
+          naturalisticEvidence: [],
+          naturalisticSupportingObservation: "",
+          // Parent-Child Dynamic Snapshot
+          parentProximity: [],
+          parentInterventionLevel: [],
+          parentInterventionStyle: [],
+          childIndependenceLevel: "",
+          childEmotionalPresentationWithParent: "",
+          childIndependenceWhenParentEngaged: "",
+          emotionalRegulationWithParentPresent: "",
+          // Examiner Summary (Qualitative)
+          mostEngagedZone: "",
+          dominantObservedIntelligences: "",
+          initialLearningStyleImpressions: "",
+          earlyFlagsNeedsFollowUp: "",
+          selfDirectedVsSeekingGuidance: "",
+          flagIndicators: "",
+          additionalNotesObservations: "",
+          // Office Use Only
+          applicationNumber: params.id,
+          loggedToSystemDate: "",
+          loggedBy: "",
         });
       }
     } catch (error: any) {
@@ -296,6 +395,7 @@ export default function InitialObservationFormPage() {
         spatialEvidence: data.spatialEvidence.join(','),
         bodilyKinestheticEvidence: data.bodilyKinestheticEvidence.join(','),
         musicalEvidence: data.musicalEvidence.join(','),
+        existentialEvidence: data.existentialEvidence.join(','),
         interpersonalEvidence: data.interpersonalEvidence.join(','),
         intrapersonalEvidence: data.intrapersonalEvidence.join(','),
         naturalisticEvidence: data.naturalisticEvidence.join(','),
@@ -343,7 +443,7 @@ export default function InitialObservationFormPage() {
             {/* Child Information */}
             <section>
               <FormSectionHeader title="Child Information" bgClassName="bg-teal-700" />
-              <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField label="Full Name" htmlFor="fullName">
                   <Input 
                     id="fullName"
@@ -364,6 +464,27 @@ export default function InitialObservationFormPage() {
                     <p className="text-red-500 text-sm mt-1">{errors.age.message}</p>
                   )}
                 </FormField>
+              <FormField label="Date" htmlFor="date">
+                <Input 
+                  id="date"
+                  type="date"
+                  {...register("date")}
+                  className={errors.date ? "border-red-500" : ""}
+                />
+                {errors.date && (
+                  <p className="text-red-500 text-sm mt-1">{errors.date.message}</p>
+                )}
+              </FormField>
+              <FormField label="Examiner" htmlFor="examiner">
+                <Input 
+                  id="examiner"
+                  {...register("examiner")}
+                  className={errors.examiner ? "border-red-500" : ""}
+                />
+                {errors.examiner && (
+                  <p className="text-red-500 text-sm mt-1">{errors.examiner.message}</p>
+                )}
+              </FormField>
               </div>
             </section>
 
@@ -1228,6 +1349,41 @@ export default function InitialObservationFormPage() {
                   </div>
                 </div>
               </div>
+
+              {/* Existential */}
+              <div className="border border-slate-200 rounded-lg p-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Existential (Big Question)</label>
+                    <p className="text-sm text-slate-600">Asks deep questions about meaning, purpose, or life</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Evidence</label>
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2">
+                        <input type="checkbox" value="moderate" {...register("existentialEvidence")} className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded" />
+                        <span className="text-sm text-slate-700">✓ Moderate</span>
+                      </label>
+                      <label className="flex items-center gap-2">
+                        <input type="checkbox" value="strong" {...register("existentialEvidence")} className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded" />
+                        <span className="text-sm text-slate-700">+ Strong</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Supporting Observation</label>
+                    <Textarea 
+                      rows={3}
+                      {...register("existentialSupportingObservation")}
+                      placeholder="Record specific observations..."
+                      className={errors.existentialSupportingObservation ? "border-red-500" : ""}
+                    />
+                    {errors.existentialSupportingObservation && (
+                      <p className="text-red-500 text-sm mt-1">{errors.existentialSupportingObservation.message}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
             </section>
 
             {/* Parent-Child Dynamic Snapshot */}
@@ -1494,7 +1650,8 @@ export default function InitialObservationFormPage() {
               </div>
             </section>
 
-            {/* Office Use Only */}
+            {/* Office Use Only - hidden for now */}
+            {false && (
             <section>
               <FormSectionHeader title="Office Use Only" bgClassName="bg-teal-700" />
               <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1504,8 +1661,8 @@ export default function InitialObservationFormPage() {
                     {...register("applicationNumber")}
                     className={errors.applicationNumber ? "border-red-500" : ""}
                   />
-                  {errors.applicationNumber && (
-                    <p className="text-red-500 text-sm mt-1">{errors.applicationNumber.message}</p>
+                  {errors.applicationNumber?.message && (
+                    <p className="text-red-500 text-sm mt-1">{errors?.applicationNumber?.message}</p>
                   )}
                 </FormField>
                 <FormField label="Logged to System Date" htmlFor="loggedToSystemDate">
@@ -1516,7 +1673,7 @@ export default function InitialObservationFormPage() {
                     className={errors.loggedToSystemDate ? "border-red-500" : ""}
                   />
                   {errors.loggedToSystemDate && (
-                    <p className="text-red-500 text-sm mt-1">{errors.loggedToSystemDate.message}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors?.loggedToSystemDate?.message}</p>
                   )}
                 </FormField>
                 <FormField label="Logged by" htmlFor="loggedBy">
@@ -1527,7 +1684,7 @@ export default function InitialObservationFormPage() {
                     className={errors.loggedBy ? "border-red-500" : ""}
                   />
                   {errors.loggedBy && (
-                    <p className="text-red-500 text-sm mt-1">{errors.loggedBy.message}</p>
+                    <p className="text-red-500 text-sm mt-1">{errors?.loggedBy?.message}</p>
                   )}
                 </FormField>
               </div>
@@ -1538,6 +1695,7 @@ export default function InitialObservationFormPage() {
                 {/* <p>Page 4 of 5</p> */}
               </div>
             </section>
+            )}
 
             {message && (
               <div className={`p-3 rounded-lg ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>

@@ -84,7 +84,13 @@ export default function CaregiverFormPage() {
   const loadFormData = async () => {
     try {
       setLoading(true);
+      
+      // Load existing form data
       const res = await apiService.get(`/api/admin/caregiver-form?applicationId=${params.id}`);
+      
+      // Load application data for auto-filling
+      const appRes = await apiService.getApplicationData(params.id);
+      
       if (res.success && res.data) {
         const data = res.data;
         reset({
@@ -106,6 +112,29 @@ export default function CaregiverFormPage() {
           applicationNumber: data.applicationNumber || "",
           loggedToSystemDate: data.loggedToSystemDate || "",
           loggedBy: data.loggedBy || "",
+        });
+      } else if (appRes.success && appRes.data) {
+        // Auto-fill with application data if no existing form data
+        const appData = appRes.data;
+        reset({
+          fullName: appData.caregiverFullName || "",
+          childName: appData.childFullName || "",
+          date: new Date().toISOString().split('T')[0], // Today's date as default
+          careDuration: "",
+          regularActivities: "",
+          behaviorWithoutParent: "",
+          toysGamesTasksEnjoyed: "",
+          preferences: "",
+          responseToDifficulties: "",
+          engagementWithChosenActivity: "",
+          engagementWithAssignedActivity: "",
+          interactionWithChildren: "",
+          seekingHelpComfort: "",
+          emotionalRegulationStrategies: "",
+          emotionalStrengthsVulnerabilities: "",
+          applicationNumber: params.id,
+          loggedToSystemDate: "",
+          loggedBy: "",
         });
       }
     } catch (error: any) {

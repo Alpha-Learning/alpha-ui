@@ -9,6 +9,8 @@ export async function POST(request: NextRequest) {
       // Child Information
       fullName,
       age,
+      date,
+      examiner,
       // Zone-Based Engagement Grid
       zoneATimeSpent,
       zoneASelfDirected,
@@ -53,6 +55,7 @@ export async function POST(request: NextRequest) {
       musicalEvidence,
       musicalSupportingObservation,
       interpersonalEvidence,
+      existentialEvidence,
       interpersonalSupportingObservation,
       intrapersonalEvidence,
       intrapersonalSupportingObservation,
@@ -102,6 +105,8 @@ export async function POST(request: NextRequest) {
           // Child Information
           fullName,
           age,
+          date,
+          examiner,
           // Zone-Based Engagement Grid
           zoneATimeSpent,
           zoneASelfDirected,
@@ -146,6 +151,7 @@ export async function POST(request: NextRequest) {
           musicalEvidence,
           musicalSupportingObservation,
           interpersonalEvidence,
+          existentialEvidence,
           interpersonalSupportingObservation,
           intrapersonalEvidence,
           intrapersonalSupportingObservation,
@@ -181,6 +187,8 @@ export async function POST(request: NextRequest) {
           // Child Information
           fullName,
           age,
+          date,
+          examiner,
           // Zone-Based Engagement Grid
           zoneATimeSpent,
           zoneASelfDirected,
@@ -225,6 +233,7 @@ export async function POST(request: NextRequest) {
           musicalEvidence,
           musicalSupportingObservation,
           interpersonalEvidence,
+          existentialEvidence,
           interpersonalSupportingObservation,
           intrapersonalEvidence,
           intrapersonalSupportingObservation,

@@ -361,11 +361,193 @@ export default function ComprehensiveProfileSheetPage() {
 
   useEffect(() => {
     (async () => {
+      // Load existing form data
       const res = await apiService.get(
         `/api/admin/comprehensive-profile-sheet?applicationId=${params.id}`
       );
+      
+      // Load application data for auto-filling
+      const appRes = await apiService.getApplicationData(params.id);
+      
       if (res.success && res.data) {
+        // Use existing form data
         reset(res.data);
+      } else if (appRes.success && appRes.data) {
+        // Auto-fill with application data if no existing form data
+        const appData = appRes.data;
+        reset({
+          // Child Information
+          childName: appData.childFullName || "",
+          childAge: appData.childAge ? appData.childAge.toString() : "",
+          assessmentDate: "",
+          recommendedPlacement: "",
+          examiner: "",
+          
+          // Cognitive Skills Profile - all default to false
+          processingSpeedSteadyReflective: false,
+          processingSpeedFlexibleAdaptive: false,
+          processingSpeedRapidResponsive: false,
+          workingMemoryAreaOfGrowth: false,
+          workingMemoryDeveloping: false,
+          workingMemoryConsistentConfident: false,
+          attentionFocusVariable: false,
+          attentionFocusFocusedWithCues: false,
+          attentionFocusSelfDirected: false,
+          verbalReasoningExploring: false,
+          verbalReasoningDeveloping: false,
+          verbalReasoningFluentCommunicator: false,
+          phonologicalAwarenessExploring: false,
+          phonologicalAwarenessLinking: false,
+          phonologicalAwarenessConfident: false,
+          visualSpatialSkillsExploring: false,
+          visualSpatialSkillsDeveloping: false,
+          visualSpatialSkillsConfident: false,
+          numericalPatternConcrete: false,
+          numericalPatternEmergingAbstract: false,
+          numericalPatternFlexibleThinker: false,
+          additionalCognitiveNotes: "",
+          
+          // Learning Style Preference - all default to false
+          visualObserved: false,
+          visualObservedEvidence: "",
+          auditoryObserved: false,
+          auditoryObservedEvidence: "",
+          kinestheticTactileObserved: false,
+          kinestheticTactileObservedEvidence: "",
+          readingWritingObserved: false,
+          readingWritingObservedEvidence: "",
+          verbalLinguisticObserved: false,
+          verbalLinguisticObservedEvidence: "",
+          logicalMathematicalObserved: false,
+          logicalMathematicalObservedEvidence: "",
+          socialInterpersonalObserved: false,
+          socialInterpersonalObservedEvidence: "",
+          solitaryIntrapersonalObserved: false,
+          solitaryIntrapersonalObservedEvidence: "",
+          multimodalObserved: false,
+          multimodalObservedEvidence: "",
+          
+          // Dominant Intelligence Types - all default to false
+          linguisticObserved: false,
+          linguisticStronglyEvident: false,
+          linguisticNotes: "",
+          logicalMathematicalObservedInt: false,
+          logicalMathematicalStronglyEvidentInt: false,
+          logicalMathematicalNotesInt: "",
+          spatialObserved: false,
+          spatialStronglyEvident: false,
+          spatialNotes: "",
+          bodilyKinestheticObserved: false,
+          bodilyKinestheticStronglyEvident: false,
+          bodilyKinestheticNotes: "",
+          musicalObserved: false,
+          musicalStronglyEvident: false,
+          musicalNotes: "",
+          interpersonalObserved: false,
+          interpersonalStronglyEvident: false,
+          interpersonalNotes: "",
+          intrapersonalObserved: false,
+          intrapersonalStronglyEvident: false,
+          intrapersonalNotes: "",
+          naturalisticObserved: false,
+          naturalisticStronglyEvident: false,
+          naturalisticNotes: "",
+          existentialObserved: false,
+          existentialStronglyEvident: false,
+          existentialNotes: "",
+          
+          // Meta-Learning Pillars & Soft Skills Profile
+          summaryInsightLearnerType: "",
+          summaryInsightLearningEnvironments: "",
+          selfRegulationEmerging: false,
+          selfRegulationDeveloping: false,
+          selfRegulationStrong: false,
+          selfRegulationNotesEvidence: "",
+          emotionalIntelligenceEmerging: false,
+          emotionalIntelligenceDeveloping: false,
+          emotionalIntelligenceStrong: false,
+          emotionalIntelligenceNotesEvidence: "",
+          socialCommunicationEmerging: false,
+          socialCommunicationDeveloping: false,
+          socialCommunicationStrong: false,
+          socialCommunicationNotesEvidence: "",
+          cognitiveFlexibilityEmerging: false,
+          cognitiveFlexibilityDeveloping: false,
+          cognitiveFlexibilityStrong: false,
+          cognitiveFlexibilityNotesEvidence: "",
+          resilienceConfidenceEmerging: false,
+          resilienceConfidenceDeveloping: false,
+          resilienceConfidenceStrong: false,
+          resilienceConfidenceNotesEvidence: "",
+          creativityExpressionEmerging: false,
+          creativityExpressionDeveloping: false,
+          creativityExpressionStrong: false,
+          creativityExpressionNotesEvidence: "",
+          softSkillSummaryNotes: "",
+          
+          // Academic & Digital Readiness
+          englishCurrentLevel: "",
+          englishNotes: "",
+          mathsCurrentLevel: "",
+          mathsNotes: "",
+          scienceCurrentLevel: "",
+          scienceNotes: "",
+          technologyUseLow: false,
+          technologyUseModerate: false,
+          technologyUseHigh: false,
+          technologyUseExceptional: false,
+          academicNotes: "",
+          
+          // Interview-Based Verbal Assessment Summary
+          zonesADPreferredZones: "",
+          zonesADSelfDirectedOrReliant: "",
+          zonesADResponseToChallenge: "",
+          zonesADEvidenceDominantIntelligence: "",
+          peerSessionInitiateOrFollow: "",
+          peerSessionRoleAdopted: "",
+          peerSessionConflictHandled: "",
+          parentChildEmotionalTone: "",
+          parentChildFacilitativeVsDirective: "",
+          parentChildResponseWorkingSolo: "",
+          ks1Score: 0,
+          ks1InterpretationEmerging: false,
+          ks1InterpretationBasic: false,
+          ks1InterpretationStrong: false,
+          ks1InterpretationExceptional: false,
+          ks1SuggestedAction: "",
+          ks1ScoreRange1325Action: "",
+          ks1ScoreRange2640Action: "",
+          ks1ScoreRange4155Action: "",
+          ks1ScoreRange5665Action: "",
+          ks2Score: 0,
+          ks2InterpretationEmerging: false,
+          ks2InterpretationBasic: false,
+          ks2InterpretationStrong: false,
+          ks2InterpretationExceptional: false,
+          ks2SuggestedAction: "",
+          ks2ScoreRange2044Action: "",
+          ks2ScoreRange4569Action: "",
+          ks2ScoreRange7089Action: "",
+          ks2ScoreRange9095Action: "",
+          qualitativeInsightsVerbalResponses: "",
+          
+          // Component Recommendations
+          aiCurriculumEntryPoint: "",
+          peerEngagementGroupLearning: false,
+          peerEngagementNeedsScaffolding: false,
+          peerEngagementMonitorConflict: false,
+          mentorshipLeadershipPotential: false,
+          mentorshipRecommendOneOnOne: false,
+          mentorshipNotApplicable: false,
+          homeSupportTips: "",
+          
+          // Final Summary Statement
+          finalSummaryStrengths: "",
+          finalSummaryApproaches: "",
+          finalSummaryTargetedSupport: "",
+          compiledBy: "",
+          compiledDate: "",
+        });
       }
     })();
   }, [params.id, reset]);

@@ -9,41 +9,41 @@ import { FormField, Input, Textarea, FormSectionHeader } from "@/app/components/
 import { apiService } from "@/app/utils";
 
 const schema = z.object({
-  fullName: z.string().min(1, "Required"),
-  age: z.string().min(1, "Required"),
+  fullName: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  age: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
   // Opening Engagement answers
-  areaLikeBest: z.string().min(1, "Required"),
-  whatMakesInteresting: z.string().min(1, "Required"),
-  hardButFun: z.string().min(1, "Required"),
-  feelWhenTryingNew: z.string().min(1, "Required"),
-  teachGame: z.string().min(1, "Required"),
+  areaLikeBest: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  whatMakesInteresting: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  hardButFun: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  feelWhenTryingNew: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  teachGame: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
   // Ratings (per zone)
-  zoneAScore: z.string().min(1, "Required"),
-  zoneANotes: z.string().min(1, "Required"),
-  zoneBScore: z.string().min(1, "Required"),
-  zoneBNotes: z.string().min(1, "Required"),
-  zoneCScore: z.string().min(1, "Required"),
-  zoneCNotes: z.string().min(1, "Required"),
-  zoneDScore: z.string().min(1, "Required"),
-  zoneDNotes: z.string().min(1, "Required"),
+  zoneAScore: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  zoneANotes: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  zoneBScore: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  zoneBNotes: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  zoneCScore: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  zoneCNotes: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  zoneDScore: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  zoneDNotes: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
   // Meta skills
-  metaSelfReg: z.string().min(1, "Required"),
+  metaSelfReg: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
   metaNotesSelfReg: z.string().optional(),
-  metaCuriosity: z.string().min(1, "Required"),
+  metaCuriosity: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
   metaNotesCuriosity: z.string().optional(),
-  metaSocial: z.string().min(1, "Required"),
+  metaSocial: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
   metaNotesSocial: z.string().optional(),
-  metaEmotional: z.string().min(1, "Required"),
+  metaEmotional: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
   metaNotesEmotional: z.string().optional(),
-  metaConfidence: z.string().min(1, "Required"),
+  metaConfidence: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
   metaNotesConfidence: z.string().optional(),
   // Examiner final comments (required)
-  mostEngagedZone: z.string().min(1, "Required"),
-  dominantObservedIntelligences: z.string().min(1, "Required"),
-  initialLearningStyleImpressions: z.string().min(1, "Required"),
-  earlyFlagsNeedsFollowUp: z.string().min(1, "Required"),
-  selfDirectedVsSeekingGuidance: z.string().min(1, "Required"),
-  finalAdditionalNotes: z.string().min(1, "Required"),
+  mostEngagedZone: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  dominantObservedIntelligences: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  initialLearningStyleImpressions: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  earlyFlagsNeedsFollowUp: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  selfDirectedVsSeekingGuidance: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  finalAdditionalNotes: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
   // Intelligence evidence (checkboxes)
   intelLinguisticEvidenceModerate: z.boolean().default(false),
   intelLinguisticEvidenceStrong: z.boolean().default(false),
@@ -64,36 +64,36 @@ const schema = z.object({
   intelExistentialEvidenceModerate: z.boolean().default(false),
   intelExistentialEvidenceStrong: z.boolean().default(false),
   // Supporting observations for each intelligence type
-  intelLinguistic: z.string().optional(),
-  intelLogical: z.string().optional(),
-  intelSpatial: z.string().optional(),
-  intelBodily: z.string().optional(),
-  intelMusical: z.string().optional(),
-  intelInterpersonal: z.string().optional(),
-  intelIntrapersonal: z.string().optional(),
-  intelNaturalistic: z.string().optional(),
-  intelExistential: z.string().optional(),
+  intelLinguistic: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  intelLogical: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  intelSpatial: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  intelBodily: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  intelMusical: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  intelInterpersonal: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  intelIntrapersonal: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  intelNaturalistic: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  intelExistential: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
   // Parent–Child dynamic snapshot (required)
-  parentProximity: z.string().min(1, "Required"),
-  parentInterventionLevel: z.string().min(1, "Required"),
-  parentInterventionStyle: z.string().min(1, "Required"),
-  childIndependenceLevel: z.string().min(1, "Required"),
-  childEmotionalWithParent: z.string().min(1, "Required"),
-  childIndependenceWhenParentEngaged: z.string().min(1, "Required"),
-  emotionalRegulationWithParentPresent: z.string().min(1, "Required"),
+  parentProximity: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  parentInterventionLevel: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  parentInterventionStyle: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  childIndependenceLevel: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  childEmotionalWithParent: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  childIndependenceWhenParentEngaged: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  emotionalRegulationWithParentPresent: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
   // Interaction summary
-  interactionPreferredZone: z.string().min(1, "Required"),
-  interactionInitialBehaviour: z.string().min(1, "Required"),
-  interactionOpennessToAdultGuidance: z.string().min(1, "Required"),
-  interactionMostRevealingActivity: z.string().min(1, "Required"),
-  interactionCrossRefStep5: z.string().min(1, "Required"),
-  interactionCuriosityExploration: z.string().min(1, "Required"),
-  interactionFocusAttention: z.string().min(1, "Required"),
-  interactionEngagementWithAdult: z.string().min(1, "Required"),
-  interactionResilienceInChallenge: z.string().min(1, "Required"),
-  interactionEmotionRegulationSignals: z.string().min(1, "Required"),
-  interactionCaregiverInteractionStyle: z.string().min(1, "Required"),
-  interactionRecommendations: z.string().min(1, "Required"),
+  interactionPreferredZone: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  interactionInitialBehaviour: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  interactionOpennessToAdultGuidance: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  interactionMostRevealingActivity: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  interactionCrossRefStep5: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  interactionCuriosityExploration: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  interactionFocusAttention: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  interactionEngagementWithAdult: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  interactionResilienceInChallenge: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  interactionEmotionRegulationSignals: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  interactionCaregiverInteractionStyle: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
+  interactionRecommendations: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
   // Office use
   applicationNumber: z.string().optional(),
   observerName: z.string().optional(),
@@ -145,45 +145,190 @@ export default function GuidedObservationsProcedurePage() {
   // Helper to safely check field errors when using dynamic keys
   const hasError = (name: keyof FormValues) => Boolean((errors as any)?.[name]);
 
-  useEffect(() => { (async () => { const res = await apiService.get(`/api/admin/guided-observations-procedure?applicationId=${params.id}`); if (res.success && res.data) reset({
-    fullName: res.data.fullName || "", age: res.data.age || "",
-    areaLikeBest: res.data.areaLikeBest || res.data.guidingQ1 || "",
-    whatMakesInteresting: res.data.whatMakesInteresting || res.data.guidingQ2 || "",
-    hardButFun: res.data.hardButFun || res.data.guidingQ3 || "",
-    feelWhenTryingNew: res.data.feelWhenTryingNew || res.data.guidingQ4 || "",
-    teachGame: res.data.teachGame || res.data.guidingQ5 || "",
-    zoneAScore: res.data.zoneAScore || "", zoneANotes: res.data.zoneANotes || "",
-    zoneBScore: res.data.zoneBScore || "", zoneBNotes: res.data.zoneBNotes || "",
-    zoneCScore: res.data.zoneCScore || "", zoneCNotes: res.data.zoneCNotes || "",
-    zoneDScore: res.data.zoneDScore || "", zoneDNotes: res.data.zoneDNotes || "",
-    metaSelfReg: res.data.metaSelfReg || "", metaNotesSelfReg: res.data.metaNotesSelfReg || "",
-    metaCuriosity: res.data.metaCuriosity || "", metaNotesCuriosity: res.data.metaNotesCuriosity || "",
-    metaSocial: res.data.metaSocial || "", metaNotesSocial: res.data.metaNotesSocial || "",
-    metaEmotional: res.data.metaEmotional || "", metaNotesEmotional: res.data.metaNotesEmotional || "",
-    metaConfidence: res.data.metaConfidence || "", metaNotesConfidence: res.data.metaNotesConfidence || "",
-    mostEngagedZone: res.data.mostEngagedZone || "",
-    dominantObservedIntelligences: res.data.dominantObservedIntelligences || "",
-    initialLearningStyleImpressions: res.data.initialLearningStyleImpressions || "",
-    earlyFlagsNeedsFollowUp: res.data.earlyFlagsNeedsFollowUp || "",
-    selfDirectedVsSeekingGuidance: res.data.selfDirectedVsSeekingGuidance || "",
-    finalAdditionalNotes: res.data.finalAdditionalNotes || "",
-    intelLinguisticEvidenceModerate: res.data.intelLinguisticEvidenceModerate || false, intelLinguisticEvidenceStrong: res.data.intelLinguisticEvidenceStrong || false,
-    intelLogicalEvidenceModerate: res.data.intelLogicalEvidenceModerate || false, intelLogicalEvidenceStrong: res.data.intelLogicalEvidenceStrong || false,
-    intelSpatialEvidenceModerate: res.data.intelSpatialEvidenceModerate || false, intelSpatialEvidenceStrong: res.data.intelSpatialEvidenceStrong || false,
-    intelBodilyEvidenceModerate: res.data.intelBodilyEvidenceModerate || false, intelBodilyEvidenceStrong: res.data.intelBodilyEvidenceStrong || false,
-    intelMusicalEvidenceModerate: res.data.intelMusicalEvidenceModerate || false, intelMusicalEvidenceStrong: res.data.intelMusicalEvidenceStrong || false,
-    intelInterpersonalEvidenceModerate: res.data.intelInterpersonalEvidenceModerate || false, intelInterpersonalEvidenceStrong: res.data.intelInterpersonalEvidenceStrong || false,
-    intelIntrapersonalEvidenceModerate: res.data.intelIntrapersonalEvidenceModerate || false, intelIntrapersonalEvidenceStrong: res.data.intelIntrapersonalEvidenceStrong || false,
-    intelNaturalisticEvidenceModerate: res.data.intelNaturalisticEvidenceModerate || false, intelNaturalisticEvidenceStrong: res.data.intelNaturalisticEvidenceStrong || false,
-    intelExistentialEvidenceModerate: res.data.intelExistentialEvidenceModerate || false, intelExistentialEvidenceStrong: res.data.intelExistentialEvidenceStrong || false,
-    intelLinguistic: res.data.intelLinguistic || "", intelLogical: res.data.intelLogical || "", intelSpatial: res.data.intelSpatial || "", intelBodily: res.data.intelBodily || "", intelMusical: res.data.intelMusical || "",
-    intelInterpersonal: res.data.intelInterpersonal || "", intelIntrapersonal: res.data.intelIntrapersonal || "", intelNaturalistic: res.data.intelNaturalistic || "", intelExistential: res.data.intelExistential || "",
-    parentProximity: res.data.parentProximity || "", parentInterventionLevel: res.data.parentInterventionLevel || "", parentInterventionStyle: res.data.parentInterventionStyle || "",
-    childIndependenceLevel: res.data.childIndependenceLevel || "", childEmotionalWithParent: res.data.childEmotionalWithParent || "", childIndependenceWhenParentEngaged: res.data.childIndependenceWhenParentEngaged || "", emotionalRegulationWithParentPresent: res.data.emotionalRegulationWithParentPresent || "",
-    interactionPreferredZone: res.data.interactionPreferredZone || "", interactionInitialBehaviour: res.data.interactionInitialBehaviour || "", interactionOpennessToAdultGuidance: res.data.interactionOpennessToAdultGuidance || "",
-    interactionMostRevealingActivity: res.data.interactionMostRevealingActivity || "", interactionCrossRefStep5: res.data.interactionCrossRefStep5 || "", interactionCuriosityExploration: res.data.interactionCuriosityExploration || "", interactionFocusAttention: res.data.interactionFocusAttention || "", interactionEngagementWithAdult: res.data.interactionEngagementWithAdult || "", interactionResilienceInChallenge: res.data.interactionResilienceInChallenge || "", interactionEmotionRegulationSignals: res.data.interactionEmotionRegulationSignals || "", interactionCaregiverInteractionStyle: res.data.interactionCaregiverInteractionStyle || "", interactionRecommendations: res.data.interactionRecommendations || "",
-    applicationNumber: res.data.applicationNumber || "", observerName: res.data.observerName || "", assessmentDate: res.data.assessmentDate || "", loggedToSystemDate: res.data.loggedToSystemDate || "", loggedBy: res.data.loggedBy || "",
-  }); })(); }, [params.id, reset]);
+  useEffect(() => { 
+    (async () => { 
+      // Load existing form data
+      const res = await apiService.get(`/api/admin/guided-observations-procedure?applicationId=${params.id}`);
+      
+      // Load application data for auto-filling
+      const appRes = await apiService.getApplicationData(params.id);
+      
+      if (res.success && res.data) {
+        // Use existing form data
+        reset({
+          fullName: res.data.fullName || "", 
+          age: res.data.age || "",
+          areaLikeBest: res.data.areaLikeBest || res.data.guidingQ1 || "",
+          whatMakesInteresting: res.data.whatMakesInteresting || res.data.guidingQ2 || "",
+          hardButFun: res.data.hardButFun || res.data.guidingQ3 || "",
+          feelWhenTryingNew: res.data.feelWhenTryingNew || res.data.guidingQ4 || "",
+          teachGame: res.data.teachGame || res.data.guidingQ5 || "",
+          zoneAScore: res.data.zoneAScore || "", 
+          zoneANotes: res.data.zoneANotes || "",
+          zoneBScore: res.data.zoneBScore || "", 
+          zoneBNotes: res.data.zoneBNotes || "",
+          zoneCScore: res.data.zoneCScore || "", 
+          zoneCNotes: res.data.zoneCNotes || "",
+          zoneDScore: res.data.zoneDScore || "", 
+          zoneDNotes: res.data.zoneDNotes || "",
+          metaSelfReg: res.data.metaSelfReg || "", 
+          metaNotesSelfReg: res.data.metaNotesSelfReg || "",
+          metaCuriosity: res.data.metaCuriosity || "", 
+          metaNotesCuriosity: res.data.metaNotesCuriosity || "",
+          metaSocial: res.data.metaSocial || "", 
+          metaNotesSocial: res.data.metaNotesSocial || "",
+          metaEmotional: res.data.metaEmotional || "", 
+          metaNotesEmotional: res.data.metaNotesEmotional || "",
+          metaConfidence: res.data.metaConfidence || "", 
+          metaNotesConfidence: res.data.metaNotesConfidence || "",
+          mostEngagedZone: res.data.mostEngagedZone || "",
+          dominantObservedIntelligences: res.data.dominantObservedIntelligences || "",
+          initialLearningStyleImpressions: res.data.initialLearningStyleImpressions || "",
+          earlyFlagsNeedsFollowUp: res.data.earlyFlagsNeedsFollowUp || "",
+          selfDirectedVsSeekingGuidance: res.data.selfDirectedVsSeekingGuidance || "",
+          finalAdditionalNotes: res.data.finalAdditionalNotes || "",
+          intelLinguisticEvidenceModerate: res.data.intelLinguisticEvidenceModerate || false, 
+          intelLinguisticEvidenceStrong: res.data.intelLinguisticEvidenceStrong || false,
+          intelLogicalEvidenceModerate: res.data.intelLogicalEvidenceModerate || false, 
+          intelLogicalEvidenceStrong: res.data.intelLogicalEvidenceStrong || false,
+          intelSpatialEvidenceModerate: res.data.intelSpatialEvidenceModerate || false, 
+          intelSpatialEvidenceStrong: res.data.intelSpatialEvidenceStrong || false,
+          intelBodilyEvidenceModerate: res.data.intelBodilyEvidenceModerate || false, 
+          intelBodilyEvidenceStrong: res.data.intelBodilyEvidenceStrong || false,
+          intelMusicalEvidenceModerate: res.data.intelMusicalEvidenceModerate || false, 
+          intelMusicalEvidenceStrong: res.data.intelMusicalEvidenceStrong || false,
+          intelInterpersonalEvidenceModerate: res.data.intelInterpersonalEvidenceModerate || false, 
+          intelInterpersonalEvidenceStrong: res.data.intelInterpersonalEvidenceStrong || false,
+          intelIntrapersonalEvidenceModerate: res.data.intelIntrapersonalEvidenceModerate || false, 
+          intelIntrapersonalEvidenceStrong: res.data.intelIntrapersonalEvidenceStrong || false,
+          intelNaturalisticEvidenceModerate: res.data.intelNaturalisticEvidenceModerate || false, 
+          intelNaturalisticEvidenceStrong: res.data.intelNaturalisticEvidenceStrong || false,
+          intelExistentialEvidenceModerate: res.data.intelExistentialEvidenceModerate || false, 
+          intelExistentialEvidenceStrong: res.data.intelExistentialEvidenceStrong || false,
+          intelLinguistic: res.data.intelLinguistic || "", 
+          intelLogical: res.data.intelLogical || "", 
+          intelSpatial: res.data.intelSpatial || "", 
+          intelBodily: res.data.intelBodily || "", 
+          intelMusical: res.data.intelMusical || "",
+          intelInterpersonal: res.data.intelInterpersonal || "", 
+          intelIntrapersonal: res.data.intelIntrapersonal || "", 
+          intelNaturalistic: res.data.intelNaturalistic || "", 
+          intelExistential: res.data.intelExistential || "",
+          parentProximity: res.data.parentProximity || "", 
+          parentInterventionLevel: res.data.parentInterventionLevel || "", 
+          parentInterventionStyle: res.data.parentInterventionStyle || "",
+          childIndependenceLevel: res.data.childIndependenceLevel || "", 
+          childEmotionalWithParent: res.data.childEmotionalWithParent || "", 
+          childIndependenceWhenParentEngaged: res.data.childIndependenceWhenParentEngaged || "", 
+          emotionalRegulationWithParentPresent: res.data.emotionalRegulationWithParentPresent || "",
+          interactionPreferredZone: res.data.interactionPreferredZone || "", 
+          interactionInitialBehaviour: res.data.interactionInitialBehaviour || "", 
+          interactionOpennessToAdultGuidance: res.data.interactionOpennessToAdultGuidance || "",
+          interactionMostRevealingActivity: res.data.interactionMostRevealingActivity || "", 
+          interactionCrossRefStep5: res.data.interactionCrossRefStep5 || "", 
+          interactionCuriosityExploration: res.data.interactionCuriosityExploration || "", 
+          interactionFocusAttention: res.data.interactionFocusAttention || "", 
+          interactionEngagementWithAdult: res.data.interactionEngagementWithAdult || "", 
+          interactionResilienceInChallenge: res.data.interactionResilienceInChallenge || "", 
+          interactionEmotionRegulationSignals: res.data.interactionEmotionRegulationSignals || "", 
+          interactionCaregiverInteractionStyle: res.data.interactionCaregiverInteractionStyle || "", 
+          interactionRecommendations: res.data.interactionRecommendations || "",
+          applicationNumber: res.data.applicationNumber || "", 
+          observerName: res.data.observerName || "", 
+          assessmentDate: res.data.assessmentDate || "", 
+          loggedToSystemDate: res.data.loggedToSystemDate || "", 
+          loggedBy: res.data.loggedBy || "",
+        });
+      } else if (appRes.success && appRes.data) {
+        // Auto-fill with application data if no existing form data
+        const appData = appRes.data;
+        reset({
+          fullName: appData.childFullName || "", 
+          age: appData.childAge ? appData.childAge.toString() : "",
+          areaLikeBest: "",
+          whatMakesInteresting: "",
+          hardButFun: "",
+          feelWhenTryingNew: "",
+          teachGame: "",
+          zoneAScore: "", 
+          zoneANotes: "",
+          zoneBScore: "", 
+          zoneBNotes: "",
+          zoneCScore: "", 
+          zoneCNotes: "",
+          zoneDScore: "", 
+          zoneDNotes: "",
+          metaSelfReg: "", 
+          metaNotesSelfReg: "",
+          metaCuriosity: "", 
+          metaNotesCuriosity: "",
+          metaSocial: "", 
+          metaNotesSocial: "",
+          metaEmotional: "", 
+          metaNotesEmotional: "",
+          metaConfidence: "", 
+          metaNotesConfidence: "",
+          mostEngagedZone: "",
+          dominantObservedIntelligences: "",
+          initialLearningStyleImpressions: "",
+          earlyFlagsNeedsFollowUp: "",
+          selfDirectedVsSeekingGuidance: "",
+          finalAdditionalNotes: "",
+          intelLinguisticEvidenceModerate: false, 
+          intelLinguisticEvidenceStrong: false,
+          intelLogicalEvidenceModerate: false, 
+          intelLogicalEvidenceStrong: false,
+          intelSpatialEvidenceModerate: false, 
+          intelSpatialEvidenceStrong: false,
+          intelBodilyEvidenceModerate: false, 
+          intelBodilyEvidenceStrong: false,
+          intelMusicalEvidenceModerate: false, 
+          intelMusicalEvidenceStrong: false,
+          intelInterpersonalEvidenceModerate: false, 
+          intelInterpersonalEvidenceStrong: false,
+          intelIntrapersonalEvidenceModerate: false, 
+          intelIntrapersonalEvidenceStrong: false,
+          intelNaturalisticEvidenceModerate: false, 
+          intelNaturalisticEvidenceStrong: false,
+          intelExistentialEvidenceModerate: false, 
+          intelExistentialEvidenceStrong: false,
+          intelLinguistic: "", 
+          intelLogical: "", 
+          intelSpatial: "", 
+          intelBodily: "", 
+          intelMusical: "",
+          intelInterpersonal: "", 
+          intelIntrapersonal: "", 
+          intelNaturalistic: "", 
+          intelExistential: "",
+          parentProximity: "", 
+          parentInterventionLevel: "", 
+          parentInterventionStyle: "",
+          childIndependenceLevel: "", 
+          childEmotionalWithParent: "", 
+          childIndependenceWhenParentEngaged: "", 
+          emotionalRegulationWithParentPresent: "",
+          interactionPreferredZone: "", 
+          interactionInitialBehaviour: "", 
+          interactionOpennessToAdultGuidance: "",
+          interactionMostRevealingActivity: "", 
+          interactionCrossRefStep5: "", 
+          interactionCuriosityExploration: "", 
+          interactionFocusAttention: "", 
+          interactionEngagementWithAdult: "", 
+          interactionResilienceInChallenge: "", 
+          interactionEmotionRegulationSignals: "", 
+          interactionCaregiverInteractionStyle: "", 
+          interactionRecommendations: "",
+          applicationNumber: params.id, 
+          observerName: "", 
+          assessmentDate: "", 
+          loggedToSystemDate: "", 
+          loggedBy: "",
+        });
+      }
+    })(); 
+  }, [params.id, reset]);
 
   const onSubmit = async (values: FormValues) => { setSaving(true); await apiService.post("/api/admin/guided-observations-procedure", { applicationId: params.id, ...values }); setSaving(false); router.push(`/admin/applications/${params.id}`); };
 
@@ -318,11 +463,36 @@ export default function GuidedObservationsProcedurePage() {
             <li>“Can you teach me how to use this game?”</li>
           </ul>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField label="Which area do you like best?" htmlFor="guidingQ1"><Textarea rows={3} id="guidingQ1" {...register("areaLikeBest")} /></FormField>
-            <FormField label="Let’s build something that doesn’t exist yet" htmlFor="guidingQ2"><Textarea rows={3} id="guidingQ2" {...register("whatMakesInteresting")} /></FormField>
-            <FormField label="What’s hard to do but fun to try?" htmlFor="guidingQ3"><Textarea rows={3} id="guidingQ3" {...register("hardButFun")} /></FormField>
-            <FormField label="How do you feel when you try something new?" htmlFor="guidingQ4"><Textarea rows={3} id="guidingQ4" {...register("feelWhenTryingNew")} /></FormField>
-            <FormField label="Can you teach me how to use this game?" htmlFor="guidingQ5" ><Textarea rows={3} id="guidingQ5" {...register("teachGame")} /></FormField>
+            <FormField label="Which area do you like best?" htmlFor="guidingQ1">
+              <Textarea rows={3} id="guidingQ1" {...register("areaLikeBest")} />
+              {errors.areaLikeBest && (
+                <p className="text-red-500 text-sm mt-1">{errors.areaLikeBest.message}</p>
+              )}
+            </FormField>
+            <FormField label="Let's build something that doesn't exist yet" htmlFor="guidingQ2">
+              <Textarea rows={3} id="guidingQ2" {...register("whatMakesInteresting")} />
+              {errors.whatMakesInteresting && (
+                <p className="text-red-500 text-sm mt-1">{errors.whatMakesInteresting.message}</p>
+              )}
+            </FormField>
+            <FormField label="What's hard to do but fun to try?" htmlFor="guidingQ3">
+              <Textarea rows={3} id="guidingQ3" {...register("hardButFun")} />
+              {errors.hardButFun && (
+                <p className="text-red-500 text-sm mt-1">{errors.hardButFun.message}</p>
+              )}
+            </FormField>
+            <FormField label="How do you feel when you try something new?" htmlFor="guidingQ4">
+              <Textarea rows={3} id="guidingQ4" {...register("feelWhenTryingNew")} />
+              {errors.feelWhenTryingNew && (
+                <p className="text-red-500 text-sm mt-1">{errors.feelWhenTryingNew.message}</p>
+              )}
+            </FormField>
+            <FormField label="Can you teach me how to use this game?" htmlFor="guidingQ5">
+              <Textarea rows={3} id="guidingQ5" {...register("teachGame")} />
+              {errors.teachGame && (
+                <p className="text-red-500 text-sm mt-1">{errors.teachGame.message}</p>
+              )}
+            </FormField>
           </div>
         </div>
       </section>
@@ -414,6 +584,9 @@ export default function GuidedObservationsProcedurePage() {
                 <label className="flex items-center gap-2"><input type="radio" value="Hovering" {...register("parentProximity")} /> <span>Hovering</span></label>
                 <label className="flex items-center gap-2"><input type="radio" value="Distant" {...register("parentProximity")} /> <span>Distant</span></label>
               </div>
+              {errors.parentProximity && (
+                <p className="text-red-500 text-sm mt-1">{errors.parentProximity.message}</p>
+              )}
             </FormField>
             <FormField label="Parent Intervention Level" htmlFor="parentInterventionLevel">
               <div className="grid grid-cols-3 gap-3 text-sm text-slate-800">
@@ -421,6 +594,9 @@ export default function GuidedObservationsProcedurePage() {
                 <label className="flex items-center gap-2"><input type="radio" value="Medium" {...register("parentInterventionLevel")} /> <span>Medium</span></label>
                 <label className="flex items-center gap-2"><input type="radio" value="High" {...register("parentInterventionLevel")} /> <span>High</span></label>
               </div>
+              {errors.parentInterventionLevel && (
+                <p className="text-red-500 text-sm mt-1">{errors.parentInterventionLevel.message}</p>
+              )}
             </FormField>
             <FormField label="Parent Intervention Style" htmlFor="parentInterventionStyle">
               <div className="grid grid-cols-3 gap-3 text-sm text-slate-800">
@@ -428,11 +604,34 @@ export default function GuidedObservationsProcedurePage() {
                 <label className="flex items-center gap-2"><input type="radio" value="Supportive" {...register("parentInterventionStyle")} /> <span>Supportive</span></label>
                 <label className="flex items-center gap-2"><input type="radio" value="Detached" {...register("parentInterventionStyle")} /> <span>Detached</span></label>
               </div>
+              {errors.parentInterventionStyle && (
+                <p className="text-red-500 text-sm mt-1">{errors.parentInterventionStyle.message}</p>
+              )}
             </FormField>
-            <FormField label="Child's Independence Level" htmlFor="childIndependenceLevel"><Textarea rows={3} id="childIndependenceLevel" {...register("childIndependenceLevel")} /></FormField>
-            <FormField label="Child's Emotional Presentation (with Parent)" htmlFor="childEmotionalWithParent"><Textarea rows={3} id="childEmotionalWithParent" {...register("childEmotionalWithParent")} /></FormField>
-            <FormField label="Child's Independence when Parent is Engaged" htmlFor="childIndependenceWhenParentEngaged"><Textarea rows={3} id="childIndependenceWhenParentEngaged" {...register("childIndependenceWhenParentEngaged")} /></FormField>
-            <FormField label="Emotional Regulation with Parent Present" htmlFor="emotionalRegulationWithParentPresent"><Textarea rows={3} id="emotionalRegulationWithParentPresent" {...register("emotionalRegulationWithParentPresent")} /></FormField>
+            <FormField label="Child's Independence Level" htmlFor="childIndependenceLevel">
+              <Textarea rows={3} id="childIndependenceLevel" {...register("childIndependenceLevel")} />
+              {errors.childIndependenceLevel && (
+                <p className="text-red-500 text-sm mt-1">{errors.childIndependenceLevel.message}</p>
+              )}
+            </FormField>
+            <FormField label="Child's Emotional Presentation (with Parent)" htmlFor="childEmotionalWithParent">
+              <Textarea rows={3} id="childEmotionalWithParent" {...register("childEmotionalWithParent")} />
+              {errors.childEmotionalWithParent && (
+                <p className="text-red-500 text-sm mt-1">{errors.childEmotionalWithParent.message}</p>
+              )}
+            </FormField>
+            <FormField label="Child's Independence when Parent is Engaged" htmlFor="childIndependenceWhenParentEngaged">
+              <Textarea rows={3} id="childIndependenceWhenParentEngaged" {...register("childIndependenceWhenParentEngaged")} />
+              {errors.childIndependenceWhenParentEngaged && (
+                <p className="text-red-500 text-sm mt-1">{errors.childIndependenceWhenParentEngaged.message}</p>
+              )}
+            </FormField>
+            <FormField label="Emotional Regulation with Parent Present" htmlFor="emotionalRegulationWithParentPresent">
+              <Textarea rows={3} id="emotionalRegulationWithParentPresent" {...register("emotionalRegulationWithParentPresent")} />
+              {errors.emotionalRegulationWithParentPresent && (
+                <p className="text-red-500 text-sm mt-1">{errors.emotionalRegulationWithParentPresent.message}</p>
+              )}
+            </FormField>
           </div>
         </section>
 
@@ -489,6 +688,9 @@ export default function GuidedObservationsProcedurePage() {
                     </td>
                     <td className="border border-slate-300 px-3 py-2">
                       <Textarea rows={3} {...register(row.k as keyof FormValues)} />
+                      {errors[row.k as keyof typeof errors] && (
+                        <p className="text-red-500 text-sm mt-1">{errors[row.k as keyof typeof errors]?.message}</p>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -503,18 +705,33 @@ export default function GuidedObservationsProcedurePage() {
           <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField label="Most engaged zone" htmlFor="mostEngagedZone">
               <Input id="mostEngagedZone" {...register("mostEngagedZone")} />
+              {errors.mostEngagedZone && (
+                <p className="text-red-500 text-sm mt-1">{errors.mostEngagedZone.message}</p>
+              )}
             </FormField>
             <FormField label="Dominant observed intelligences" htmlFor="dominantObservedIntelligences">
               <Input id="dominantObservedIntelligences" {...register("dominantObservedIntelligences")} />
+              {errors.dominantObservedIntelligences && (
+                <p className="text-red-500 text-sm mt-1">{errors.dominantObservedIntelligences.message}</p>
+              )}
             </FormField>
             <FormField label="Initial learning style impressions" htmlFor="initialLearningStyleImpressions">
               <Textarea rows={3} id="initialLearningStyleImpressions" {...register("initialLearningStyleImpressions")} />
+              {errors.initialLearningStyleImpressions && (
+                <p className="text-red-500 text-sm mt-1">{errors.initialLearningStyleImpressions.message}</p>
+              )}
             </FormField>
             <FormField label="Any early flags or needs for follow‑up" htmlFor="earlyFlagsNeedsFollowUp">
               <Textarea rows={3} id="earlyFlagsNeedsFollowUp" {...register("earlyFlagsNeedsFollowUp")} />
+              {errors.earlyFlagsNeedsFollowUp && (
+                <p className="text-red-500 text-sm mt-1">{errors.earlyFlagsNeedsFollowUp.message}</p>
+              )}
             </FormField>
             <FormField label="Self‑directed vs. seeking guidance" htmlFor="selfDirectedVsSeekingGuidance">
               <Textarea rows={3} id="selfDirectedVsSeekingGuidance" {...register("selfDirectedVsSeekingGuidance")} />
+              {errors.selfDirectedVsSeekingGuidance && (
+                <p className="text-red-500 text-sm mt-1">{errors.selfDirectedVsSeekingGuidance.message}</p>
+              )}
             </FormField>
           </div>
           <div className="mt-4 border border-slate-200 rounded-lg p-4">
@@ -529,6 +746,9 @@ export default function GuidedObservationsProcedurePage() {
           <div className="mt-4">
             <FormField label="Additional Notes / Observations" htmlFor="finalAdditionalNotes">
               <Textarea rows={6} id="finalAdditionalNotes" {...register("finalAdditionalNotes")} />
+              {errors.finalAdditionalNotes && (
+                <p className="text-red-500 text-sm mt-1">{errors.finalAdditionalNotes.message}</p>
+              )}
             </FormField>
           </div>
         </section>
@@ -547,51 +767,111 @@ export default function GuidedObservationsProcedurePage() {
               <tbody className="align-top text-slate-900">
                 <tr>
                   <td className="border border-slate-300 px-3 py-2">Preferred Zone</td>
-                  <td className="border border-slate-300 px-3 py-2"><Textarea rows={3} {...register('interactionPreferredZone')} /></td>
+                  <td className="border border-slate-300 px-3 py-2">
+                    <Textarea rows={3} {...register('interactionPreferredZone')} />
+                    {errors.interactionPreferredZone && (
+                      <p className="text-red-500 text-sm mt-1">{errors.interactionPreferredZone.message}</p>
+                    )}
+                  </td>
                 </tr>
                 <tr>
                   <td className="border border-slate-300 px-3 py-2">Initial Behaviour (entering space)</td>
-                  <td className="border border-slate-300 px-3 py-2"><Textarea rows={3} {...register('interactionInitialBehaviour')} /></td>
+                  <td className="border border-slate-300 px-3 py-2">
+                    <Textarea rows={3} {...register('interactionInitialBehaviour')} />
+                    {errors.interactionInitialBehaviour && (
+                      <p className="text-red-500 text-sm mt-1">{errors.interactionInitialBehaviour.message}</p>
+                    )}
+                  </td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-300 px-3 py-2">Child’s openness to adult guidance</td>
-                  <td className="border border-slate-300 px-3 py-2"><Textarea rows={3} {...register('interactionOpennessToAdultGuidance')} /></td>
+                  <td className="border border-slate-300 px-3 py-2">Child's openness to adult guidance</td>
+                  <td className="border border-slate-300 px-3 py-2">
+                    <Textarea rows={3} {...register('interactionOpennessToAdultGuidance')} />
+                    {errors.interactionOpennessToAdultGuidance && (
+                      <p className="text-red-500 text-sm mt-1">{errors.interactionOpennessToAdultGuidance.message}</p>
+                    )}
+                  </td>
                 </tr>
                 <tr>
                   <td className="border border-slate-300 px-3 py-2">Most revealing activity and why</td>
-                  <td className="border border-slate-300 px-3 py-2"><Textarea rows={3} {...register('interactionMostRevealingActivity')} /></td>
+                  <td className="border border-slate-300 px-3 py-2">
+                    <Textarea rows={3} {...register('interactionMostRevealingActivity')} />
+                    {errors.interactionMostRevealingActivity && (
+                      <p className="text-red-500 text-sm mt-1">{errors.interactionMostRevealingActivity.message}</p>
+                    )}
+                  </td>
                 </tr>
                 <tr>
                   <td className="border border-slate-300 px-3 py-2">Cross-reference with Step 5 observations</td>
-                  <td className="border border-slate-300 px-3 py-2"><Textarea rows={3} {...register('interactionCrossRefStep5')} /></td>
+                  <td className="border border-slate-300 px-3 py-2">
+                    <Textarea rows={3} {...register('interactionCrossRefStep5')} />
+                    {errors.interactionCrossRefStep5 && (
+                      <p className="text-red-500 text-sm mt-1">{errors.interactionCrossRefStep5.message}</p>
+                    )}
+                  </td>
                 </tr>
                 <tr>
                   <td className="border border-slate-300 px-3 py-2">Curiosity and exploration</td>
-                  <td className="border border-slate-300 px-3 py-2"><Textarea rows={3} {...register('interactionCuriosityExploration')} /></td>
+                  <td className="border border-slate-300 px-3 py-2">
+                    <Textarea rows={3} {...register('interactionCuriosityExploration')} />
+                    {errors.interactionCuriosityExploration && (
+                      <p className="text-red-500 text-sm mt-1">{errors.interactionCuriosityExploration.message}</p>
+                    )}
+                  </td>
                 </tr>
                 <tr>
                   <td className="border border-slate-300 px-3 py-2">Focus and attention span</td>
-                  <td className="border border-slate-300 px-3 py-2"><Textarea rows={3} {...register('interactionFocusAttention')} /></td>
+                  <td className="border border-slate-300 px-3 py-2">
+                    <Textarea rows={3} {...register('interactionFocusAttention')} />
+                    {errors.interactionFocusAttention && (
+                      <p className="text-red-500 text-sm mt-1">{errors.interactionFocusAttention.message}</p>
+                    )}
+                  </td>
                 </tr>
                 <tr>
                   <td className="border border-slate-300 px-3 py-2">Engagement with adult direction</td>
-                  <td className="border border-slate-300 px-3 py-2"><Textarea rows={3} {...register('interactionEngagementWithAdult')} /></td>
+                  <td className="border border-slate-300 px-3 py-2">
+                    <Textarea rows={3} {...register('interactionEngagementWithAdult')} />
+                    {errors.interactionEngagementWithAdult && (
+                      <p className="text-red-500 text-sm mt-1">{errors.interactionEngagementWithAdult.message}</p>
+                    )}
+                  </td>
                 </tr>
                 <tr>
                   <td className="border border-slate-300 px-3 py-2">Resilience in challenge</td>
-                  <td className="border border-slate-300 px-3 py-2"><Textarea rows={3} {...register('interactionResilienceInChallenge')} /></td>
+                  <td className="border border-slate-300 px-3 py-2">
+                    <Textarea rows={3} {...register('interactionResilienceInChallenge')} />
+                    {errors.interactionResilienceInChallenge && (
+                      <p className="text-red-500 text-sm mt-1">{errors.interactionResilienceInChallenge.message}</p>
+                    )}
+                  </td>
                 </tr>
                 <tr>
                   <td className="border border-slate-300 px-3 py-2">Emotion regulation signals</td>
-                  <td className="border border-slate-300 px-3 py-2"><Textarea rows={3} {...register('interactionEmotionRegulationSignals')} /></td>
+                  <td className="border border-slate-300 px-3 py-2">
+                    <Textarea rows={3} {...register('interactionEmotionRegulationSignals')} />
+                    {errors.interactionEmotionRegulationSignals && (
+                      <p className="text-red-500 text-sm mt-1">{errors.interactionEmotionRegulationSignals.message}</p>
+                    )}
+                  </td>
                 </tr>
                 <tr>
                   <td className="border border-slate-300 px-3 py-2">Notes on Caregiver Interaction Style</td>
-                  <td className="border border-slate-300 px-3 py-2"><Textarea rows={3} {...register('interactionCaregiverInteractionStyle')} /></td>
+                  <td className="border border-slate-300 px-3 py-2">
+                    <Textarea rows={3} {...register('interactionCaregiverInteractionStyle')} />
+                    {errors.interactionCaregiverInteractionStyle && (
+                      <p className="text-red-500 text-sm mt-1">{errors.interactionCaregiverInteractionStyle.message}</p>
+                    )}
+                  </td>
                 </tr>
                 <tr>
                   <td className="border border-slate-300 px-3 py-2">Recommendations for support or follow-up</td>
-                  <td className="border border-slate-300 px-3 py-2"><Textarea rows={3} {...register('interactionRecommendations')} /></td>
+                  <td className="border border-slate-300 px-3 py-2">
+                    <Textarea rows={3} {...register('interactionRecommendations')} />
+                    {errors.interactionRecommendations && (
+                      <p className="text-red-500 text-sm mt-1">{errors.interactionRecommendations.message}</p>
+                    )}
+                  </td>
                 </tr>
               </tbody>
             </table>

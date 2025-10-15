@@ -243,11 +243,135 @@ export default function ParentChildDynamicObservationPage() {
 
   useEffect(() => {
     (async () => {
+      // Load existing form data
       const res = await apiService.get(
         `/api/admin/parent-child-dynamic-observation?applicationId=${params.id}`
       );
+      
+      // Load application data for auto-filling
+      const appRes = await apiService.getApplicationData(params.id);
+      
       if (res.success && res.data) {
+        // Use existing form data
         reset(res.data);
+      } else if (appRes.success && appRes.data) {
+        // Auto-fill with application data if no existing form data
+        const appData = appRes.data;
+        reset({
+          // Child Information
+          childFullName: appData.childFullName || "",
+          childAge: appData.childAge ? appData.childAge.toString() : "",
+          
+          // Joint Story Creation (10 minutes)
+          sharedIdeaExchangeRating: "",
+          sharedIdeaExchangeNotes: "",
+          emotionalWarmthRating: "",
+          emotionalWarmthNotes: "",
+          balanceOfLeadershipRating: "",
+          balanceOfLeadershipNotes: "",
+          communicationStyleRating: "",
+          communicationStyleNotes: "",
+          mutualCreativityRating: "",
+          mutualCreativityNotes: "",
+          
+          // Separation - Child Continues Solo (10 minutes)
+          independenceRating: "",
+          independenceNotes: "",
+          confidenceHesitationRating: "",
+          confidenceHesitationNotes: "",
+          taskEngagementRating: "",
+          taskEngagementNotes: "",
+          creativeExpansionRating: "",
+          creativeExpansionNotes: "",
+          
+          // Teaching Moment - Comic Strip (10 minutes)
+          teachingStyleRating: "",
+          teachingStyleNotes: "",
+          patienceEncouragementRating: "",
+          patienceEncouragementNotes: "",
+          parentClarityRating: "",
+          parentClarityNotes: "",
+          childEngagementRating: "",
+          childEngagementNotes: "",
+          
+          // Parenting Style & Dynamic Insights
+          parentDominantStyleDirective: false,
+          parentDominantStyleSupportive: false,
+          parentDominantStyleDetached: false,
+          parentDominantStyleFacilitative: false,
+          emotionalAttunementHigh: false,
+          emotionalAttunementModerate: false,
+          emotionalAttunementLow: false,
+          encouragementStylePraiseFocused: false,
+          encouragementStyleProcessFocused: false,
+          encouragementStyleCorrectionFocused: false,
+          attachmentSignalSecure: false,
+          attachmentSignalAnxious: false,
+          attachmentSignalAvoidant: false,
+          attachmentSignalDisengaged: false,
+          
+          // Child Meta-Skills During Assessment
+          confidenceAutonomyObserved: false,
+          confidenceAutonomyNotes: "",
+          emotionalRegulationObserved: false,
+          emotionalRegulationNotes: "",
+          curiosityObserved: false,
+          curiosityNotes: "",
+          creativityExpressionObserved: false,
+          creativityExpressionNotes: "",
+          selfDirectedLearningObserved: false,
+          selfDirectedLearningNotes: "",
+          communicationObserved: false,
+          communicationNotes: "",
+          
+          // Learning Type & Intelligence Clues
+          linguisticObserved: false,
+          linguisticStronglyEvident: false,
+          linguisticNotes: "",
+          logicalMathematicalObserved: false,
+          logicalMathematicalStronglyEvident: false,
+          logicalMathematicalNotes: "",
+          spatialObserved: false,
+          spatialStronglyEvident: false,
+          spatialNotes: "",
+          bodilyKinestheticObserved: false,
+          bodilyKinestheticStronglyEvident: false,
+          bodilyKinestheticNotes: "",
+          musicalObserved: false,
+          musicalStronglyEvident: false,
+          musicalNotes: "",
+          interpersonalObserved: false,
+          interpersonalStronglyEvident: false,
+          interpersonalNotes: "",
+          intrapersonalObserved: false,
+          intrapersonalStronglyEvident: false,
+          intrapersonalNotes: "",
+          naturalisticObserved: false,
+          naturalisticStronglyEvident: false,
+          naturalisticNotes: "",
+          existentialObserved: false,
+          existentialStronglyEvident: false,
+          existentialNotes: "",
+          
+          // Dynamic Summary & Reflection
+          parentChildDynamicStandout: "",
+          childExpressiveWithWithoutParent: "",
+          parentGuidanceHindrance: "",
+          
+          // Red Flags or Follow-up Needs
+          emotionalDistressFlag: false,
+          parentOverDirectionFlag: false,
+          confidenceIssueFlag: false,
+          noFlagsFlag: false,
+          redFlagsNotes: "",
+          
+          // Office Use Only
+          applicationNumber: params.id,
+          observerName: "",
+          assessmentDate: "",
+          loggedToSystemDate: "",
+          loggedBy: "",
+        });
       }
     })();
   }, [params.id, reset]);

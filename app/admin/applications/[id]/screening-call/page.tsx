@@ -60,7 +60,13 @@ export default function ScreeningCallFormPage() {
   const loadScreeningCallData = async () => {
     try {
       setLoading(true);
+      
+      // Load existing form data
       const res = await apiService.get(`/api/admin/screening-call?applicationId=${params.id}`);
+      
+      // Load application data for auto-filling
+      const appRes = await apiService.getApplicationData(params.id);
+      
       if (res.success && res.data) {
         const data = res.data;
         reset({
@@ -89,6 +95,36 @@ export default function ScreeningCallFormPage() {
           additionalNotes: data.additionalNotes || "",
           loggedToSystemDate: data.loggedToSystemDate || "",
           loggedBy: data.loggedBy || "",
+        });
+      } else if (appRes.success && appRes.data) {
+        // Auto-fill with application data if no existing form data
+        const appData = appRes.data;
+        reset({
+          fullName: appData.parentFullName || "",
+          childName: appData.childFullName || "",
+          date: new Date().toISOString().split('T')[0], // Today's date as default
+          callerName: "",
+          crmLeadTag: undefined,
+          recordingPermission: undefined,
+          introductionNotes: "",
+          overviewNotes: "",
+          applicationReason: "",
+          currentSchoolIssues: "",
+          techResponseAtHome: "",
+          parentWarmUpNotes: "",
+          flexibleModelOpenness: "",
+          childFreeTime: "",
+          adaptiveTechComfort: "",
+          fitClarificationNotes: "",
+          generalNotes: "",
+          parentReactionsNotes: "",
+          comprehensiveQuestionnaires: false,
+          guidebookInfo: false,
+          walkthroughDate: "",
+          assessmentInvite: "",
+          additionalNotes: "",
+          loggedToSystemDate: "",
+          loggedBy: "",
         });
       }
     } catch (error: any) {
@@ -128,7 +164,7 @@ const router = useRouter();
       </div>
     );
   }
-
+console.log("errors========",errors);
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
@@ -246,6 +282,9 @@ const router = useRouter();
                 placeholder="Introduction: Notes / Parent Reactions"
                 {...register("introductionNotes")}
               />
+              {errors.introductionNotes && (
+                <p className="text-red-500 text-sm mt-1">{errors.introductionNotes.message}</p>
+              )}
             </section>
 
             {/* Overview */}
@@ -262,6 +301,9 @@ const router = useRouter();
                 placeholder="Parent reactions during overview"
                 {...register("overviewNotes")}
               />
+              {errors.overviewNotes && (
+                <p className="text-red-500 text-sm mt-1">{errors.overviewNotes.message}</p>
+              )}
             </section>
 
             {/* Parent Warm-Up */}
@@ -275,6 +317,9 @@ const router = useRouter();
                     rows={4} 
                     {...register("applicationReason")}
                   />
+                  {errors.applicationReason && (
+                    <p className="text-red-500 text-sm mt-1">{errors.applicationReason.message}</p>
+                  )}
                 </li>
                 <li>
                   <div className="text-sm">What are you looking for that your current school may not provide?</div>
@@ -283,6 +328,9 @@ const router = useRouter();
                     rows={4} 
                     {...register("currentSchoolIssues")}
                   />
+                  {errors.currentSchoolIssues && (
+                    <p className="text-red-500 text-sm mt-1">{errors.currentSchoolIssues.message}</p>
+                  )}
                 </li>
                 <li>
                   <div className="text-sm">How does your child respond to learning with technology at home?</div>
@@ -291,6 +339,9 @@ const router = useRouter();
                     rows={4} 
                     {...register("techResponseAtHome")}
                   />
+                  {errors.techResponseAtHome && (
+                    <p className="text-red-500 text-sm mt-1">{errors.techResponseAtHome.message}</p>
+                  )}
                 </li>
               </ol>
               {/* <Textarea 
@@ -330,6 +381,9 @@ const router = useRouter();
                     rows={3} 
                     {...register("flexibleModelOpenness")}
                   />
+                  {errors.flexibleModelOpenness && (
+                    <p className="text-red-500 text-sm mt-1">{errors.flexibleModelOpenness.message}</p>
+                  )}
                 </li>
                 <li>
                   <div className="text-sm">What does your child do in their free time?</div>
@@ -338,6 +392,9 @@ const router = useRouter();
                     rows={3} 
                     {...register("childFreeTime")}
                   />
+                  {errors.childFreeTime && (
+                    <p className="text-red-500 text-sm mt-1">{errors.childFreeTime.message}</p>
+                  )}
                 </li>
                 <li>
                   <div className="text-sm">How comfortable are you with adaptive learning technology?</div>
@@ -346,6 +403,9 @@ const router = useRouter();
                     rows={3} 
                     {...register("adaptiveTechComfort")}
                   />
+                  {errors.adaptiveTechComfort && (
+                    <p className="text-red-500 text-sm mt-1">{errors.adaptiveTechComfort.message}</p>
+                  )}
                 </li>
               </ol>
            
@@ -370,14 +430,22 @@ const router = useRouter();
                     id="walkthroughDate" 
                     placeholder="e.g., 2025-09-30 10:00" 
                     {...register("walkthroughDate")}
+                    className={errors.walkthroughDate ? "border-red-500" : ""}
                   />
+                  {errors.walkthroughDate && (
+                    <p className="text-red-500 text-sm mt-1">{errors.walkthroughDate.message}</p>
+                  )}
                 </FormField>
                 <FormField label="Confirm Invite to Assessment Day" htmlFor="assessmentInvite">
                   <Input 
                     id="assessmentInvite" 
                     placeholder="Add note or date" 
                     {...register("assessmentInvite")}
+                    className={errors.assessmentInvite ? "border-red-500" : ""}
                   />
+                  {errors.assessmentInvite && (
+                    <p className="text-red-500 text-sm mt-1">{errors.assessmentInvite.message}</p>
+                  )}
                 </FormField>
               </div>
               <Textarea 
@@ -386,6 +454,9 @@ const router = useRouter();
                 placeholder="Additional Notes / Observations"
                 {...register("additionalNotes")}
               />
+              {errors.additionalNotes && (
+                <p className="text-red-500 text-sm mt-1">{errors.additionalNotes.message}</p>
+              )}
             </section>
 
             {message && (

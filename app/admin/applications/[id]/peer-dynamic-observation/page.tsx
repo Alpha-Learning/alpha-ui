@@ -237,11 +237,128 @@ export default function PeerDynamicObservationPage() {
 
   useEffect(() => {
     (async () => {
+      // Load existing form data
       const res = await apiService.get(
         `/api/admin/peer-dynamic-observation?applicationId=${params.id}`
       );
+      
+      // Load application data for auto-filling
+      const appRes = await apiService.getApplicationData(params.id);
+      
       if (res.success && res.data) {
+        // Use existing form data
         reset(res.data);
+      } else if (appRes.success && appRes.data) {
+        // Auto-fill with application data if no existing form data
+        const appData = appRes.data;
+        reset({
+          // Observation Details
+          childName: appData.childFullName || "",
+          date: "",
+          examiner: "",
+          age: appData.childAge ? appData.childAge.toString() : "",
+          sessionStartTime: "",
+          sessionEndTime: "",
+          
+          // Behavioural Skill Assessment (1-5 ratings)
+          leadershipRating: "",
+          leadershipNotes: "",
+          collaborationRating: "",
+          collaborationNotes: "",
+          conflictResolutionRating: "",
+          conflictResolutionNotes: "",
+          communicationRating: "",
+          communicationNotes: "",
+          emotionalRegulationRating: "",
+          emotionalRegulationNotes: "",
+          empathyRating: "",
+          empathyNotes: "",
+          adaptabilityRating: "",
+          adaptabilityNotes: "",
+          initiativeRating: "",
+          initiativeNotes: "",
+          
+          // Meta Learning Skill Alignment (Yes/No observations)
+          curiosityObserved: false,
+          curiosityNotes: "",
+          confidenceObserved: false,
+          confidenceNotes: "",
+          selfRegulationObserved: false,
+          selfRegulationNotes: "",
+          collaborationObserved: false,
+          collaborationObservedNotes: "",
+          emotionalAwarenessObserved: false,
+          emotionalAwarenessNotes: "",
+          leadershipObserved: false,
+          leadershipObservedNotes: "",
+          problemSolvingObserved: false,
+          problemSolvingNotes: "",
+          perspectiveTakingObserved: false,
+          perspectiveTakingNotes: "",
+          
+          // Learning Preference & Intelligence Inference
+          linguisticObserved: false,
+          linguisticStronglyEvident: false,
+          linguisticNotes: "",
+          logicalMathematicalObserved: false,
+          logicalMathematicalStronglyEvident: false,
+          logicalMathematicalNotes: "",
+          spatialObserved: false,
+          spatialStronglyEvident: false,
+          spatialNotes: "",
+          bodilyKinestheticObserved: false,
+          bodilyKinestheticStronglyEvident: false,
+          bodilyKinestheticNotes: "",
+          musicalObserved: false,
+          musicalStronglyEvident: false,
+          musicalNotes: "",
+          interpersonalObserved: false,
+          interpersonalStronglyEvident: false,
+          interpersonalNotes: "",
+          intrapersonalObserved: false,
+          intrapersonalStronglyEvident: false,
+          intrapersonalNotes: "",
+          naturalisticObserved: false,
+          naturalisticStronglyEvident: false,
+          naturalisticNotes: "",
+          existentialObserved: false,
+          existentialStronglyEvident: false,
+          existentialNotes: "",
+          
+          // Learning Style Clues
+          visualObserved: false,
+          visualNotes: "",
+          auditoryObserved: false,
+          auditoryNotes: "",
+          kinestheticObserved: false,
+          kinestheticNotes: "",
+          verbalObserved: false,
+          verbalNotes: "",
+          socialObserved: false,
+          socialNotes: "",
+          solitaryObserved: false,
+          solitaryNotes: "",
+          
+          // Social Role Tendency (multiple selections allowed)
+          leaderRole: false,
+          withdrawnRole: false,
+          problemSolverRole: false,
+          followerRole: false,
+          initiatorRole: false,
+          bridgerRole: false,
+          observerRole: false,
+          supporterRole: false,
+          challengerRole: false,
+          mediatorRole: false,
+          
+          // Summary Reflections
+          notableStrengths: "",
+          areasOfConcern: "",
+          situationsChildThrived: "",
+          situationsChallenging: "",
+          suggestedFollowUp: "",
+          caregiverInteraction: "",
+        });
       }
     })();
   }, [params.id, reset]);

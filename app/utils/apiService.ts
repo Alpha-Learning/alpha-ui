@@ -235,6 +235,11 @@ class ApiService {
   setDefaultHeaders(headers: Record<string, string>) {
     this.defaultHeaders = { ...this.defaultHeaders, ...headers };
   }
+
+  // Fetch application data for auto-filling forms
+  async getApplicationData(applicationId: string) {
+    return this.get(`/api/admin/applications/${applicationId}`);
+  }
 }
 
 // Create a default instance

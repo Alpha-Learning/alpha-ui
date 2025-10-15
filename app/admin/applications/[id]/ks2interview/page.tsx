@@ -142,10 +142,16 @@ export default function KS2InterviewQuestionsPage() {
 
   useEffect(() => {
     (async () => {
+      // Load existing form data
       const res = await apiService.get(
         `/api/admin/ks2-interview-questions?applicationId=${params.id}`
       );
-      if (res.success && res.data)
+      
+      // Load application data for auto-filling
+      const appRes = await apiService.getApplicationData(params.id);
+      
+      if (res.success && res.data) {
+        // Use existing form data
         reset({
           fullName: res.data.fullName || "",
           age: res.data.age || "",
@@ -197,6 +203,61 @@ export default function KS2InterviewQuestionsPage() {
           loggedToSystemDate: res.data.loggedToSystemDate || "",
           loggedBy: res.data.loggedBy || "",
         });
+      } else if (appRes.success && appRes.data) {
+        // Auto-fill with application data if no existing form data
+        const appData = appRes.data;
+        reset({
+          fullName: appData.childFullName || "",
+          age: appData.childAge ? appData.childAge.toString() : "",
+          somethingAlwaysWantedToLearn: "",
+          somethingAlwaysWantedToLearnNotes: "",
+          fiveThingsWithPaperclip: "",
+          fiveThingsWithPaperclipNotes: "",
+          finishSchoolworkEarly: "",
+          finishSchoolworkEarlyNotes: "",
+          logicChallenge: "",
+          logicChallengeNotes: "",
+          somethingHard: "",
+          somethingHardNotes: "",
+          answerIsWrong: "",
+          answerIsWrongNotes: "",
+          favouriteThingOnComputer: "",
+          favouriteThingOnComputerNotes: "",
+          likeWorkingWithOthers: "",
+          likeWorkingWithOthersNotes: "",
+          drawMachineInvention: "",
+          drawMachineInventionNotes: "",
+          confidenceTryingNewThings: "",
+          confidenceTryingNewThingsNotes: "",
+          helpedSomeoneLearn: "",
+          helpedSomeoneLearnNotes: "",
+          magicWandMakesSmarter: "",
+          magicWandMakesSmarterNotes: "",
+          explainInternetToPast: "",
+          explainInternetToPastNotes: "",
+          inChargeOfWorld: "",
+          inChargeOfWorldNotes: "",
+          threeThingsGoodAt: "",
+          threeThingsGoodAtNotes: "",
+          somethingGetBetterAt: "",
+          somethingGetBetterAtNotes: "",
+          inventJobDoesntExist: "",
+          inventJobDoesntExistNotes: "",
+          learningPreference: "",
+          digitalTasks: "",
+          digitalTasksNotes: "",
+          playingWithFriends: "",
+          playingWithFriendsNotes: "",
+          parentalInterferenceFlagged: false,
+          parentalInterferenceNotes: "",
+          totalScore: "",
+          applicationNumber: params.id,
+          observerName: "",
+          assessmentDate: "",
+          loggedToSystemDate: "",
+          loggedBy: "",
+        });
+      }
     })();
   }, [params.id, reset]);
 

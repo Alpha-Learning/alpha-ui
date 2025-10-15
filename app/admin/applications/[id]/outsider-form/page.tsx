@@ -78,7 +78,13 @@ export default function OutsiderFormPage() {
   const loadFormData = async () => {
     try {
       setLoading(true);
+      
+      // Load existing form data
       const res = await apiService.get(`/api/admin/outsider-form?applicationId=${params.id}`);
+      
+      // Load application data for auto-filling
+      const appRes = await apiService.getApplicationData(params.id);
+      
       if (res.success && res.data) {
         const data = res.data;
         reset({
@@ -97,6 +103,26 @@ export default function OutsiderFormPage() {
           applicationNumber: data.applicationNumber || "",
           loggedToSystemDate: data.loggedToSystemDate || "",
           loggedBy: data.loggedBy || "",
+        });
+      } else if (appRes.success && appRes.data) {
+        // Auto-fill with application data if no existing form data
+        const appData = appRes.data;
+        reset({
+          fullName: "", // Outsider name not in application data
+          childName: appData.childFullName || "",
+          date: new Date().toISOString().split('T')[0], // Today's date as default
+          relationshipToChild: "",
+          interactionContext: "",
+          learningTendenciesCuriosity: "",
+          emotionalTraits: "",
+          adaptationToChanges: "",
+          communicationSkills: "",
+          groupBehavior: "",
+          concernsNotes: "",
+          emotionalStrengthsVulnerabilities: "",
+          applicationNumber: params.id,
+          loggedToSystemDate: "",
+          loggedBy: "",
         });
       }
     } catch (error: any) {

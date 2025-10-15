@@ -371,6 +371,8 @@ model InitialObservationForm {
   // Child Information
   fullName String
   age      String
+  date     String @default("")
+  examiner String @default("")
 
   // Zone-Based Engagement Grid
   zoneATimeSpent String
@@ -420,6 +422,8 @@ model InitialObservationForm {
   bodilyKinestheticSupportingObservation String
   musicalEvidence String
   musicalSupportingObservation String
+  existentialEvidence String @default("")
+  existentialSupportingObservation String @default("")
   interpersonalEvidence String
   interpersonalSupportingObservation String
   intrapersonalEvidence String
