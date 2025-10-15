@@ -114,6 +114,7 @@ model Application {
   peerDynamicObservation PeerDynamicObservation?
   parentChildDynamicObservation ParentChildDynamicObservation?
   comprehensiveProfileSheet ComprehensiveProfileSheet?
+  understandingParent UnderstandingParent?
 
   @@map("applications")
 }
@@ -591,6 +592,7 @@ model KS1InterviewQuestions {
   // Child Information
   fullName String
   age      String
+  date     String?
 
   // Interview Questions (1-14)
   whatDoYouDoSomethingHard Int? // Growth mindset & perseverance
@@ -663,6 +665,7 @@ model KS2InterviewQuestions {
   // Child Information
   fullName          String?
   age               String?
+  date              String?
   
   // Interview Questions (1-20)
   // Questions 1-6
@@ -873,6 +876,8 @@ model ParentChildDynamicObservation {
   // Child Information
   childFullName     String?
   childAge          String?
+  date              String?
+  examiner          String?
   
   // Joint Story Creation (10 minutes)
   sharedIdeaExchangeRating     Int?
@@ -1195,4 +1200,29 @@ model ComprehensiveProfileSheet {
   updatedAt DateTime @updatedAt
   
   @@map("comprehensive_profile_sheet")
+}
+
+// Understanding the Parent (new page separate from Facility Walkthrough)
+model UnderstandingParent {
+  id            String   @id @default(cuid())
+  applicationId String   @unique
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  // Child & Session Info
+  childName   String?
+  age         String?
+  date        String?
+  examiner    String?
+  occupation  String?
+
+  // Ratings Grid stored as JSON (per domain: selected categories + notes)
+  grid        Json?
+
+  // Additional Notes
+  additionalNotes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("understanding_parent")
 }

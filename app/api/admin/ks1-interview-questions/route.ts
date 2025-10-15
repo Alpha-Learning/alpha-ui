@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
       // Child Information
       fullName,
       age,
+      date,
       // Interview Questions
       whatDoYouDoSomethingHard,
       whatDoYouDoSomethingHardNotes,
@@ -64,6 +65,7 @@ export async function POST(request: NextRequest) {
       // Child Information
       fullName,
       age,
+      date,
       // Interview Questions - convert string scores to integers
       whatDoYouDoSomethingHard: whatDoYouDoSomethingHard ? parseInt(whatDoYouDoSomethingHard) : null,
       whatDoYouDoSomethingHardNotes,

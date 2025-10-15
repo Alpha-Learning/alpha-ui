@@ -17,6 +17,7 @@ const schema = z.object({
   // Child Information (required)
   fullName: z.string().min(1, "Required"),
   age: z.string().min(1, "Required"),
+  date: z.string().optional(),
   
   // Interview Questions (1-20) - all required except learningPreference
   somethingAlwaysWantedToLearn: z.string().min(1, "Required"),
@@ -80,6 +81,7 @@ export default function KS2InterviewQuestionsPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const [saving, setSaving] = useState(false);
+  // Removed auto default of today's date; using user-provided Date field
   const {
     register,
     handleSubmit,
@@ -90,6 +92,7 @@ export default function KS2InterviewQuestionsPage() {
     defaultValues: {
       fullName: "",
       age: "",
+      date: "",
       somethingAlwaysWantedToLearn: "",
       somethingAlwaysWantedToLearnNotes: "",
       fiveThingsWithPaperclip: "",
@@ -155,6 +158,7 @@ export default function KS2InterviewQuestionsPage() {
         reset({
           fullName: res.data.fullName || "",
           age: res.data.age || "",
+          date: res.data.date || "",
           somethingAlwaysWantedToLearn: res.data.somethingAlwaysWantedToLearn || "",
           somethingAlwaysWantedToLearnNotes: res.data.somethingAlwaysWantedToLearnNotes || "",
           fiveThingsWithPaperclip: res.data.fiveThingsWithPaperclip || "",
@@ -209,6 +213,7 @@ export default function KS2InterviewQuestionsPage() {
         reset({
           fullName: appData.childFullName || "",
           age: appData.childAge ? appData.childAge.toString() : "",
+          date: "",
           somethingAlwaysWantedToLearn: "",
           somethingAlwaysWantedToLearnNotes: "",
           fiveThingsWithPaperclip: "",
@@ -311,6 +316,9 @@ export default function KS2InterviewQuestionsPage() {
             </FormField>
             <FormField label="Age" htmlFor="age" error={errors.age as any}>
               <Input id="age" {...register("age")} />
+            </FormField>
+            <FormField label="Date" htmlFor="date">
+              <Input id="date" {...register("date" as any)} />
             </FormField>
           </div>
         </section>

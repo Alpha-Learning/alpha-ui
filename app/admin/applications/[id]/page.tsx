@@ -297,8 +297,8 @@ export default function AdminApplicationDetailPage() {
     "5. KS1 interview / KS2 interview question",
     "6. Parent-Child Dynamic Observation",
     "7. Examiner Form: Peer Dynamic Observation",
-    "8. Facility walkthrough checklist",
-    "9. UTL Comprehensive Profile Sheet",
+    "8. Understanding The Parent",
+    "9. Examiner Form: Peer Dynamic Observation",
     "10. Understanding The Learning Comprehensive Profile Sheet",
   ];
 
@@ -428,8 +428,8 @@ export default function AdminApplicationDetailPage() {
                  4: `/admin/applications/${data.id}/initial-observation-form`,
                  6: `/admin/applications/${data.id}/parent-child-dynamic-observation`,
                  7: `/admin/applications/${data.id}/peer-dynamic-observation`,
-                 8: `/admin/applications/${data.id}/facility-walkthrough-checklist`,
-                 9: `/admin/applications/${data.id}/comprehensive-profile-sheet`,
+                 8: `/admin/applications/${data.id}/understanding-parent`,
+                 9: `/admin/applications/${data.id}/peer-dynamic-observation`,
                  10: `/admin/applications/${data.id}/comprehensive-profile-sheet`,
                };
               const href = hrefMap[stageNumber];

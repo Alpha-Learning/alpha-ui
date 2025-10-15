@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
       // Child Information
       fullName,
       age,
+      date,
       // Interview Questions (1-20)
       somethingAlwaysWantedToLearn,
       somethingAlwaysWantedToLearnNotes,
@@ -73,6 +74,7 @@ export async function POST(request: NextRequest) {
       // Child Information
       fullName,
       age,
+      date,
       // Interview Questions - convert string scores to integers
       somethingAlwaysWantedToLearn: somethingAlwaysWantedToLearn ? parseInt(somethingAlwaysWantedToLearn) : null,
       somethingAlwaysWantedToLearnNotes,

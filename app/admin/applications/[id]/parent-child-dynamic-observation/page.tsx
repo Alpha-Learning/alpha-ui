@@ -17,6 +17,8 @@ const schema = z.object({
   // Child Information
   childFullName: z.string().min(1, "Required"),
   childAge: z.string().min(1, "Required"),
+  date: z.string().optional(),
+  examiner: z.string().optional(),
   
   // Joint Story Creation (10 minutes)
   sharedIdeaExchangeRating: z.string().min(1, "Required"),
@@ -146,6 +148,8 @@ export default function ParentChildDynamicObservationPage() {
     defaultValues: {
       childFullName: "",
       childAge: "",
+      date: "",
+      examiner: "",
       sharedIdeaExchangeRating: "",
       sharedIdeaExchangeNotes: "",
       emotionalWarmthRating: "",
@@ -261,6 +265,8 @@ export default function ParentChildDynamicObservationPage() {
           // Child Information
           childFullName: appData.childFullName || "",
           childAge: appData.childAge ? appData.childAge.toString() : "",
+          date: "",
+          examiner: "",
           
           // Joint Story Creation (10 minutes)
           sharedIdeaExchangeRating: "",
@@ -426,6 +432,12 @@ export default function ParentChildDynamicObservationPage() {
             </FormField>
             <FormField label="Age" htmlFor="childAge" error={errors.childAge as any}>
               <Input id="childAge" {...register("childAge")} />
+            </FormField>
+            <FormField label="Date" htmlFor="date">
+              <Input id="date" {...register("date" as any)} />
+            </FormField>
+            <FormField label="Examiner" htmlFor="examiner">
+              <Input id="examiner" {...register("examiner" as any)} />
             </FormField>
           </div>
         </section>
@@ -1913,7 +1925,7 @@ export default function ParentChildDynamicObservationPage() {
         </section>
 
         {/* Office Use Only */}
-        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
+        {/* <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Office Use Only"
             bgClassName="bg-teal-700"
@@ -1936,7 +1948,7 @@ export default function ParentChildDynamicObservationPage() {
               <Input id="loggedBy" {...register("loggedBy")} />
             </FormField>
           </div>
-        </section>
+        </section> */}
 
         {/* Submit Button */}
         <div className="flex justify-end">

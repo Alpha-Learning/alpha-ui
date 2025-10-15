@@ -17,6 +17,7 @@ const schema = z.object({
   // Child Information (required)
   fullName: z.string().min(1, "Required"),
   age: z.string().min(1, "Required"),
+  date: z.string().optional(),
 
   // Interview Questions (1-14) - all required
   whatDoYouDoSomethingHard: z.string().min(1, "Required"),
@@ -68,6 +69,7 @@ export default function KS1InterviewQuestionsPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const [saving, setSaving] = useState(false);
+  // Removed defaulting to today's date; now using user-provided Date field
   const {
     register,
     handleSubmit,
@@ -113,6 +115,7 @@ export default function KS1InterviewQuestionsPage() {
       totalScore: "",
       applicationNumber: "",
       observerName: "",
+      date: "",
       assessmentDate: "",
       loggedToSystemDate: "",
       loggedBy: "",
@@ -183,6 +186,7 @@ export default function KS1InterviewQuestionsPage() {
           totalScore: res.data.totalScore || "",
           applicationNumber: res.data.applicationNumber || "",
           observerName: res.data.observerName || "",
+          date: res.data.date || "",
           assessmentDate: res.data.assessmentDate || "",
           loggedToSystemDate: res.data.loggedToSystemDate || "",
           loggedBy: res.data.loggedBy || "",
@@ -225,6 +229,7 @@ export default function KS1InterviewQuestionsPage() {
           totalScore: "",
           applicationNumber: params.id,
           observerName: "",
+          date: "",
           assessmentDate: "",
           loggedToSystemDate: "",
           loggedBy: "",
@@ -283,6 +288,9 @@ export default function KS1InterviewQuestionsPage() {
             </FormField>
             <FormField label="Age" htmlFor="age" error={errors.age as any}>
               <Input id="age" {...register("age")} />
+            </FormField>
+            <FormField label="Date" htmlFor="date">
+              <Input id="date" {...register("date" as any)} />
             </FormField>
           </div>
         </section>
@@ -926,7 +934,7 @@ export default function KS1InterviewQuestionsPage() {
         </section>
 
         {/* Parental Interference */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+        <section className="bg-white rounded-xl mb-6 shadow-sm ring-1 ring-black/5 p-6">
           <FormSectionHeader
             title="Parental Interference"
             bgClassName="bg-teal-700"
