@@ -378,14 +378,14 @@ export default function AdminApplicationDetailPage() {
           </div>
           
           {/* Enhanced Progress Bar */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
               <span>Overall Progress</span>
               <span className="font-semibold">{pct}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
               <div 
-                className={`h-3 rounded-full transition-all duration-500 ${
+                className={`h-3 rounded-full W-[${pct}%] transition-all duration-500 ${
                   pct === 100 
                     ? 'bg-gradient-to-r from-green-500 to-green-600' 
                     : pct >= 70 
@@ -394,11 +394,9 @@ export default function AdminApplicationDetailPage() {
                     ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' 
                     : 'bg-gradient-to-r from-red-500 to-red-600'
                 }`}
-                // @ts-expect-error: style is valid on div but TypeScript types may be out of date
-                style={{ width: `${pct}%` }}
               ></div>
             </div>
-          </div>
+          </div> */}
 
           {/* Progress Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
