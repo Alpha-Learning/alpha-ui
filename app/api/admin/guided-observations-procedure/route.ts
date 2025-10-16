@@ -12,13 +12,17 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
+    
     const body = await request.json();
     const {
       applicationId,
-      // Child Information
-      fullName,
+      // Basic Information
+      childName,
       age,
-      // Ratings Grid
+      date,
+      examiner,
+      
+      // Guided Activity Ratings Grid
       zoneAScore,
       zoneANotes,
       zoneBScore,
@@ -27,211 +31,307 @@ export async function POST(request: NextRequest) {
       zoneCNotes,
       zoneDScore,
       zoneDNotes,
-      // Guiding Questions (new names)
-      areaLikeBest,
-      whatMakesInteresting,
-      hardButFun,
-      feelWhenTryingNew,
-      teachGame,
-      // Meta skills
-      metaSelfReg,
-      metaNotesSelfReg,
-      metaCuriosity,
-      metaNotesCuriosity,
-      metaSocial,
-      metaNotesSocial,
-      metaEmotional,
-      metaNotesEmotional,
-      metaConfidence,
-      metaNotesConfidence,
-      // Intelligence notes
-      intelLinguistic,
-      intelLogical,
-      intelSpatial,
-      intelBodily,
-      intelMusical,
-      intelInterpersonal,
-      intelIntrapersonal,
-      intelNaturalistic,
-      intelExistential,
-      // Intelligence evidence checkboxes
-      intelLinguisticEvidenceModerate,
-      intelLinguisticEvidenceStrong,
-      intelLogicalEvidenceModerate,
-      intelLogicalEvidenceStrong,
-      intelSpatialEvidenceModerate,
-      intelSpatialEvidenceStrong,
-      intelBodilyEvidenceModerate,
-      intelBodilyEvidenceStrong,
-      intelMusicalEvidenceModerate,
-      intelMusicalEvidenceStrong,
-      intelInterpersonalEvidenceModerate,
-      intelInterpersonalEvidenceStrong,
-      intelIntrapersonalEvidenceModerate,
-      intelIntrapersonalEvidenceStrong,
-      intelNaturalisticEvidenceModerate,
-      intelNaturalisticEvidenceStrong,
-      intelExistentialEvidenceModerate,
-      intelExistentialEvidenceStrong,
-      // Parent–Child snapshot
+      
+      // Meta Learning Skill Scoring
+      metaCuriosityScore,
+      metaCuriosityNotes,
+      metaSelfRegulationScore,
+      metaSelfRegulationNotes,
+      metaConfidenceScore,
+      metaConfidenceNotes,
+      metaCollaborationScore,
+      metaCollaborationNotes,
+      metaEmotionalAwarenessScore,
+      metaEmotionalAwarenessNotes,
+      
+      // Intelligence & Learning Type Check-In
+      intelLinguisticEvidence,
+      intelLinguisticObservation,
+      intelLogicalEvidence,
+      intelLogicalObservation,
+      intelSpatialEvidence,
+      intelSpatialObservation,
+      intelBodilyEvidence,
+      intelBodilyObservation,
+      
+      // Additional Intelligences
+      intelMusicalEvidence,
+      intelMusicalObservation,
+      intelInterpersonalEvidence,
+      intelInterpersonalObservation,
+      intelIntrapersonalEvidence,
+      intelIntrapersonalObservation,
+      intelNaturalisticEvidence,
+      intelNaturalisticObservation,
+      intelExistentialEvidence,
+      intelExistentialObservation,
+      
+      // Parent-Child Dynamic Snapshot
       parentProximity,
       parentInterventionLevel,
       parentInterventionStyle,
       childIndependenceLevel,
-      childEmotionalWithParent,
+      childEmotionalPresentation,
       childIndependenceWhenParentEngaged,
       emotionalRegulationWithParentPresent,
-      // Examiner comments
+      
+      // Examiner Final Comments
       mostEngagedZone,
       dominantObservedIntelligences,
       initialLearningStyleImpressions,
       earlyFlagsNeedsFollowUp,
       selfDirectedVsSeekingGuidance,
-      finalAdditionalNotes,
-      // Interaction summary
-      interactionPreferredZone,
-      interactionInitialBehaviour,
-      interactionOpennessToAdultGuidance,
-      interactionMostRevealingActivity,
-      interactionCrossRefStep5,
-      interactionCuriosityExploration,
-      interactionFocusAttention,
-      interactionEngagementWithAdult,
-      interactionResilienceInChallenge,
-      interactionEmotionRegulationSignals,
-      interactionCaregiverInteractionStyle,
-      interactionRecommendations,
-      // Office use
-      applicationNumber,
-      observerName,
-      assessmentDate,
-      loggedToSystemDate,
-      loggedBy,
+      flagIndicators,
+      additionalNotes,
+      
+      // Interaction Summary
+      preferredZone,
+      initialBehaviour,
+      opennessToAdultGuidance,
+      mostRevealingActivity,
+      crossReferenceStep5,
+      curiosityAndExploration,
+      focusAndAttentionSpan,
+      engagementWithAdultDirection,
+      
+      // Additional Observations
+      resilienceInChallenge,
+      emotionRegulationSignals,
+      caregiverInteractionStyle,
+      recommendationsForSupport,
     } = body;
 
-    if (!applicationId) {
-      return NextResponse.json({ success: false, error: "Application ID is required" }, { status: 400 });
+    // Validate required fields
+    if (!applicationId || !childName || !age || !date || !examiner) {
+      return NextResponse.json(
+        { success: false, message: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
-    const existing = await model.findUnique({ where: { applicationId } });
+    // Check if application exists
+    const application = await prisma.application.findUnique({
+      where: { id: applicationId },
+    });
 
-    const payload = {
-      // Child Information
-      fullName,
-      age,
-      // Ratings Grid
-      zoneAScore,
-      zoneANotes,
-      zoneBScore,
-      zoneBNotes,
-      zoneCScore,
-      zoneCNotes,
-      zoneDScore,
-      zoneDNotes,
-      // Guiding Questions
-      areaLikeBest,
-      whatMakesInteresting,
-      hardButFun,
-      feelWhenTryingNew,
-      teachGame,
-      // Meta
-      metaSelfReg,
-      metaNotesSelfReg,
-      metaCuriosity,
-      metaNotesCuriosity,
-      metaSocial,
-      metaNotesSocial,
-      metaEmotional,
-      metaNotesEmotional,
-      metaConfidence,
-      metaNotesConfidence,
-      // Intelligence
-      intelLinguistic,
-      intelLogical,
-      intelSpatial,
-      intelBodily,
-      intelMusical,
-      intelInterpersonal,
-      intelIntrapersonal,
-      intelNaturalistic,
-      intelExistential,
-      // Intelligence evidence checkboxes
-      intelLinguisticEvidenceModerate,
-      intelLinguisticEvidenceStrong,
-      intelLogicalEvidenceModerate,
-      intelLogicalEvidenceStrong,
-      intelSpatialEvidenceModerate,
-      intelSpatialEvidenceStrong,
-      intelBodilyEvidenceModerate,
-      intelBodilyEvidenceStrong,
-      intelMusicalEvidenceModerate,
-      intelMusicalEvidenceStrong,
-      intelInterpersonalEvidenceModerate,
-      intelInterpersonalEvidenceStrong,
-      intelIntrapersonalEvidenceModerate,
-      intelIntrapersonalEvidenceStrong,
-      intelNaturalisticEvidenceModerate,
-      intelNaturalisticEvidenceStrong,
-      intelExistentialEvidenceModerate,
-      intelExistentialEvidenceStrong,
-      // Parent–Child
-      parentProximity,
-      parentInterventionLevel,
-      parentInterventionStyle,
-      childIndependenceLevel,
-      childEmotionalWithParent,
-      childIndependenceWhenParentEngaged,
-      emotionalRegulationWithParentPresent,
-      // Examiner
-      mostEngagedZone,
-      dominantObservedIntelligences,
-      initialLearningStyleImpressions,
-      earlyFlagsNeedsFollowUp,
-      selfDirectedVsSeekingGuidance,
-      finalAdditionalNotes,
-      interactionPreferredZone,
-      interactionInitialBehaviour,
-      interactionOpennessToAdultGuidance,
-      interactionMostRevealingActivity,
-      interactionCrossRefStep5,
-      interactionCuriosityExploration,
-      interactionFocusAttention,
-      interactionEngagementWithAdult,
-      interactionResilienceInChallenge,
-      interactionEmotionRegulationSignals,
-      interactionCaregiverInteractionStyle,
-      interactionRecommendations,
-      // Office
-      applicationNumber,
-      observerName,
-      assessmentDate,
-      loggedToSystemDate,
-      loggedBy,
-    } as const;
+    if (!application) {
+      return NextResponse.json(
+        { success: false, message: "Application not found" },
+        { status: 404 }
+      );
+    }
 
-    let record;
-    if (existing) {
-      record = await model.update({ where: { applicationId }, data: payload });
+    // Check if guided observation already exists for this application
+    const existingObservation = await prisma.guidedObservationsProcedure.findUnique({
+      where: { applicationId },
+    });
+
+    let observation;
+
+    if (existingObservation) {
+      // Update existing observation
+      observation = await prisma.guidedObservationsProcedure.update({
+        where: { applicationId },
+        data: {
+          // Basic Information
+          childName,
+          age,
+          date: new Date(date),
+          examiner,
+          
+          // Guided Activity Ratings Grid
+          zoneAScore,
+          zoneANotes,
+          zoneBScore,
+          zoneBNotes,
+          zoneCScore,
+          zoneCNotes,
+          zoneDScore,
+          zoneDNotes,
+          
+          // Meta Learning Skill Scoring
+          metaCuriosityScore,
+          metaCuriosityNotes,
+          metaSelfRegulationScore,
+          metaSelfRegulationNotes,
+          metaConfidenceScore,
+          metaConfidenceNotes,
+          metaCollaborationScore,
+          metaCollaborationNotes,
+          metaEmotionalAwarenessScore,
+          metaEmotionalAwarenessNotes,
+          
+          // Intelligence & Learning Type Check-In
+          intelLinguisticEvidence,
+          intelLinguisticObservation,
+          intelLogicalEvidence,
+          intelLogicalObservation,
+          intelSpatialEvidence,
+          intelSpatialObservation,
+          intelBodilyEvidence,
+          intelBodilyObservation,
+          
+          // Additional Intelligences
+          intelMusicalEvidence,
+          intelMusicalObservation,
+          intelInterpersonalEvidence,
+          intelInterpersonalObservation,
+          intelIntrapersonalEvidence,
+          intelIntrapersonalObservation,
+          intelNaturalisticEvidence,
+          intelNaturalisticObservation,
+          intelExistentialEvidence,
+          intelExistentialObservation,
+          
+          // Parent-Child Dynamic Snapshot
+          parentProximity,
+          parentInterventionLevel,
+          parentInterventionStyle,
+          childIndependenceLevel,
+          childEmotionalPresentation,
+          childIndependenceWhenParentEngaged,
+          emotionalRegulationWithParentPresent,
+          
+          // Examiner Final Comments
+          mostEngagedZone,
+          dominantObservedIntelligences,
+          initialLearningStyleImpressions,
+          earlyFlagsNeedsFollowUp,
+          selfDirectedVsSeekingGuidance,
+          flagIndicators,
+          additionalNotes,
+          
+          // Interaction Summary
+          preferredZone,
+          initialBehaviour,
+          opennessToAdultGuidance,
+          mostRevealingActivity,
+          crossReferenceStep5,
+          curiosityAndExploration,
+          focusAndAttentionSpan,
+          engagementWithAdultDirection,
+          
+          // Additional Observations
+          resilienceInChallenge,
+          emotionRegulationSignals,
+          caregiverInteractionStyle,
+          recommendationsForSupport,
+        },
+      });
     } else {
-      record = await model.create({ data: { applicationId, ...payload } });
+      // Create new observation
+      observation = await prisma.guidedObservationsProcedure.create({
+        data: {
+          applicationId,
+          // Basic Information
+          childName,
+          age,
+          date: new Date(date),
+          examiner,
+          
+          // Guided Activity Ratings Grid
+          zoneAScore,
+          zoneANotes,
+          zoneBScore,
+          zoneBNotes,
+          zoneCScore,
+          zoneCNotes,
+          zoneDScore,
+          zoneDNotes,
+          
+          // Meta Learning Skill Scoring
+          metaCuriosityScore,
+          metaCuriosityNotes,
+          metaSelfRegulationScore,
+          metaSelfRegulationNotes,
+          metaConfidenceScore,
+          metaConfidenceNotes,
+          metaCollaborationScore,
+          metaCollaborationNotes,
+          metaEmotionalAwarenessScore,
+          metaEmotionalAwarenessNotes,
+          
+          // Intelligence & Learning Type Check-In
+          intelLinguisticEvidence,
+          intelLinguisticObservation,
+          intelLogicalEvidence,
+          intelLogicalObservation,
+          intelSpatialEvidence,
+          intelSpatialObservation,
+          intelBodilyEvidence,
+          intelBodilyObservation,
+          
+          // Additional Intelligences
+          intelMusicalEvidence,
+          intelMusicalObservation,
+          intelInterpersonalEvidence,
+          intelInterpersonalObservation,
+          intelIntrapersonalEvidence,
+          intelIntrapersonalObservation,
+          intelNaturalisticEvidence,
+          intelNaturalisticObservation,
+          intelExistentialEvidence,
+          intelExistentialObservation,
+          
+          // Parent-Child Dynamic Snapshot
+          parentProximity,
+          parentInterventionLevel,
+          parentInterventionStyle,
+          childIndependenceLevel,
+          childEmotionalPresentation,
+          childIndependenceWhenParentEngaged,
+          emotionalRegulationWithParentPresent,
+          
+          // Examiner Final Comments
+          mostEngagedZone,
+          dominantObservedIntelligences,
+          initialLearningStyleImpressions,
+          earlyFlagsNeedsFollowUp,
+          selfDirectedVsSeekingGuidance,
+          flagIndicators,
+          additionalNotes,
+          
+          // Interaction Summary
+          preferredZone,
+          initialBehaviour,
+          opennessToAdultGuidance,
+          mostRevealingActivity,
+          crossReferenceStep5,
+          curiosityAndExploration,
+          focusAndAttentionSpan,
+          engagementWithAdultDirection,
+          
+          // Additional Observations
+          resilienceInChallenge,
+          emotionRegulationSignals,
+          caregiverInteractionStyle,
+          recommendationsForSupport,
+        },
+      });
     }
 
-    // advance stage to 6 and mark form as completed
-    await prisma.application.update({ 
-      where: { id: applicationId }, 
+    // Update application current stage to 5 and mark guided observation as completed
+    await prisma.application.update({
+      where: { id: applicationId },
       data: { 
-        // currentStage: 6,
-        isSixthFormCompleted: true
-      } 
+        isFifthFormCompleted: true
+      }
     });
 
     // Update application status based on all form completions
     await updateApplicationStatus(applicationId, prisma);
 
-    return NextResponse.json({ success: true, data: record });
-  } catch (error) {
-    console.error("Error saving guided observations:", error);
-    return NextResponse.json({ success: false, error: "Failed to save form" }, { status: 500 });
+    return NextResponse.json({
+      success: true,
+      data: observation,
+      message: "Guided observation data saved successfully and application stage updated",
+    });
+  } catch (error: any) {
+    console.error("Error saving guided observation:", error);
+    return NextResponse.json(
+      { success: false, message: error.message || "Failed to save guided observation" },
+      { status: 500 }
+    );
   }
 }
 
@@ -239,23 +339,30 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const applicationId = searchParams.get("applicationId");
+
     if (!applicationId) {
-      return NextResponse.json({ success: false, error: "Application ID is required" }, { status: 400 });
-    }
-    const model: any = (prisma as any).guidedObservationsProcedure;
-    if (!model || typeof model.findUnique !== "function") {
       return NextResponse.json(
-        { success: false, error: "GuidedObservationsProcedure model not available. Run prisma migrate." },
-        { status: 500 }
+        { success: false, message: "Application ID is required" },
+        { status: 400 }
       );
     }
-    const record = await model.findUnique({ where: { applicationId } });
-    return NextResponse.json({ success: true, data: record });
-  } catch (error) {
-    console.error("Error fetching guided observations:", error);
-    return NextResponse.json({ success: false, error: "Failed to fetch form" }, { status: 500 });
+
+    const observation = await prisma.guidedObservationsProcedure.findUnique({
+      where: { applicationId },
+      include: {
+        application: true,
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: observation,
+    });
+  } catch (error: any) {
+    console.error("Error fetching guided observation:", error);
+    return NextResponse.json(
+      { success: false, message: error.message || "Failed to fetch guided observation" },
+      { status: 500 }
+    );
   }
 }
-
-
-

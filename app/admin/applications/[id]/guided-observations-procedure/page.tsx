@@ -3,150 +3,61 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, Input, Textarea, FormSectionHeader } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
+import { guidedObservationSchema, type GuidedObservationFormData } from "@/app/lib/validations/guided-observation";
 
-const schema = z.object({
-  fullName: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  age: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  // Opening Engagement answers
-  areaLikeBest: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  whatMakesInteresting: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  hardButFun: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  feelWhenTryingNew: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  teachGame: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  // Ratings (per zone)
-  zoneAScore: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  zoneANotes: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  zoneBScore: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  zoneBNotes: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  zoneCScore: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  zoneCNotes: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  zoneDScore: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  zoneDNotes: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  // Meta skills
-  metaSelfReg: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  metaNotesSelfReg: z.string().optional(),
-  metaCuriosity: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  metaNotesCuriosity: z.string().optional(),
-  metaSocial: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  metaNotesSocial: z.string().optional(),
-  metaEmotional: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  metaNotesEmotional: z.string().optional(),
-  metaConfidence: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  metaNotesConfidence: z.string().optional(),
-  // Examiner final comments (required)
-  mostEngagedZone: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  dominantObservedIntelligences: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  initialLearningStyleImpressions: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  earlyFlagsNeedsFollowUp: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  selfDirectedVsSeekingGuidance: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  finalAdditionalNotes: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  // Intelligence evidence (checkboxes)
-  intelLinguisticEvidenceModerate: z.boolean().default(false),
-  intelLinguisticEvidenceStrong: z.boolean().default(false),
-  intelLogicalEvidenceModerate: z.boolean().default(false),
-  intelLogicalEvidenceStrong: z.boolean().default(false),
-  intelSpatialEvidenceModerate: z.boolean().default(false),
-  intelSpatialEvidenceStrong: z.boolean().default(false),
-  intelBodilyEvidenceModerate: z.boolean().default(false),
-  intelBodilyEvidenceStrong: z.boolean().default(false),
-  intelMusicalEvidenceModerate: z.boolean().default(false),
-  intelMusicalEvidenceStrong: z.boolean().default(false),
-  intelInterpersonalEvidenceModerate: z.boolean().default(false),
-  intelInterpersonalEvidenceStrong: z.boolean().default(false),
-  intelIntrapersonalEvidenceModerate: z.boolean().default(false),
-  intelIntrapersonalEvidenceStrong: z.boolean().default(false),
-  intelNaturalisticEvidenceModerate: z.boolean().default(false),
-  intelNaturalisticEvidenceStrong: z.boolean().default(false),
-  intelExistentialEvidenceModerate: z.boolean().default(false),
-  intelExistentialEvidenceStrong: z.boolean().default(false),
-  // Supporting observations for each intelligence type
-  intelLinguistic: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  intelLogical: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  intelSpatial: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  intelBodily: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  intelMusical: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  intelInterpersonal: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  intelIntrapersonal: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  intelNaturalistic: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  intelExistential: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  // Parent–Child dynamic snapshot (required)
-  parentProximity: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  parentInterventionLevel: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  parentInterventionStyle: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  childIndependenceLevel: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  childEmotionalWithParent: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  childIndependenceWhenParentEngaged: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  emotionalRegulationWithParentPresent: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  // Interaction summary
-  interactionPreferredZone: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  interactionInitialBehaviour: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  interactionOpennessToAdultGuidance: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  interactionMostRevealingActivity: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  interactionCrossRefStep5: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  interactionCuriosityExploration: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  interactionFocusAttention: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  interactionEngagementWithAdult: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  interactionResilienceInChallenge: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  interactionEmotionRegulationSignals: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  interactionCaregiverInteractionStyle: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  interactionRecommendations: z.string().nullish().transform(val => val || "").pipe(z.string().min(1, "Required")),
-  // Office use
-  applicationNumber: z.string().optional(),
-  observerName: z.string().optional(),
-  assessmentDate: z.string().optional(),
-  loggedToSystemDate: z.string().optional(),
-  loggedBy: z.string().optional(),
-})
-// Require at least one evidence checkbox per intelligence row
-.refine((v) => v.intelLinguisticEvidenceModerate || v.intelLinguisticEvidenceStrong, { path: ["intelLinguisticEvidenceModerate"], message: "Select evidence" })
-.refine((v) => v.intelLogicalEvidenceModerate || v.intelLogicalEvidenceStrong, { path: ["intelLogicalEvidenceModerate"], message: "Select evidence" })
-.refine((v) => v.intelSpatialEvidenceModerate || v.intelSpatialEvidenceStrong, { path: ["intelSpatialEvidenceModerate"], message: "Select evidence" })
-.refine((v) => v.intelBodilyEvidenceModerate || v.intelBodilyEvidenceStrong, { path: ["intelBodilyEvidenceModerate"], message: "Select evidence" })
-.refine((v) => v.intelMusicalEvidenceModerate || v.intelMusicalEvidenceStrong, { path: ["intelMusicalEvidenceModerate"], message: "Select evidence" })
-.refine((v) => v.intelInterpersonalEvidenceModerate || v.intelInterpersonalEvidenceStrong, { path: ["intelInterpersonalEvidenceModerate"], message: "Select evidence" })
-.refine((v) => v.intelIntrapersonalEvidenceModerate || v.intelIntrapersonalEvidenceStrong, { path: ["intelIntrapersonalEvidenceModerate"], message: "Select evidence" })
-.refine((v) => v.intelNaturalisticEvidenceModerate || v.intelNaturalisticEvidenceStrong, { path: ["intelNaturalisticEvidenceModerate"], message: "Select evidence" })
-.refine((v) => v.intelExistentialEvidenceModerate || v.intelExistentialEvidenceStrong, { path: ["intelExistentialEvidenceModerate"], message: "Select evidence" });
-type FormValues = z.infer<typeof schema>;
 
 export default function GuidedObservationsProcedurePage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormValues>({
-    resolver: zodResolver(schema),
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+    reset,
+  } = useForm<GuidedObservationFormData>({
+    resolver: zodResolver(guidedObservationSchema),
     defaultValues: {
-      fullName: "", age: "",
-      areaLikeBest: "", whatMakesInteresting: "", hardButFun: "", feelWhenTryingNew: "", teachGame: "",
-      zoneAScore: "", zoneANotes: "", zoneBScore: "", zoneBNotes: "", zoneCScore: "", zoneCNotes: "", zoneDScore: "", zoneDNotes: "",
-      metaSelfReg: "", metaNotesSelfReg: "", metaCuriosity: "", metaNotesCuriosity: "", metaSocial: "", metaNotesSocial: "", metaEmotional: "", metaNotesEmotional: "", metaConfidence: "", metaNotesConfidence: "",
-      mostEngagedZone: "", dominantObservedIntelligences: "", initialLearningStyleImpressions: "", earlyFlagsNeedsFollowUp: "", selfDirectedVsSeekingGuidance: "", finalAdditionalNotes: "",
-      intelLinguisticEvidenceModerate: false, intelLinguisticEvidenceStrong: false,
-      intelLogicalEvidenceModerate: false, intelLogicalEvidenceStrong: false,
-      intelSpatialEvidenceModerate: false, intelSpatialEvidenceStrong: false,
-      intelBodilyEvidenceModerate: false, intelBodilyEvidenceStrong: false,
-      intelMusicalEvidenceModerate: false, intelMusicalEvidenceStrong: false,
-      intelInterpersonalEvidenceModerate: false, intelInterpersonalEvidenceStrong: false,
-      intelIntrapersonalEvidenceModerate: false, intelIntrapersonalEvidenceStrong: false,
-      intelNaturalisticEvidenceModerate: false, intelNaturalisticEvidenceStrong: false,
-      intelExistentialEvidenceModerate: false, intelExistentialEvidenceStrong: false,
-      intelLinguistic: "", intelLogical: "", intelSpatial: "", intelBodily: "", intelMusical: "",
-      intelInterpersonal: "", intelIntrapersonal: "", intelNaturalistic: "", intelExistential: "",
-      interactionPreferredZone: "", interactionInitialBehaviour: "", interactionOpennessToAdultGuidance: "",
-      interactionMostRevealingActivity: "", interactionCrossRefStep5: "", interactionCuriosityExploration: "", interactionFocusAttention: "", interactionEngagementWithAdult: "", interactionResilienceInChallenge: "", interactionEmotionRegulationSignals: "", interactionCaregiverInteractionStyle: "", interactionRecommendations: "",
-      applicationNumber: "", observerName: "", assessmentDate: "", loggedToSystemDate: "", loggedBy: "",
-    }
+      childName: "",
+      age: "",
+      date: new Date().toISOString().split('T')[0],
+      examiner: "",
+      zoneAScore: 1,
+      zoneANotes: "",
+      zoneBScore: 1,
+      zoneBNotes: "",
+      zoneCScore: 1,
+      zoneCNotes: "",
+      metaCuriosityScore: 1,
+      metaCuriosityNotes: "",
+      metaSelfRegulationScore: 1,
+      metaSelfRegulationNotes: "",
+      metaConfidenceScore: 1,
+      metaConfidenceNotes: "",
+      metaCollaborationScore: 1,
+      metaCollaborationNotes: "",
+      metaEmotionalAwarenessScore: 1,
+      metaEmotionalAwarenessNotes: "",
+    },
   });
 
-  // Helper to safely check field errors when using dynamic keys
-  const hasError = (name: keyof FormValues) => Boolean((errors as any)?.[name]);
+  // Load existing data
+  useEffect(() => {
+    loadGuidedObservationData();
+  }, [params.id]);
 
-  useEffect(() => { 
-    (async () => { 
+  const loadGuidedObservationData = async () => {
+    try {
+      setLoading(true);
+      
       // Load existing form data
       const res = await apiService.get(`/api/admin/guided-observations-procedure?applicationId=${params.id}`);
       
@@ -154,761 +65,1288 @@ export default function GuidedObservationsProcedurePage() {
       const appRes = await apiService.getApplicationData(params.id);
       
       if (res.success && res.data) {
-        // Use existing form data
+        const data = res.data;
+        const appData = appRes.success && appRes.data ? appRes.data : null;
         reset({
-          fullName: res.data.fullName || "", 
-          age: res.data.age || "",
-          areaLikeBest: res.data.areaLikeBest || res.data.guidingQ1 || "",
-          whatMakesInteresting: res.data.whatMakesInteresting || res.data.guidingQ2 || "",
-          hardButFun: res.data.hardButFun || res.data.guidingQ3 || "",
-          feelWhenTryingNew: res.data.feelWhenTryingNew || res.data.guidingQ4 || "",
-          teachGame: res.data.teachGame || res.data.guidingQ5 || "",
-          zoneAScore: res.data.zoneAScore || "", 
-          zoneANotes: res.data.zoneANotes || "",
-          zoneBScore: res.data.zoneBScore || "", 
-          zoneBNotes: res.data.zoneBNotes || "",
-          zoneCScore: res.data.zoneCScore || "", 
-          zoneCNotes: res.data.zoneCNotes || "",
-          zoneDScore: res.data.zoneDScore || "", 
-          zoneDNotes: res.data.zoneDNotes || "",
-          metaSelfReg: res.data.metaSelfReg || "", 
-          metaNotesSelfReg: res.data.metaNotesSelfReg || "",
-          metaCuriosity: res.data.metaCuriosity || "", 
-          metaNotesCuriosity: res.data.metaNotesCuriosity || "",
-          metaSocial: res.data.metaSocial || "", 
-          metaNotesSocial: res.data.metaNotesSocial || "",
-          metaEmotional: res.data.metaEmotional || "", 
-          metaNotesEmotional: res.data.metaNotesEmotional || "",
-          metaConfidence: res.data.metaConfidence || "", 
-          metaNotesConfidence: res.data.metaNotesConfidence || "",
-          mostEngagedZone: res.data.mostEngagedZone || "",
-          dominantObservedIntelligences: res.data.dominantObservedIntelligences || "",
-          initialLearningStyleImpressions: res.data.initialLearningStyleImpressions || "",
-          earlyFlagsNeedsFollowUp: res.data.earlyFlagsNeedsFollowUp || "",
-          selfDirectedVsSeekingGuidance: res.data.selfDirectedVsSeekingGuidance || "",
-          finalAdditionalNotes: res.data.finalAdditionalNotes || "",
-          intelLinguisticEvidenceModerate: res.data.intelLinguisticEvidenceModerate || false, 
-          intelLinguisticEvidenceStrong: res.data.intelLinguisticEvidenceStrong || false,
-          intelLogicalEvidenceModerate: res.data.intelLogicalEvidenceModerate || false, 
-          intelLogicalEvidenceStrong: res.data.intelLogicalEvidenceStrong || false,
-          intelSpatialEvidenceModerate: res.data.intelSpatialEvidenceModerate || false, 
-          intelSpatialEvidenceStrong: res.data.intelSpatialEvidenceStrong || false,
-          intelBodilyEvidenceModerate: res.data.intelBodilyEvidenceModerate || false, 
-          intelBodilyEvidenceStrong: res.data.intelBodilyEvidenceStrong || false,
-          intelMusicalEvidenceModerate: res.data.intelMusicalEvidenceModerate || false, 
-          intelMusicalEvidenceStrong: res.data.intelMusicalEvidenceStrong || false,
-          intelInterpersonalEvidenceModerate: res.data.intelInterpersonalEvidenceModerate || false, 
-          intelInterpersonalEvidenceStrong: res.data.intelInterpersonalEvidenceStrong || false,
-          intelIntrapersonalEvidenceModerate: res.data.intelIntrapersonalEvidenceModerate || false, 
-          intelIntrapersonalEvidenceStrong: res.data.intelIntrapersonalEvidenceStrong || false,
-          intelNaturalisticEvidenceModerate: res.data.intelNaturalisticEvidenceModerate || false, 
-          intelNaturalisticEvidenceStrong: res.data.intelNaturalisticEvidenceStrong || false,
-          intelExistentialEvidenceModerate: res.data.intelExistentialEvidenceModerate || false, 
-          intelExistentialEvidenceStrong: res.data.intelExistentialEvidenceStrong || false,
-          intelLinguistic: res.data.intelLinguistic || "", 
-          intelLogical: res.data.intelLogical || "", 
-          intelSpatial: res.data.intelSpatial || "", 
-          intelBodily: res.data.intelBodily || "", 
-          intelMusical: res.data.intelMusical || "",
-          intelInterpersonal: res.data.intelInterpersonal || "", 
-          intelIntrapersonal: res.data.intelIntrapersonal || "", 
-          intelNaturalistic: res.data.intelNaturalistic || "", 
-          intelExistential: res.data.intelExistential || "",
-          parentProximity: res.data.parentProximity || "", 
-          parentInterventionLevel: res.data.parentInterventionLevel || "", 
-          parentInterventionStyle: res.data.parentInterventionStyle || "",
-          childIndependenceLevel: res.data.childIndependenceLevel || "", 
-          childEmotionalWithParent: res.data.childEmotionalWithParent || "", 
-          childIndependenceWhenParentEngaged: res.data.childIndependenceWhenParentEngaged || "", 
-          emotionalRegulationWithParentPresent: res.data.emotionalRegulationWithParentPresent || "",
-          interactionPreferredZone: res.data.interactionPreferredZone || "", 
-          interactionInitialBehaviour: res.data.interactionInitialBehaviour || "", 
-          interactionOpennessToAdultGuidance: res.data.interactionOpennessToAdultGuidance || "",
-          interactionMostRevealingActivity: res.data.interactionMostRevealingActivity || "", 
-          interactionCrossRefStep5: res.data.interactionCrossRefStep5 || "", 
-          interactionCuriosityExploration: res.data.interactionCuriosityExploration || "", 
-          interactionFocusAttention: res.data.interactionFocusAttention || "", 
-          interactionEngagementWithAdult: res.data.interactionEngagementWithAdult || "", 
-          interactionResilienceInChallenge: res.data.interactionResilienceInChallenge || "", 
-          interactionEmotionRegulationSignals: res.data.interactionEmotionRegulationSignals || "", 
-          interactionCaregiverInteractionStyle: res.data.interactionCaregiverInteractionStyle || "", 
-          interactionRecommendations: res.data.interactionRecommendations || "",
-          applicationNumber: res.data.applicationNumber || "", 
-          observerName: res.data.observerName || "", 
-          assessmentDate: res.data.assessmentDate || "", 
-          loggedToSystemDate: res.data.loggedToSystemDate || "", 
-          loggedBy: res.data.loggedBy || "",
+          childName: data.childName || appData?.childFullName || "",
+          age: data.age || (appData?.childAge ? appData.childAge.toString() : ""),
+          date: data.date || new Date().toISOString().split('T')[0],
+          examiner: data.examiner || "",
+          zoneAScore: data.zoneAScore || 1,
+          zoneANotes: data.zoneANotes || "",
+          zoneBScore: data.zoneBScore || 1,
+          zoneBNotes: data.zoneBNotes || "",
+          zoneCScore: data.zoneCScore || 1,
+          zoneCNotes: data.zoneCNotes || "",
+          zoneDScore: data.zoneDScore || 1,
+          zoneDNotes: data.zoneDNotes || "",
+          metaCuriosityScore: data.metaCuriosityScore || 1,
+          metaCuriosityNotes: data.metaCuriosityNotes || "",
+          metaSelfRegulationScore: data.metaSelfRegulationScore || 1,
+          metaSelfRegulationNotes: data.metaSelfRegulationNotes || "",
+          metaConfidenceScore: data.metaConfidenceScore || 1,
+          metaConfidenceNotes: data.metaConfidenceNotes || "",
+          metaCollaborationScore: data.metaCollaborationScore || 1,
+          metaCollaborationNotes: data.metaCollaborationNotes || "",
+          metaEmotionalAwarenessScore: data.metaEmotionalAwarenessScore || 1,
+          metaEmotionalAwarenessNotes: data.metaEmotionalAwarenessNotes || "",
+          intelLinguisticEvidence: data.intelLinguisticEvidence || undefined,
+          intelLinguisticObservation: data.intelLinguisticObservation || "",
+          intelLogicalEvidence: data.intelLogicalEvidence || undefined,
+          intelLogicalObservation: data.intelLogicalObservation || "",
+          intelSpatialEvidence: data.intelSpatialEvidence || undefined,
+          intelSpatialObservation: data.intelSpatialObservation || "",
+          intelBodilyEvidence: data.intelBodilyEvidence || undefined,
+          intelBodilyObservation: data.intelBodilyObservation || "",
+          intelMusicalEvidence: data.intelMusicalEvidence || undefined,
+          intelMusicalObservation: data.intelMusicalObservation || "",
+          intelInterpersonalEvidence: data.intelInterpersonalEvidence || undefined,
+          intelInterpersonalObservation: data.intelInterpersonalObservation || "",
+          intelIntrapersonalEvidence: data.intelIntrapersonalEvidence || undefined,
+          intelIntrapersonalObservation: data.intelIntrapersonalObservation || "",
+          intelNaturalisticEvidence: data.intelNaturalisticEvidence || undefined,
+          intelNaturalisticObservation: data.intelNaturalisticObservation || "",
+          intelExistentialEvidence: data.intelExistentialEvidence || undefined,
+          intelExistentialObservation: data.intelExistentialObservation || "",
+          parentProximity: data.parentProximity || undefined,
+          parentInterventionLevel: data.parentInterventionLevel || undefined,
+          parentInterventionStyle: data.parentInterventionStyle || undefined,
+          childIndependenceLevel: data.childIndependenceLevel || "",
+          childEmotionalPresentation: data.childEmotionalPresentation || "",
+          childIndependenceWhenParentEngaged: data.childIndependenceWhenParentEngaged || "",
+          emotionalRegulationWithParentPresent: data.emotionalRegulationWithParentPresent || "",
+          mostEngagedZone: data.mostEngagedZone || "",
+          dominantObservedIntelligences: data.dominantObservedIntelligences || "",
+          initialLearningStyleImpressions: data.initialLearningStyleImpressions || "",
+          earlyFlagsNeedsFollowUp: data.earlyFlagsNeedsFollowUp || "",
+          selfDirectedVsSeekingGuidance: data.selfDirectedVsSeekingGuidance || "",
+          flagIndicators: data.flagIndicators || "",
+          additionalNotes: data.additionalNotes || "",
+          preferredZone: data.preferredZone || "",
+          initialBehaviour: data.initialBehaviour || "",
+          opennessToAdultGuidance: data.opennessToAdultGuidance || "",
+          mostRevealingActivity: data.mostRevealingActivity || "",
+          crossReferenceStep5: data.crossReferenceStep5 || "",
+          curiosityAndExploration: data.curiosityAndExploration || "",
+          focusAndAttentionSpan: data.focusAndAttentionSpan || "",
+          engagementWithAdultDirection: data.engagementWithAdultDirection || "",
+          resilienceInChallenge: data.resilienceInChallenge || "",
+          emotionRegulationSignals: data.emotionRegulationSignals || "",
+          caregiverInteractionStyle: data.caregiverInteractionStyle || "",
+          recommendationsForSupport: data.recommendationsForSupport || "",
         });
       } else if (appRes.success && appRes.data) {
         // Auto-fill with application data if no existing form data
         const appData = appRes.data;
         reset({
-          fullName: appData.childFullName || "", 
+          childName: appData.childFullName || "",
           age: appData.childAge ? appData.childAge.toString() : "",
-          areaLikeBest: "",
-          whatMakesInteresting: "",
-          hardButFun: "",
-          feelWhenTryingNew: "",
-          teachGame: "",
-          zoneAScore: "", 
+          date: new Date().toISOString().split('T')[0],
+          examiner: "",
+          zoneAScore: 1,
           zoneANotes: "",
-          zoneBScore: "", 
+          zoneBScore: 1,
           zoneBNotes: "",
-          zoneCScore: "", 
+          zoneCScore: 1,
           zoneCNotes: "",
-          zoneDScore: "", 
+          zoneDScore: 1,
           zoneDNotes: "",
-          metaSelfReg: "", 
-          metaNotesSelfReg: "",
-          metaCuriosity: "", 
-          metaNotesCuriosity: "",
-          metaSocial: "", 
-          metaNotesSocial: "",
-          metaEmotional: "", 
-          metaNotesEmotional: "",
-          metaConfidence: "", 
-          metaNotesConfidence: "",
-          mostEngagedZone: "",
-          dominantObservedIntelligences: "",
-          initialLearningStyleImpressions: "",
-          earlyFlagsNeedsFollowUp: "",
-          selfDirectedVsSeekingGuidance: "",
-          finalAdditionalNotes: "",
-          intelLinguisticEvidenceModerate: false, 
-          intelLinguisticEvidenceStrong: false,
-          intelLogicalEvidenceModerate: false, 
-          intelLogicalEvidenceStrong: false,
-          intelSpatialEvidenceModerate: false, 
-          intelSpatialEvidenceStrong: false,
-          intelBodilyEvidenceModerate: false, 
-          intelBodilyEvidenceStrong: false,
-          intelMusicalEvidenceModerate: false, 
-          intelMusicalEvidenceStrong: false,
-          intelInterpersonalEvidenceModerate: false, 
-          intelInterpersonalEvidenceStrong: false,
-          intelIntrapersonalEvidenceModerate: false, 
-          intelIntrapersonalEvidenceStrong: false,
-          intelNaturalisticEvidenceModerate: false, 
-          intelNaturalisticEvidenceStrong: false,
-          intelExistentialEvidenceModerate: false, 
-          intelExistentialEvidenceStrong: false,
-          intelLinguistic: "", 
-          intelLogical: "", 
-          intelSpatial: "", 
-          intelBodily: "", 
-          intelMusical: "",
-          intelInterpersonal: "", 
-          intelIntrapersonal: "", 
-          intelNaturalistic: "", 
-          intelExistential: "",
-          parentProximity: "", 
-          parentInterventionLevel: "", 
-          parentInterventionStyle: "",
-          childIndependenceLevel: "", 
-          childEmotionalWithParent: "", 
-          childIndependenceWhenParentEngaged: "", 
-          emotionalRegulationWithParentPresent: "",
-          interactionPreferredZone: "", 
-          interactionInitialBehaviour: "", 
-          interactionOpennessToAdultGuidance: "",
-          interactionMostRevealingActivity: "", 
-          interactionCrossRefStep5: "", 
-          interactionCuriosityExploration: "", 
-          interactionFocusAttention: "", 
-          interactionEngagementWithAdult: "", 
-          interactionResilienceInChallenge: "", 
-          interactionEmotionRegulationSignals: "", 
-          interactionCaregiverInteractionStyle: "", 
-          interactionRecommendations: "",
-          applicationNumber: params.id, 
-          observerName: "", 
-          assessmentDate: "", 
-          loggedToSystemDate: "", 
-          loggedBy: "",
+          metaCuriosityScore: 1,
+          metaCuriosityNotes: "",
+          metaSelfRegulationScore: 1,
+          metaSelfRegulationNotes: "",
+          metaConfidenceScore: 1,
+          metaConfidenceNotes: "",
+          metaCollaborationScore: 1,
+          metaCollaborationNotes: "",
+          metaEmotionalAwarenessScore: 1,
+          metaEmotionalAwarenessNotes: "",
         });
       }
-    })(); 
-  }, [params.id, reset]);
+    } catch (error: any) {
+      console.error("Error loading guided observation data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const onSubmit = async (values: FormValues) => { setSaving(true); await apiService.post("/api/admin/guided-observations-procedure", { applicationId: params.id, ...values }); setSaving(false); router.push(`/admin/applications/${params.id}`); };
+  const onSubmit = async (formData: GuidedObservationFormData) => {
+    try {
+      setSaving(true);
+      setMessage(null);
+      
+      const res = await apiService.post("/api/admin/guided-observations-procedure", {
+        applicationId: params.id,
+        ...formData,
+      });
+
+      if (res.success) {
+        setMessage({ type: 'success', text: 'Guided observation data saved successfully!' });
+        router.push(`/admin/applications/${params.id}`);
+      } else {
+        setMessage({ type: 'error', text: res.message || 'Failed to save data' });
+      }
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message || 'Failed to save data' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg text-slate-600">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
-        <div className="text-xl font-bold text-slate-900">Guided Observations Procedure</div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="mb-6">
+            <div className="text-xl font-bold text-slate-900">Examiner Form: Guided Observation</div>
         <div className="text-sm text-slate-600">Application ID: {params.id}</div>
       </div>
 
-      {/* Opening Engagement + Structured Activities by Zone */}
-      <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
-        <FormSectionHeader title="Guided Interaction Session (30 minutes)" bgClassName="bg-teal-700" />
-        <div className="mt-3">
-          <div className="font-semibold text-slate-900 mb-2">1. Opening Engagement (10 minutes)</div>
-          <ul className="list-disc pl-6 text-slate-800 space-y-1">
-            <li>“Can you show me which area you like best?”</li>
-            <li>“What makes that area interesting to you?”</li>
-            <li>“Have you seen anything like this before?”</li>
-          </ul>
-          {/* Answers */}
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <FormField label="Answer: area you like best" htmlFor="areaLikeBest" error={errors.areaLikeBest as any}>
-              <Textarea rows={3} id="areaLikeBest" {...register("areaLikeBest")} />
+          {/* Basic Information */}
+          <FormSectionHeader title="Basic Information" bgClassName="bg-teal-700" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 mt-3">
+            <FormField label="Child Name" htmlFor="childName">
+              <Input 
+                id="childName" 
+                placeholder="Child Name" 
+                {...register("childName")}
+                className={errors.childName ? "border-red-500" : ""}
+              />
+              {errors.childName && (
+                <p className="text-red-500 text-sm mt-1">{errors.childName.message}</p>
+              )}
             </FormField>
-            <FormField label="Answer: what makes it interesting" htmlFor="whatMakesInteresting" error={errors.whatMakesInteresting as any}>
-              <Textarea rows={3} id="whatMakesInteresting" {...register("whatMakesInteresting")} />
+            <FormField label="Age" htmlFor="age">
+              <Input 
+                id="age" 
+                placeholder="Age" 
+                {...register("age")}
+                className={errors.age ? "border-red-500" : ""}
+              />
+              {errors.age && (
+                <p className="text-red-500 text-sm mt-1">{errors.age.message}</p>
+              )}
             </FormField>
-            <FormField label="Answer: seen anything like this before?" htmlFor="hardButFun" error={errors.hardButFun as any}>
-              <Textarea rows={3} id="hardButFun" {...register("hardButFun")} />
+            <FormField label="Date" htmlFor="date">
+              <Input 
+                id="date" 
+                type="date" 
+                {...register("date")}
+                className={errors.date ? "border-red-500" : ""}
+              />
+              {errors.date && (
+                <p className="text-red-500 text-sm mt-1">{errors.date.message}</p>
+              )}
             </FormField>
-            <FormField label="Answer: how do you feel when trying something new?" htmlFor="feelWhenTryingNew" error={errors.feelWhenTryingNew as any}>
-              <Textarea rows={3} id="feelWhenTryingNew" {...register("feelWhenTryingNew")} />
-            </FormField>
-            <FormField label="Answer: can you teach me how to use this game?" htmlFor="teachGame" error={errors.teachGame as any}>
-              <Textarea rows={3} id="teachGame" {...register("teachGame")} />
+            <FormField label="Examiner" htmlFor="examiner">
+              <Input 
+                id="examiner" 
+                placeholder="Examiner" 
+                {...register("examiner")}
+                className={errors.examiner ? "border-red-500" : ""}
+              />
+              {errors.examiner && (
+                <p className="text-red-500 text-sm mt-1">{errors.examiner.message}</p>
+              )}
             </FormField>
           </div>
-        </div>
-        <div className="mt-6">
-          <div className="font-semibold text-slate-900 mb-2">2. Structured Activities by Zone</div>
+
+          {/* Guided Activity Ratings Grid */}
+          <FormSectionHeader title="Guided Activity Ratings Grid" bgClassName="bg-teal-700" />
+          <div className="mb-8 mt-3">
+            <p className="text-sm text-slate-600 mb-4">
+              Use a 1–5 scale (1 = emerging, 5 = exemplary) include qualitative notes for each activity they partake in.
+            </p>
+            
           <div className="overflow-x-auto">
-            <table className="min-w-full border border-slate-300 text-sm">
-              <thead className="bg-slate-100  text-slate-900">
-                <tr>
-                  <th className="border border-slate-300 px-3 py-2 w-10">#</th>
-                  <th className="border border-slate-300 px-3 py-2 text-left">Zone</th>
-                  <th className="border border-slate-300 px-3 py-2 text-left">Activity</th>
-                  <th className="border border-slate-300 px-3 py-2 text-left">Materials</th>
-                  <th className="border border-slate-300 px-3 py-2 text-left">Task</th>
-                  <th className="border border-slate-300 px-3 py-2 text-left">Observation Points</th>
+              <table className="w-full border-collapse border border-slate-300">
+                <thead>
+                  <tr className="bg-slate-50">
+                    <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Zone</th>
+                    <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Meta Skills Focused On</th>
+                    <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Score (1-5)</th>
+                    <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Key Behaviours / Notes</th>
                 </tr>
               </thead>
-              <tbody className="align-top text-slate-900">
-                <tr>
-                  <td className="border border-slate-300 px-3 py-2">A</td>
-                  <td className="border border-slate-300 px-3 py-2">Building & Engineering</td>
-                  <td className="border border-slate-300 px-3 py-2">Engineering Challenge</td>
-                  <td className="border border-slate-300 px-3 py-2">Magnetic tiles, bridge building kit</td>
-                  <td className="border border-slate-300 px-3 py-2">Let’s build something that doesn’t exist yet</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <ul className="list-disc pl-5 space-y-1">
-                      <li>Problem‑solving approach</li>
-                      <li>Persistence</li>
-                      <li>Creativity</li>
-                      <li>Fine motor skills</li>
-                      <li>Spatial reasoning</li>
-                    </ul>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-slate-300 px-3 py-2">B</td>
-                  <td className="border border-slate-300 px-3 py-2">Creative Zone</td>
-                  <td className="border border-slate-300 px-3 py-2">Creative Prompt</td>
-                  <td className="border border-slate-300 px-3 py-2">Art supplies, ‘Design a New Planet’ template</td>
-                  <td className="border border-slate-300 px-3 py-2">Guided drawing or creative design</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <ul className="list-disc pl-5 space-y-1">
-                      <li>Imagination</li>
-                      <li>Story‑telling ability</li>
-                      <li>Colour usage</li>
-                      <li>Detail orientation</li>
-                      <li>Willingness to explain</li>
-                    </ul>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-slate-300 px-3 py-2">C</td>
-                  <td className="border border-slate-300 px-3 py-2">Sensory & Regulation Corner</td>
-                  <td className="border border-slate-300 px-3 py-2">Sensory Play</td>
-                  <td className="border border-slate-300 px-3 py-2">Blindfolds, texture items, scent jars</td>
-                  <td className="border border-slate-300 px-3 py-2">Blindfolded texture match, calming activities</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <ul className="list-disc pl-5 space-y-1">
-                      <li>Sensory processing</li>
-                      <li>Trust level</li>
-                      <li>Self‑regulation</li>
-                      <li>Comfort with uncertainty</li>
-                    </ul>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-slate-300 px-3 py-2">D</td>
-                  <td className="border border-slate-300 px-3 py-2">Reading & Logic Station</td>
-                  <td className="border border-slate-300 px-3 py-2">Logic Game</td>
-                  <td className="border border-slate-300 px-3 py-2">Pattern puzzles, coding toy, sequencing cards</td>
-                  <td className="border border-slate-300 px-3 py-2">Progressive difficulty puzzles</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <ul className="list-disc pl-5 space-y-1">
-                      <li>Logical thinking</li>
-                      <li>Pattern recognition</li>
-                      <li>Frustration tolerance</li>
-                      <li>Strategy development</li>
-                    </ul>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Guiding Questions */}
-      <section className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
-        <FormSectionHeader title="Guiding Questions" bgClassName="bg-teal-700" />
-        <div className="mt-3 text-slate-800">
-          <ul className="list-disc pl-6 space-y-1 mb-4">
-            <li>“Can you show me which area you like best?”</li>
-            <li>“Let’s build something that doesn’t exist yet.”</li>
-            <li>“What’s something that’s hard to do but fun to try?”</li>
-            <li>“How do you feel when you try something new?”</li>
-            <li>“Can you teach me how to use this game?”</li>
-          </ul>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField label="Which area do you like best?" htmlFor="guidingQ1">
-              <Textarea rows={3} id="guidingQ1" {...register("areaLikeBest")} />
-              {errors.areaLikeBest && (
-                <p className="text-red-500 text-sm mt-1">{errors.areaLikeBest.message}</p>
-              )}
-            </FormField>
-            <FormField label="Let's build something that doesn't exist yet" htmlFor="guidingQ2">
-              <Textarea rows={3} id="guidingQ2" {...register("whatMakesInteresting")} />
-              {errors.whatMakesInteresting && (
-                <p className="text-red-500 text-sm mt-1">{errors.whatMakesInteresting.message}</p>
-              )}
-            </FormField>
-            <FormField label="What's hard to do but fun to try?" htmlFor="guidingQ3">
-              <Textarea rows={3} id="guidingQ3" {...register("hardButFun")} />
-              {errors.hardButFun && (
-                <p className="text-red-500 text-sm mt-1">{errors.hardButFun.message}</p>
-              )}
-            </FormField>
-            <FormField label="How do you feel when you try something new?" htmlFor="guidingQ4">
-              <Textarea rows={3} id="guidingQ4" {...register("feelWhenTryingNew")} />
-              {errors.feelWhenTryingNew && (
-                <p className="text-red-500 text-sm mt-1">{errors.feelWhenTryingNew.message}</p>
-              )}
-            </FormField>
-            <FormField label="Can you teach me how to use this game?" htmlFor="guidingQ5">
-              <Textarea rows={3} id="guidingQ5" {...register("teachGame")} />
-              {errors.teachGame && (
-                <p className="text-red-500 text-sm mt-1">{errors.teachGame.message}</p>
-              )}
-            </FormField>
-          </div>
-        </div>
-      </section>
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
-          <FormSectionHeader title="Child Information" bgClassName="bg-teal-700" />
-          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField label="Full Name" htmlFor="fullName" error={errors.fullName as any}><Input id="fullName" {...register("fullName")} /></FormField>
-            <FormField label="Age" htmlFor="age" error={errors.age as any}><Input id="age" {...register("age")} /></FormField>
-          </div>
-        </section>
-
-        {/* Guided Activity Ratings */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
-          <FormSectionHeader title="Guided Activity Ratings" bgClassName="bg-teal-700" />
-          {[
-            { k: "A", t: "Engineering & Building", s: "zoneAScore", n: "zoneANotes", skills: ["Problem‑solving","Creativity","Spatial reasoning","Focus"] },
-            { k: "B", t: "Creative Arts", s: "zoneBScore", n: "zoneBNotes", skills: ["Imagination","Expression","Language","Storytelling"] },
-            { k: "C", t: "Sensory & Regulation", s: "zoneCScore", n: "zoneCNotes", skills: ["Emotional regulation","Sensory awareness","Trust"] },
-            { k: "D", t: "Reading & Logic", s: "zoneDScore", n: "zoneDNotes", skills: ["Logical thinking","Strategy","Frustration tolerance"] },
-          ].map((z) => (
-            <div key={z.k} className="mt-4 border border-slate-200 rounded-lg p-4">
-              <div className="font-medium text-slate-900 mb-2">Zone {z.k}: {z.t}</div>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-800 mb-1">Meta Skills Focused On</label>
-                  <ul className="list-disc pl-5 text-slate-800 space-y-1">
-                    {z.skills.map((s) => (<li key={s}>{s}</li>))}
-                  </ul>
-                </div>
-                <FormField label="Score (1-5)" htmlFor={z.s} error={errors[z.s as keyof FormValues] as any}>
-                  <select id={z.s} {...register(z.s as keyof FormValues)} className={`w-full px-3 py-2 border rounded-md text-black bg-white ${errors[z.s as keyof FormValues] ? 'border-red-500' : 'border-gray-300'}`}>
-                    <option value="">Select...</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                  </select>
-                </FormField>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-slate-800 mb-1">Key Behaviours / Notes</label>
-                  <Textarea rows={3} {...register(z.n as keyof FormValues)} className={(errors[z.n as keyof FormValues] ? 'border-red-500' : '') as string} />
-                </div>
-              </div>
-            </div>
-          ))}
-        </section>
-
-        {/* Meta Learning Skill Indicators */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
-          <FormSectionHeader title="Meta Learning Skill Indicators" bgClassName="bg-teal-700" />
-          {[
-            { k: 'metaSelfReg', l: 'Self‑Regulation', n: 'metaNotesSelfReg' },
-            { k: 'metaCuriosity', l: 'Curiosity', n: 'metaNotesCuriosity' },
-            { k: 'metaSocial', l: 'Social Engagement', n: 'metaNotesSocial' },
-            { k: 'metaEmotional', l: 'Emotional Regulation', n: 'metaNotesEmotional' },
-            { k: 'metaConfidence', l: 'Confidence / Autonomy', n: 'metaNotesConfidence' },
-          ].map((m) => (
-            <div key={m.k} className="mt-4 border border-slate-200 rounded-lg p-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <FormField label={`${m.l} (1-5)`} htmlFor={m.k} error={errors[m.k as keyof FormValues] as any}>
-                  <select {...register(m.k as keyof FormValues)} className={`w-full px-3 py-2 border rounded-md text-black bg-white ${errors[m.k as keyof FormValues] ? 'border-red-500' : 'border-gray-300'}`}>
-                    <option value="">Select...</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                  </select>
-                </FormField>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-slate-800 mb-1">Behaviour Notes</label>
-                  <Textarea rows={3} {...register(m.n as keyof FormValues)} />
-                </div>
-              </div>
-            </div>
-          ))}
-        </section>
-
-        {/* Parent–Child Dynamic Snapshot */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
-          <FormSectionHeader title="Parent–Child Dynamic Snapshot" bgClassName="bg-teal-700" />
-          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField label="Parent Proximity" htmlFor="parentProximity">
-              <div className="grid grid-cols-3 gap-3 text-sm text-slate-800">
-                <label className="flex items-center gap-2"><input type="radio" value="Close" {...register("parentProximity")} /> <span>Close</span></label>
-                <label className="flex items-center gap-2"><input type="radio" value="Hovering" {...register("parentProximity")} /> <span>Hovering</span></label>
-                <label className="flex items-center gap-2"><input type="radio" value="Distant" {...register("parentProximity")} /> <span>Distant</span></label>
-              </div>
-              {errors.parentProximity && (
-                <p className="text-red-500 text-sm mt-1">{errors.parentProximity.message}</p>
-              )}
-            </FormField>
-            <FormField label="Parent Intervention Level" htmlFor="parentInterventionLevel">
-              <div className="grid grid-cols-3 gap-3 text-sm text-slate-800">
-                <label className="flex items-center gap-2"><input type="radio" value="Low" {...register("parentInterventionLevel")} /> <span>Low</span></label>
-                <label className="flex items-center gap-2"><input type="radio" value="Medium" {...register("parentInterventionLevel")} /> <span>Medium</span></label>
-                <label className="flex items-center gap-2"><input type="radio" value="High" {...register("parentInterventionLevel")} /> <span>High</span></label>
-              </div>
-              {errors.parentInterventionLevel && (
-                <p className="text-red-500 text-sm mt-1">{errors.parentInterventionLevel.message}</p>
-              )}
-            </FormField>
-            <FormField label="Parent Intervention Style" htmlFor="parentInterventionStyle">
-              <div className="grid grid-cols-3 gap-3 text-sm text-slate-800">
-                <label className="flex items-center gap-2"><input type="radio" value="Directive" {...register("parentInterventionStyle")} /> <span>Directive</span></label>
-                <label className="flex items-center gap-2"><input type="radio" value="Supportive" {...register("parentInterventionStyle")} /> <span>Supportive</span></label>
-                <label className="flex items-center gap-2"><input type="radio" value="Detached" {...register("parentInterventionStyle")} /> <span>Detached</span></label>
-              </div>
-              {errors.parentInterventionStyle && (
-                <p className="text-red-500 text-sm mt-1">{errors.parentInterventionStyle.message}</p>
-              )}
-            </FormField>
-            <FormField label="Child's Independence Level" htmlFor="childIndependenceLevel">
-              <Textarea rows={3} id="childIndependenceLevel" {...register("childIndependenceLevel")} />
-              {errors.childIndependenceLevel && (
-                <p className="text-red-500 text-sm mt-1">{errors.childIndependenceLevel.message}</p>
-              )}
-            </FormField>
-            <FormField label="Child's Emotional Presentation (with Parent)" htmlFor="childEmotionalWithParent">
-              <Textarea rows={3} id="childEmotionalWithParent" {...register("childEmotionalWithParent")} />
-              {errors.childEmotionalWithParent && (
-                <p className="text-red-500 text-sm mt-1">{errors.childEmotionalWithParent.message}</p>
-              )}
-            </FormField>
-            <FormField label="Child's Independence when Parent is Engaged" htmlFor="childIndependenceWhenParentEngaged">
-              <Textarea rows={3} id="childIndependenceWhenParentEngaged" {...register("childIndependenceWhenParentEngaged")} />
-              {errors.childIndependenceWhenParentEngaged && (
-                <p className="text-red-500 text-sm mt-1">{errors.childIndependenceWhenParentEngaged.message}</p>
-              )}
-            </FormField>
-            <FormField label="Emotional Regulation with Parent Present" htmlFor="emotionalRegulationWithParentPresent">
-              <Textarea rows={3} id="emotionalRegulationWithParentPresent" {...register("emotionalRegulationWithParentPresent")} />
-              {errors.emotionalRegulationWithParentPresent && (
-                <p className="text-red-500 text-sm mt-1">{errors.emotionalRegulationWithParentPresent.message}</p>
-              )}
-            </FormField>
-          </div>
-        </section>
-
-        {/* Intelligence & Learning Type Check‑In */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
-          <FormSectionHeader title="Intelligence & Learning Type Check‑In" bgClassName="bg-teal-700" />
-          <div className="mt-3 text-slate-700">Confirm or update intelligence type from initial observations.</div>
-          <div className="mt-3 overflow-x-auto">
-            <table className="min-w-full border border-slate-300 text-sm">
-              <thead className="bg-slate-100 text-slate-900">
-                <tr>
-                  <th className="border border-slate-300 px-3 py-2 text-left">Intelligence Type Expressed</th>
-                  <th className="border border-slate-300 px-3 py-2 text-left">Definition</th>
-                  <th className="border border-slate-300 px-3 py-2 text-left">Evidence</th>
-                  <th className="border border-slate-300 px-3 py-2 text-left">Supporting Observation</th>
-                </tr>
-              </thead>
-              <tbody className="align-top text-slate-900">
-                {[
-                  { k: 'intelLinguistic', label: 'Linguistic (Word‑Smart)', def: 'Strong use of spoken or written language, storytelling, vocabulary', em: 'intelLinguisticEvidenceModerate', es: 'intelLinguisticEvidenceStrong' },
-                  { k: 'intelLogical', label: 'Logical ‑ Mathematical', def: 'Good at puzzles, patterns, reasoning, and numbers', em: 'intelLogicalEvidenceModerate', es: 'intelLogicalEvidenceStrong' },
-                  { k: 'intelSpatial', label: 'Spatial (Visual/Spatial)', def: 'Good with visualizing and designing with space or images', em: 'intelSpatialEvidenceModerate', es: 'intelSpatialEvidenceStrong' },
-                  { k: 'intelBodily', label: 'Bodily ‑ Kinesthetic', def: 'Skilled in using body for movement, building, or tactile learning', em: 'intelBodilyEvidenceModerate', es: 'intelBodilyEvidenceStrong' },
-                  { k: 'intelMusical', label: 'Musical (Sound /Rhythm Smart)', def: 'Sensitive to sound, rhythm, music, and auditory cues', em: 'intelMusicalEvidenceModerate', es: 'intelMusicalEvidenceStrong' },
-                  { k: 'intelInterpersonal', label: 'Interpersonal (People Smart)', def: 'Easily engages with others, strong social and emotional interaction', em: 'intelInterpersonalEvidenceModerate', es: 'intelInterpersonalEvidenceStrong' },
-                  { k: 'intelIntrapersonal', label: 'Intrapersonal (Self‑Smart)', def: 'Self‑aware, enjoys alone time, reflective', em: 'intelIntrapersonalEvidenceModerate', es: 'intelIntrapersonalEvidenceStrong' },
-                  { k: 'intelNaturalistic', label: 'Naturalistic (Nature Smart)', def: 'Curious about nature, patterns in environment', em: 'intelNaturalisticEvidenceModerate', es: 'intelNaturalisticEvidenceStrong' },
-                  { k: 'intelExistential', label: 'Existential (Big Question)', def: 'Asks deep questions about meaning, purpose, or life', em: 'intelExistentialEvidenceModerate', es: 'intelExistentialEvidenceStrong' },
-                ].map((row) => (
-                  <tr key={row.k}>
-                    <td className="border border-slate-300 px-3 py-2 w-[220px]">{row.label}</td>
-                    <td className="border border-slate-300 px-3 py-2">{row.def}</td>
-                    <td className="border border-slate-300 px-3 py-2 w-44">
-                      <label className="flex items-center gap-2 text-sm text-slate-800 mb-1">
-                        <input 
-                          type="checkbox" 
-                          {...register(row.em as keyof FormValues, { 
-                            setValueAs: (value) => value === "on" || value === true 
-                          })} 
-                          className="h-4 w-4 text-teal-600 border-gray-300 rounded" 
-                        />
-                        <span>✓ Moderate</span>
-                      </label>
-                      <label className="flex items-center gap-2 text-sm text-slate-800">
-                        <input 
-                          type="checkbox" 
-                          {...register(row.es as keyof FormValues, { 
-                            setValueAs: (value) => value === "on" || value === true 
-                          })} 
-                          className="h-4 w-4 text-teal-600 border-gray-300 rounded" 
-                        />
-                        <span>+ Strong</span>
-                      </label>
+                <tbody>
+                  {/* Zone A: Build Something New */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Zone A: Build Something New</td>
+                    <td className="border border-slate-300 p-3 text-gray-900">
+                      Problem-solving, Creativity, Spatial reasoning, Focus
                     </td>
-                    <td className="border border-slate-300 px-3 py-2">
-                      <Textarea rows={3} {...register(row.k as keyof FormValues)} />
-                      {errors[row.k as keyof typeof errors] && (
-                        <p className="text-red-500 text-sm mt-1">{errors[row.k as keyof typeof errors]?.message}</p>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-2">
+                        {[1, 2, 3, 4, 5].map((score) => (
+                          <label key={score} className="flex items-center text-gray-900">
+                            <input
+                              type="radio"
+                              value={score}
+                              {...register("zoneAScore", { valueAsNumber: true })}
+                              className="mr-1"
+                            />
+                            {score}
+                          </label>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={3}
+                        placeholder="Key behaviours and notes..."
+                        {...register("zoneANotes")}
+                        className="w-full"
+                      />
+                  </td>
+                </tr>
+                  
+                  {/* Zone B: Design a Planet */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Zone B: Design a Planet</td>
+                    <td className="border border-slate-300 p-3 text-gray-900">
+                      Imagination, Expression, Language, Storytelling
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-2">
+                        {[1, 2, 3, 4, 5].map((score) => (
+                          <label key={score} className="flex items-center text-gray-900">
+                            <input
+                              type="radio"
+                              value={score}
+                              {...register("zoneBScore", { valueAsNumber: true })}
+                              className="mr-1"
+                            />
+                            {score}
+                          </label>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={3}
+                        placeholder="Key behaviours and notes..."
+                        {...register("zoneBNotes")}
+                        className="w-full"
+                      />
+                  </td>
+                </tr>
+                  
+                  {/* Zone C: Sensory Play */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Zone C: Sensory Play</td>
+                    <td className="border border-slate-300 p-3 text-gray-900">
+                      Emotional regulation, Sensory awareness, Trust
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-2">
+                        {[1, 2, 3, 4, 5].map((score) => (
+                          <label key={score} className="flex items-center text-gray-900">
+                            <input
+                              type="radio"
+                              value={score}
+                              {...register("zoneCScore", { valueAsNumber: true })}
+                              className="mr-1"
+                            />
+                            {score}
+                          </label>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={3}
+                        placeholder="Key behaviours and notes..."
+                        {...register("zoneCNotes")}
+                        className="w-full"
+                      />
+                  </td>
+                </tr>
+                  
+                  {/* Zone D: Logic Game */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Zone D: Logic Game</td>
+                    <td className="border border-slate-300 p-3 text-gray-900">
+                      Logical thinking, Strategy, Frustration tolerance
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-2">
+                        {[1, 2, 3, 4, 5].map((score) => (
+                          <label key={score} className="flex items-center text-gray-900">
+                            <input
+                              type="radio"
+                              value={score}
+                              {...register("zoneDScore", { valueAsNumber: true })}
+                              className="mr-1"
+                            />
+                            {score}
+                          </label>
+                        ))}
+                      </div>
+                      {errors.zoneDScore && (
+                        <p className="text-red-500 text-sm mt-1">{errors.zoneDScore.message}</p>
                       )}
                     </td>
-                  </tr>
-                ))}
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={3}
+                        placeholder="Key behaviours and notes..."
+                        {...register("zoneDNotes")}
+                        className="w-full"
+                      />
+                      {errors.zoneDNotes && (
+                        <p className="text-red-500 text-sm mt-1">{errors.zoneDNotes.message}</p>
+                      )}
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
-        </section>
+        </div>
 
-        {/* Examiner Final Comments (last section) */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
+          {/* Meta Learning Skill Scoring */}
+          <FormSectionHeader title="Meta Learning Skill Scoring" bgClassName="bg-teal-700" />
+          <div className="mb-8 mt-3">
+            <p className="text-sm text-slate-600 mb-4">
+              Rate each Meta Skill (1-5) with behavioural evidence.
+            </p>
+            
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-slate-300">
+                <thead>
+                  <tr className="bg-slate-50">
+                    <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Meta Skill</th>
+                    <th className="border border-slate-300 p-3 text-center font-semibold text-gray-900">1</th>
+                    <th className="border border-slate-300 p-3 text-center font-semibold text-gray-900">2</th>
+                    <th className="border border-slate-300 p-3 text-center font-semibold text-gray-900">3</th>
+                    <th className="border border-slate-300 p-3 text-center font-semibold text-gray-900">4</th>
+                    <th className="border border-slate-300 p-3 text-center font-semibold text-gray-900">5</th>
+                    <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Behavioural Evidence / Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* Curiosity */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Curiosity</td>
+                    {[1, 2, 3, 4, 5].map((score) => (
+                      <td key={score} className="border border-slate-300 p-3 text-center">
+                        <input
+                          type="radio"
+                          value={score}
+                          {...register("metaCuriosityScore", { valueAsNumber: true })}
+                        />
+                      </td>
+                    ))}
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Behavioural evidence..."
+                        {...register("metaCuriosityNotes")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                  
+                  {/* Self-Regulation */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Self-Regulation</td>
+                    {[1, 2, 3, 4, 5].map((score) => (
+                      <td key={score} className="border border-slate-300 p-3 text-center">
+                        <input
+                          type="radio"
+                          value={score}
+                          {...register("metaSelfRegulationScore", { valueAsNumber: true })}
+                        />
+                      </td>
+                    ))}
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Behavioural evidence..."
+                        {...register("metaSelfRegulationNotes")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                  
+                  {/* Confidence / Autonomy */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Confidence / Autonomy</td>
+                    {[1, 2, 3, 4, 5].map((score) => (
+                      <td key={score} className="border border-slate-300 p-3 text-center">
+                        <input
+                          type="radio"
+                          value={score}
+                          {...register("metaConfidenceScore", { valueAsNumber: true })}
+                        />
+                      </td>
+                    ))}
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Behavioural evidence..."
+                        {...register("metaConfidenceNotes")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                  
+                  {/* Collaboration / Social */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Collaboration / Social</td>
+                    {[1, 2, 3, 4, 5].map((score) => (
+                      <td key={score} className="border border-slate-300 p-3 text-center">
+                        <input
+                          type="radio"
+                          value={score}
+                          {...register("metaCollaborationScore", { valueAsNumber: true })}
+                        />
+                      </td>
+                    ))}
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Behavioural evidence..."
+                        {...register("metaCollaborationNotes")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                  
+                  {/* Emotional Awareness */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Emotional Awareness</td>
+                    {[1, 2, 3, 4, 5].map((score) => (
+                      <td key={score} className="border border-slate-300 p-3 text-center">
+                        <input
+                          type="radio"
+                          value={score}
+                          {...register("metaEmotionalAwarenessScore", { valueAsNumber: true })}
+                        />
+                      </td>
+                    ))}
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Behavioural evidence..."
+                        {...register("metaEmotionalAwarenessNotes")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+          </div>
+        </div>
+
+          {/* Intelligence & Learning Type Check-In */}
+          <FormSectionHeader title="Intelligence & Learning Type Check-In" bgClassName="bg-teal-700" />
+          <div className="mb-8 mt-3">
+            <p className="text-sm text-slate-600 mb-4">
+              Confirm or update intelligence type observations from Step 5.
+            </p>
+            
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-slate-300">
+                <thead>
+                  <tr className="bg-slate-50">
+                    <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Intelligence Type Expressed</th>
+                    <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Definition</th>
+                    <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Evidence</th>
+                    <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Supporting Observation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* Linguistic */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Linguistic (Word-Smart)</td>
+                    <td className="border border-slate-300 p-3 text-gray-900">
+                      Strong use of spoken or written language, storytelling, vocabulary
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-4">
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="moderate"
+                            {...register("intelLinguisticEvidence")}
+                            className="mr-1"
+                          />
+                          Moderate
+                        </label>
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="strong"
+                            {...register("intelLinguisticEvidence")}
+                            className="mr-1"
+                          />
+                          Strong
+                        </label>
+          </div>
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Supporting observation..."
+                        {...register("intelLinguisticObservation")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                  
+                  {/* Logical-Mathematical */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Logical-Mathematical</td>
+                    <td className="border border-slate-300 p-3 text-gray-900">
+                      Good at puzzles, patterns, reasoning, and numbers
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-4">
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="moderate"
+                            {...register("intelLogicalEvidence")}
+                            className="mr-1"
+                          />
+                          Moderate
+                        </label>
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="strong"
+                            {...register("intelLogicalEvidence")}
+                            className="mr-1"
+                          />
+                          Strong
+                        </label>
+                </div>
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Supporting observation..."
+                        {...register("intelLogicalObservation")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                  
+                  {/* Spatial */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Spatial (Visual/Spatial)</td>
+                    <td className="border border-slate-300 p-3 text-gray-900">
+                      Good with visualizing and designing with space or images
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-4">
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="moderate"
+                            {...register("intelSpatialEvidence")}
+                            className="mr-1"
+                          />
+                          Moderate
+                        </label>
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="strong"
+                            {...register("intelSpatialEvidence")}
+                            className="mr-1"
+                          />
+                          Strong
+                        </label>
+                </div>
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Supporting observation..."
+                        {...register("intelSpatialObservation")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                  
+                  {/* Bodily-Kinesthetic */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Bodily-Kinesthetic</td>
+                    <td className="border border-slate-300 p-3 text-gray-900">
+                      Skilled in using body for movement, building, or tactile learning
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-4">
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="moderate"
+                            {...register("intelBodilyEvidence")}
+                            className="mr-1"
+                          />
+                          Moderate
+                        </label>
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="strong"
+                            {...register("intelBodilyEvidence")}
+                            className="mr-1"
+                          />
+                          Strong
+                        </label>
+              </div>
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Supporting observation..."
+                        {...register("intelBodilyObservation")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                  
+                  {/* Musical */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Musical (Sound/Rhythm Smart)</td>
+                    <td className="border border-slate-300 p-3 text-gray-900">
+                      Sensitive to sound, rhythm, music, and auditory cues
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-4">
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="moderate"
+                            {...register("intelMusicalEvidence")}
+                            className="mr-1"
+                          />
+                          Moderate
+                        </label>
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="strong"
+                            {...register("intelMusicalEvidence")}
+                            className="mr-1"
+                          />
+                          Strong
+                        </label>
+            </div>
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Supporting observation..."
+                        {...register("intelMusicalObservation")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                  
+                  {/* Interpersonal */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Interpersonal (People Smart)</td>
+                    <td className="border border-slate-300 p-3 text-gray-900">
+                      Easily engages with others, strong social and emotional interaction
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-4">
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="moderate"
+                            {...register("intelInterpersonalEvidence")}
+                            className="mr-1"
+                          />
+                          Moderate
+                        </label>
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="strong"
+                            {...register("intelInterpersonalEvidence")}
+                            className="mr-1"
+                          />
+                          Strong
+                        </label>
+                </div>
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Supporting observation..."
+                        {...register("intelInterpersonalObservation")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                  
+                  {/* Intrapersonal */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Intrapersonal (Self-Smart)</td>
+                    <td className="border border-slate-300 p-3 text-gray-900">
+                      Self-aware, enjoys alone time, reflective
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-4">
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="moderate"
+                            {...register("intelIntrapersonalEvidence")}
+                            className="mr-1"
+                          />
+                          Moderate
+                        </label>
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="strong"
+                            {...register("intelIntrapersonalEvidence")}
+                            className="mr-1"
+                          />
+                          Strong
+                        </label>
+              </div>
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Supporting observation..."
+                        {...register("intelIntrapersonalObservation")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                  
+                  {/* Naturalistic */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Naturalistic (Nature Smart)</td>
+                    <td className="border border-slate-300 p-3 text-gray-900">
+                      Curious about nature, patterns in environment
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-4">
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="moderate"
+                            {...register("intelNaturalisticEvidence")}
+                            className="mr-1"
+                          />
+                          Moderate
+                        </label>
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="strong"
+                            {...register("intelNaturalisticEvidence")}
+                            className="mr-1"
+                          />
+                          Strong
+                        </label>
+            </div>
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Supporting observation..."
+                        {...register("intelNaturalisticObservation")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                  
+                  {/* Existential */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Existential (Big Question)</td>
+                    <td className="border border-slate-300 p-3 text-gray-900">
+                      Asks deep questions about meaning, purpose, or life
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-4">
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="moderate"
+                            {...register("intelExistentialEvidence")}
+                            className="mr-1"
+                          />
+                          Moderate
+                        </label>
+                        <label className="flex items-center text-gray-900">
+                          <input
+                            type="radio"
+                            value="strong"
+                            {...register("intelExistentialEvidence")}
+                            className="mr-1"
+                          />
+                          Strong
+                        </label>
+              </div>
+                    </td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Supporting observation..."
+                        {...register("intelExistentialObservation")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+              </div>
+
+          {/* Parent-Child Dynamic Snapshot */}
+          <FormSectionHeader title="Parent—Child Dynamic Snapshot" bgClassName="bg-teal-700" />
+          <div className="mb-8 mt-3">
+            
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-slate-300">
+                <thead>
+                  <tr className="bg-slate-50">
+                    <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Domain</th>
+                    <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Observation / Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* Parent Proximity */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Parent Proximity</td>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-4 text-black">
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            value="close"
+                            {...register("parentProximity")}
+                            className="mr-1"
+                          />
+                          Close
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            value="hovering"
+                            {...register("parentProximity")}
+                            className="mr-1"
+                          />
+                          Hovering
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            value="distant"
+                            {...register("parentProximity")}
+                            className="mr-1"
+                          />
+                          Distant
+                        </label>
+          </div>
+                    </td>
+                  </tr>
+                  
+                  {/* Parent Intervention Level */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Parent Intervention Level</td>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-4 text-black">
+                        <label className="flex items-center text-black">
+                          <input
+                            type="radio"
+                            value="low"
+                            {...register("parentInterventionLevel")}
+                            className="mr-1"
+                          />
+                          Low
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            value="medium"
+                            {...register("parentInterventionLevel")}
+                            className="mr-1"
+                          />
+                          Medium
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            value="high"
+                            {...register("parentInterventionLevel")}
+                            className="mr-1"
+                          />
+                          High
+                        </label>
+                      </div>
+                    </td>
+                </tr>
+                  
+                  {/* Parent Intervention Style */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Parent Intervention Style</td>
+                    <td className="border border-slate-300 p-3">
+                      <div className="flex gap-4 text-black">
+                        <label className="flex items-center">
+                        <input 
+                            type="radio"
+                            value="directive"
+                            {...register("parentInterventionStyle")}
+                            className="mr-1"
+                          />
+                          Directive
+                      </label>
+                        <label className="flex items-center">
+                        <input 
+                            type="radio"
+                            value="supportive"
+                            {...register("parentInterventionStyle")}
+                            className="mr-1"
+                          />
+                          Supportive
+                      </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            value="detached"
+                            {...register("parentInterventionStyle")}
+                            className="mr-1"
+                          />
+                          Detached
+                        </label>
+                      </div>
+                    </td>
+                  </tr>
+                  
+                  {/* Child's Independence Level */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Child's Independence Level</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Observation notes..."
+                        {...register("childIndependenceLevel")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                  
+                  {/* Child's Emotional Presentation */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Child's Emotional Presentation (with Parent)</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Observation notes..."
+                        {...register("childEmotionalPresentation")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                  
+                  {/* Child's Independence when Parent is Engaged */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Child's Independence when Parent is Engaged</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Observation notes..."
+                        {...register("childIndependenceWhenParentEngaged")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+                  
+                  {/* Emotional Regulation with Parent Present */}
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Emotional Regulation with Parent Present</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Observation notes..."
+                        {...register("emotionalRegulationWithParentPresent")}
+                        className="w-full"
+                      />
+                    </td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+          </div>
+
+          {/* Examiner Final Comments */}
           <FormSectionHeader title="Examiner Final Comments (Qualitative)" bgClassName="bg-teal-700" />
-          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="mb-8 mt-3">
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
             <FormField label="Most engaged zone" htmlFor="mostEngagedZone">
-              <Input id="mostEngagedZone" {...register("mostEngagedZone")} />
-              {errors.mostEngagedZone && (
-                <p className="text-red-500 text-sm mt-1">{errors.mostEngagedZone.message}</p>
-              )}
+                  <Textarea 
+                    rows={3}
+                    placeholder="Most engaged zone..."
+                    {...register("mostEngagedZone")}
+                    className="w-full"
+                  />
             </FormField>
+                
             <FormField label="Dominant observed intelligences" htmlFor="dominantObservedIntelligences">
-              <Input id="dominantObservedIntelligences" {...register("dominantObservedIntelligences")} />
-              {errors.dominantObservedIntelligences && (
-                <p className="text-red-500 text-sm mt-1">{errors.dominantObservedIntelligences.message}</p>
-              )}
+                  <Textarea 
+                    rows={3}
+                    placeholder="Dominant observed intelligences..."
+                    {...register("dominantObservedIntelligences")}
+                    className="w-full"
+                  />
             </FormField>
+                
             <FormField label="Initial learning style impressions" htmlFor="initialLearningStyleImpressions">
-              <Textarea rows={3} id="initialLearningStyleImpressions" {...register("initialLearningStyleImpressions")} />
-              {errors.initialLearningStyleImpressions && (
-                <p className="text-red-500 text-sm mt-1">{errors.initialLearningStyleImpressions.message}</p>
-              )}
+                  <Textarea 
+                    rows={3}
+                    placeholder="Initial learning style impressions..."
+                    {...register("initialLearningStyleImpressions")}
+                    className="w-full"
+                  />
             </FormField>
-            <FormField label="Any early flags or needs for follow‑up" htmlFor="earlyFlagsNeedsFollowUp">
-              <Textarea rows={3} id="earlyFlagsNeedsFollowUp" {...register("earlyFlagsNeedsFollowUp")} />
-              {errors.earlyFlagsNeedsFollowUp && (
-                <p className="text-red-500 text-sm mt-1">{errors.earlyFlagsNeedsFollowUp.message}</p>
-              )}
+              </div>
+              
+              <div className="space-y-4">
+                <FormField label="Any early flags or needs for follow-up" htmlFor="earlyFlagsNeedsFollowUp">
+                  <Textarea 
+                    rows={3}
+                    placeholder="Early flags or needs for follow-up..."
+                    {...register("earlyFlagsNeedsFollowUp")}
+                    className="w-full"
+                  />
             </FormField>
-            <FormField label="Self‑directed vs. seeking guidance" htmlFor="selfDirectedVsSeekingGuidance">
-              <Textarea rows={3} id="selfDirectedVsSeekingGuidance" {...register("selfDirectedVsSeekingGuidance")} />
-              {errors.selfDirectedVsSeekingGuidance && (
-                <p className="text-red-500 text-sm mt-1">{errors.selfDirectedVsSeekingGuidance.message}</p>
-              )}
+                
+                <FormField label="Self-directed vs. seeking guidance" htmlFor="selfDirectedVsSeekingGuidance">
+                  <Textarea 
+                    rows={3}
+                    placeholder="Self-directed vs. seeking guidance..."
+                    {...register("selfDirectedVsSeekingGuidance")}
+                    className="w-full"
+                  />
+            </FormField>
+                
+                <FormField label="Flag Indicators" htmlFor="flagIndicators">
+                  <div className="text-sm text-slate-600 mb-2">
+                    <strong>P</strong> - Excessive parental interference<br/>
+                    <strong>T</strong> - Technology discomfort<br/>
+                    <strong>C</strong> - Confidence/independence concerns<br/>
+                    <strong>E</strong> - Exceptional performance in specific area
+          </div>
+                  <Textarea 
+                    rows={3}
+                    placeholder="Flag indicators..."
+                    {...register("flagIndicators")}
+                    className="w-full"
+                  />
+                </FormField>
+          </div>
+            </div>
+            
+            <div className="mt-6">
+              <FormField label="Additional Notes" htmlFor="additionalNotes">
+                <Textarea 
+                  rows={5}
+                  placeholder="Additional notes..."
+                  {...register("additionalNotes")}
+                  className="w-full"
+                />
             </FormField>
           </div>
-          <div className="mt-4 border border-slate-200 rounded-lg p-4">
-            <div className="font-medium text-slate-900 mb-2">Flag Indicators</div>
-            <ul className="list-disc pl-6 text-slate-800 space-y-1">
-              <li>P - Excessive parental interference</li>
-              <li>T - Technology discomfort</li>
-              <li>C - Confidence/independence concerns</li>
-              <li>E - Exceptional performance in specific area</li>
-            </ul>
           </div>
-          <div className="mt-4">
-            <FormField label="Additional Notes / Observations" htmlFor="finalAdditionalNotes">
-              <Textarea rows={6} id="finalAdditionalNotes" {...register("finalAdditionalNotes")} />
-              {errors.finalAdditionalNotes && (
-                <p className="text-red-500 text-sm mt-1">{errors.finalAdditionalNotes.message}</p>
-              )}
-            </FormField>
-          </div>
-        </section>
 
-        {/* Interaction Description table (final section) */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
+          {/* Interaction Summary */}
           <FormSectionHeader title="Interaction Summary" bgClassName="bg-teal-700" />
-          <div className="mt-3 overflow-x-auto">
-            <table className="min-w-full border border-slate-300 text-sm">
-              <thead className="bg-slate-100 text-slate-900">
-                <tr>
-                  <th className="border border-slate-300 px-3 py-2 text-left">Interaction Description</th>
-                  <th className="border border-slate-300 px-3 py-2 text-left">Comments</th>
+          <div className="mb-8 mt-3">
+            
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-slate-300">
+                <thead>
+                  <tr className="bg-slate-50">
+                    <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Domain</th>
+                    <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Observation / Notes</th>
                 </tr>
               </thead>
-              <tbody className="align-top text-slate-900">
-                <tr>
-                  <td className="border border-slate-300 px-3 py-2">Preferred Zone</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <Textarea rows={3} {...register('interactionPreferredZone')} />
-                    {errors.interactionPreferredZone && (
-                      <p className="text-red-500 text-sm mt-1">{errors.interactionPreferredZone.message}</p>
-                    )}
+                <tbody>
+                  <tr>
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Preferred Zone</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Preferred zone..."
+                        {...register("preferredZone")}
+                        className="w-full"
+                      />
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-300 px-3 py-2">Initial Behaviour (entering space)</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <Textarea rows={3} {...register('interactionInitialBehaviour')} />
-                    {errors.interactionInitialBehaviour && (
-                      <p className="text-red-500 text-sm mt-1">{errors.interactionInitialBehaviour.message}</p>
-                    )}
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Initial Behaviour (entering space)</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Initial behaviour..."
+                        {...register("initialBehaviour")}
+                        className="w-full"
+                      />
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-300 px-3 py-2">Child's openness to adult guidance</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <Textarea rows={3} {...register('interactionOpennessToAdultGuidance')} />
-                    {errors.interactionOpennessToAdultGuidance && (
-                      <p className="text-red-500 text-sm mt-1">{errors.interactionOpennessToAdultGuidance.message}</p>
-                    )}
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Child's openness to adult guidance</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Openness to adult guidance..."
+                        {...register("opennessToAdultGuidance")}
+                        className="w-full"
+                      />
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-300 px-3 py-2">Most revealing activity and why</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <Textarea rows={3} {...register('interactionMostRevealingActivity')} />
-                    {errors.interactionMostRevealingActivity && (
-                      <p className="text-red-500 text-sm mt-1">{errors.interactionMostRevealingActivity.message}</p>
-                    )}
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Most revealing activity and why</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Most revealing activity..."
+                        {...register("mostRevealingActivity")}
+                        className="w-full"
+                      />
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-300 px-3 py-2">Cross-reference with Step 5 observations</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <Textarea rows={3} {...register('interactionCrossRefStep5')} />
-                    {errors.interactionCrossRefStep5 && (
-                      <p className="text-red-500 text-sm mt-1">{errors.interactionCrossRefStep5.message}</p>
-                    )}
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Cross-reference with Step 5 observations</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Cross-reference with Step 5..."
+                        {...register("crossReferenceStep5")}
+                        className="w-full"
+                      />
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-300 px-3 py-2">Curiosity and exploration</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <Textarea rows={3} {...register('interactionCuriosityExploration')} />
-                    {errors.interactionCuriosityExploration && (
-                      <p className="text-red-500 text-sm mt-1">{errors.interactionCuriosityExploration.message}</p>
-                    )}
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Curiosity and exploration</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Curiosity and exploration..."
+                        {...register("curiosityAndExploration")}
+                        className="w-full"
+                      />
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-300 px-3 py-2">Focus and attention span</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <Textarea rows={3} {...register('interactionFocusAttention')} />
-                    {errors.interactionFocusAttention && (
-                      <p className="text-red-500 text-sm mt-1">{errors.interactionFocusAttention.message}</p>
-                    )}
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Focus and attention span</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Focus and attention span..."
+                        {...register("focusAndAttentionSpan")}
+                        className="w-full"
+                      />
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-300 px-3 py-2">Engagement with adult direction</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <Textarea rows={3} {...register('interactionEngagementWithAdult')} />
-                    {errors.interactionEngagementWithAdult && (
-                      <p className="text-red-500 text-sm mt-1">{errors.interactionEngagementWithAdult.message}</p>
-                    )}
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Engagement with adult direction</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Engagement with adult direction..."
+                        {...register("engagementWithAdultDirection")}
+                        className="w-full"
+                      />
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-300 px-3 py-2">Resilience in challenge</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <Textarea rows={3} {...register('interactionResilienceInChallenge')} />
-                    {errors.interactionResilienceInChallenge && (
-                      <p className="text-red-500 text-sm mt-1">{errors.interactionResilienceInChallenge.message}</p>
-                    )}
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Resilience in challenge</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Resilience in challenge..."
+                        {...register("resilienceInChallenge")}
+                        className="w-full"
+                      />
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-300 px-3 py-2">Emotion regulation signals</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <Textarea rows={3} {...register('interactionEmotionRegulationSignals')} />
-                    {errors.interactionEmotionRegulationSignals && (
-                      <p className="text-red-500 text-sm mt-1">{errors.interactionEmotionRegulationSignals.message}</p>
-                    )}
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Emotion regulation signals</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Emotion regulation signals..."
+                        {...register("emotionRegulationSignals")}
+                        className="w-full"
+                      />
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-300 px-3 py-2">Notes on Caregiver Interaction Style</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <Textarea rows={3} {...register('interactionCaregiverInteractionStyle')} />
-                    {errors.interactionCaregiverInteractionStyle && (
-                      <p className="text-red-500 text-sm mt-1">{errors.interactionCaregiverInteractionStyle.message}</p>
-                    )}
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Notes on Caregiver Interaction Style</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Caregiver interaction style..."
+                        {...register("caregiverInteractionStyle")}
+                        className="w-full"
+                      />
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-300 px-3 py-2">Recommendations for support or follow-up</td>
-                  <td className="border border-slate-300 px-3 py-2">
-                    <Textarea rows={3} {...register('interactionRecommendations')} />
-                    {errors.interactionRecommendations && (
-                      <p className="text-red-500 text-sm mt-1">{errors.interactionRecommendations.message}</p>
-                    )}
+                    <td className="border border-slate-300 p-3 font-medium text-gray-900">Recommendations for support or follow-up</td>
+                    <td className="border border-slate-300 p-3">
+                      <Textarea 
+                        rows={2}
+                        placeholder="Recommendations for support..."
+                        {...register("recommendationsForSupport")}
+                        className="w-full"
+                      />
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-        </section>
+            
+            <div className="mt-6">
+              <FormField label="Additional Notes" htmlFor="additionalNotes">
+                <Textarea 
+                  rows={4}
+                  placeholder="Additional notes..."
+                  {...register("additionalNotes")}
+                  className="w-full"
+                />
+            </FormField>
+          </div>
+          </div>
 
-        {/* Office Use Only (last section) */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
-          <FormSectionHeader title="Office Use Only" bgClassName="bg-teal-700" />
-          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField label="Application Number" htmlFor="applicationNumber">
-              <Input id="applicationNumber" {...register("applicationNumber")} />
-            </FormField>
-            <FormField label="Observer Name" htmlFor="observerName">
-              <Input id="observerName" {...register("observerName")} />
-            </FormField>
-            <FormField label="Assessment Date" htmlFor="assessmentDate">
-              <Input id="assessmentDate" type="date" {...register("assessmentDate")} />
-            </FormField>
-            <FormField label="Logged to System Date" htmlFor="loggedToSystemDate">
-              <Input id="loggedToSystemDate" type="date" {...register("loggedToSystemDate")} />
-            </FormField>
-            <FormField label="Logged by" htmlFor="loggedBy">
-              <Input id="loggedBy" {...register("loggedBy")} />
-            </FormField>
-          </div>
-          <div className="mt-4 text-right text-sm text-slate-600">
-            <p>Owner: SY Holdings WLL</p>
-            <p>Prepared by: Meta Learning Systems Implementation Unit</p>
-            <p>Confidentiality Level: Internal Operational Use</p>
-          </div>
-        </section>
+          {message && (
+            <div className={`p-3 rounded-lg ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+              {message.text}
+            </div>
+          )}
 
         <div className="flex items-center justify-end gap-3">
-          <button type="submit" disabled={saving} className="[clip-path:polygon(0%_0%,95%_0%,100%_28%,100%_100%,6%_100%,0%_65%)] cursor-pointer py-3 flex justify-between items-center bg-gradient-to-r from-[#8EC0C2] to-[#142954] text-white rounded-lg px-4">{saving ? 'Saving…' : 'Submit Form'}</button>
+            <button 
+              type="submit"
+              disabled={saving}
+              className="[clip-path:polygon(0%_0%,95%_0%,100%_28%,100%_100%,6%_100%,0%_65%)] cursor-pointer py-3 flex justify-between items-center bg-gradient-to-r from-[#8EC0C2] to-[#142954] text-white rounded-lg px-4 hover:brightness-[1.05] active:brightness-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {saving ? 'Saving...' : 'Save & Continue'}
+            </button>
         </div>
       </form>
+      </div>
     </div>
   );
 }

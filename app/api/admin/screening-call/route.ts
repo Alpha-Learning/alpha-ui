@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
 import { updateApplicationStatus } from "@/app/utils/applicationStatus";
+import { sendPaymentEmail } from "@/app/lib/emailService";
 
 export async function POST(request: NextRequest) {
   try {
@@ -42,9 +43,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if application exists
+    // Check if application exists and get user details
     const application = await prisma.application.findUnique({
       where: { id: applicationId },
+      include: {
+        user: true,
+      },
     });
 
     if (!application) {
@@ -139,10 +143,40 @@ export async function POST(request: NextRequest) {
     // Update application status based on all form completions
     await updateApplicationStatus(applicationId, prisma);
 
+    // Send payment email to parent
+    try {
+      // Set default payment amount and due date (7 days from now)
+      const defaultPaymentAmount = 150;
+      const paymentDueDate = new Date();
+      paymentDueDate.setDate(paymentDueDate.getDate() + 7);
+
+      const emailSent = await sendPaymentEmail({
+        parentName: application?.user?.name || "",
+        parentEmail: application?.user?.email || "",
+        childName: childName,
+        paymentAmount: defaultPaymentAmount,
+        paymentDate: paymentDueDate.toISOString().split('T')[0],
+        applicationId: applicationId,
+        walkthroughDate: walkthroughDate,
+        assessmentDate: assessmentInvite,
+        callerName: callerName,
+        screeningDate: date,
+      });
+
+      if (emailSent) {
+        console.log(`Payment email sent successfully to ${application?.user?.email || ""}`);
+      } else {
+        console.error(`Failed to send payment email to ${application?.user?.email || ""}`);
+      }
+    } catch (emailError) {
+      console.error("Error sending payment email:", emailError);
+      // Don't fail the entire request if email fails
+    }
+
     return NextResponse.json({
       success: true,
       data: screeningCall,
-      message: "Screening call data saved successfully and application stage updated",
+      message: "Screening call data saved successfully, application stage updated, and payment email sent",
     });
   } catch (error: any) {
     console.error("Error saving screening call:", error);

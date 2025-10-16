@@ -134,6 +134,11 @@ function Stage7Dropdown({ applicationId, isCompleted, stageTitle }: {
       name: "KS2 Interview Questions", 
       url: `${baseUrl}/admin/applications/${applicationId}/ks2interview`,
       color: "orange"
+    },
+    {
+      name: "Guided Observation Procedure",
+      url: `${baseUrl}/admin/applications/${applicationId}/guided-observations-procedure`,
+      color: "purple"
     }
   ];
 
@@ -185,7 +190,7 @@ function Stage7Dropdown({ applicationId, isCompleted, stageTitle }: {
           <div className="p-4">
             <div className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
               <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
-              Interview Forms
+              Assessment Forms
             </div>
             <div className="space-y-2">
               {forms.map((form, index) => (
@@ -240,7 +245,6 @@ type AppDetail = {
   isSeventhFormCompleted?: boolean;
   isEighthFormCompleted?: boolean;
   isNinthFormCompleted?: boolean;
-  isTenthFormCompleted?: boolean;
   // Individual questionnaire completion flags
   isParentGuardianFormCompleted?: boolean;
   isCaregiverFormCompleted?: boolean;
@@ -284,7 +288,6 @@ export default function AdminApplicationDetailPage() {
     data.isSeventhFormCompleted,
     data.isEighthFormCompleted,
     data.isNinthFormCompleted,
-    data.isTenthFormCompleted,
   ];
   const completedCount = completionFields.filter(Boolean).length;
   const pct = Math.round((completedCount / data.totalStages) * 100);
@@ -298,8 +301,7 @@ export default function AdminApplicationDetailPage() {
     "6. Parent-Child Dynamic Observation",
     "7. Examiner Form: Peer Dynamic Observation",
     "8. Understanding The Parent",
-    "9. Examiner Form: Peer Dynamic Observation",
-    "10. Understanding The Learning Comprehensive Profile Sheet",
+    "9. UTL Comprehensive Profile Sheet",
   ];
 
   return (
@@ -393,8 +395,9 @@ export default function AdminApplicationDetailPage() {
                     ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' 
                     : 'bg-gradient-to-r from-red-500 to-red-600'
                 }`}
+                // @ts-expect-error: style is valid on div but TypeScript types may be out of date
                 style={{ width: `${pct}%` }}
-              />
+              ></div>
             </div>
           </div>
 
@@ -419,7 +422,7 @@ export default function AdminApplicationDetailPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-6">Application Forms</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {Array.from({ length: data.totalStages }, (_, i) => i).map((idx) => {
+            {Array.from({ length: 9 }, (_, i) => i).map((idx) => {
               const stageNumber = idx + 1;
               const isCompleted = completionFields[idx] || false;
                const hrefMap: Record<number, string> = {
@@ -429,8 +432,7 @@ export default function AdminApplicationDetailPage() {
                  6: `/admin/applications/${data.id}/parent-child-dynamic-observation`,
                  7: `/admin/applications/${data.id}/peer-dynamic-observation`,
                  8: `/admin/applications/${data.id}/understanding-parent`,
-                 9: `/admin/applications/${data.id}/peer-dynamic-observation`,
-                 10: `/admin/applications/${data.id}/comprehensive-profile-sheet`,
+                 9: `/admin/applications/${data.id}/comprehensive-profile-sheet`,
                };
               const href = hrefMap[stageNumber];
               

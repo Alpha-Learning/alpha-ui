@@ -462,88 +462,68 @@ model InitialObservationForm {
   @@map("initial_observation_forms")
 }
 
-// Guided Observations Procedure (Stage 6)
+// Guided Observations Procedure (Stage 5)
 model GuidedObservationsProcedure {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Child Information
-  fullName String
-  age      String
+  // Basic Information
+  childName String
+  age       String
+  date      DateTime
+  examiner  String
 
-  // Ratings Grid (per zone)
-  zoneAScore String
-  zoneANotes String
-  zoneBScore String
-  zoneBNotes String
-  zoneCScore String
-  zoneCNotes String
-  zoneDScore String
-  zoneDNotes String
+          // Guided Activity Ratings Grid
+          zoneAScore Int
+          zoneANotes String?
+          zoneBScore Int
+          zoneBNotes String?
+          zoneCScore Int
+          zoneCNotes String?
+          zoneDScore Int
+          zoneDNotes String?
 
-  // Guiding Questions answers
-  // Legacy kept for compatibility
-  guidingQ1 String?
-  guidingQ2 String?
-  guidingQ3 String?
-  guidingQ4 String?
-  guidingQ5 String?
-  // New semantic fields
-  areaLikeBest         String?
-  whatMakesInteresting String?
-  hardButFun           String?
-  feelWhenTryingNew    String?
-  teachGame            String?
+  // Meta Learning Skill Scoring
+  metaCuriosityScore Int
+  metaCuriosityNotes String?
+  metaSelfRegulationScore Int
+  metaSelfRegulationNotes String?
+  metaConfidenceScore Int
+  metaConfidenceNotes String?
+  metaCollaborationScore Int
+  metaCollaborationNotes String?
+  metaEmotionalAwarenessScore Int
+  metaEmotionalAwarenessNotes String?
 
-  // Meta Learning Skill Indicators (scores 1-5 + notes optional)
-  metaSelfReg String
-  metaNotesSelfReg String?
-  metaCuriosity String
-  metaNotesCuriosity String?
-  metaSocial String
-  metaNotesSocial String?
-  metaEmotional String
-  metaNotesEmotional String?
-  metaConfidence String
-  metaNotesConfidence String?
+  // Intelligence & Learning Type Check-In
+  intelLinguisticEvidence String? // "moderate" or "strong"
+  intelLinguisticObservation String?
+  intelLogicalEvidence String? // "moderate" or "strong"
+  intelLogicalObservation String?
+  intelSpatialEvidence String? // "moderate" or "strong"
+  intelSpatialObservation String?
+  intelBodilyEvidence String? // "moderate" or "strong"
+  intelBodilyObservation String?
 
-  // Intelligence & Learning Type Check‑In (supporting observation notes)
-  intelLinguistic String?
-  intelLogical String?
-  intelSpatial String?
-  intelBodily String?
-  intelMusical String?
-  intelInterpersonal String?
-  intelIntrapersonal String?
-  intelNaturalistic String?
-  intelExistential String?
-  // Intelligence evidence flags (✓ moderate, + strong)
-  intelLinguisticEvidenceModerate Boolean? @default(false)
-  intelLinguisticEvidenceStrong   Boolean? @default(false)
-  intelLogicalEvidenceModerate    Boolean? @default(false)
-  intelLogicalEvidenceStrong      Boolean? @default(false)
-  intelSpatialEvidenceModerate    Boolean? @default(false)
-  intelSpatialEvidenceStrong      Boolean? @default(false)
-  intelBodilyEvidenceModerate     Boolean? @default(false)
-  intelBodilyEvidenceStrong       Boolean? @default(false)
-  intelMusicalEvidenceModerate    Boolean? @default(false)
-  intelMusicalEvidenceStrong      Boolean? @default(false)
-  intelInterpersonalEvidenceModerate Boolean? @default(false)
-  intelInterpersonalEvidenceStrong   Boolean? @default(false)
-  intelIntrapersonalEvidenceModerate Boolean? @default(false)
-  intelIntrapersonalEvidenceStrong   Boolean? @default(false)
-  intelNaturalisticEvidenceModerate  Boolean? @default(false)
-  intelNaturalisticEvidenceStrong    Boolean? @default(false)
-  intelExistentialEvidenceModerate   Boolean? @default(false)
-  intelExistentialEvidenceStrong     Boolean? @default(false)
+  // Additional Intelligences
+  intelMusicalEvidence String? // "moderate" or "strong"
+  intelMusicalObservation String?
+  intelInterpersonalEvidence String? // "moderate" or "strong"
+  intelInterpersonalObservation String?
+  intelIntrapersonalEvidence String? // "moderate" or "strong"
+  intelIntrapersonalObservation String?
+  intelNaturalisticEvidence String? // "moderate" or "strong"
+  intelNaturalisticObservation String?
+  intelExistentialEvidence String? // "moderate" or "strong"
+  intelExistentialObservation String?
 
-  // Parent–Child Dynamic Snapshot
-  parentProximity String?
-  parentInterventionLevel String?
-  parentInterventionStyle String?
+  // Parent-Child Dynamic Snapshot
+  parentProximity String? // "close", "hovering", "distant"
+  parentInterventionLevel String? // "low", "medium", "high"
+  parentInterventionStyle String? // "directive", "supportive", "detached"
   childIndependenceLevel String?
-  childEmotionalWithParent String?
+  childEmotionalPresentation String?
   childIndependenceWhenParentEngaged String?
   emotionalRegulationWithParentPresent String?
 
@@ -553,28 +533,24 @@ model GuidedObservationsProcedure {
   initialLearningStyleImpressions String?
   earlyFlagsNeedsFollowUp String?
   selfDirectedVsSeekingGuidance String?
-  finalAdditionalNotes String?
+  flagIndicators String?
+  additionalNotes String?
 
-  // Interaction summary table (Stage 6 continued)
-  interactionPreferredZone String?
-  interactionInitialBehaviour String?
-  interactionOpennessToAdultGuidance String?
-  interactionMostRevealingActivity String?
-  interactionCrossRefStep5 String?
-  interactionCuriosityExploration String?
-  interactionFocusAttention String?
-  interactionEngagementWithAdult String?
-  interactionResilienceInChallenge String?
-  interactionEmotionRegulationSignals String?
-  interactionCaregiverInteractionStyle String?
-  interactionRecommendations String?
+  // Interaction Summary
+  preferredZone String?
+  initialBehaviour String?
+  opennessToAdultGuidance String?
+  mostRevealingActivity String?
+  crossReferenceStep5 String?
+  curiosityAndExploration String?
+  focusAndAttentionSpan String?
+  engagementWithAdultDirection String?
 
-  // Office Use Only
-  applicationNumber     String?
-  observerName          String?
-  assessmentDate        String?
-  loggedToSystemDate    String?
-  loggedBy              String?
+  // Additional Observations
+  resilienceInChallenge String?
+  emotionRegulationSignals String?
+  caregiverInteractionStyle String?
+  recommendationsForSupport String?
 
   // Relation
   applicationId String @unique

@@ -362,7 +362,7 @@ export default function OutsiderFormPage() {
             </section>
 
             {/* Office Use Only */}
-            <section>
+            {/* <section>
               <FormSectionHeader title="Office Use Only" bgClassName="bg-teal-700" />
               <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField label="Application Number" htmlFor="applicationNumber">
@@ -403,7 +403,7 @@ export default function OutsiderFormPage() {
                 <p>Prepared by: Meta Learning Systems Implementation Unit</p>
                 <p>Confidentiality Level: Internal Operational Use</p>
               </div>
-            </section>
+            </section> */}
           </div>
 
           {message && (
