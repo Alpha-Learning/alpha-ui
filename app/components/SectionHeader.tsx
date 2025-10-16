@@ -12,8 +12,7 @@ export default function SectionHeader({ show, onRequestClick }: SectionHeaderPro
     <div
       className={`absolute top-1 sm:top-3 md:top-4 left-0 right-0 flex items-center justify-between px-2 sm:px-4 md:px-6 lg:px-10 ${
         show ? "fade-down-in" : "opacity-0"
-      }`}
-      style={{ animationDelay: "800ms" }}
+    } [animation-delay:800ms]`}
       onAnimationEnd={() => {}}
     >
       <img 

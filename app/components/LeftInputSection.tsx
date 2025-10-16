@@ -55,15 +55,7 @@ export default function LeftInputSection({
             {/* </button> */}
             {/* Decorative element */}
             <div
-              style={{
-                clipPath: `polygon(
-                  0% 0%, 8% 3%, 16% 6%, 22% 18%, 28% 50%,
-                  22% 82%, 16% 94%, 8% 97%, 0% 100%,
-                  100% 100%, 92% 97%, 84% 94%, 78% 82%, 72% 50%,
-                  78% 18%, 84% 6%, 92% 3%, 100% 0%
-                )`,
-              }}
-              className=" w-[14px] sm:w-[16px] h-8 sm:h-39 rotate-[132deg] absolute -top-5 sm:-top-8 right-7 sm:right-11 hidden xl:flex bg-[#9A9A9A]"
+              className=" w-[14px] sm:w-[16px] h-8 sm:h-39 rotate-[132deg] absolute -top-5 sm:-top-8 right-7 sm:right-11 hidden xl:flex bg-[#9A9A9A] [clip-path:polygon(0%_0%,_8%_3%,_16%_6%,_22%_18%,_28%_50%,_22%_82%,_16%_94%,_8%_97%,_0%_100%,_100%_100%,_92%_97%,_84%_94%,_78%_82%,_72%_50%,_78%_18%,_84%_6%,_92%_3%,_100%_0%)]"
             />
           </div>
 

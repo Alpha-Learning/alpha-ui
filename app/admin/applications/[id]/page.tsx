@@ -43,9 +43,9 @@ function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: {
   };
 
   return (
-    <div className="relative">
+    <div className="relative h-full">
       <div 
-        className={`p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
+        className={`p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 h-full min-h-[180px] flex flex-col ${
           isCompleted 
             ? 'bg-green-50 border-green-200 hover:border-green-300' 
             : 'bg-gray-50 border-gray-200 hover:border-gray-300'
@@ -153,9 +153,9 @@ function Stage7Dropdown({ applicationId, isCompleted, stageTitle }: {
   };
 
   return (
-    <div className="relative">
+    <div className="relative h-full">
       <div 
-        className={`p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
+        className={`p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 h-full min-h-[180px] flex flex-col ${
           isCompleted 
             ? 'bg-green-50 border-green-200 hover:border-green-300' 
             : 'bg-gray-50 border-gray-200 hover:border-gray-300'
@@ -420,7 +420,7 @@ export default function AdminApplicationDetailPage() {
         {/* Forms Grid */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-6">Application Forms</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
             {Array.from({ length: 9 }, (_, i) => i).map((idx) => {
               const stageNumber = idx + 1;
               const isCompleted = completionFields[idx] || false;
@@ -460,7 +460,7 @@ export default function AdminApplicationDetailPage() {
                }
               
               const inner = (
-                <div className={`p-4 rounded-lg border-2 transition-all duration-200 ${
+                <div className={`p-4 rounded-lg border-2 transition-all duration-200 h-full min-h-[180px] flex flex-col ${
                   isCompleted 
                     ? 'bg-green-50 border-green-200 hover:border-green-300' 
                     : 'bg-gray-50 border-gray-200 hover:border-gray-300'
@@ -492,7 +492,7 @@ export default function AdminApplicationDetailPage() {
                 <Link 
                   key={idx} 
                   href={href} 
-                  className="block hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg transition-transform duration-200"
+                  className="block h-full hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg transition-transform duration-200"
                 >
                   {inner}
                 </Link>

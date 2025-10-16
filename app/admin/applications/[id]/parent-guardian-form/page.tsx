@@ -26,6 +26,7 @@ export default function ParentGuardianFormPage() {
       fullName: "",
       childName: "",
       date: "",
+      parentOccupation: "",
       typicalWeekday: "",
       screenTimeHours: "",
       homeActivities: "",
@@ -73,6 +74,7 @@ export default function ParentGuardianFormPage() {
           fullName: data.fullName || "",
           childName: data.childName || "",
           date: data.date ? new Date(data.date).toISOString().split('T')[0] : "",
+          parentOccupation: data.parentOccupation || "",
           typicalWeekday: data.typicalWeekday || "",
           screenTimeHours: data.screenTimeHours || "",
           homeActivities: data.homeActivities || "",
@@ -104,6 +106,7 @@ export default function ParentGuardianFormPage() {
           fullName: appData.parentFullName || "",
           childName: appData.childFullName || "",
           date: new Date().toISOString().split('T')[0], // Today's date as default
+          parentOccupation: "",
           typicalWeekday: "",
           screenTimeHours: "",
           homeActivities: "",
@@ -220,6 +223,12 @@ export default function ParentGuardianFormPage() {
                       <p className="text-red-500 text-sm mt-1">{errors.date.message}</p>
                     )}
                   </FormField>
+                <FormField label="Parent Occupation" htmlFor="parentOccupation">
+                  <Input 
+                    id="parentOccupation"
+                    {...register("parentOccupation")}
+                  />
+                </FormField>
                 </div>
               </section>
 
@@ -490,54 +499,7 @@ export default function ParentGuardianFormPage() {
           {/* System Logging - Full Width */}
           <div className="mt-8 ">
                     {/* Office Use Only */}
-                    <section className="mb-4" >
-                <FormSectionHeader title="Office Use Only" bgClassName="bg-teal-700 " />
-                <div className="mt-3">
-                  <FormField label="Application Number" htmlFor="applicationNumber">
-                    <Input 
-                      id="applicationNumber"
-                      {...register("applicationNumber")}
-                      className={errors.applicationNumber ? "border-red-500" : ""}
-                    />
-                    {errors.applicationNumber && (
-                      <p className="text-red-500 text-sm mt-1">{errors.applicationNumber.message}</p>
-                    )}
-                  </FormField>
-                </div>
-              </section>
-            <section>
-              <FormSectionHeader title="System Logging" bgClassName="bg-teal-700" />
-              <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField label="Logged to System Date" htmlFor="loggedToSystemDate">
-                  <Input 
-                    id="loggedToSystemDate"
-                    type="date"
-                    {...register("loggedToSystemDate")}
-                    className={errors.loggedToSystemDate ? "border-red-500" : ""}
-                  />
-                  {errors.loggedToSystemDate && (
-                    <p className="text-red-500 text-sm mt-1">{errors.loggedToSystemDate.message}</p>
-                  )}
-                </FormField>
-                <FormField label="Logged by" htmlFor="loggedBy">
-                  <Input 
-                    id="loggedBy"
-                    {...register("loggedBy")}
-                    placeholder="Enter name"
-                    className={errors.loggedBy ? "border-red-500" : ""}
-                  />
-                  {errors.loggedBy && (
-                    <p className="text-red-500 text-sm mt-1">{errors.loggedBy.message}</p>
-                  )}
-                </FormField>
-              </div>
-              <div className="mt-4 text-right text-sm text-slate-600">
-                <p>Owner: SY Holdings WLL</p>
-                <p>Prepared by: Meta Learning Systems Implementation Unit</p>
-                <p>Confidentiality Level: Internal Operational Use</p>
-                {/* <p>Page 4 of 5</p> */}
-              </div>
-            </section>
+    
             
           </div>
 
@@ -547,7 +509,7 @@ export default function ParentGuardianFormPage() {
             </div>
           )}
 
-          <div className="flex items-center justify-end gap-3">
+          <div className="flex items-center my-4 justify-end gap-3">
             <button 
               type="submit"
               disabled={saving}

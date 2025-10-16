@@ -134,7 +134,7 @@ export default function AdminApplicationsPage() {
             {/* Progress Bar */}
             <div className="w-full bg-gray-200 rounded-full h-2 mb-2 overflow-hidden">
               <div 
-                className={`h-2 rounded-full transition-all duration-300 ${
+                className={`h-2 rounded-full transition-all duration-300 W-[${progressPercentage}%] ${
                   progressPercentage === 100 
                     ? 'bg-green-500' 
                     : progressPercentage >= 70 
@@ -142,11 +142,8 @@ export default function AdminApplicationsPage() {
                     : progressPercentage >= 40 
                     ? 'bg-yellow-500' 
                     : 'bg-red-500'
-                }`}
-                style={{ 
-                  width: `${progressPercentage}%`,
-                  minWidth: progressPercentage > 0 ? '4px' : '0px'
-                }}
+                } ${progressPercentage > 0 ? 'min-w-1' : ''}`}
+                // style={{ width: `${progressPercentage}%` }}
               ></div>
             </div>
             

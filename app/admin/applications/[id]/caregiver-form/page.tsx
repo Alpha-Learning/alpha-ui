@@ -414,49 +414,6 @@ export default function CaregiverFormPage() {
             </section>
 
             {/* Office Use Only */}
-            <section>
-              <FormSectionHeader title="Office Use Only" bgClassName="bg-teal-700" />
-              <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField label="Application Number" htmlFor="applicationNumber">
-                  <Input 
-                    id="applicationNumber"
-                    {...register("applicationNumber")}
-                    className={errors.applicationNumber ? "border-red-500" : ""}
-                  />
-                  {errors.applicationNumber && (
-                    <p className="text-red-500 text-sm mt-1">{errors.applicationNumber.message}</p>
-                  )}
-                </FormField>
-                <FormField label="Logged to System Date" htmlFor="loggedToSystemDate">
-                  <Input 
-                    id="loggedToSystemDate"
-                    type="date"
-                    {...register("loggedToSystemDate")}
-                    className={errors.loggedToSystemDate ? "border-red-500" : ""}
-                  />
-                  {errors.loggedToSystemDate && (
-                    <p className="text-red-500 text-sm mt-1">{errors.loggedToSystemDate.message}</p>
-                  )}
-                </FormField>
-                <FormField label="Logged by" htmlFor="loggedBy">
-                  <Input 
-                    id="loggedBy"
-                    {...register("loggedBy")}
-                    placeholder="Enter name"
-                    className={errors.loggedBy ? "border-red-500" : ""}
-                  />
-                  {errors.loggedBy && (
-                    <p className="text-red-500 text-sm mt-1">{errors.loggedBy.message}</p>
-                  )}
-                </FormField>
-              </div>
-              <div className="mt-4 text-right text-sm text-slate-600">
-                <p>Owner: SY Holdings WLL</p>
-                <p>Prepared by: Meta Learning Systems Implementation Unit</p>
-                <p>Confidentiality Level: Internal Operational Use</p>
-                {/* <p>Page 3 of 4</p> */}
-              </div>
-            </section>
           </div>
 
           {message && (

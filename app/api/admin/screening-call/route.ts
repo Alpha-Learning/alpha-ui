@@ -9,7 +9,6 @@ export async function POST(request: NextRequest) {
     const {
       applicationId,
       fullName,
-      childName,
       date,
       callerName,
       crmLeadTag,
@@ -35,8 +34,8 @@ export async function POST(request: NextRequest) {
       loggedBy,
     } = body;
 
-    // Validate required fields
-    if (!applicationId || !fullName || !childName || !date || !callerName) {
+    // Validate required fields (childName will be derived from application)
+    if (!applicationId || !fullName || !date || !callerName) {
       return NextResponse.json(
         { success: false, message: "Missing required fields" },
         { status: 400 }
@@ -58,6 +57,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Derive child's name from the application record
+    const derivedChildName = application.childFullName || "";
+
     // Check if screening call already exists for this application
     const existingScreeningCall = await prisma.screeningCall.findUnique({
       where: { applicationId },
@@ -71,7 +73,7 @@ export async function POST(request: NextRequest) {
         where: { applicationId },
         data: {
           fullName,
-          childName,
+          childName: derivedChildName,
           date: new Date(date),
           callerName,
           crmLeadTag,
@@ -103,7 +105,7 @@ export async function POST(request: NextRequest) {
         data: {
           applicationId,
           fullName,
-          childName,
+          childName: derivedChildName,
           date: new Date(date),
           callerName,
           crmLeadTag,
@@ -153,7 +155,7 @@ export async function POST(request: NextRequest) {
       const emailSent = await sendPaymentEmail({
         parentName: application?.user?.name || "",
         parentEmail: application?.user?.email || "",
-        childName: childName,
+        childName: derivedChildName,
         paymentAmount: defaultPaymentAmount,
         paymentDate: paymentDueDate.toISOString().split('T')[0],
         applicationId: applicationId,

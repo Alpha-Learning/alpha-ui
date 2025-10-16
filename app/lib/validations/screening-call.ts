@@ -3,7 +3,6 @@ import { z } from "zod";
 export const screeningCallSchema = z.object({
   // General Information
   fullName: z.string().min(1, "Full name is required"),
-  childName: z.string().min(1, "Child's name is required"),
   date: z.string().min(1, "Date is required"),
   callerName: z.string().min(1, "Caller name is required"),
   crmLeadTag: z.enum(["Hot", "Warm", "Cold"]).optional(),

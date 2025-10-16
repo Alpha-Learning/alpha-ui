@@ -25,7 +25,6 @@ export default function ScreeningCallFormPage() {
     resolver: zodResolver(screeningCallSchema),
     defaultValues: {
       fullName: "",
-      childName: "",
       date: "",
       callerName: "",
       crmLeadTag: undefined,
@@ -71,7 +70,6 @@ export default function ScreeningCallFormPage() {
         const data = res.data;
         reset({
           fullName: data.fullName || "",
-          childName: data.childName || "",
           date: data.date ? new Date(data.date).toISOString().split('T')[0] : "",
           callerName: data.callerName || "",
           crmLeadTag: data.crmLeadTag || undefined,
@@ -101,7 +99,6 @@ export default function ScreeningCallFormPage() {
         const appData = appRes.data;
         reset({
           fullName: appData.parentFullName || "",
-          childName: appData.childFullName || "",
           date: new Date().toISOString().split('T')[0], // Today's date as default
           callerName: "",
           crmLeadTag: undefined,
@@ -189,17 +186,6 @@ console.log("errors========",errors);
                   />
                   {errors.fullName && (
                     <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>
-                  )}
-                </FormField>
-                <FormField label="Child's Name" htmlFor="childName">
-                  <Input 
-                    id="childName" 
-                    placeholder="Child's Name" 
-                    {...register("childName")}
-                    className={errors.childName ? "border-red-500" : ""}
-                  />
-                  {errors.childName && (
-                    <p className="text-red-500 text-sm mt-1">{errors.childName.message}</p>
                   )}
                 </FormField>
                 <FormField label="Date" htmlFor="date">

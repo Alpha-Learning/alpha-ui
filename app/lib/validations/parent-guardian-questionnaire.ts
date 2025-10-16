@@ -5,6 +5,7 @@ export const parentGuardianQuestionnaireSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   childName: z.string().min(1, "Child's name is required"),
   date: z.string().min(1, "Date is required"),
+  parentOccupation: z.string().optional(),
   
   // Family Environment & Routine
   typicalWeekday: z.string().min(1, "Typical weekday description is required"),

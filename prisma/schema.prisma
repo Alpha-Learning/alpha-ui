@@ -197,6 +197,7 @@ model ParentGuardianQuestionnaire {
   fullName        String
   childName       String
   date            DateTime
+  parentOccupation String?
 
   // Family Environment & Routine
   typicalWeekday      String

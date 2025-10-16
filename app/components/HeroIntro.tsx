@@ -79,15 +79,18 @@ export default function HeroIntro({
       {!overlayDone && <div className="intro-overlay" />}
 
       <div className="absolute top-6 left-6 space-y-1 text-black font-extrabold tracking-tight leading-tight text-xl md:text-xl">
-        {words.map((w, i) => (
-          <div
-            key={i}
-            className={headerExit ? "line-exit-down" : "opacity-0 line-enter"}
-            style={headerExit ? undefined : { animationDelay: `${1.9 + i * 0.25}s` }}
-          >
-            {w}
-          </div>
-        ))}
+        {words.map((w, i) => {
+          const ms = Math.round((1.9 + i * 0.25) * 1000);
+          const delayClass = headerExit ? "" : `[animation-delay:${ms}ms]`;
+          return (
+            <div
+              key={i}
+              className={`${headerExit ? "line-exit-down" : "opacity-0 line-enter"} ${delayClass}`}
+            >
+              {w}
+            </div>
+          );
+        })}
       </div>
 
       <div className="flex items-center justify-center h-screen">

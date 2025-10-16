@@ -16,15 +16,15 @@ const schema = z.object({
   parentFullName: z.string().min(1, "Parent full name is required"),
   parentEmail: z.string().email("Invalid email format"),
   parentPhone: z.string().min(1, "Phone number is required"),
-  relationToChild: z.string().min(1, "Relation to child is required"),
+  parentOccupation: z.string().optional(),
   parentCity: z.string().min(1, "City/Location is required"),
   parentEthnicity: z.string().min(1, "Ethnicity is required"),
 
   // Child Information
   childFullName: z.string().min(1, "Child full name is required"),
-  childDateOfBirth: z.string().optional(),
+  // Removed: childDateOfBirth
   childAge: z.coerce.number().int().min(1).max(18).optional(),
-  childGender: z.enum(["M", "F"]).optional(),
+  // Removed: childGender
   childEthnicity: z.string().optional(),
   childSchoolYear: z.string().optional(),
   childCurrentSchool: z.string().optional(),
@@ -156,8 +156,8 @@ function PreAssessmentInner() {
                       <FormField label="Phone Number" htmlFor="parentPhone" error={errors.parentPhone}>
                         <Input id="parentPhone" placeholder="+973 ..." {...register("parentPhone")} error={!!errors.parentPhone} />
                       </FormField>
-                      <FormField label="Relation to Child" htmlFor="relationToChild" error={errors.relationToChild}>
-                        <Input id="relationToChild" placeholder="Mother / Father / Guardian" {...register("relationToChild")} error={!!errors.relationToChild} />
+                      <FormField label="Occupation (optional)" htmlFor="parentOccupation" error={errors.parentOccupation as any}>
+                        <Input id="parentOccupation" placeholder="e.g., Engineer, Teacher" {...register("parentOccupation")} error={!!(errors as any).parentOccupation} />
                       </FormField>
                       <FormField label="City/Location" htmlFor="parentCity" error={errors.parentCity}>
                         <Input id="parentCity" placeholder="Manama" {...register("parentCity")} error={!!errors.parentCity} />
@@ -193,22 +193,11 @@ function PreAssessmentInner() {
                       <FormField label="Full Name" htmlFor="childFullName" error={errors.childFullName}>
                         <Input id="childFullName" placeholder="Child name" {...register("childFullName")} error={!!errors.childFullName} />
                       </FormField>
-                      <FormField label="Date of Birth" htmlFor="childDateOfBirth" error={errors.childDateOfBirth}>
-                        <Input id="childDateOfBirth" type="date" {...register("childDateOfBirth")} error={!!errors.childDateOfBirth} />
-                      </FormField>
+                      
                       <FormField label="Age" htmlFor="childAge" error={errors.childAge as any}>
                         <Input id="childAge" type="number" min={1} max={18} placeholder="8" {...register("childAge")} error={!!errors.childAge} />
                       </FormField>
-                      <FormField label="Gender" htmlFor="childGender" error={errors.childGender as any}>
-                        <div className="grid grid-cols-2 gap-2">
-                          {["M", "F"].map((opt) => (
-                            <label key={opt} className="inline-flex items-center gap-2 text-sm text-slate-700">
-                              <input type="radio" value={opt} {...register("childGender")} />
-                              <span>{opt === "M" ? "Male" : "Female"}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </FormField>
+                      
                       <FormField label="Ethnicity (you may list multiple)" htmlFor="childEthnicity" error={errors.childEthnicity}>
                         <Input id="childEthnicity" placeholder="e.g., Bahraini, Indian" {...register("childEthnicity")} error={!!errors.childEthnicity} />
                       </FormField>
