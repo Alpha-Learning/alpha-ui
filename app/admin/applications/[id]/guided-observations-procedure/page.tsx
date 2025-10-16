@@ -8,7 +8,6 @@ import { FormField, Input, Textarea, FormSectionHeader } from "@/app/components/
 import { apiService } from "@/app/utils";
 import { guidedObservationSchema, type GuidedObservationFormData } from "@/app/lib/validations/guided-observation";
 
-
 export default function GuidedObservationsProcedurePage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
@@ -30,22 +29,68 @@ export default function GuidedObservationsProcedurePage() {
       age: "",
       date: new Date().toISOString().split('T')[0],
       examiner: "",
-      zoneAScore: 1,
+      zoneAScore: "1",
       zoneANotes: "",
-      zoneBScore: 1,
+      zoneBScore: "1",
       zoneBNotes: "",
-      zoneCScore: 1,
+      zoneCScore: "1",
       zoneCNotes: "",
-      metaCuriosityScore: 1,
+      zoneDScore: "1",
+      zoneDNotes: "",
+      metaCuriosityScore: "1",
       metaCuriosityNotes: "",
-      metaSelfRegulationScore: 1,
+      metaSelfRegulationScore: "1",
       metaSelfRegulationNotes: "",
-      metaConfidenceScore: 1,
+      metaConfidenceScore: "1",
       metaConfidenceNotes: "",
-      metaCollaborationScore: 1,
+      metaCollaborationScore: "1",
       metaCollaborationNotes: "",
-      metaEmotionalAwarenessScore: 1,
+      metaEmotionalAwarenessScore: "1",
       metaEmotionalAwarenessNotes: "",
+      intelLinguisticEvidence: undefined,
+      intelLinguisticObservation: "",
+      intelLogicalEvidence: undefined,
+      intelLogicalObservation: "",
+      intelSpatialEvidence: undefined,
+      intelSpatialObservation: "",
+      intelBodilyEvidence: undefined,
+      intelBodilyObservation: "",
+      intelMusicalEvidence: undefined,
+      intelMusicalObservation: "",
+      intelInterpersonalEvidence: undefined,
+      intelInterpersonalObservation: "",
+      intelIntrapersonalEvidence: undefined,
+      intelIntrapersonalObservation: "",
+      intelNaturalisticEvidence: undefined,
+      intelNaturalisticObservation: "",
+      intelExistentialEvidence: undefined,
+      intelExistentialObservation: "",
+      parentProximity: undefined,
+      parentInterventionLevel: undefined,
+      parentInterventionStyle: undefined,
+      childIndependenceLevel: "",
+      childEmotionalPresentation: "",
+      childIndependenceWhenParentEngaged: "",
+      emotionalRegulationWithParentPresent: "",
+      mostEngagedZone: "",
+      dominantObservedIntelligences: "",
+      initialLearningStyleImpressions: "",
+      earlyFlagsNeedsFollowUp: "",
+      selfDirectedVsSeekingGuidance: "",
+      flagIndicators: "",
+      additionalNotes: "",
+      preferredZone: "",
+      initialBehaviour: "",
+      opennessToAdultGuidance: "",
+      mostRevealingActivity: "",
+      crossReferenceStep5: "",
+      curiosityAndExploration: "",
+      focusAndAttentionSpan: "",
+      engagementWithAdultDirection: "",
+      resilienceInChallenge: "",
+      emotionRegulationSignals: "",
+      caregiverInteractionStyle: "",
+      recommendationsForSupport: "",
     },
   });
 
@@ -72,23 +117,23 @@ export default function GuidedObservationsProcedurePage() {
           age: data.age || (appData?.childAge ? appData.childAge.toString() : ""),
           date: data.date || new Date().toISOString().split('T')[0],
           examiner: data.examiner || "",
-          zoneAScore: data.zoneAScore || 1,
+          zoneAScore: data.zoneAScore ? data.zoneAScore.toString() : "1",
           zoneANotes: data.zoneANotes || "",
-          zoneBScore: data.zoneBScore || 1,
+          zoneBScore: data.zoneBScore ? data.zoneBScore.toString() : "1",
           zoneBNotes: data.zoneBNotes || "",
-          zoneCScore: data.zoneCScore || 1,
+          zoneCScore: data.zoneCScore ? data.zoneCScore.toString() : "1",
           zoneCNotes: data.zoneCNotes || "",
-          zoneDScore: data.zoneDScore || 1,
+          zoneDScore: data.zoneDScore ? data.zoneDScore.toString() : "1",
           zoneDNotes: data.zoneDNotes || "",
-          metaCuriosityScore: data.metaCuriosityScore || 1,
+          metaCuriosityScore: data.metaCuriosityScore ? data.metaCuriosityScore.toString() : "1",
           metaCuriosityNotes: data.metaCuriosityNotes || "",
-          metaSelfRegulationScore: data.metaSelfRegulationScore || 1,
+          metaSelfRegulationScore: data.metaSelfRegulationScore ? data.metaSelfRegulationScore.toString() : "1",
           metaSelfRegulationNotes: data.metaSelfRegulationNotes || "",
-          metaConfidenceScore: data.metaConfidenceScore || 1,
+          metaConfidenceScore: data.metaConfidenceScore ? data.metaConfidenceScore.toString() : "1",
           metaConfidenceNotes: data.metaConfidenceNotes || "",
-          metaCollaborationScore: data.metaCollaborationScore || 1,
+          metaCollaborationScore: data.metaCollaborationScore ? data.metaCollaborationScore.toString() : "1",
           metaCollaborationNotes: data.metaCollaborationNotes || "",
-          metaEmotionalAwarenessScore: data.metaEmotionalAwarenessScore || 1,
+          metaEmotionalAwarenessScore: data.metaEmotionalAwarenessScore ? data.metaEmotionalAwarenessScore.toString() : "1",
           metaEmotionalAwarenessNotes: data.metaEmotionalAwarenessNotes || "",
           intelLinguisticEvidence: data.intelLinguisticEvidence || undefined,
           intelLinguisticObservation: data.intelLinguisticObservation || "",
@@ -143,23 +188,23 @@ export default function GuidedObservationsProcedurePage() {
           age: appData.childAge ? appData.childAge.toString() : "",
           date: new Date().toISOString().split('T')[0],
           examiner: "",
-          zoneAScore: 1,
+          zoneAScore: "1",
           zoneANotes: "",
-          zoneBScore: 1,
+          zoneBScore: "1",
           zoneBNotes: "",
-          zoneCScore: 1,
+          zoneCScore: "1",
           zoneCNotes: "",
-          zoneDScore: 1,
+          zoneDScore: "1",
           zoneDNotes: "",
-          metaCuriosityScore: 1,
+          metaCuriosityScore: "1",
           metaCuriosityNotes: "",
-          metaSelfRegulationScore: 1,
+          metaSelfRegulationScore: "1",
           metaSelfRegulationNotes: "",
-          metaConfidenceScore: 1,
+          metaConfidenceScore: "1",
           metaConfidenceNotes: "",
-          metaCollaborationScore: 1,
+          metaCollaborationScore: "1",
           metaCollaborationNotes: "",
-          metaEmotionalAwarenessScore: 1,
+          metaEmotionalAwarenessScore: "1",
           metaEmotionalAwarenessNotes: "",
         });
       }
@@ -175,10 +220,22 @@ export default function GuidedObservationsProcedurePage() {
       setSaving(true);
       setMessage(null);
       
-      const res = await apiService.post("/api/admin/guided-observations-procedure", {
+      // Convert string scores to numbers for the API
+      const payload = {
         applicationId: params.id,
         ...formData,
-      });
+        zoneAScore: parseInt(formData.zoneAScore),
+        zoneBScore: parseInt(formData.zoneBScore),
+        zoneCScore: parseInt(formData.zoneCScore),
+        zoneDScore: parseInt(formData.zoneDScore),
+        metaCuriosityScore: parseInt(formData.metaCuriosityScore),
+        metaSelfRegulationScore: parseInt(formData.metaSelfRegulationScore),
+        metaConfidenceScore: parseInt(formData.metaConfidenceScore),
+        metaCollaborationScore: parseInt(formData.metaCollaborationScore),
+        metaEmotionalAwarenessScore: parseInt(formData.metaEmotionalAwarenessScore),
+      };
+      
+      const res = await apiService.post("/api/admin/guided-observations-procedure", payload);
 
       if (res.success) {
         setMessage({ type: 'success', text: 'Guided observation data saved successfully!' });
@@ -207,8 +264,8 @@ export default function GuidedObservationsProcedurePage() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-6">
             <div className="text-xl font-bold text-slate-900">Examiner Form: Guided Observation</div>
-        <div className="text-sm text-slate-600">Application ID: {params.id}</div>
-      </div>
+            <div className="text-sm text-slate-600">Application ID: {params.id}</div>
+          </div>
 
           {/* Basic Information */}
           <FormSectionHeader title="Basic Information" bgClassName="bg-teal-700" />
@@ -266,7 +323,7 @@ export default function GuidedObservationsProcedurePage() {
               Use a 1–5 scale (1 = emerging, 5 = exemplary) include qualitative notes for each activity they partake in.
             </p>
             
-          <div className="overflow-x-auto">
+            <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-slate-300">
                 <thead>
                   <tr className="bg-slate-50">
@@ -274,8 +331,8 @@ export default function GuidedObservationsProcedurePage() {
                     <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Meta Skills Focused On</th>
                     <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Score (1-5)</th>
                     <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Key Behaviours / Notes</th>
-                </tr>
-              </thead>
+                  </tr>
+                </thead>
                 <tbody>
                   {/* Zone A: Build Something New */}
                   <tr>
@@ -290,13 +347,16 @@ export default function GuidedObservationsProcedurePage() {
                             <input
                               type="radio"
                               value={score}
-                              {...register("zoneAScore", { valueAsNumber: true })}
+                              {...register("zoneAScore")}
                               className="mr-1"
                             />
                             {score}
                           </label>
                         ))}
                       </div>
+                      {errors.zoneAScore && (
+                        <p className="text-red-500 text-sm mt-1">{errors.zoneAScore.message}</p>
+                      )}
                     </td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -305,8 +365,8 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("zoneANotes")}
                         className="w-full"
                       />
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
                   
                   {/* Zone B: Design a Planet */}
                   <tr>
@@ -321,13 +381,16 @@ export default function GuidedObservationsProcedurePage() {
                             <input
                               type="radio"
                               value={score}
-                              {...register("zoneBScore", { valueAsNumber: true })}
+                              {...register("zoneBScore")}
                               className="mr-1"
                             />
                             {score}
                           </label>
                         ))}
                       </div>
+                      {errors.zoneBScore && (
+                        <p className="text-red-500 text-sm mt-1">{errors.zoneBScore.message}</p>
+                      )}
                     </td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -336,8 +399,8 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("zoneBNotes")}
                         className="w-full"
                       />
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
                   
                   {/* Zone C: Sensory Play */}
                   <tr>
@@ -352,13 +415,16 @@ export default function GuidedObservationsProcedurePage() {
                             <input
                               type="radio"
                               value={score}
-                              {...register("zoneCScore", { valueAsNumber: true })}
+                              {...register("zoneCScore")}
                               className="mr-1"
                             />
                             {score}
                           </label>
                         ))}
                       </div>
+                      {errors.zoneCScore && (
+                        <p className="text-red-500 text-sm mt-1">{errors.zoneCScore.message}</p>
+                      )}
                     </td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -367,8 +433,8 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("zoneCNotes")}
                         className="w-full"
                       />
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
                   
                   {/* Zone D: Logic Game */}
                   <tr>
@@ -383,7 +449,7 @@ export default function GuidedObservationsProcedurePage() {
                             <input
                               type="radio"
                               value={score}
-                              {...register("zoneDScore", { valueAsNumber: true })}
+                              {...register("zoneDScore")}
                               className="mr-1"
                             />
                             {score}
@@ -401,15 +467,12 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("zoneDNotes")}
                         className="w-full"
                       />
-                      {errors.zoneDNotes && (
-                        <p className="text-red-500 text-sm mt-1">{errors.zoneDNotes.message}</p>
-                      )}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
 
           {/* Meta Learning Skill Scoring */}
           <FormSectionHeader title="Meta Learning Skill Scoring" bgClassName="bg-teal-700" />
@@ -440,7 +503,7 @@ export default function GuidedObservationsProcedurePage() {
                         <input
                           type="radio"
                           value={score}
-                          {...register("metaCuriosityScore", { valueAsNumber: true })}
+                          {...register("metaCuriosityScore")}
                         />
                       </td>
                     ))}
@@ -462,7 +525,7 @@ export default function GuidedObservationsProcedurePage() {
                         <input
                           type="radio"
                           value={score}
-                          {...register("metaSelfRegulationScore", { valueAsNumber: true })}
+                          {...register("metaSelfRegulationScore")}
                         />
                       </td>
                     ))}
@@ -484,7 +547,7 @@ export default function GuidedObservationsProcedurePage() {
                         <input
                           type="radio"
                           value={score}
-                          {...register("metaConfidenceScore", { valueAsNumber: true })}
+                          {...register("metaConfidenceScore")}
                         />
                       </td>
                     ))}
@@ -506,7 +569,7 @@ export default function GuidedObservationsProcedurePage() {
                         <input
                           type="radio"
                           value={score}
-                          {...register("metaCollaborationScore", { valueAsNumber: true })}
+                          {...register("metaCollaborationScore")}
                         />
                       </td>
                     ))}
@@ -528,7 +591,7 @@ export default function GuidedObservationsProcedurePage() {
                         <input
                           type="radio"
                           value={score}
-                          {...register("metaEmotionalAwarenessScore", { valueAsNumber: true })}
+                          {...register("metaEmotionalAwarenessScore")}
                         />
                       </td>
                     ))}
@@ -543,8 +606,8 @@ export default function GuidedObservationsProcedurePage() {
                   </tr>
                 </tbody>
               </table>
+            </div>
           </div>
-        </div>
 
           {/* Intelligence & Learning Type Check-In */}
           <FormSectionHeader title="Intelligence & Learning Type Check-In" bgClassName="bg-teal-700" />
@@ -590,7 +653,7 @@ export default function GuidedObservationsProcedurePage() {
                           />
                           Strong
                         </label>
-          </div>
+                      </div>
                     </td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -628,7 +691,7 @@ export default function GuidedObservationsProcedurePage() {
                           />
                           Strong
                         </label>
-                </div>
+                      </div>
                     </td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -666,7 +729,7 @@ export default function GuidedObservationsProcedurePage() {
                           />
                           Strong
                         </label>
-                </div>
+                      </div>
                     </td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -704,7 +767,7 @@ export default function GuidedObservationsProcedurePage() {
                           />
                           Strong
                         </label>
-              </div>
+                      </div>
                     </td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -742,7 +805,7 @@ export default function GuidedObservationsProcedurePage() {
                           />
                           Strong
                         </label>
-            </div>
+                      </div>
                     </td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -780,7 +843,7 @@ export default function GuidedObservationsProcedurePage() {
                           />
                           Strong
                         </label>
-                </div>
+                      </div>
                     </td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -818,7 +881,7 @@ export default function GuidedObservationsProcedurePage() {
                           />
                           Strong
                         </label>
-              </div>
+                      </div>
                     </td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -856,7 +919,7 @@ export default function GuidedObservationsProcedurePage() {
                           />
                           Strong
                         </label>
-            </div>
+                      </div>
                     </td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -894,7 +957,7 @@ export default function GuidedObservationsProcedurePage() {
                           />
                           Strong
                         </label>
-              </div>
+                      </div>
                     </td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -907,13 +970,12 @@ export default function GuidedObservationsProcedurePage() {
                   </tr>
                 </tbody>
               </table>
-              </div>
-              </div>
+            </div>
+          </div>
 
           {/* Parent-Child Dynamic Snapshot */}
           <FormSectionHeader title="Parent—Child Dynamic Snapshot" bgClassName="bg-teal-700" />
           <div className="mb-8 mt-3">
-            
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-slate-300">
                 <thead>
@@ -955,7 +1017,7 @@ export default function GuidedObservationsProcedurePage() {
                           />
                           Distant
                         </label>
-          </div>
+                      </div>
                     </td>
                   </tr>
                   
@@ -993,7 +1055,7 @@ export default function GuidedObservationsProcedurePage() {
                         </label>
                       </div>
                     </td>
-                </tr>
+                  </tr>
                   
                   {/* Parent Intervention Style */}
                   <tr>
@@ -1001,23 +1063,23 @@ export default function GuidedObservationsProcedurePage() {
                     <td className="border border-slate-300 p-3">
                       <div className="flex gap-4 text-black">
                         <label className="flex items-center">
-                        <input 
+                          <input 
                             type="radio"
                             value="directive"
                             {...register("parentInterventionStyle")}
                             className="mr-1"
                           />
                           Directive
-                      </label>
+                        </label>
                         <label className="flex items-center">
-                        <input 
+                          <input 
                             type="radio"
                             value="supportive"
                             {...register("parentInterventionStyle")}
                             className="mr-1"
                           />
                           Supportive
-                      </label>
+                        </label>
                         <label className="flex items-center">
                           <input
                             type="radio"
@@ -1082,43 +1144,42 @@ export default function GuidedObservationsProcedurePage() {
                       />
                     </td>
                   </tr>
-              </tbody>
-            </table>
-          </div>
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {/* Examiner Final Comments */}
           <FormSectionHeader title="Examiner Final Comments (Qualitative)" bgClassName="bg-teal-700" />
           <div className="mb-8 mt-3">
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
-            <FormField label="Most engaged zone" htmlFor="mostEngagedZone">
+                <FormField label="Most engaged zone" htmlFor="mostEngagedZone">
                   <Textarea 
                     rows={3}
                     placeholder="Most engaged zone..."
                     {...register("mostEngagedZone")}
                     className="w-full"
                   />
-            </FormField>
+                </FormField>
                 
-            <FormField label="Dominant observed intelligences" htmlFor="dominantObservedIntelligences">
+                <FormField label="Dominant observed intelligences" htmlFor="dominantObservedIntelligences">
                   <Textarea 
                     rows={3}
                     placeholder="Dominant observed intelligences..."
                     {...register("dominantObservedIntelligences")}
                     className="w-full"
                   />
-            </FormField>
+                </FormField>
                 
-            <FormField label="Initial learning style impressions" htmlFor="initialLearningStyleImpressions">
+                <FormField label="Initial learning style impressions" htmlFor="initialLearningStyleImpressions">
                   <Textarea 
                     rows={3}
                     placeholder="Initial learning style impressions..."
                     {...register("initialLearningStyleImpressions")}
                     className="w-full"
                   />
-            </FormField>
+                </FormField>
               </div>
               
               <div className="space-y-4">
@@ -1129,7 +1190,7 @@ export default function GuidedObservationsProcedurePage() {
                     {...register("earlyFlagsNeedsFollowUp")}
                     className="w-full"
                   />
-            </FormField>
+                </FormField>
                 
                 <FormField label="Self-directed vs. seeking guidance" htmlFor="selfDirectedVsSeekingGuidance">
                   <Textarea 
@@ -1138,7 +1199,7 @@ export default function GuidedObservationsProcedurePage() {
                     {...register("selfDirectedVsSeekingGuidance")}
                     className="w-full"
                   />
-            </FormField>
+                </FormField>
                 
                 <FormField label="Flag Indicators" htmlFor="flagIndicators">
                   <div className="text-sm text-slate-600 mb-2">
@@ -1146,7 +1207,7 @@ export default function GuidedObservationsProcedurePage() {
                     <strong>T</strong> - Technology discomfort<br/>
                     <strong>C</strong> - Confidence/independence concerns<br/>
                     <strong>E</strong> - Exceptional performance in specific area
-          </div>
+                  </div>
                   <Textarea 
                     rows={3}
                     placeholder="Flag indicators..."
@@ -1154,7 +1215,7 @@ export default function GuidedObservationsProcedurePage() {
                     className="w-full"
                   />
                 </FormField>
-          </div>
+              </div>
             </div>
             
             <div className="mt-6">
@@ -1165,22 +1226,21 @@ export default function GuidedObservationsProcedurePage() {
                   {...register("additionalNotes")}
                   className="w-full"
                 />
-            </FormField>
-          </div>
+              </FormField>
+            </div>
           </div>
 
           {/* Interaction Summary */}
           <FormSectionHeader title="Interaction Summary" bgClassName="bg-teal-700" />
           <div className="mb-8 mt-3">
-            
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-slate-300">
                 <thead>
                   <tr className="bg-slate-50">
                     <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Domain</th>
                     <th className="border border-slate-300 p-3 text-left font-semibold text-gray-900">Observation / Notes</th>
-                </tr>
-              </thead>
+                  </tr>
+                </thead>
                 <tbody>
                   <tr>
                     <td className="border border-slate-300 p-3 font-medium text-gray-900">Preferred Zone</td>
@@ -1191,9 +1251,9 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("preferredZone")}
                         className="w-full"
                       />
-                  </td>
-                </tr>
-                <tr>
+                    </td>
+                  </tr>
+                  <tr>
                     <td className="border border-slate-300 p-3 font-medium text-gray-900">Initial Behaviour (entering space)</td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -1202,9 +1262,9 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("initialBehaviour")}
                         className="w-full"
                       />
-                  </td>
-                </tr>
-                <tr>
+                    </td>
+                  </tr>
+                  <tr>
                     <td className="border border-slate-300 p-3 font-medium text-gray-900">Child's openness to adult guidance</td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -1213,9 +1273,9 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("opennessToAdultGuidance")}
                         className="w-full"
                       />
-                  </td>
-                </tr>
-                <tr>
+                    </td>
+                  </tr>
+                  <tr>
                     <td className="border border-slate-300 p-3 font-medium text-gray-900">Most revealing activity and why</td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -1224,9 +1284,9 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("mostRevealingActivity")}
                         className="w-full"
                       />
-                  </td>
-                </tr>
-                <tr>
+                    </td>
+                  </tr>
+                  <tr>
                     <td className="border border-slate-300 p-3 font-medium text-gray-900">Cross-reference with Step 5 observations</td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -1235,9 +1295,9 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("crossReferenceStep5")}
                         className="w-full"
                       />
-                  </td>
-                </tr>
-                <tr>
+                    </td>
+                  </tr>
+                  <tr>
                     <td className="border border-slate-300 p-3 font-medium text-gray-900">Curiosity and exploration</td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -1246,9 +1306,9 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("curiosityAndExploration")}
                         className="w-full"
                       />
-                  </td>
-                </tr>
-                <tr>
+                    </td>
+                  </tr>
+                  <tr>
                     <td className="border border-slate-300 p-3 font-medium text-gray-900">Focus and attention span</td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -1257,9 +1317,9 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("focusAndAttentionSpan")}
                         className="w-full"
                       />
-                  </td>
-                </tr>
-                <tr>
+                    </td>
+                  </tr>
+                  <tr>
                     <td className="border border-slate-300 p-3 font-medium text-gray-900">Engagement with adult direction</td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -1268,9 +1328,9 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("engagementWithAdultDirection")}
                         className="w-full"
                       />
-                  </td>
-                </tr>
-                <tr>
+                    </td>
+                  </tr>
+                  <tr>
                     <td className="border border-slate-300 p-3 font-medium text-gray-900">Resilience in challenge</td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -1279,9 +1339,9 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("resilienceInChallenge")}
                         className="w-full"
                       />
-                  </td>
-                </tr>
-                <tr>
+                    </td>
+                  </tr>
+                  <tr>
                     <td className="border border-slate-300 p-3 font-medium text-gray-900">Emotion regulation signals</td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -1290,9 +1350,9 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("emotionRegulationSignals")}
                         className="w-full"
                       />
-                  </td>
-                </tr>
-                <tr>
+                    </td>
+                  </tr>
+                  <tr>
                     <td className="border border-slate-300 p-3 font-medium text-gray-900">Notes on Caregiver Interaction Style</td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -1301,9 +1361,9 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("caregiverInteractionStyle")}
                         className="w-full"
                       />
-                  </td>
-                </tr>
-                <tr>
+                    </td>
+                  </tr>
+                  <tr>
                     <td className="border border-slate-300 p-3 font-medium text-gray-900">Recommendations for support or follow-up</td>
                     <td className="border border-slate-300 p-3">
                       <Textarea 
@@ -1312,22 +1372,11 @@ export default function GuidedObservationsProcedurePage() {
                         {...register("recommendationsForSupport")}
                         className="w-full"
                       />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-            
-            <div className="mt-6">
-              <FormField label="Additional Notes" htmlFor="additionalNotes">
-                <Textarea 
-                  rows={4}
-                  placeholder="Additional notes..."
-                  {...register("additionalNotes")}
-                  className="w-full"
-                />
-            </FormField>
-          </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {message && (
@@ -1336,7 +1385,7 @@ export default function GuidedObservationsProcedurePage() {
             </div>
           )}
 
-        <div className="flex items-center justify-end gap-3">
+          <div className="flex items-center justify-end gap-3">
             <button 
               type="submit"
               disabled={saving}
@@ -1344,8 +1393,8 @@ export default function GuidedObservationsProcedurePage() {
             >
               {saving ? 'Saving...' : 'Save & Continue'}
             </button>
-        </div>
-      </form>
+          </div>
+        </form>
       </div>
     </div>
   );

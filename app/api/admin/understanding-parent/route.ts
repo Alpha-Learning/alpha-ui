@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
+import { updateApplicationStatus } from "@/app/utils/applicationStatus";
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,6 +34,18 @@ export async function POST(request: NextRequest) {
     const record = existing
       ? await prisma.understandingParent.update({ where: { applicationId }, data: payload })
       : await prisma.understandingParent.create({ data: { applicationId, ...payload } });
+
+    // Mark Understanding Parent as completed and advance stage to 8
+    await prisma.application.update({ 
+      where: { id: applicationId }, 
+      data: { 
+        currentStage: 8,
+        isEighthFormCompleted: true
+      } 
+    });
+
+    // Update application status based on all form completions
+    await updateApplicationStatus(applicationId, prisma);
 
     return NextResponse.json({ success: true, data: record });
   } catch (error) {

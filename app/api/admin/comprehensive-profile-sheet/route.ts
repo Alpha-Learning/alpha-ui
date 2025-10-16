@@ -367,12 +367,12 @@ export async function POST(request: NextRequest) {
       record = await prisma.comprehensiveProfileSheet.create({ data: { applicationId, ...payload } });
     }
 
-    // Mark Comprehensive Profile Sheet as completed and advance stage to 10
+    // Mark Comprehensive Profile Sheet as completed and advance stage to 9
     await prisma.application.update({ 
       where: { id: applicationId }, 
       data: { 
-        currentStage: 10,
-        isTenthFormCompleted: true
+        currentStage: 9,
+        isNinthFormCompleted: true
       } 
     });
 

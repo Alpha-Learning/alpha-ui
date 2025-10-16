@@ -237,12 +237,12 @@ export async function POST(request: NextRequest) {
       record = await prisma.parentChildDynamicObservation.create({ data: { applicationId, ...payload } });
     }
 
-    // Mark Parent-Child Dynamic Observation as completed and advance stage to 9
+    // Mark Parent-Child Dynamic Observation as completed and advance stage to 6
     await prisma.application.update({ 
       where: { id: applicationId }, 
       data: { 
-        currentStage: 9,
-        isNinthFormCompleted: true
+        currentStage: 6,
+        isSixthFormCompleted: true
       } 
     });
 

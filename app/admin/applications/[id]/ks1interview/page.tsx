@@ -1013,7 +1013,7 @@ export default function KS1InterviewQuestionsPage() {
         </section>
 
         {/* Office Use Only */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
+        {/* <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
             title="Office Use Only"
             bgClassName="bg-teal-700"
@@ -1044,7 +1044,7 @@ export default function KS1InterviewQuestionsPage() {
               <Input id="loggedBy" {...register("loggedBy")} />
             </FormField>
           </div>
-        </section>
+        </section> */}
 
         {/* Submit Button */}
         <div className="flex justify-end">

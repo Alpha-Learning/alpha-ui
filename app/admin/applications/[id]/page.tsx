@@ -168,7 +168,7 @@ function Stage7Dropdown({ applicationId, isCompleted, stageTitle }: {
               ? 'bg-green-500 text-white' 
               : 'bg-gray-300 text-gray-600'
           }`}>
-            {isCompleted ? '✓' : '7'}
+            {isCompleted ? '✓' : '5'}
           </div>
           <div className={`w-3 h-3 rounded-full ${
             isCompleted ? 'bg-green-500' : 'bg-gray-300'
@@ -234,7 +234,6 @@ type AppDetail = {
   paymentAmount?: number | null;
   paidAt?: string | null;
   currentStage: number;
-  totalStages: number;
   // Form completion status
   isFirstFormCompleted?: boolean;
   isSecondFormCompleted?: boolean;
@@ -290,14 +289,14 @@ export default function AdminApplicationDetailPage() {
     data.isNinthFormCompleted,
   ];
   const completedCount = completionFields.filter(Boolean).length;
-  const pct = Math.round((completedCount / data.totalStages) * 100);
+  const pct = Math.round((completedCount / 9) * 100);
   
   const stageTitles = [
     "1. Application form",
     "2. Screening call and flow script",
     "3. Parent/Guardian/Outsider question",
     "4. Initial observation form",
-    "5. KS1 interview / KS2 interview question",
+    "5. KS1 interview / KS2 interview / Guided Observation Procedure",
     "6. Parent-Child Dynamic Observation",
     "7. Examiner Form: Peer Dynamic Observation",
     "8. Understanding The Parent",
@@ -374,7 +373,7 @@ export default function AdminApplicationDetailPage() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-900">Application Progress</h2>
             <div className="text-sm text-gray-600">
-              {completedCount} of {data.totalStages} stages completed
+              {completedCount} of 9 stages completed
             </div>
           </div>
           
@@ -408,7 +407,7 @@ export default function AdminApplicationDetailPage() {
               <div className="text-sm text-green-700">Completed</div>
             </div>
             <div className="text-center p-4 bg-yellow-50 rounded-lg">
-              <div className="text-2xl font-bold text-yellow-600">{data.totalStages - completedCount}</div>
+              <div className="text-2xl font-bold text-yellow-600">{9 - completedCount}</div>
               <div className="text-sm text-yellow-700">Remaining</div>
             </div>
             <div className="text-center p-4 bg-blue-50 rounded-lg">

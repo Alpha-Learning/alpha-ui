@@ -310,11 +310,17 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Check if all three Stage 5 forms are completed (KS1, KS2, and Guided Observation Procedure)
+    const ks1Form = await prisma.kS1InterviewQuestions.findUnique({ where: { applicationId } });
+    const ks2Form = await prisma.kS2InterviewQuestions.findUnique({ where: { applicationId } });
+    const isStage5Complete = !!(ks1Form && ks2Form); // All three forms must exist
+    
     // Update application current stage to 5 and mark guided observation as completed
     await prisma.application.update({
       where: { id: applicationId },
       data: { 
-        isFifthFormCompleted: true
+        // currentStage: 5,
+        isFifthFormCompleted: isStage5Complete
       }
     });
 

@@ -8,31 +8,31 @@ export const guidedObservationSchema = z.object({
   examiner: z.string().min(1, "Examiner is required"),
   
   // Guided Activity Ratings Grid - Zone A: Build Something New
-  zoneAScore: z.number().min(1).max(5),
+  zoneAScore: z.string().min(1, "Zone A score is required"),
   zoneANotes: z.string().optional(),
   
   // Guided Activity Ratings Grid - Zone B: Design a Planet
-  zoneBScore: z.number().min(1).max(5),
+  zoneBScore: z.string().min(1, "Zone B score is required"),
   zoneBNotes: z.string().optional(),
   
   // Guided Activity Ratings Grid - Zone C: Sensory Play
-  zoneCScore: z.number().min(1).max(5),
+  zoneCScore: z.string().min(1, "Zone C score is required"),
   zoneCNotes: z.string().optional(),
   
   // Guided Activity Ratings Grid - Zone D: Logic Game
-  zoneDScore: z.number().min(1).max(5),
+  zoneDScore: z.string().min(1, "Zone D score is required"),
   zoneDNotes: z.string().optional(),
   
   // Meta Learning Skill Scoring
-  metaCuriosityScore: z.number().min(1).max(5),
+  metaCuriosityScore: z.string().min(1, "Meta curiosity score is required"),
   metaCuriosityNotes: z.string().optional(),
-  metaSelfRegulationScore: z.number().min(1).max(5),
+  metaSelfRegulationScore: z.string().min(1, "Meta self-regulation score is required"),
   metaSelfRegulationNotes: z.string().optional(),
-  metaConfidenceScore: z.number().min(1).max(5),
+  metaConfidenceScore: z.string().min(1, "Meta confidence score is required"),
   metaConfidenceNotes: z.string().optional(),
-  metaCollaborationScore: z.number().min(1).max(5),
+  metaCollaborationScore: z.string().min(1, "Meta collaboration score is required"),
   metaCollaborationNotes: z.string().optional(),
-  metaEmotionalAwarenessScore: z.number().min(1).max(5),
+  metaEmotionalAwarenessScore: z.string().min(1, "Meta emotional awareness score is required"),
   metaEmotionalAwarenessNotes: z.string().optional(),
   
   // Intelligence & Learning Type Check-In

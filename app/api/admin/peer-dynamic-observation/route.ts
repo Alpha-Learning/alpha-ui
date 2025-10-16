@@ -225,12 +225,12 @@ export async function POST(request: NextRequest) {
       record = await prisma.peerDynamicObservation.create({ data: { applicationId, ...payload } });
     }
 
-    // Mark Peer Dynamic Observation as completed and advance stage to 8
+    // Mark Peer Dynamic Observation as completed and advance stage to 7
     await prisma.application.update({ 
       where: { id: applicationId }, 
       data: { 
-        currentStage: 8,
-        isEighthFormCompleted: true
+        currentStage: 7,
+        isSeventhFormCompleted: true
       } 
     });
 

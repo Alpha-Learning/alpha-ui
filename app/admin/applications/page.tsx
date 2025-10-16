@@ -28,7 +28,6 @@ type AdminApp = {
   isSeventhFormCompleted?: boolean;
   isEighthFormCompleted?: boolean;
   isNinthFormCompleted?: boolean;
-  isTenthFormCompleted?: boolean;
   // Individual questionnaire completion flags
   isParentGuardianFormCompleted?: boolean;
   isCaregiverFormCompleted?: boolean;
@@ -114,7 +113,6 @@ export default function AdminApplicationsPage() {
           { name: "Form 7", completed: row.isSeventhFormCompleted },
           { name: "Form 8", completed: row.isEighthFormCompleted },
           { name: "Form 9", completed: row.isNinthFormCompleted },
-          { name: "Form 10", completed: row.isTenthFormCompleted },
         ];
         
         const completedCount = completedForms.filter(f => f.completed).length;

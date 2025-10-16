@@ -263,12 +263,12 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Update application current stage to 5 and mark initial observation form as completed
+    // Update application current stage to 4 and mark initial observation form as completed
     await prisma.application.update({
       where: { id: applicationId },
       data: { 
-        // currentStage: 5,
-        isFifthFormCompleted: true
+        // currentStage: 4,
+        isFourthFormCompleted: true
       }
     });
 
