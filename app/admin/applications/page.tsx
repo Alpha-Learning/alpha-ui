@@ -100,87 +100,87 @@ export default function AdminApplicationsPage() {
       ),
       width: "110px",
     },
-    {
-      name: "Forms",
-      cell: (row) => {
-        const completedForms = [
-          { name: "Form 1", completed: row.isFirstFormCompleted },
-          { name: "Form 2", completed: row.isSecondFormCompleted },
-          { name: "Form 3", completed: row.isThirdFormCompleted },
-          { name: "Form 4", completed: row.isFourthFormCompleted },
-          { name: "Form 5", completed: row.isFifthFormCompleted },
-          { name: "Form 6", completed: row.isSixthFormCompleted },
-          { name: "Form 7", completed: row.isSeventhFormCompleted },
-          { name: "Form 8", completed: row.isEighthFormCompleted },
-          { name: "Form 9", completed: row.isNinthFormCompleted },
-        ];
+    // {
+    //   name: "Forms",
+    //   cell: (row) => {
+    //     const completedForms = [
+    //       { name: "Form 1", completed: row.isFirstFormCompleted },
+    //       { name: "Form 2", completed: row.isSecondFormCompleted },
+    //       { name: "Form 3", completed: row.isThirdFormCompleted },
+    //       { name: "Form 4", completed: row.isFourthFormCompleted },
+    //       { name: "Form 5", completed: row.isFifthFormCompleted },
+    //       { name: "Form 6", completed: row.isSixthFormCompleted },
+    //       { name: "Form 7", completed: row.isSeventhFormCompleted },
+    //       { name: "Form 8", completed: row.isEighthFormCompleted },
+    //       { name: "Form 9", completed: row.isNinthFormCompleted },
+    //     ];
         
-        const completedCount = completedForms.filter(f => f.completed).length;
-        const totalCount = completedForms.length;
-        const progressPercentage = Math.round((completedCount / totalCount) * 100);
+    //     const completedCount = completedForms.filter(f => f.completed).length;
+    //     const totalCount = completedForms.length;
+    //     const progressPercentage = Math.round((completedCount / totalCount) * 100);
         
-        return (
-          <div className="min-w-[120px]">
-            {/* Progress Header */}
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold text-gray-900">
-                {completedCount}/{totalCount}
-              </span>
-              <span className="text-xs text-gray-500 font-medium">
-                {progressPercentage}%
-              </span>
-            </div>
+    //     return (
+    //       <div className="min-w-[120px]">
+    //         {/* Progress Header */}
+    //         <div className="flex items-center justify-between mb-2">
+    //           <span className="text-sm font-semibold text-gray-900">
+    //             {completedCount}/{totalCount}
+    //           </span>
+    //           <span className="text-xs text-gray-500 font-medium">
+    //             {progressPercentage}%
+    //           </span>
+    //         </div>
             
-            {/* Progress Bar */}
-            <div className="w-full bg-gray-200 rounded-full h-2 mb-2 overflow-hidden">
-              <div 
-                className={`h-2 rounded-full transition-all duration-300 W-[${progressPercentage}%] ${
-                  progressPercentage === 100 
-                    ? 'bg-green-500' 
-                    : progressPercentage >= 70 
-                    ? 'bg-blue-500' 
-                    : progressPercentage >= 40 
-                    ? 'bg-yellow-500' 
-                    : 'bg-red-500'
-                } ${progressPercentage > 0 ? 'min-w-1' : ''}`}
-                // style={{ width: `${progressPercentage}%` }}
-              ></div>
-            </div>
+    //         {/* Progress Bar */}
+    //         <div className="w-full bg-gray-200 rounded-full h-2 mb-2 overflow-hidden">
+    //           <div 
+    //             className={`h-2 rounded-full transition-all duration-300 W-[${progressPercentage}%] ${
+    //               progressPercentage === 100 
+    //                 ? 'bg-green-500' 
+    //                 : progressPercentage >= 70 
+    //                 ? 'bg-blue-500' 
+    //                 : progressPercentage >= 40 
+    //                 ? 'bg-yellow-500' 
+    //                 : 'bg-red-500'
+    //             } ${progressPercentage > 0 ? 'min-w-1' : ''}`}
+    //             // style={{ width: `${progressPercentage}%` }}
+    //           ></div>
+    //         </div>
             
-            {/* Form Status Grid */}
-            <div className="grid grid-cols-5 gap-1">
-              {completedForms.map((form, index) => (
-                <div
-                  key={index}
-                  className={`w-4 h-4 rounded-sm flex items-center justify-center text-xs font-bold ${
-                    form.completed
-                      ? 'bg-green-100 text-green-700 border border-green-300'
-                      : 'bg-gray-100 text-gray-400 border border-gray-300'
-                  }`}
-                  title={`${form.name}: ${form.completed ? 'Completed' : 'Pending'}`}
-                >
-                  {form.completed ? '✓' : index + 1}
-                </div>
-              ))}
-            </div>
+    //         {/* Form Status Grid */}
+    //         <div className="grid grid-cols-5 gap-1">
+    //           {completedForms.map((form, index) => (
+    //             <div
+    //               key={index}
+    //               className={`w-4 h-4 rounded-sm flex items-center justify-center text-xs font-bold ${
+    //                 form.completed
+    //                   ? 'bg-green-100 text-green-700 border border-green-300'
+    //                   : 'bg-gray-100 text-gray-400 border border-gray-300'
+    //               }`}
+    //               title={`${form.name}: ${form.completed ? 'Completed' : 'Pending'}`}
+    //             >
+    //               {form.completed ? '✓' : index + 1}
+    //             </div>
+    //           ))}
+    //         </div>
             
-            {/* Status Text */}
-            <div className="mt-1 text-xs text-gray-600">
-              {progressPercentage === 100 ? (
-                <span className="text-green-600 font-medium">All Complete</span>
-              ) : progressPercentage >= 70 ? (
-                <span className="text-blue-600 font-medium">Almost Done</span>
-              ) : progressPercentage >= 40 ? (
-                <span className="text-yellow-600 font-medium">In Progress</span>
-              ) : (
-                <span className="text-red-600 font-medium">Getting Started</span>
-              )}
-            </div>
-          </div>
-        );
-      },
-      width: "150px",
-    },
+    //         {/* Status Text */}
+    //         <div className="mt-1 text-xs text-gray-600">
+    //           {progressPercentage === 100 ? (
+    //             <span className="text-green-600 font-medium">All Complete</span>
+    //           ) : progressPercentage >= 70 ? (
+    //             <span className="text-blue-600 font-medium">Almost Done</span>
+    //           ) : progressPercentage >= 40 ? (
+    //             <span className="text-yellow-600 font-medium">In Progress</span>
+    //           ) : (
+    //             <span className="text-red-600 font-medium">Getting Started</span>
+    //           )}
+    //         </div>
+    //       </div>
+    //     );
+    //   },
+    //   width: "150px",
+    // },
     { name: "Comment", selector: row => row.adminComment ?? "" },
     {
       name: "Actions",
