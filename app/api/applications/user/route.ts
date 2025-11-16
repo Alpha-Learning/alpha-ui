@@ -102,7 +102,7 @@ export async function GET(req: Request) {
     // Combine applications and requests
     const allItems = [
       ...transformedApplications,
-      ...userRequests.map(req => ({
+      ...userRequests.map((req:any) => ({
         id: req.id,
         parentFullName: "", // Not applicable for requests
         parentEmail: "",
