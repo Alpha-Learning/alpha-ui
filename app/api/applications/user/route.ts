@@ -81,7 +81,7 @@ export async function GET(req: Request) {
     });
 
     // Transform applications to match expected format
-    const transformedApplications = applications.map(app => ({
+    const transformedApplications = applications.map((app:any) => ({
       id: app.id,
       parentFullName: app.parentFullName,
       parentEmail: app.parentEmail,
