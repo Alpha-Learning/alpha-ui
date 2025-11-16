@@ -17,6 +17,7 @@ const schema = z.object({
   parentEmail: z.string().email("Invalid email format"),
   parentPhone: z.string().min(1, "Phone number is required"),
   parentOccupation: z.string().optional(),
+  relationToChild: z.string().optional(),
   parentCity: z.string().min(1, "City/Location is required"),
   parentEthnicity: z.string().min(1, "Ethnicity is required"),
 
@@ -158,6 +159,9 @@ function PreAssessmentInner() {
                       </FormField>
                       <FormField label="Occupation (optional)" htmlFor="parentOccupation" error={errors.parentOccupation as any}>
                         <Input id="parentOccupation" placeholder="e.g., Engineer, Teacher" {...register("parentOccupation")} error={!!(errors as any).parentOccupation} />
+                      </FormField>
+                      <FormField label="Relation to Child (optional)" htmlFor="relationToChild" error={errors.relationToChild}>
+                        <Input id="relationToChild" placeholder="e.g., Mother, Father, Guardian" {...register("relationToChild")} error={!!errors.relationToChild} />
                       </FormField>
                       <FormField label="City/Location" htmlFor="parentCity" error={errors.parentCity}>
                         <Input id="parentCity" placeholder="Manama" {...register("parentCity")} error={!!errors.parentCity} />
