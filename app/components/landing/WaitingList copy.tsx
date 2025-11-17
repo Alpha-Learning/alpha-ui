@@ -373,247 +373,151 @@ export default function WaitingList() {
     </div>
   </div>
 </div>  
-
-<motion.div
-  className="relative w-full h-[390px] sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden rounded-b-2xl shadow-md"
-  initial={{ opacity: 0, y: -30 }}
+        {/*  UTL Section  */}
+      <motion.section
+  initial={{ opacity: 0, y: 60 }}
   whileInView={{ opacity: 1, y: 0 }}
   viewport={{ once: false, amount: 0.3 }}
-  transition={{ duration: 0.6 }}
+  transition={{ duration: 0.7, ease: "easeOut" }}
+  className="bg-[#EFEDCD] py-16 sm:py-20 md:py-24 text-[#004AAD] shadow-[0_8px_16px_rgba(0,74,173,0.3)] relative z-10"
 >
-  <img
-    src="/waitlist3.jpg"
-    alt="Alphera Academy Banner"
-    className="w-full h-full object-cover"
-  />
-  <div className="absolute inset-0 bg-gradient-to-b from-[#00000025] to-transparent"></div>
-</motion.div>
+  <div className="w-full px-6 sm:px-10">
 
-{/* Who Finds Home at Alphera Section */}
-<div className="relative w-full h-[457px] overflow-hidden pl-[159px] bg-[#d8efcd]">
-  <div className="mb-6">
-    <h2
-      className="text-[#004AAD] text-left text-[47px] font-normal relative h-[67px] flex items-center justify-start"
-      style={{ 
-        fontFamily: "Foco, sans-serif", 
-        fontStyle: "normal", 
-        lineHeight: "normal",
-        transformOrigin: "0 0",
-        transform: "rotate(-90deg) scale(1, 1)",
-      }}
-    >
-      WHO FINDS HOME AT ALPHERA
-    </h2>
-  </div>
-  <div className="flex flex-col font-[Foco] sm:flex-row gap-6 px-6 flex-wrap mb-20">
+    {/* Top Row */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-12">
+
+      {/* Left Content */}
+      <motion.div
+        initial={{ opacity: 0, x: -40 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: false, amount: 0.3 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="text-center md:text-left"
+      >
+        <h2
+          className="text-3xl font-semibold mb-4"
+          style={{
+            fontFamily: "foco, sans-serif",
+            fontSize: "47px",
+            fontStyle: "normal",
+            fontWeight: "400",
+            lineHeight: "normal",
+            color: "#004AAD",
+          }}
+        >
+          UTL – Understanding the Learner Process
+        </h2>
+
+        <p
+          className="text-[#192951] text-lg leading-relaxed"
+          style={{
+            fontFamily: "foco, sans-serif",
+            fontSize: "24px",
+            fontStyle: "normal",
+            fontWeight: "400",
+            lineHeight: "normal",
+            color: "#004AAD",
+          }}
+        >
+          Before joining, each learner completes a UTL session that helps us
+          understand their learning style, strengths, and aspirations — forming
+          the foundation of their personalised journey.
+        </p>
+      </motion.div>
+
+      {/* Right Image */}
+      <motion.div
+        initial={{ opacity: 0, x: 40 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: false, amount: 0.3 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="w-full flex justify-center md:justify-end"
+      >
+        <div
+          className="rounded-xl overflow-hidden w-[280px] sm:w-[320px] md:w-[406px] h-[200px] sm:h-[220px] md:h-[271px]"
+          style={{ boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)" }}
+        >
+          <img
+            src="/waitlist3.jpg"
+            alt="UTL process"
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </motion.div>
+    </div>
+
+    {/* Bottom Cards */}
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, amount: 0.3 }}
-      transition={{ duration: 0.6 }}
-      className="text-[#004AAD] text-left relative h-[267px]"
-      style={{
-        transformOrigin: "0 0",
-        transform: "rotate(-90deg) scale(1, 1)",
-        fontFamily: "Foco, sans-serif",
-        fontSize: "16px",
-        fontStyle: "normal",
-        fontWeight: "400",
-        lineHeight: "normal",
-        color: "#004AAD",
-      }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+      className="grid grid-cols-1 md:grid-cols-2 gap-8"
     >
-      <span>
-        <span
+
+      {/* Acceptance Card */}
+      <div
+        className="bg-gradient-to-r from-[#2673DB] to-[#004AAD] text-white rounded-2xl shadow-md px-8 py-10 w-full"
+        style={{ fontFamily: "foco, sans-serif" }}
+      >
+        <h3
           style={{
-            fontFamily: "Foco, sans-serif",
-            fontSize: "16px",
-            fontStyle: "normal",
+            color: "#FFFF",
+            fontFamily: "Foco",
+            fontSize: "47px",
             fontWeight: "400",
-            lineHeight: "normal",
-            color: "#004AAD",
           }}
+          className="mb-3"
         >
-          We serve families who believe: 
-          <br />
-        </span>
-        <ul 
-          style={{ 
-            listStyleType: "disc",
-            paddingLeft: "20px",
-            margin: 0,
-            marginTop: "0.25rem",
-            marginBottom: "0.25rem",
-          }}
-        >
-          <li style={{ marginBottom: "0.125rem" }}>
-            <span
-              style={{
-                fontFamily: "Foco, sans-serif",
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: "400",
-                lineHeight: "normal",
-                color: "#004AAD",
-              }}
-            >
-              Children learn best through relationships and real experiences, not self-abandonment and conformity 
-            </span>
-          </li>
-          <li style={{ marginBottom: "0.125rem" }}>
-            <span
-              style={{
-                fontFamily: "Foco, sans-serif",
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: "400",
-                lineHeight: "normal",
-                color: "#004AAD",
-              }}
-            >
-              Small learning communities allow children to be fully known and supported, and to see the value in their contributions. 
-            </span>
-          </li>
-          <li style={{ marginBottom: "0.125rem" }}>
-            <span
-              style={{
-                fontFamily: "Foco, sans-serif",
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: "400",
-                lineHeight: "normal",
-                color: "#004AAD",
-              }}
-            >
-              Character development matters as much as academic achievement. 
-            </span>
-          </li>
-          <li style={{ marginBottom: "0.125rem" }}>
-            <span
-              style={{
-                fontFamily: "Foco, sans-serif",
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: "400",
-                lineHeight: "normal",
-                color: "#004AAD",
-              }}
-            >
-              Technology should serve human learning and innovation, never control or determine it. 
-            </span>
-          </li>
-          <li style={{ marginBottom: "0.125rem" }}>
-            <span
-              style={{
-                fontFamily: "Foco, sans-serif",
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: "400",
-                lineHeight: "normal",
-                color: "#004AAD",
-              }}
-            >
-              Education should honor how children were inherently designed to grow and discover. 
-            </span>
-          </li>
-        </ul>
-        <span
+          Acceptance
+        </h3>
+
+        <p
           style={{
-            fontFamily: "Foco, sans-serif",
-            fontSize: "16px",
-            fontStyle: "normal",
+            color: "#82B3B4",
+            fontFamily: "Foco",
+            fontSize: "24px",
             fontWeight: "400",
-            lineHeight: "normal",
-            color: "#004AAD",
-            marginTop: "0.25rem",
           }}
         >
-          <br />
-        </span>
-        <span
+          Successful applicants receive an official offer and a tailored
+          learning profile to begin their Alphera journey.
+        </p>
+      </div>
+
+      {/* Fees Card */}
+      <div
+        className="bg-gradient-to-r from-[#2673DB] to-[#004AAD] text-white rounded-2xl shadow-md px-8 py-10 w-full"
+        style={{ fontFamily: "foco, sans-serif" }}
+      >
+        <h3
           style={{
-            fontFamily: "Foco, sans-serif",
-            fontSize: "16px",
-            fontStyle: "normal",
+            color: "#FFFF",
+            fontFamily: "Foco",
+            fontSize: "47px",
             fontWeight: "400",
-            lineHeight: "normal",
-            color: "#004AAD",
+          }}
+          className="mb-3"
+        >
+          Fees
+        </h3>
+
+        <p
+          style={{
+            color: "#82B3B4",
+            fontFamily: "Foco",
+            fontSize: "24px",
+            fontWeight: "400",
           }}
         >
-          We might not be right for families seeking: 
-          <br />
-        </span>
-        <ul 
-          style={{ 
-            listStyleType: "disc",
-            paddingLeft: "20px",
-            margin: 0,
-            marginTop: "0.25rem",
-            marginBottom: "0.25rem",
-          }}
-        >
-          <li style={{ marginBottom: "0.125rem" }}>
-            <span
-              style={{
-                fontFamily: "Foco, sans-serif",
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: "400",
-                lineHeight: "normal",
-                color: "#004AAD",
-              }}
-            >
-              Large schools with traditional classroom structures. 
-            </span>
-          </li>
-          <li style={{ marginBottom: "0.125rem" }}>
-            <span
-              style={{
-                fontFamily: "Foco, sans-serif",
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: "400",
-                lineHeight: "normal",
-                color: "#004AAD",
-              }}
-            >
-              Technology-driven or primarily online education. 
-            </span>
-          </li>
-          <li style={{ marginBottom: "0.125rem" }}>
-            <span
-              style={{
-                fontFamily: "Foco, sans-serif",
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: "400",
-                lineHeight: "normal",
-                color: "#004AAD",
-              }}
-            >
-              High stakes testing preparation as a primary focus. 
-            </span>
-          </li>
-          <li style={{ marginBottom: "0.125rem" }}>
-            <span
-              style={{
-                fontFamily: "Foco, sans-serif",
-                fontSize: "16px",
-                fontStyle: "normal",
-                fontWeight: "400",
-                lineHeight: "normal",
-                color: "#004AAD",
-              }}
-            >
-              Standardized approaches that treat all children the same way. 
-            </span>
-          </li>
-        </ul>
-      </span>
+          Our tuition structure will be announced prior to launch, reflecting
+          Alphera’s commitment to quality, innovation, and accessibility.
+        </p>
+      </div>
+
     </motion.div>
   </div>
-</div>
-   
+</motion.section>
 
 
       </div>
