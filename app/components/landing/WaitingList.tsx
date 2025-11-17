@@ -427,7 +427,7 @@ export default function WaitingList() {
         <span
           style={{
             fontFamily: "Foco, sans-serif",
-            fontSize: "16px",
+            fontSize: "24px",
             fontStyle: "normal",
             fontWeight: "400",
             lineHeight: "normal",
@@ -533,7 +533,7 @@ export default function WaitingList() {
         <span
           style={{
             fontFamily: "Foco, sans-serif",
-            fontSize: "16px",
+            fontSize: "24px",
             fontStyle: "normal",
             fontWeight: "400",
             lineHeight: "normal",
@@ -609,6 +609,73 @@ export default function WaitingList() {
             </span>
           </li>
         </ul>
+      </span>
+    </motion.div>
+  </div>
+</div>
+<motion.div
+  className="relative w-full h-[390px] sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden rounded-b-2xl shadow-md"
+  initial={{ opacity: 0, y: -30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: false, amount: 0.3 }}
+  transition={{ duration: 0.6 }}
+>
+  <img
+    src="/waitlist4.jpg"
+    alt="Alphera Academy Banner"
+    className="w-full h-full object-cover object-top"
+  />
+  <div className="absolute inset-0 bg-gradient-to-b from-[#00000025] to-transparent"></div>
+</motion.div>
+
+{/* Ready to see learning through your child's eyes again? Section */}
+<div className="relative w-full h-[457px] overflow-visible pl-[159px] bg-[#dadada]">
+  <div className="mb-6 pt-4">
+    <h2
+      className="text-[#004AAD] text-left text-[36px] font-normal relative h-[67px] flex items-center justify-start pl-6 pt-4"
+      style={{ 
+        fontFamily: "Foco, sans-serif", 
+        fontStyle: "normal", 
+        lineHeight: "normal",
+      }}
+    >
+      Ready to see learning through your child's eyes again? 
+    </h2>
+  </div>
+  <div className="flex flex-col font-[Foco] sm:flex-row gap-6 px-6 flex-wrap mb-20">
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.6 }}
+      className="text-[#004AAD] text-left relative h-[267px]"
+      style={{
+        transformOrigin: "0 0",
+        transform: "rotate(-90deg) scale(1, 1)",
+        fontFamily: "Foco, sans-serif",
+        fontSize: "24px",
+        fontStyle: "normal",
+        fontWeight: "400",
+        lineHeight: "normal",
+        color: "#004AAD",
+      }}
+    >
+      <span>
+        Our enrollment process is designed as a conversation; we want to understand
+        your child as a unique individual, and you want to see if Alphera feels right
+        for your family. 
+        <br />
+        <br />
+        No high-pressure sales tactics. Just an honest exploration of whether we can
+        support your child's natural development journey effectively. 
+        <br />
+        <br />
+        Start the conversation → 
+        <br />
+        Limited enrollment ensures every child receives the individual attention that
+        makes authentic learning possible. 
+        <br />
+        <br />
       </span>
     </motion.div>
   </div>

@@ -79,9 +79,7 @@ style={{  fontFamily: "Foco",
           lineHeight: "normal"
  }}
 >
-  A new kind of school where innovation meets purpose. We combine the <br/>
-  best of the British and Arabic curricula with AI-driven personalisation <br/>
-  preparing students not just for exams, but for life.
+  Where learning aligns with human nature
 </span>
 <span
  className="font-[Foco] font-black text-[25px] leading-[100%] tracking-[0%] text-center align-middle "
