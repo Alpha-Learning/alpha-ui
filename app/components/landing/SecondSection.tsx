@@ -54,7 +54,7 @@ const cardVariants: Variants = {
         {/* <div className="max-w-3xl min-h-[400px] mx-auto px-4 sm:px-6 lg:px-8"> */}
         <div>
           <div
-            className="relative w-full h-[390px] sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden mb-16 rounded-b-2xl shadow-md"
+            className="relative w-full h-[390px] sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden shadow-md"
             // initial={{ opacity: 0, y: -30 }}
             // whileInView={{ opacity: 1, y: 0 }}
             // viewport={{ once: true, amount: 0.2 }}
@@ -67,50 +67,155 @@ const cardVariants: Variants = {
             />
             <div className="absolute inset-0 bg-gradient-to-b from-[#00000025] to-transparent h-[431px]"></div>
           </div>
+          {/* HOW A DAY UNFOLDS */}
+          <section className="py-16 sm:py-20 md:py-24">
+  <div className="max-w-6xl mx-auto px-6 sm:px-10">
 
-          {/*  The Journey Section  */}
-          <div className="flex justify-center items-start">
+    {/* Heading + Icon */}
+    <motion.div
+      className="flex items-start gap-4 mb-12"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ amount: 0.3 }}
+      transition={{ duration: 0.6 }}
+    >
+      <img src="/unfoldicon.png" alt="clock icon" className="w-10 h-10 sm:w-14 sm:h-14" />
+
+      <div>
+        <h2
+          className="text-[#004AAD] text-[32px] sm:text-[47px] font-[400] leading-tight"
+          style={{ fontFamily: "Foco" }}
+        >
+          HOW A DAY UNFOLDS
+        </h2>
+
+        <p
+          className="text-[#004AAD] text-[19px] sm:text-[24px] font-[400] leading-tight"
+          style={{ fontFamily: "Foco" }}
+        >
+          Following natural rhythms, not rigid schedules
+        </p>
+      </div>
+    </motion.div>
+
+    {/* Timeline Cards */}
+    {(() => {
+      const colors = [
+        "#F5F5F5",
+        "#E7E7E7",
+        "#D7D7D7",
+        "#C9C9C9",
+        "#C2C1C1",
+        "#B8B8B8",
+        "#AEADAD",
+        "#A5A4A4",
+      ];
+
+      const items = [
+        {
+          time: "8:00",
+          title: "Morning Awakening",
+          desc: "Children arrive and ease into their day through movement, breathing, and setting intentions. No rushed transitions or jarring bells."
+        },
+        {
+          time: "8:30",
+          title: "Core Learning Pod Time",
+          desc: "Math, reading, science, and Arabic, but delivered in ways that match how each child learns best. Some work at tables, others on floor cushions. Some need absolute quiet; others think better with soft background music.\n\nThe Innovative ALS technology\ntracks what's working for each child, but our academic guides make all the decisions about what happens next."
+        },
+        {
+          time: "11:00",
+          title: "Child-Choice Break",
+          desc: "Kids choose how to recharge. Some read quietly. Others run outside. A few keep working because they're in flow. We honor their natural rhythms."
+        },
+        {
+          time: "10:30",
+          title: "Hands-On Discovery",
+          desc: "Real projects that matter. Children might design solutions to school problems, interview elderly community members about local history, or conduct experiments that answer their own questions."
+        },
+        {
+          time: "11:45",
+          title: "Shared Lunch",
+          desc: "Social skills develop naturally over shared meals. Children practice conversation, resolve minor conflicts, and build friendships without adult orchestration."
+        },
+        {
+          time: "12:30",
+          title: "Creative Application",
+          desc: "Morning learning comes alive through art, building, writing, or performance. Children show what they've learned in ways that make sense to them."
+        },
+        {
+          time: "1:30",
+          title: "Connection Time",
+          desc: "One-on-one conversations with mentors, small group discussions, or quiet reflection time. Children process their experiences and plan ahead."
+        },
+        {
+          time: "2:00",
+          title: "Daily Reflection",
+          desc: "What did you discover about yourself today? What are you curious about tomorrow? Children develop the self-awareness that makes lifelong learning possible."
+        },
+      ];
+
+      return items.map((item, index) => (
+        <motion.div
+          key={index}
+          className="p-8 sm:p-10 rounded-[30px]"
+          style={{ backgroundColor: colors[index] }}
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ amount: 0.4 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <div className="flex items-start gap-6">
+            {/* Time */}
             <div
-              className="space-y-8 flex flex-col justify-center text-center lg:text-left"
-              // initial={{ opacity: 0, y: 24 }}
-              // whileInView={{ opacity: 1, y: 0 }}
-              // viewport={{ once: true, amount: 0.2 }}
-              // transition={{ duration: 0.3, ease: "easeOut" }}
+              className="text-[#004AAD] font-[300]"
+              style={{
+                fontFamily: "Foco",
+                fontSize: "20px",
+                lineHeight: "100%",
+                minWidth: "80px"
+              }}
             >
-              <div>
-                <h2
-                  style={{
-                    fontFamily: "Foco",
-                    fontSize: "47px",
-                    fontWeight: 400,
-                    color: "#004AAD",
-                    fontStyle: "normal",
-                    lineHeight: "normal"
-                  }}
-                  
-                  className="text-4xl lg:mb-5 text-center font-medium text-[#222222]"
-                >
-                  The Journey
-                </h2>
+              {item.time}
+            </div>
 
-                <p
-                  style={{ fontFamily: "Foco",
-                    fontSize: "24px",
-                    fontWeight: 400,
-                    color: "#004AAD",
-                    fontStyle: "normal",
-                    lineHeight: "normal"
-                   }}
-                  
-                  className="text-[24px] text-center text-[#004AAD] leading-[1.9] max-w-3xl mx-auto mb-8"
-                >
-                  Every learner follows a personalised journey. Through <br/> continuous
-                  reflection, feedback, and growth, Alphera <br/>tailors learning to
-                  each child’s strengths, goals, and<br/> potential.
-                </p>
-              </div>
+            {/* Text */}
+            <div className="flex-1">
+              <h3
+                className="text-[#004AAD] mb-2"
+                style={{
+                  fontFamily: "Foco",
+                  fontWeight: 400,
+                  fontSize: "24px",
+                  lineHeight: "120%",
+                }}
+              >
+                {item.title}
+              </h3>
+
+              <p
+                className="text-[#004AAD]"
+                style={{
+                  fontFamily: "Foco",
+                  fontWeight: 400,
+                  fontSize: "16px",
+                  lineHeight: "120%",
+                  letterSpacing: "0%",
+                  whiteSpace: "pre-line",
+                }}
+              >
+                {item.desc}
+              </p>
             </div>
           </div>
+        </motion.div>
+      ));
+    })()}
+  </div>
+</section>
+
+
+
+         
           <motion.div
             className="relative w-full h-[390px] sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden shadow-md"
             initial={{ opacity: 0, y: -30 }}
@@ -127,105 +232,182 @@ const cardVariants: Variants = {
           </motion.div>
         </div>
 
-        {/*Experience & Technology Section */}
-        <div className="bg-[#EFEDCD] py-16">
-          <div className="max-w-6xl mx-auto px-6 md:px-8 lg:px-10 space-y-24">
-            {/* Experience */}
-            <motion.div
-              className="flex flex-col md:flex-row items-center md:items-start gap-10"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="flex-1">
-                <h3
-                  className="text-[#004AAD] font-normal mb-4 text-[47px]"
-                  style={{ fontFamily: "Foco",
-                    fontSize: "47px",
-                    fontWeight: 400,
-                    color: "#004AAD",
-                    fontStyle: "normal",
-                    lineHeight: "normal"
-                   }}
-                >
-                  The Experience
-                </h3>
-                <p
-                  className="text-[#004AAD] text-[17px] leading-[1.8] text-[24px]"
-                  style={{ fontFamily: "Foco",
-                    fontSize: "24px",
-                    fontWeight: 400,
-                    color: "#004AAD",
-                    fontStyle: "normal",
-                    lineHeight: "normal" }}
-                >
-                  Learning at Alphera is active, creative, and meaningful.
-                  Students explore real-world challenges, engage in collaborative
-                  projects, and apply their learning in authentic ways.
-                </p>
-              </div>
+       
+     {/* SECTION 1 - TECHNOLOGY WITH PURPOSE */}
+{/* SECTION 1 - TECHNOLOGY WITH PURPOSE */}
+<section className="bg-[#EFEDCD] py-16">
+  <div className="mx-auto px-6 md:px-8 lg:px-10">
+    <motion.div
+      className="flex flex-col md:flex-row items-center md:items-start gap-6"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Text */}
+      <div className="w-full md:w-[60%]">
+        <h3
+          className="text-[#004AAD] font-normal mb-4"
+          style={{
+            fontFamily: "Foco",
+            fontSize: "47px",
+            fontWeight: 400,
+            lineHeight: "normal",
+          }}
+        >
+          TECHNOLOGY WITH PURPOSE
+        </h3>
 
-              <div className="flex-1 flex justify-center md:justify-end">
-                <motion.img
-                  src="/op3.jpg"
-                  alt="Students collaborating"
-                  className="w-[280px] h-[180px] sm:w-[350px] sm:h-[220px] lg:w-[400px] lg:h-[240px] object-cover rounded-lg shadow-md"
-                  style={{borderRadius:"30px"}}   
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 200, damping: 10 }}
-                />
-              </div>
-            </motion.div>
+        <p
+          className="text-[#004AAD] leading-[1.8] mb-6"
+          style={{
+            fontFamily: "Foco",
+            fontSize: "24px",
+            fontWeight: 400,
+            lineHeight: "normal",
+          }}
+        >
+          Smart tools serving human relationships
+        </p>
 
-            {/* Technology */}
-            <motion.div
-              className="flex flex-col md:flex-row-reverse items-center md:items-start gap-10"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <div className="flex-1">
-                <h3
-                  className="text-[#004AAD]  font-normal mb-4 text-[47px]"
-                  style={{ fontFamily: "Foco",
-                    fontSize: "47px",
-                    fontWeight: 400,
-                    color: "#004AAD",
-                    fontStyle: "normal",
-                    lineHeight: "normal" }}
-                >
-                  Technology
-                </h3>
-                <p
-                  className="text-[#004AAD] text-[17px] leading-[1.8] text-[24px]"
-                 style={{ fontFamily: "Foco",
-                    fontSize: "24px",
-                    fontWeight: 400,
-                    color: "#004AAD",
-                    fontStyle: "normal",
-                    lineHeight: "normal"}}
-                >
-                  Our AI-powered Alphera Learning System (ASLS) integrates academic
-                  data, emotional feedback, and progress tracking to shape each
-                  learner’s pathway in real time.
-                </p>
-              </div>
+        <p
+          className="text-[#004AAD] leading-[1.8] mb-6"
+          style={{
+            fontFamily: "Foco",
+            fontSize: "16px",
+            fontWeight: 400,
+            lineHeight: "normal",
+          }}
+        >
+          Our ALS learning system quietly observes each child when they're most
+          focused, what frustrates them, and how they prefer to learn. This helps
+          academic guides understand each child more completely. But here's what
+          technology never does at Alphera:
+        </p>
 
-              <div className="flex-1 flex justify-center md:justify-start">
-                <motion.img
-                  src="/op4.png"
-                  alt="AI-powered Alphera Learning System"
-                  className="w-[373px] h-[254px] sm:w-[350px] sm:h-[220px] lg:w-[400px] lg:h-[240px] object-cover rounded-lg shadow-md"
-                  style={{borderRadius:"30px"}}
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 200, damping: 10 }}
-                />
-              </div>
-            </motion.div>
-          </div>
-        </div>
+        {/* Bullet List */}
+        <ul
+          className="list-disc pl-6 text-[#004AAD] mb-6"
+          style={{ fontFamily: "Foco", fontSize: "16px", fontWeight: 400 }}
+        >
+          <li>Deliver lessons</li>
+          <li>Make decisions about what a child needs</li>
+          <li>Replace human connection</li>
+          <li>Determine learning goals</li>
+          <li>Provide emotional support</li>
+        </ul>
+
+        <p
+          className="text-[#004AAD] leading-[1.8] mb-6"
+          style={{
+            fontFamily: "Foco",
+            fontSize: "16px",
+            fontWeight: 400,
+            lineHeight: "normal",
+          }}
+        >
+          Think of our ALS technology as an excellent journal that helps Academic
+          guides engage with each child most effectively. The insights are
+          valuable, but human wisdom guides everything that happens next.
+        </p>
+
+        <p
+          className="text-[#004AAD] leading-[1.8]"
+          style={{
+            fontFamily: "Foco",
+            fontSize: "16px",
+            fontWeight: 400,
+            lineHeight: "normal",
+          }}
+        >
+          The goal: Children who see technology as a useful tool,
+          not a crutch or master.
+        </p>
+      </div>
+
+      {/* Image */}
+      <div className="w-full md:w-[40%] flex justify-center md:justify-center">
+        <motion.img
+          src="/op4.png"
+          alt="Technology with purpose"
+          className="w-[350px] lg:w-[400px] h-auto object-cover rounded-lg shadow-md"
+          style={{ borderRadius: "30px" }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 200, damping: 10 }}
+        />
+      </div>
+    </motion.div>
+  </div>
+</section>
+
+
+{/* SECTION 2 - GUIDES WHO UNDERSTAND CHILDHOOD */}
+<section className="bg-[#E2DFB6] py-16">
+  <div className="mx-auto px-6 md:px-8 lg:px-10">
+    <motion.div
+      className="flex flex-col md:flex-row-reverse items-center md:items-start gap-6"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Text */}
+      <div className="w-full md:w-[60%]">
+        <h3
+          className="text-[#004AAD] font-normal mb-4"
+          style={{
+            fontFamily: "Foco",
+            fontSize: "47px",
+            fontWeight: 400,
+            lineHeight: "normal",
+          }}
+        >
+          GUIDES WHO UNDERSTAND CHILDHOOD
+        </h3>
+
+        <p
+          className="text-[#004AAD] leading-[1.8] mb-6"
+          style={{
+            fontFamily: "Foco",
+            fontSize: "16px",
+            fontWeight: 400,
+            lineHeight: "normal",
+          }}
+        >
+          Adults trained in human development, not just subject matter. Our guides
+          help children thrive—not by forcing learning, but by understanding how
+          children learn best.
+        </p>
+
+        <ul
+          className="list-disc pl-6 text-[#004AAD] space-y-2"
+          style={{ fontFamily: "Foco", fontSize: "16px", fontWeight: 400 }}
+        >
+          <li>Learning Mentors work with a maximum of 15 children, ensuring genuine relationships and individual attention.</li>
+          <li>Development Coaches specialize in emotional intelligence, creativity, and social skills.</li>
+          <li>Experience Designers create hands-on learning that connects to real life.</li>
+          <li>Family Partners help parents understand their child's growth and extend learning at home.</li>
+          <li>Adults are chosen for their deep respect for childhood, not standardized results.</li>
+        </ul>
+      </div>
+
+      {/* Image */}
+      <div className="w-full md:w-[40%] flex justify-center md:justify-center">
+        <motion.img
+          src="/op3.jpg"
+          alt="Guides who understand childhood"
+          className="w-[350px] lg:w-[400px] h-auto object-cover rounded-lg shadow-md"
+          style={{ borderRadius: "30px" }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 200, damping: 10 }}
+        />
+      </div>
+    </motion.div>
+  </div>
+</section>
+
+
+
 
         {/* Full Width Image Section  */}
         <motion.div 
@@ -236,89 +418,84 @@ const cardVariants: Variants = {
           transition={{ duration: 0.3, delay: 0.2 }}
         >
           <img
-            src="/opweb.png"
+            src="/walkingchild.png"
             alt="Additional classroom scene"
             className="w-full h-[320px] md:h-[100%] object-cover"
           />
         </motion.div>
 
-        {/*  Alphera Smart Learning System Cards  */}
-      <div className="bg-[#DEDEDE] py-20 px-6 lg:px-12">
-  <h2
-    className="text-center text-3xl md:text-4xl font-semibold text-[#004AAD] mb-20"
-    style={{ fontFamily: "Foco,regular",
+      <section className="bg-[#E2DFB6] py-16">
+  <div className="mx-auto px-6 md:px-8 lg:px-10">
+    <motion.div
+      className="flex flex-col md:flex-row-reverse items-center md:items-start gap-6"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Text */}
+      <div className="w-full md:w-[60%]">
+
+
+        <p
+          className="text-[#004AAD] leading-[1.8] mb-6"
+          style={{
+            fontFamily: "Foco",
+            fontSize: "24px",
+            fontWeight: 400,
+            lineHeight: "normal",
+          }}
+        >
+          The skills that will always matter 
+        </p>
+        <p className="list-disc pl-6 text-[#004AAD] space-y-2"
+          style={{ fontFamily: "Foco", fontSize: "16px", fontWeight: 400 }}>
+In the near future, artificial intelligence will handle routine information processing. The people who will thrive in that environment will be those who can: 
+
+        <ul
+          className="list-disc pl-6 text-[#004AAD] space-y-2"
+          style={{ fontFamily: "Foco", fontSize: "16px", fontWeight: 400 }}
+        >
+          <li>See patterns and possibilities others miss</li>
+<li>Build trust and lead with empathy</li>
+<li>Make critical decisions when there's no clear right answer</li>
+<li>Adapt quickly using intuition and experience</li>
+<li>Create art, beauty, meaning, and connection</li>
+<li>Remain authentically human in a digital world</li>
+<li>Cultivating inherent strengths in an artificially intelligent era</li>
+        </ul>
+        These aren't new skills; they're ancient competencies that traditional schooling often controls or suppresses. We're helping children rediscover what makes them uniquely, powerfully human. 
+</p>
+      </div>
+
+      {/* Image */}
+     {/* <div className="w-full md:w-[40%] flex justify-center md:justify-center text-center md:text-left"> */}
+<div className="w-full md:w-[40%] flex items-center justify-center md:justify-center text-center md:text-left
++ md:mt-16
+">
+  <motion.h2
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.6 }}
+    style={{
+      fontFamily: "Foco",
+      fontWeight: 400,
+      fontStyle: "normal",
+      fontSize: "47px",
+      lineHeight: "100%",
+      letterSpacing: "0%",
       color: "#004AAD",
-textAlign: "center",
-fontSize: "47px",
-fontStyle: "normal",
-fontWeight: "400",
-lineHeight: "normal"
-     }}
+      width:"373px"
+    }}
   >
-    Alphera Smart Learning System
-  </h2>
-
-  <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto">
-    {cards.map((card, i) => (
-      <motion.div
-        key={i}
-        custom={i}
-        variants={cardVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ amount: 0.3 }}
-        className="relative bg-[#004AAD] text-white rounded-xl w-[198px] h-[348px] flex flex-col items-center text-center shadow-lg pt-[60px] pb-6"
-      >
-        {/* Icon Container */}
-        <div className="absolute -top-[15px]">
-          <img
-            src={card.img}
-            alt={card.title}
-            className="w-[85px] h-[85px] object-contain"
-            style={{margin:"35px"}}
-          />
-        </div>
-
-        {/* Card Text */}
-        <div className="px-3 mt-15">
-          <h4
-            className="text-[20px] mb-2"
-            style={{
-              fontFamily: "Foco",
-              color: "#FFFFFF",
-              textAlign: "center",
-              fontWeight: "400",
-              lineHeight: "1.4",
-            }}
-          >
-            {card.title}
-          </h4>
-           <div
-            className="mx-auto my-3"
-            style={{
-              width: "100%",
-              height: "1px",
-              backgroundColor: "#82B3B4",
-              opacity: 0.7,
-            }}
-          />
-          <p
-            className="text-[16px]"
-            style={{
-              fontFamily: "Foco",
-              color: "#82B3B4",
-              textAlign: "center",
-              fontWeight: "400",
-              lineHeight: "1.4",
-            }}
-          >
-            {card.text}
-          </p>
-        </div>
-      </motion.div>
-    ))}
-  </div>
+    EMPOWERING LEARNERS FOR A MEANINGFUL FUTURE
+  </motion.h2>
 </div>
+
+    </motion.div>
+  </div>
+</section>
 
 
       </div>

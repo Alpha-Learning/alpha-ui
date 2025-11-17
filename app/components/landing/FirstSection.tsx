@@ -125,7 +125,7 @@ The result? Children who love learning again. Not because we made it entertainin
       viewport={{ amount: 0.3 }}
       transition={{ duration: 0.6 }}
     >
-      Six ways the children develop naturally:
+      Six ways children naturally develop when we get out of their way:
     </motion.h2>
 
     <div className="">
