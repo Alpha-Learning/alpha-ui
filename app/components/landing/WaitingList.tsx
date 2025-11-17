@@ -372,7 +372,7 @@ export default function WaitingList() {
       </motion.div>
     </div>
   </div>
-</div>
+</div>  
         {/*  UTL Section  */}
       <motion.section
   initial={{ opacity: 0, y: 60 }}
