@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { sendWelcomeEmail } from "@/app/lib/emailService";
+import { sendWelcomeEmail, sendWaitingListNotification } from "@/app/lib/emailService";
 
 const waitingListSchema = z.object({
   email: z.string().email("Invalid email format"),
@@ -20,13 +20,27 @@ export async function POST(req: Request) {
     }
 
     // Send welcome email to user
-    const emailSent = await sendWelcomeEmail(parsed.data.email);
+    const welcomeEmailSent = await sendWelcomeEmail(parsed.data.email);
     
-    if (emailSent) {
+    if (welcomeEmailSent) {
       console.log(`Welcome email sent to: ${parsed.data.email}`);
     } else {
       console.error(`Failed to send welcome email to: ${parsed.data.email}`);
-      // Still return success to user even if email fails
+      // Still continue even if email fails
+    }
+
+    // Send notification to admins
+    try {
+      const notificationSent = await sendWaitingListNotification(parsed.data.email);
+      if (notificationSent) {
+        console.log(`Admin notification sent for: ${parsed.data.email}`);
+      } else {
+        console.error(`Failed to send admin notification for: ${parsed.data.email}`);
+        // Don't fail the request if admin notification fails
+      }
+    } catch (notificationError) {
+      console.error("Error sending admin notification:", notificationError);
+      // Don't fail the request if admin notification fails
     }
 
     return NextResponse.json({
