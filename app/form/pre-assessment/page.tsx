@@ -170,7 +170,7 @@ function PreAssessmentInner() {
                           id="relationToChild"
                           defaultValue=""
                           {...register("relationToChild")}
-                          className={`w-full rounded-xl border px-4 py-10 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent transition ${
+                          className={`w-full rounded-xl border px-4 py-3 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent transition ${
                             errors.relationToChild ? "border-red-300" : "border-slate-400"
                           }`}
                         >

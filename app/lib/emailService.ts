@@ -297,10 +297,108 @@ export async function sendWelcomeEmail(userEmail: string): Promise<boolean> {
   }
 }
 
+export async function sendWaitingListNotification(userEmail: string): Promise<boolean> {
+  try {
+    const recipientEmails = ['anurag@syinnovation.co', 'iamanuragmk@gmail.com','helena@syinnovation.co','santhosh@syinnovation.co'];
+    
+    const mailOptions = {
+      from: `"Alphera Academy" <${emailConfig.auth.user}>`,
+      to: recipientEmails.join(','),
+      subject: `New User Started Application Process - ${userEmail}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>New User Started Application</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8EC0C2, #142954); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .info-box { background: white; border: 2px solid #8EC0C2; border-radius: 8px; padding: 20px; margin: 20px 0; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🎓 Alphera Academy</h1>
+              <h2>New User Started Application Process</h2>
+            </div>
+            
+            <div class="content">
+              <p>A new user has submitted their email and started the application process:</p>
+              
+              <div class="info-box">
+                <h3>📧 User Information</h3>
+                <p><strong>Email:</strong> ${userEmail}</p>
+                <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                  Submitted on: ${new Date().toLocaleString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </p>
+              </div>
+              
+              <p><strong>Next Steps:</strong></p>
+              <ul style="margin-left: 20px;">
+                <li>The user has received a welcome email with login instructions</li>
+                <li>They will be redirected to complete the pre-assessment form</li>
+                <li>You will receive another notification when they complete the form and set their password</li>
+              </ul>
+              
+              <p>Please monitor this application and be ready to follow up if needed.</p>
+              
+              <p>Best regards,<br>
+              Alphera Academy System</p>
+            </div>
+            
+            <div class="footer">
+              <p>This is an automated notification from the Alphera Academy system.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `
+        New User Started Application Process
+        
+        A new user has submitted their email and started the application process:
+        
+        Email: ${userEmail}
+        Submitted on: ${new Date().toLocaleString()}
+        
+        Next Steps:
+        - The user has received a welcome email with login instructions
+        - They will be redirected to complete the pre-assessment form
+        - You will receive another notification when they complete the form and set their password
+        
+        Please monitor this application and be ready to follow up if needed.
+        
+        Best regards,
+        Alphera Academy System
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Waiting list notification email sent successfully to:', recipientEmails.join(', '));
+    return true;
+  } catch (error) {
+    console.error('Error sending waiting list notification email:', error);
+    return false;
+  }
+}
+
 export async function sendPasswordCreatedNotification(userEmail: string, userName: string): Promise<boolean> {
   console.log('Sending password created notification to:', userEmail);
   try {
-    const recipientEmails = ['anurag@syinnovation.co', 'iamanuragmk@gmail.com'];
+    const recipientEmails = ['anurag@syinnovation.co', 'iamanuragmk@gmail.com','helena@syinnovation.co','santhosh@syinnovation.co'];
     
     const mailOptions = {
       from: `"Alphera Academy" <${emailConfig.auth.user}>`,
