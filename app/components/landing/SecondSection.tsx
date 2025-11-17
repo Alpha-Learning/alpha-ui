@@ -79,7 +79,7 @@ const cardVariants: Variants = {
       viewport={{ amount: 0.3 }}
       transition={{ duration: 0.6 }}
     >
-      <img src="/unfoldicon.png" alt="clock icon" className="w-10 h-10 sm:w-14 sm:h-14" />
+      <img src="/unfoldicon.png" alt="clock icon" className="w-21 h-21 sm:w-25 sm:h-25" />
 
       <div>
         <h2
@@ -245,85 +245,83 @@ const cardVariants: Variants = {
       transition={{ duration: 0.5 }}
     >
       {/* Text */}
-      <div className="w-full md:w-[60%]">
-        <h3
-          className="text-[#004AAD] font-normal mb-4"
-          style={{
-            fontFamily: "Foco",
-            fontSize: "47px",
-            fontWeight: 400,
-            lineHeight: "normal",
-          }}
-        >
-          TECHNOLOGY WITH PURPOSE
-        </h3>
+     <div className="w-full md:w-[60%] ml-0 md:ml-[77px]">
 
-        <p
-          className="text-[#004AAD] leading-[1.8] mb-6"
-          style={{
-            fontFamily: "Foco",
-            fontSize: "24px",
-            fontWeight: 400,
-            lineHeight: "normal",
-          }}
-        >
-          Smart tools serving human relationships
-        </p>
+  <h3
+    className="text-[#004AAD] font-normal mb-4 text-[28px] sm:text-[36px] md:text-[47px]"
+    style={{
+      fontFamily: "Foco",
+      fontWeight: 400,
+      lineHeight: "normal",
+    }}
+  >
+    TECHNOLOGY WITH PURPOSE
+  </h3>
 
-        <p
-          className="text-[#004AAD] leading-[1.8] mb-6"
-          style={{
-            fontFamily: "Foco",
-            fontSize: "16px",
-            fontWeight: 400,
-            lineHeight: "normal",
-          }}
-        >
-          Our ALS learning system quietly observes each child when they're most
-          focused, what frustrates them, and how they prefer to learn. This helps
-          academic guides understand each child more completely. But here's what
-          technology never does at Alphera:
-        </p>
+  <p
+    className="text-[#004AAD] leading-[1.7] mb-4 text-[18px] sm:text-[20px] md:text-[24px]"
+    style={{
+      fontFamily: "Foco",
+      fontWeight: 400,
+      lineHeight: "normal",
+    }}
+  >
+    Smart tools serving human relationships
+  </p>
 
-        {/* Bullet List */}
-        <ul
-          className="list-disc pl-6 text-[#004AAD] mb-6"
-          style={{ fontFamily: "Foco", fontSize: "16px", fontWeight: 400 }}
-        >
-          <li>Deliver lessons</li>
-          <li>Make decisions about what a child needs</li>
-          <li>Replace human connection</li>
-          <li>Determine learning goals</li>
-          <li>Provide emotional support</li>
-        </ul>
+  <p
+    className="text-[#004AAD] leading-[1.7] mb-4 text-[14px] sm:text-[15px] md:text-[16px]"
+    style={{
+      fontFamily: "Foco",
+      fontWeight: 400,
+      lineHeight: "normal",
+    }}
+  >
+    Our ALS learning system quietly observes each child when they're most
+    focused, what frustrates them, and how they prefer to learn. This helps
+    academic guides understand each child more completely. But here's what
+    technology never does at Alphera:
+  </p>
 
-        <p
-          className="text-[#004AAD] leading-[1.8] mb-6"
-          style={{
-            fontFamily: "Foco",
-            fontSize: "16px",
-            fontWeight: 400,
-            lineHeight: "normal",
-          }}
-        >
-          Think of our ALS technology as an excellent journal that helps Academic
-          guides engage with each child most effectively. The insights are
-          valuable, but human wisdom guides everything that happens next.
-        </p>
+  {/* Bullet List */}
+  <ul
+    className="list-disc pl-5 text-[#004AAD] mb-4 text-[14px] sm:text-[15px] md:text-[16px]"
+    style={{ fontFamily: "Foco", fontWeight: 400 }}
+  >
+    <li>Deliver lessons</li>
+    <li>Make decisions about what a child needs</li>
+    <li>Replace human connection</li>
+    <li>Determine learning goals</li>
+    <li>Provide emotional support</li>
+  </ul>
 
-        <p
-          className="text-[#004AAD] leading-[1.8]"
-          style={{
-            fontFamily: "Foco",
-            fontSize: "16px",
-            fontWeight: 400,
-            lineHeight: "normal",
-          }}
-        >
-          The goal: Children who see technology as a useful tool,
-          not a crutch or master.
-        </p>
-      </div>
+  <p
+    className="text-[#004AAD] leading-[1.7] mb-4 text-[14px] sm:text-[15px] md:text-[16px]"
+    style={{
+      fontFamily: "Foco",
+      fontWeight: 400,
+      lineHeight: "normal",
+    }}
+  >
+    Think of our ALS technology as an excellent journal that helps Academic
+    guides engage with each child most effectively. The insights are valuable,
+    but human wisdom guides everything that happens next.
+  </p>
+
+  <p
+    className="text-[#004AAD] leading-[1.7] text-[14px] sm:text-[15px] md:text-[16px]"
+    style={{
+      fontFamily: "Foco",
+      fontWeight: 400,
+      lineHeight: "normal",
+    }}
+  >
+    The goal: Children who see technology as a useful tool,
+    not a crutch or master.
+  </p>
+
+</div>
+
 
       {/* Image */}
       <div className="w-full md:w-[40%] flex justify-center md:justify-center">
@@ -352,7 +350,7 @@ const cardVariants: Variants = {
       transition={{ duration: 0.5 }}
     >
       {/* Text */}
-      <div className="w-full md:w-[60%]">
+      <div className="w-full md:w-[60%] ">
         <h3
           className="text-[#004AAD] font-normal mb-4"
           style={{
@@ -424,10 +422,11 @@ const cardVariants: Variants = {
           />
         </motion.div>
 
-      <section className="bg-[#E2DFB6] py-16">
+      <section className="bg-[#D8EFCD] py-16">
   <div className="mx-auto px-6 md:px-8 lg:px-10">
+
     <motion.div
-      className="flex flex-col md:flex-row-reverse items-center md:items-start gap-6"
+      className="flex flex-col-reverse md:flex-row-reverse items-center md:items-start gap-6"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
@@ -435,7 +434,6 @@ const cardVariants: Variants = {
     >
       {/* Text */}
       <div className="w-full md:w-[60%]">
-
 
         <p
           className="text-[#004AAD] leading-[1.8] mb-6"
@@ -446,56 +444,67 @@ const cardVariants: Variants = {
             lineHeight: "normal",
           }}
         >
-          The skills that will always matter 
+          The skills that will always matter
         </p>
-        <p className="list-disc pl-6 text-[#004AAD] space-y-2"
-          style={{ fontFamily: "Foco", fontSize: "16px", fontWeight: 400 }}>
-In the near future, artificial intelligence will handle routine information processing. The people who will thrive in that environment will be those who can: 
+
+        <p
+          className="text-[#004AAD] space-y-2"
+          style={{ fontFamily: "Foco", fontSize: "16px", fontWeight: 400 }}
+        >
+          In the near future, artificial intelligence will handle routine information processing.
+          The people who will thrive in that environment will be those who can:
+        </p>
 
         <ul
-          className="list-disc pl-6 text-[#004AAD] space-y-2"
+          className="list-disc pl-6 text-[#004AAD] space-y-2 mt-4"
           style={{ fontFamily: "Foco", fontSize: "16px", fontWeight: 400 }}
         >
           <li>See patterns and possibilities others miss</li>
-<li>Build trust and lead with empathy</li>
-<li>Make critical decisions when there's no clear right answer</li>
-<li>Adapt quickly using intuition and experience</li>
-<li>Create art, beauty, meaning, and connection</li>
-<li>Remain authentically human in a digital world</li>
-<li>Cultivating inherent strengths in an artificially intelligent era</li>
+          <li>Build trust and lead with empathy</li>
+          <li>Make critical decisions when there's no clear right answer</li>
+          <li>Adapt quickly using intuition and experience</li>
+          <li>Create art, beauty, meaning, and connection</li>
+          <li>Remain authentically human in a digital world</li>
+          <li>Cultivating inherent strengths in an artificially intelligent era</li>
         </ul>
-        These aren't new skills; they're ancient competencies that traditional schooling often controls or suppresses. We're helping children rediscover what makes them uniquely, powerfully human. 
-</p>
+
+        <p
+          className="text-[#004AAD] mt-4"
+          style={{ fontFamily: "Foco", fontSize: "16px", fontWeight: 400 }}
+        >
+          These aren't new skills; they're ancient competencies that traditional schooling
+          often controls or suppresses. We're helping children rediscover what makes
+          them uniquely, powerfully human.
+        </p>
+
       </div>
 
-      {/* Image */}
-     {/* <div className="w-full md:w-[40%] flex justify-center md:justify-center text-center md:text-left"> */}
-<div className="w-full md:w-[40%] flex items-center justify-center md:justify-center text-center md:text-left
-+ md:mt-16
-">
-  <motion.h2
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.6 }}
-    style={{
-      fontFamily: "Foco",
-      fontWeight: 400,
-      fontStyle: "normal",
-      fontSize: "47px",
-      lineHeight: "100%",
-      letterSpacing: "0%",
-      color: "#004AAD",
-      width:"373px"
-    }}
-  >
-    EMPOWERING LEARNERS FOR A MEANINGFUL FUTURE
-  </motion.h2>
-</div>
+      {/* Heading Block (Image container position previously) */}
+      <div className="w-full md:w-[40%] flex items-center justify-center md:justify-center text-center md:text-left md:mt-16">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          style={{
+            fontFamily: "Foco",
+            fontWeight: 400,
+            fontStyle: "normal",
+            fontSize: "47px",
+            lineHeight: "100%",
+            letterSpacing: "0%",
+            color: "#004AAD",
+            width: "373px",
+          }}
+        >
+          EMPOWERING LEARNERS FOR A MEANINGFUL FUTURE
+        </motion.h2>
+      </div>
 
     </motion.div>
   </div>
 </section>
+
 
 
       </div>
