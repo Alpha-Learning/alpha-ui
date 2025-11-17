@@ -113,38 +113,45 @@ export default function ThirdSection() {
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <div className="flex items-center bg-white rounded-full shadow-[0_6px_16px_rgba(0,0,0,0.15)] overflow-hidden w-full max-w-md mx-auto"
-              style={{color: "#82B3B4",
-                      fontFamily: "Foco",
-                      fontSize: "20px",
-                      fontStyle: "normal",
-                      fontWeight: "400",
-                      lineHeight: "normal"}}>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="E-Mail Here"
-                  className="flex-1 px-5 py-3 text-[#192951] placeholder-[#82B3B4] focus:outline-none rounded-l-full"
-                  style={{ fontFamily: "Foco, sans-serif" }}
-                  required
-                />
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="px-8 py-3 font-semibold text-white text-sm sm:text-base rounded-full transition-all duration-300 bg-[#004AAD] shadow-[0_4px_12px_rgba(0,64,184,0.4)] hover:shadow-[0_6px_16px_rgba(0,64,184,0.6)] hover:translate-y-[-2px] disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ fontFamily: "Foco", 
-                    color: "#82B3B4",
-                    textAlign: "center",
-                    fontSize: "24px",
-                    fontStyle: "normal",
-                    fontWeight: "900",
-                    lineHeight: "normal"
-                        }}
-                >
-                  {isSubmitting ? "SUBMITTING..." : "SUBMIT"}
-                </button>
-              </div>
+              <div
+  className="flex items-center bg-white rounded-full shadow-[0_6px_16px_rgba(0,0,0,0.15)] overflow-hidden w-full max-w-md mx-auto"
+  style={{
+    color: "#82B3B4",
+    fontFamily: "Foco",
+    fontSize: "16px", // reduced from 20px on mobile
+    fontStyle: "normal",
+    fontWeight: "400",
+    lineHeight: "normal",
+  }}
+>
+  <input
+    type="email"
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+    placeholder="E-Mail Here"
+    className="flex-1 px-4 py-2 text-[#192951] placeholder-[#82B3B4] focus:outline-none rounded-l-full text-sm sm:text-base"
+    style={{ fontFamily: "Foco, sans-serif" }}
+    required
+  />
+
+  <button
+    type="submit"
+    disabled={isSubmitting}
+    className="px-5 py-2 sm:px-8 sm:py-3 font-semibold text-white text-xs sm:text-base rounded-full transition-all duration-300 bg-[#004AAD] shadow-[0_4px_12px_rgba(0,64,184,0.4)] hover:shadow-[0_6px_16px_rgba(0,64,184,0.6)] hover:translate-y-[-2px] disabled:opacity-50 disabled:cursor-not-allowed"
+    style={{
+      fontFamily: "Foco",
+      color: "#82B3B4",
+      textAlign: "center",
+      fontSize: "18px", // reduced on mobile, stays 24px on desktop
+      fontStyle: "normal",
+      fontWeight: "900",
+      lineHeight: "normal",
+    }}
+  >
+    {isSubmitting ? "SUBMITTING..." : "SUBMIT"}
+  </button>
+</div>
+
             </motion.form>
           ) : (
             <motion.div
