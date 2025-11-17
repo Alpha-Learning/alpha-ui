@@ -120,15 +120,15 @@ const cardVariants: Variants = {
         {
           time: "8:30",
           title: "Core Learning Pod Time",
-          desc: "Math, reading, science, and Arabic, but delivered in ways that match how each child learns best. Some work at tables, others on floor cushions. Some need absolute quiet; others think better with soft background music.\n\nThe Innovative ALS technology\ntracks what's working for each child, but our academic guides make all the decisions about what happens next."
+          desc: "Math, Reading, Science, and Arabic, but delivered in ways that match how each child learns best. Some work at tables, others on floor cushions. Some need absolute quiet; others think better with soft background music.\n\nThe Innovative ALS technology\ntracks what's working for each child, but our academic guides make all the decisions about what happens next."
         },
         {
-          time: "11:00",
+          time: "10:30",
           title: "Child-Choice Break",
           desc: "Kids choose how to recharge. Some read quietly. Others run outside. A few keep working because they're in flow. We honor their natural rhythms."
         },
         {
-          time: "10:30",
+          time: "11:00",
           title: "Hands-On Discovery",
           desc: "Real projects that matter. Children might design solutions to school problems, interview elderly community members about local history, or conduct experiments that answer their own questions."
         },
@@ -223,11 +223,26 @@ const cardVariants: Variants = {
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.6 }}
           >
-            <img
+            {/* <img
               src="/opmain.png"
               alt="Alphera Academy Banner"
               className="w-full h-full object-cover object-left "
-            />
+            /> */}
+            <picture>
+  {/* Mobile image */}
+  <source
+    media="(max-width: 768px)"
+    srcSet="/imagegirlsmob.png"
+  />
+  
+  {/* Desktop image */}
+  <img
+    src="/opmain.png"
+    alt="Alphera Academy Banner"
+    className="w-full h-full object-cover object-center"
+  />
+</picture>
+
             <div className="absolute inset-0 bg-gradient-to-b from-[#00000025] to-transparent h-[431px]"></div>
           </motion.div>
         </div>
@@ -383,9 +398,9 @@ const cardVariants: Variants = {
         >
           <li>Learning Mentors work with a maximum of 15 children, ensuring genuine relationships and individual attention.</li>
           <li>Development Coaches specialize in emotional intelligence, creativity, and social skills.</li>
-          <li>Experience Designers create hands-on learning that connects to real life.</li>
+          <li>Experienced Designers. Also this parts terminology confuses me a little. Should we stick to what it is, Academic Guides, Meta Coachs, (family partners is actually a very cool idea but also not something specifically mentioned anywhere in our system as of yet)</li>
           <li>Family Partners help parents understand their child's growth and extend learning at home.</li>
-          <li>Adults are chosen for their deep respect for childhood, not standardized results.</li>
+          <li>Adults are chosen for their commitment to honoring every child as a distinct person, rather than producing standardized results.</li>
         </ul>
       </div>
 
@@ -464,7 +479,7 @@ const cardVariants: Variants = {
           <li>Make critical decisions when there's no clear right answer</li>
           <li>Adapt quickly using intuition and experience</li>
           <li>Create art, beauty, meaning, and connection</li>
-          <li>Remain authentically human in a digital world</li>
+          {/* <li>Remain authentically human in a digital world</li> */}
           <li>Cultivating inherent strengths in an artificially intelligent era</li>
         </ul>
 

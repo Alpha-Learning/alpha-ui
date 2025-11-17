@@ -622,11 +622,26 @@ export default function WaitingList() {
   viewport={{ once: false, amount: 0.3 }}
   transition={{ duration: 0.6 }}
 >
+  {/* <img
+    src="/waitlist4.jpg"
+    alt="Alphera Academy Banner"
+    className="w-full h-full object-cover object-center"
+  /> */}
+  <picture>
+  {/* Mobile image */}
+  <source
+    media="(max-width: 768px)"
+    srcSet="/imageboymob.jpg"
+  />
+  
+  {/* Desktop image */}
   <img
     src="/waitlist4.jpg"
     alt="Alphera Academy Banner"
     className="w-full h-full object-cover object-center"
   />
+</picture>
+
   <div className="absolute inset-0 bg-gradient-to-b from-[#00000025] to-transparent"></div>
 </motion.div>
 

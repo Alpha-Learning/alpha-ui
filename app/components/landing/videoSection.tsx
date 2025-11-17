@@ -84,9 +84,7 @@ style={{  fontFamily: "Foco",
           lineHeight: "normal"
  }}
 >
-  A new kind of school where innovation meets purpose. We combine the <br/>
-  best of the British and Arabic curricula with AI-driven personalisation <br/>
-  preparing students not just for exams, but for life.
+  Where learning comes naturally
 </span>
 <button
   onClick={scrollToWaitingList}
