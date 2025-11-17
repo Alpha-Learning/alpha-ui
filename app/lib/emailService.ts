@@ -315,14 +315,14 @@ export async function sendPasswordCreatedNotification(userEmail: string, userNam
     const mailOptions = {
       from: `"Alphera Academy" <${emailConfig.auth.user}>`,
       to: recipientEmails.join(','),
-      subject: `New User Password Created - ${userEmail}`,
+      subject: `New Submission - ${userEmail}`,
       html: `
         <!DOCTYPE html>
         <html>
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>New User Password Created</title>
+          <title>New User Submission</title>
           <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -336,7 +336,7 @@ export async function sendPasswordCreatedNotification(userEmail: string, userNam
           <div class="container">
             <div class="header">
               <h1>🎓 Alphera Academy</h1>
-              <h2>New User Password Created</h2>
+              <h2>New User Submission</h2>
             </div>
             
             <div class="content">
@@ -372,7 +372,7 @@ export async function sendPasswordCreatedNotification(userEmail: string, userNam
         </html>
       `,
       text: `
-        New User Password Created
+        New User Submission
         
         A new user has completed their application and created a password:
         
