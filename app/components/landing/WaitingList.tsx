@@ -244,7 +244,7 @@ export default function WaitingList() {
           INVESTMENT IN NATURAL DEVELOPMENT 
         </h2>
       </div>
-
+ 
       {/* Content */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
