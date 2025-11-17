@@ -4,33 +4,6 @@ import React from "react";
 import { motion } from "framer-motion";
 
 export default function FirstSection() {
-  const pillars = [
-    {
-      title: "Self Regulated Learning",
-      desc: "Learning how to learn",
-      img: "/a.jpeg",
-    },
-    {
-      title: "Emotional Intelligence",
-      desc: "AI-powered personalisationand smart learning systems",
-      img: "/b.png",
-    },
-    {
-      title: "Social Skills",
-      desc: "Leadership, empathy, and cultural awareness",
-      img: "/c.png",
-    },
-    {
-      title: "General Cognitive",
-      desc: "Connecting education to everyday life",
-      img: "/d.jpeg",
-    },
-    {
-      title: "Creativity",
-      desc: "Building balance, curiosity, and confidence",
-      img: "/e.jpeg",
-    },
-  ];
 
   return (
     <section id="about" className="py-12 sm:py-16 md:py-20 lg:py-0 bg-white">
@@ -74,7 +47,7 @@ export default function FirstSection() {
                 lineHeight: "normal"
               }}
             >
-              Our Story
+             WHY WE EXIST
             </h2>
 
             <motion.p
@@ -92,10 +65,16 @@ export default function FirstSection() {
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              Alphera Academy was founded with a bold vision to redefine how
-              education feels, functions, and flourishes. We’re building a
-              school ecosystem that blends academic excellence with technology,
-              wellbeing, and creativity.
+           <span style={{ fontSize: "24px", lineHeight: "normal", display: "block", marginBottom: "16px" }}>
+We started with an uncomfortable question: If children are natural learners, why do so many hate school? 
+</span>
+<span style={{ fontSize: "16px", lineHeight: "normal", display: "block" }}>
+We watched kids light up as they built forts, then shut down during math worksheets. We saw brilliant eight year olds convinced they were "bad at learning" because they couldn't sit still for lectures.<br/><br/>
+
+So, we went back to basics. How did humans learn for thousands of years before classrooms existed? Through relationships. Through doing. Through making mistakes and trying again. We studied child development, cognitive science, and schools around the world. Then we designed something radical yet straightforward: an education that works with human nature rather than against it.<br/><br/>
+
+The result? Children who love learning again. Not because we made it entertaining, but because we made it authentic. 
+</span>
             </motion.p>
           </motion.div>
 
@@ -121,243 +100,117 @@ export default function FirstSection() {
           </motion.div>
 
 
-          {/*  Mission & Vision Section  */}
-<section className=" bg-[#EFEDCD] py-16 sm:py-20 md:py-24 flex flex-col items-center justify-center overflow-hidden">
-  <div className="max-w-6xl mx-auto px-6 sm:px-10 text-center">
+{/* Intuitive Learning Framework Section */}
+<section className="bg-[#FBF5E5] py-16 sm:py-20 md:py-24">
+  <div className="max-w-6xl mx-auto px-6 sm:px-10">
 
     {/* Heading */}
-    <h2
-      className="flex flex-wrap justify-center items-center gap-2 sm:gap-4 
-                 text-[#004AAD] font-normal leading-normal"
+    <motion.h2
+      className="text-[#004AAD] text-[32px] sm:text-[47px] font-[400] text-left"
       style={{ fontFamily: "Foco" }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ amount: 0.3 }}
+      transition={{ duration: 0.6 }}
     >
-      <span className="text-[32px] sm:text-[47px]">Mission</span>
+      The Intuitive Learning Framework
+    </motion.h2>
 
-      <span
-        className="text-[50px] sm:text-[96px] font-light"
-        style={{ fontFamily: "Foco" }}
-      >
-        &
-      </span>
-
-      <span className="text-[32px] sm:text-[47px]">Vision</span>
-    </h2>
-
-    {/* Content */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 text-[#004AAD]">
-
-      {/* Mission */}
-      <div
-        className="text-[16px] sm:text-[22px] leading-relaxed text-center md:text-right px-2 sm:px-6"
-        style={{ fontFamily: "Foco", fontWeight: 400 }}
-      >
-        Empower every learner with the skills, confidence, and mindset to
-        thrive in a changing world.
-      </div>
-
-      {/* Vision */}
-      <div
-        className="text-[16px] sm:text-[22px] leading-relaxed text-center md:text-left px-2 sm:px-6 
-                   md:border-l md:pl-10"
-        style={{ fontFamily: "Foco", fontWeight: 400 }}
-      >
-        Create Bahrain’s first fully personalised, AI-enhanced learning
-        environment where education adapts to each learner.
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-
-
-          {/*  WHY US */}
-          <section className="relative w-full h-[500px] sm:h-[550px] md:h-[600px] overflow-hidden">
-            <img
-    src="/aboutus3.png"
-    alt="Why Alphera"
-    className="absolute inset-0 w-full h-full object-cover object-center"
-    style={{ transform: "scaleX(-1)" }}
-  />
-
-  {/* White left shade */}
-  <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-white to-transparent"></div>
-
-            <div className="absolute inset-0 bg-[#00000033]"></div>
-
-            <motion.div
-              className="relative z-10 flex flex-col justify-center h-full px-6 sm:px-10 md:px-20 lg:px-32 text-left max-w-3xl"
-              initial={{ opacity: 0, x: -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.6 }}
-            >
-              <h2
-                className="mb-6"
-                style={{
-                  fontFamily: "Foco",
-                  fontWeight: 400,
-                  fontSize: "47px",
-                  lineHeight: "normal",
-                  color: "#004AAD",
-                }}
-              >
-                Why Us
-              </h2>
-
-              <p
-                style={{
-                  fontFamily: "Foco",
-                  fontWeight: 400,
-                  fontStyle: "normal",
-                  fontSize: "24px",
-                  lineHeight: "normal",
-                  // letterSpacing: "0px",
-                  color: "#004AAD",
-                }}
-              >
-                At Alphera, we don’t just teach, we understand how every learner learns best. We combine deep academic rigours with real-world learning, personal development, and emotional intelligence. Our learners grow into thinkers, leaders, and creators.
-              </p>
-            </motion.div>
-          </section>
-
-          
- {/*5 PILLARS OF ALPHERA */}
-<section className=" w-full py-12 sm:py-16 md:py-20 bg-[#DEDEDE] flex flex-col items-center text-center overflow-hidden">
-  {/* Heading */}
-  <h2
-    className="text-[#004AAD] text-[30px] sm:text-[36px] md:text-[47px] font-[400] mb-10"
-    style={{ fontFamily: "Foco",
-                  lineHeight: "100%",
-                  letterSpacing: "0px",
-                 }}
-  >
-    The 5 Pillars of Alphera
-  </h2>
-
-  {/* Cards Grid */}
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-8 px-4 sm:px-8 md:px-12 lg:px-16 justify-items-center">
-    {[
-      {
-        title: "Self Regulated Learning",
-        desc: "Learning how to learn",
-        img: "/aboutusiconself.png",
-      },
-      {
-        title: "Emotional Intelligence",
-        desc: "AI-powered personalisation and smart learning systems",
-        img: "/aboutusintelligance.png",
-      },
-      {
-        title: "Social Skills",
-        desc: "Leadership, empathy, and cultural awareness",
-        img: "/aboutussocialskill.png",
-      },
-      {
-        title: "General Cognitive",
-        desc: "Connecting education to everyday life",
-        img: "/aboutusgs.png",
-      },
-      {
-        title: "Creativity",
-        desc: "Building balance, curiosity, and confidence",
-        img: "/aboutuscreativity.png",
-      },
-    ].map((pillar, index) => (
-      <motion.div
-  key={index}
-  className="bg-gradient-to-r from-[#2673DB] to-[#004AAD] rounded-[30px] shadow-md flex flex-col items-center justify-start p-5 sm:p-6"
-  style={{
-    width: "198px",
-    height: "284px",
-  }}
-  initial={{ opacity: 0, y: 40 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  viewport={{ once: false, amount: 0.2 }}
-  transition={{ duration: 0.6, delay: index * 0.2 }}
->
-
-  <div className="flex flex-col items-center justify-start m-[24]" style={{ height: "180px" }}>
-    {/* Image */}
-    <div
-      className="rounded-[12px] overflow-hidden flex items-center justify-center"
-      style={{
-        // width: "100px",
-        // height: "99px",
-        borderRadius:"0px",
-        flexShrink: 0,
-      }}
+    {/* Sub-heading */}
+    <motion.h2
+      className="text-[#004AAD] text-[19px] sm:text-[24px] font-[400] text-left mb-12"
+      style={{ fontFamily: "Foco" }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ amount: 0.3 }}
+      transition={{ duration: 0.6 }}
     >
-      <img
-        src={pillar.img}
-        alt={pillar.title}
-        style={{
-          // width: "100px",
-          // height: "99px",
-          borderRadius: "0px",
-          objectFit: "cover",
-        }}
-      />
-    </div>
+      Six ways the children develop naturally:
+    </motion.h2>
 
+    <div className="">
 
-    <h3
-      className="text-white mt-3 text-center leading-[1.1]"
-      style={{
-        fontFamily: "Foco",
-        fontWeight: 400,
-        fontSize: "26px",
-        lineHeight: "1.normal",
-        textAlign: "center",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "42px", 
-        padding: "0 4px",
-        color:"white"
-      }}
-    >
-      {pillar.title}
-    </h3>
-
-    
-    {/* <div
-      className="w-[40px] bg-[#82B3B4] rounded-full"
-      style={{
-        height: "1px",
-        opacity: 0.9,
-        marginTop: "6px",
-        width:"164px",
+      {[
+        { num: "1", img: "/learningab.png", title: "Learning About Yourself", desc: "With time, every child uncovers the rhythm of their own mind. Some learn through touch, some through movement, some in quiet focus, and others in lively collaboration. But instead of nurturing these various learning styles, traditional schooling often stifles them. It’s like trying to fit every square-, star-, and triangle-shaped peg into the same round hole." },
+        { num: "2", img: "/thinkingheart.png", title: "Thinking with Heart and Mind", desc: "True learning doesn’t just come from finding the singular correct answer. In fact, real-world challenges rarely have one right answer. Instead of simply “hitting save” on question + answer, children learn through exploring possibilities, making connections between different ideas, and trusting their creative instincts. These are the thinking skills no computer can replicate. " },
+        { num: "3", img: "/reflection.png", title: "Growing Through Reflection", desc: "After every experience, children pause to ask: What worked? What would I try differently? How did this feel? This reflection turns experience into wisdom, something uniquely human." },
+        { num: "4", img: "/emotions.png", title: "Understanding Emotions", desc: "Children discover the language of their emotions, learn to steady themselves when things feel hard, and develop the resilience to move past disappointment. Along the way, they grow kinder and more empathetic by engaging with others who see and experience the world differently." },
+        { num: "5", img: "/relationship.png", title: "Building Real Relationships", desc: "As children collaborate, disagree, and find their way to common ground, they learn to listen, compromise, and lead with empathy. These are the social skills that will shape their futures—not test scores." },
+        { num: "6", img: "/character.png", title: "Developing Character", desc: "Children practice kindness, honesty, and integrity in real situations. They learn to care about others and contribute to their community, not because they are instructed to, but because they experience the inherent value of connection. These aren't subjects to be taught. They're human aptitudes to be nurtured." },
+      ].map((item, index) => (
         
-      }}
-    ></div> */}
-  </div>
+        <motion.div
+          key={index}
+          className="flex items-center gap-8 p-8 sm:p-10 rounded-[30px]"
+          style={{ backgroundColor: index % 2 === 0 ? "#E5D6C0" : "#EEE2D0" }}
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ amount: 0.4 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
 
-  {/* DESCRIPTION AREA */}
-  {/* <div className="flex-1 flex items-start justify-center">
-    <p
-      className="text-white opacity-90 text-center"
-      style={{
-        fontFamily: "Foco, sans-serif",
-        fontWeight: 400,
-        fontSize: "clamp(14px, 1.5vw, 16px)",
-        lineHeight: "1.3",
-        textAlign: "center",
-        padding: "0 6px",
-        color: "#82B3B4"
-      }}
-    >
-      {pillar.desc}
-    </p>
-  </div> */}
-</motion.div>
+          {/* Number */}
+          <div
+            className="text-[#FFFFFF] flex items-center justify-end w-[90px] opacity-[0.27]"
+            style={{
+              fontFamily: "Foco",
+              fontWeight: 300,
+              fontStyle: "Light",
+              fontSize: "128px",
+              lineHeight: "100%",
+              letterSpacing: "0%",
+              textAlign: "right",
+            }}
+          >
+            {item.num}
+          </div>
 
+          {/* Icon */}
+          <div className="flex-shrink-0 flex items-center justify-center"
+            style={{ width: "69px", height: "83px" }}
+          >
+            <img
+              src={item.img}
+              alt="icon"
+              style={{ width: "69px", height: "83px", objectFit: "contain" }}
+            />
+          </div>
 
-    ))}
+          {/* Text */}
+          <div className="flex-1">
+            <h3
+              className="text-[#004AAD] mb-2"
+              style={{
+                fontFamily: "Foco",
+                fontWeight: 400,
+                fontSize: "32px",
+                lineHeight: "120%",
+              }}
+            >
+              {item.title}
+            </h3>
+
+            <p
+              className="text-[#004AAD]"
+              style={{
+                fontFamily: "Foco",
+                fontWeight: 400,
+                fontSize: "16px",
+                lineHeight: "100%",
+                letterSpacing: "0%",
+              }}
+            >
+              {item.desc}
+            </p>
+          </div>
+
+        </motion.div>
+
+      ))}
+
+    </div>
   </div>
 </section>
-
         </div>
       </div>
     </section>
