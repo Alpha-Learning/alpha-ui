@@ -106,7 +106,7 @@ The result? Children who love learning again. Not because we made it entertainin
 
     {/* Heading */}
     <motion.h2
-      className="text-[#004AAD] text-[32px] sm:text-[47px] font-[400] text-left"
+      className="text-[#004AAD] text-[28px] sm:text-[40px] md:text-[47px] font-[400] text-left"
       style={{ fontFamily: "Foco" }}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -118,7 +118,7 @@ The result? Children who love learning again. Not because we made it entertainin
 
     {/* Sub-heading */}
     <motion.h2
-      className="text-[#004AAD] text-[19px] sm:text-[24px] font-[400] text-left mb-12"
+      className="text-[#004AAD] text-[17px] sm:text-[20px] md:text-[24px] font-[400] text-left mb-10 sm:mb-12"
       style={{ fontFamily: "Foco" }}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -128,11 +128,11 @@ The result? Children who love learning again. Not because we made it entertainin
       Six ways children naturally develop when we get out of their way:
     </motion.h2>
 
-    <div className="">
+    <div className="flex flex-col">
 
       {[
         { num: "1", img: "/learningab.png", title: "Learning About Yourself", desc: "With time, every child uncovers the rhythm of their own mind. Some learn through touch, some through movement, some in quiet focus, and others in lively collaboration. But instead of nurturing these various learning styles, traditional schooling often stifles them. It’s like trying to fit every square-, star-, and triangle-shaped peg into the same round hole." },
-        { num: "2", img: "/thinkingheart.png", title: "Thinking with Heart and Mind", desc: "True learning doesn’t just come from finding the singular correct answer. In fact, real-world challenges rarely have one right answer. Instead of simply “hitting save” on question + answer, children learn through exploring possibilities, making connections between different ideas, and trusting their creative instincts. These are the thinking skills no computer can replicate. " },
+        { num: "2", img: "/thinkingheart.png", title: "Thinking with Heart and Mind", desc: "True learning doesn’t just come from finding the singular correct answer. In fact, real-world challenges rarely have one right answer. Instead of simply “hitting save” on question + answer, children learn through exploring possibilities, making connections between different ideas, and trusting their creative instincts. These are the thinking skills no computer can replicate." },
         { num: "3", img: "/reflection.png", title: "Growing Through Reflection", desc: "After every experience, children pause to ask: What worked? What would I try differently? How did this feel? This reflection turns experience into wisdom, something uniquely human." },
         { num: "4", img: "/emotions.png", title: "Understanding Emotions", desc: "Children discover the language of their emotions, learn to steady themselves when things feel hard, and develop the resilience to move past disappointment. Along the way, they grow kinder and more empathetic by engaging with others who see and experience the world differently." },
         { num: "5", img: "/relationship.png", title: "Building Real Relationships", desc: "As children collaborate, disagree, and find their way to common ground, they learn to listen, compromise, and lead with empathy. These are the social skills that will shape their futures—not test scores." },
@@ -141,7 +141,7 @@ The result? Children who love learning again. Not because we made it entertainin
         
         <motion.div
           key={index}
-          className="flex items-center gap-8 p-8 sm:p-10 rounded-[30px]"
+          className={`flex flex-col sm:flex-row items-center gap-6 sm:gap-8 p-6 sm:p-8 md:p-10 rounded-[30px]`}
           style={{ backgroundColor: index % 2 === 0 ? "#E5D6C0" : "#EEE2D0" }}
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -151,53 +151,45 @@ The result? Children who love learning again. Not because we made it entertainin
 
           {/* Number */}
           <div
-            className="text-[#FFFFFF] flex items-center justify-end w-[90px] opacity-[0.27]"
+            className="text-[#FFFFFF] flex items-start sm:items-center justify-center w-full sm:w-[70px] md:w-[90px] opacity-[0.27] sm:text-right"
             style={{
               fontFamily: "Foco",
               fontWeight: 300,
-              fontStyle: "Light",
-              fontSize: "128px",
-              lineHeight: "100%",
-              letterSpacing: "0%",
-              textAlign: "right",
+              fontSize: "70px",
             }}
           >
-            {item.num}
+            <span className="text-[70px] sm:text-[100px] md:text-[128px] leading-none">
+              {item.num}
+            </span>
           </div>
 
           {/* Icon */}
-          <div className="flex-shrink-0 flex items-center justify-center"
-            style={{ width: "69px", height: "83px" }}
-          >
+          <div className="flex-shrink-0 flex items-center justify-center w-[60px] h-[70px] sm:w-[69px] sm:h-[83px]">
             <img
               src={item.img}
               alt="icon"
-              style={{ width: "69px", height: "83px", objectFit: "contain" }}
+              className="w-full h-full object-contain"
             />
           </div>
 
           {/* Text */}
-          <div className="flex-1">
+          <div className="flex-1 text-center sm:text-left">
             <h3
               className="text-[#004AAD] mb-2"
               style={{
                 fontFamily: "Foco",
                 fontWeight: 400,
-                fontSize: "32px",
-                lineHeight: "120%",
+                fontSize: "22px",
               }}
             >
               {item.title}
             </h3>
 
             <p
-              className="text-[#004AAD]"
+              className="text-[#004AAD] leading-relaxed text-[15px] sm:text-[16px]"
               style={{
                 fontFamily: "Foco",
                 fontWeight: 400,
-                fontSize: "16px",
-                lineHeight: "100%",
-                letterSpacing: "0%",
               }}
             >
               {item.desc}
@@ -211,6 +203,7 @@ The result? Children who love learning again. Not because we made it entertainin
     </div>
   </div>
 </section>
+
         </div>
       </div>
     </section>

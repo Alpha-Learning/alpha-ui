@@ -191,7 +191,12 @@ export default function Header() {
             </svg>
           </button>
 
-          <img src="/Group.png" alt="logo" className="w-16 h-15 mr-5" />
+          {/* <img src="/Group.png" alt="logo" className="w-16 h-15 mr-5" /> */}
+          <Link href="/">
+  <div className="flex items-center justify-center">
+              <img src="/Group.png" alt="logo" className="w-18 h-15" />
+            </div>
+</Link>
         </div>
 
         {mobileOpen && (
