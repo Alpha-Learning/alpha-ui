@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/app/lib/db";
 import { hashPassword } from "@/app/lib/auth";
+import { sendPasswordCreatedNotification } from "@/app/lib/emailService";
 
 const setPasswordSchema = z.object({
   email: z.string().email("Invalid email format"),
@@ -39,6 +40,20 @@ export async function POST(req: Request) {
       where: { id: user.id },
       data: { password: hashed },
     });
+
+    // Send notification email to admins
+    try {
+      const emailSent = await sendPasswordCreatedNotification(user.email, user.name);
+      if (emailSent) {
+        console.log(`Password created notification sent for: ${user.email}`);
+      } else {
+        console.error(`Failed to send password created notification for: ${user.email}`);
+        // Don't fail the request if email fails
+      }
+    } catch (emailError) {
+      console.error("Error sending password created notification:", emailError);
+      // Don't fail the request if email fails
+    }
 
     return NextResponse.json({
       success: true,

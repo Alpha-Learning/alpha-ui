@@ -14,7 +14,12 @@ const schema = z.object({
   parentFullName: z.string().min(2, "Full name is required"),
   parentEmail: z.string().email("Enter a valid email"),
   parentPhone: z.string().optional(),
-  relationToChild: z.string().optional(),
+  relationToChild: z
+    .string({ required_error: "Relation to child is required" })
+    .min(1, "Relation to child is required")
+    .refine((value) => ["1", "2", "3"].includes(value), {
+      message: "Relation to child is required",
+    }),
   parentCity: z.string().optional(),
   parentEthnicity: z.string().optional(),
 
@@ -156,7 +161,21 @@ function PreAssessmentInnerWithHooks() {
                 <Input id="parentPhone" placeholder="+973 ..." {...register("parentPhone")} error={!!errors.parentPhone} />
               </FormField>
               <FormField label="Relation to Child" htmlFor="relationToChild" error={errors.relationToChild}>
-                <Input id="relationToChild" placeholder="Mother / Father / Guardian" {...register("relationToChild")} error={!!errors.relationToChild} />
+                <select
+                  id="relationToChild"
+                  defaultValue=""
+                  {...register("relationToChild")}
+                  className={`w-full rounded-xl border px-4 py-3 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent transition ${
+                    errors.relationToChild ? "border-red-300" : "border-slate-400"
+                  }`}
+                >
+                  <option value="" disabled>
+                    Select relation...
+                  </option>
+                  <option value="1">Mother</option>
+                  <option value="2">Father</option>
+                  <option value="3">Guardian</option>
+                </select>
               </FormField>
               <FormField label="City/Location" htmlFor="parentCity" error={errors.parentCity}>
                 <Input id="parentCity" placeholder="Manama" {...register("parentCity")} error={!!errors.parentCity} />
