@@ -55,6 +55,7 @@ const submissionSchema = z.object({
 export async function POST(req: Request) {
   try {
     const data = await req.json();
+    console.log("Data:===========>", data);
     const parsed = submissionSchema.safeParse(data);
     
     if (!parsed.success) {
