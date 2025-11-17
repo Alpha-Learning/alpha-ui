@@ -100,8 +100,8 @@ export default function ThirdSection() {
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            Our AI-powered Alphera Learning System (ALS) integrates academic data, emotional feedback, and progress tracking to shape each learner’s pathway in real time.
-          </motion.p>
+           We’d love to talk with you to determine if our Alpha Learning System (ALS) is right for you and your child. Join our waitlist today to speak with one of our expert guides and learn more about how ALS is reshaping education.
+</motion.p>
 
           {/* FORM */}
           {!isSubmitted ? (

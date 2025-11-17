@@ -121,14 +121,14 @@ export default function Footer() {
         {/*  CONNECT Section */}
         <div className="text-center lg:text-left">
           <h3 className="text-sm font-semibold uppercase tracking-wider text-white/90 mb-2">CONNECT</h3>
-          <div className="text-sm font-jost text-white/80 leading-relaxed">
-            <p>+973 88 88 88 88</p>
-            <p>info@alphera.edu</p>
-            <p>
-  <a href="https://www.alphera.edu">www.alphera.edu</a>
-</p>
+          <div className="text-sm font-sans text-white/80 leading-relaxed">
+  <p>+973 6660 1466</p>
+  <p>Info@alpheraacademy.edu.bh</p>
+  <p>
+    <a href="https://alpheraacademy.edu.bh">https://alpheraacademy.edu.bh</a>
+  </p>
+</div>
 
-          </div>
         </div>
 
         {/* Divider */}

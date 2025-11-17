@@ -129,8 +129,9 @@ function PreAssessmentInner() {
 
   return (
     // g:[clip-path:polygon(0%_0%,100%_0%,100%_3%,100%_100%,18%_100%,0%_77%)]  xl:[clip-path:polygon(0%_0%,100%_0%,100%_3%,100%_100%,12%_100%,0%_77%)] 
-    <div className="relative w-full h-screen overflow-hidden  bg-white slide-in-right  p-2">
-      
+    // <div className="relative w-full h-screen overflow-hidden  bg-white slide-in-right  p-2">
+      <div className="relative w-full min-h-screen bg-white slide-in-right p-2">
+
     <div
       className="relative rounded-xl overflow-hidden bg-gradient-to-r  from-[#C9D0D5] to-[#A7CFE6] h-full"
     >

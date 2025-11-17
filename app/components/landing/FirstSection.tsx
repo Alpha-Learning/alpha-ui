@@ -6,13 +6,13 @@ import { motion } from "framer-motion";
 export default function FirstSection() {
 
   return (
-    <section id="about" className="py-12 sm:py-16 md:py-20 lg:py-0 bg-white">
+    <section id="about" className="sm:py-16 md:py-20 lg:py-0 bg-white">
       <div className="w-full">
         {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> */}
         <div>
           {/*  TOP IMAGE */}
           <div
-            className="relative w-full h-[390px] sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden mb-16  shadow-md"
+            className="relative w-full sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden mb-16  shadow-md"
             // initial={{ opacity: 0, y: -30 }}
             // whileInView={{ opacity: 1, y: 0 }}
             // viewport={{ once: true, amount: 0.2 }}
@@ -90,7 +90,7 @@ The result? Children who love learning again. Not because we made it entertainin
   <img
     src="/aboutus2.png"
     alt="Alphera Academy Banner"
-    className="w-full h-full object-fill"
+    className="w-full h-full object-cover"
     // style={{ transform: "scaleX(-1)" }}
   />
 {/* </div> */}
@@ -148,53 +148,60 @@ The result? Children who love learning again. Not because we made it entertainin
           viewport={{ amount: 0.4 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
+<div className=" items-center flex-start grid grid-cols-3 w-full md:w-auto md:flex">
+{/* <div className="items-center grid grid-cols-1 w-full md:w-auto md:flex md:items-start"> */}
 
           {/* Number */}
-          <div
-            className="text-[#FFFFFF] flex items-start sm:items-center justify-center w-full sm:w-[70px] md:w-[90px] opacity-[0.27] sm:text-right"
-            style={{
-              fontFamily: "Foco",
-              fontWeight: 300,
-              fontSize: "70px",
-            }}
-          >
-            <span className="text-[70px] sm:text-[100px] md:text-[128px] leading-none">
-              {item.num}
-            </span>
-          </div>
+<div
+  className="text-[#FFFFFF] flex items-start justify-left w-full sm:w-[70px] md:w-[90px] opacity-[0.27] sm:text-right"
+  style={{
+    fontFamily: "Foco",
+    fontWeight: 300,
+    fontSize: "70px",
+  }}
+>
+  <span className="text-[70px] sm:text-[100px] md:text-[128px] leading-none">
+    {item.num}
+  </span>
+</div>
 
-          {/* Icon */}
-          <div className="flex-shrink-0 flex items-center justify-center w-[60px] h-[70px] sm:w-[69px] sm:h-[83px]">
-            <img
-              src={item.img}
-              alt="icon"
-              className="w-full h-full object-contain"
-            />
-          </div>
+{/* Icon */}
+<div className="w-full flex-shrink-0 flex items-start justify-center h-[70px] sm:w-[69px] sm:h-[83px] -mt-2 sm:-mt-4 md:-mt-6">
+<img
+    src={item.img}
+    alt="icon"
+    className="w-full h-full object-contain"
+  />
+</div>
+<div className="block md:hidden">
 
-          {/* Text */}
-          <div className="flex-1 text-center sm:text-left">
-            <h3
-              className="text-[#004AAD] mb-2"
-              style={{
-                fontFamily: "Foco",
-                fontWeight: 400,
-                fontSize: "22px",
-              }}
-            >
-              {item.title}
-            </h3>
+</div>
+</div>
 
-            <p
-              className="text-[#004AAD] leading-relaxed text-[15px] sm:text-[16px]"
-              style={{
-                fontFamily: "Foco",
-                fontWeight: 400,
-              }}
-            >
-              {item.desc}
-            </p>
-          </div>
+{/* Text */}
+<div className="flex-1 text-center sm:text-left -mt-2 sm:-mt-4 md:-mt-6">
+  <h3
+    className="text-[#004AAD] mb-2"
+    style={{
+      fontFamily: "Foco",
+      fontWeight: 400,
+      fontSize: "22px",
+    }}
+  >
+    {item.title}
+  </h3>
+
+  <p
+    className="text-[#004AAD] leading-relaxed text-[15px] sm:text-[16px]"
+    style={{
+      fontFamily: "Foco",
+      fontWeight: 400,
+    }}
+  >
+    {item.desc}
+  </p>
+</div>
+
 
         </motion.div>
 
