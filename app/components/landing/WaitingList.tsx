@@ -612,7 +612,7 @@ export default function WaitingList() {
   </div>
 </div>
 <motion.div
-  className="relative w-full h-[390px] sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden rounded-b-2xl shadow-md"
+  className="relative w-full overflow-hidden rounded-b-2xl shadow-md"
   initial={{ opacity: 0, y: -30 }}
   whileInView={{ opacity: 1, y: 0 }}
   viewport={{ once: false, amount: 0.3 }}
@@ -621,7 +621,7 @@ export default function WaitingList() {
   <img
     src="/waitlist4.jpg"
     alt="Alphera Academy Banner"
-    className="w-full h-full object-cover object-top"
+    className="w-full h-auto"
   />
   <div className="absolute inset-0 bg-gradient-to-b from-[#00000025] to-transparent"></div>
 </motion.div>
