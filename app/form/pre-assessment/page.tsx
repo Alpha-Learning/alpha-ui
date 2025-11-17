@@ -17,7 +17,12 @@ const schema = z.object({
   parentEmail: z.string().email("Invalid email format"),
   parentPhone: z.string().min(1, "Phone number is required"),
   parentOccupation: z.string().optional(),
-  relationToChild: z.string().optional(),
+  relationToChild: z
+    .string({ required_error: "Relation to child is required" })
+    .min(1, "Relation to child is required")
+    .refine((value) => ["1", "2", "3"].includes(value), {
+      message: "Relation to child is required",
+    }),
   parentCity: z.string().min(1, "City/Location is required"),
   parentEthnicity: z.string().min(1, "Ethnicity is required"),
 
@@ -123,7 +128,7 @@ function PreAssessmentInner() {
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden lg:[clip-path:polygon(0%_0%,100%_0%,100%_3%,100%_100%,18%_100%,0%_77%)]  xl:[clip-path:polygon(0%_0%,100%_0%,100%_3%,100%_100%,12%_100%,0%_77%)]  bg-white slide-in-right p-2">
+    <div className="relative w-full h-screen overflow-hidden lg:[clip-path:polygon(0%_0%,100%_0%,100%_3%,100%_100%,18%_100%,0%_77%)]  xl:[clip-path:polygon(0%_0%,100%_0%,100%_3%,100%_100%,12%_100%,0%_77%)]  bg-white slide-in-right p-2 ">
       
     <div
       className="relative rounded-xl overflow-hidden bg-gradient-to-r  from-[#C9D0D5] to-[#A7CFE6]"
@@ -131,7 +136,7 @@ function PreAssessmentInner() {
       {/* bottom-left angled white corner like main page */}
       <div className="hidden sm:flex absolute left-0 bottom-0 z-10 w-[65vw] sm:w-[55vw] md:w-[50vw] lg:w-[45vw] xl:w-[40vw] h-[30vh] sm:h-[35vh] md:h-[38vh] lg:h-[40vh] xl:h-[42vh] bg-white angle-corner" />
 
-      <div className="relative z-20 h-screen flex items-center justify-center p-1 sm:p-2 md:p-3 lg:p-2">
+      <div className="relative  z-20 h-screen flex items-center justify-center p-1 sm:p-2 md:p-3 lg:p-2">
         <div className="w-full h-[calc(100vh-2rem)] sm:h-[calc(100vh-1rem)] md:h-[calc(100vh-1.5rem)] lg:h-[calc(100vh-1rem)] rounded-2xl flex flex-col overflow-hidden">
           <div className="px-4 border-b flex-shrink-0">
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">Pre-Assessment Phase Form</h1>
@@ -160,23 +165,21 @@ function PreAssessmentInner() {
                       <FormField label="Occupation (optional)" htmlFor="parentOccupation" error={errors.parentOccupation as any}>
                         <Input id="parentOccupation" placeholder="e.g., Engineer, Teacher" {...register("parentOccupation")} error={!!(errors as any).parentOccupation} />
                       </FormField>
-                      <FormField label="Relation to Child (optional)" htmlFor="relationToChild" error={errors.relationToChild}>
+                      <FormField label="Relation to Child" htmlFor="relationToChild" error={errors.relationToChild}>
                         <select
                           id="relationToChild"
+                          defaultValue=""
                           {...register("relationToChild")}
                           className={`w-full rounded-xl border px-4 py-3 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent transition ${
                             errors.relationToChild ? "border-red-300" : "border-slate-400"
                           }`}
                         >
-                          <option value="">Select relation...</option>
-                          <option value="Mother">Mother</option>
-                          <option value="Father">Father</option>
-                          <option value="Guardian">Guardian</option>
-                          <option value="Step-Mother">Step-Mother</option>
-                          <option value="Step-Father">Step-Father</option>
-                          <option value="Grandmother">Grandmother</option>
-                          <option value="Grandfather">Grandfather</option>
-                          <option value="Other">Other</option>
+                          <option value="" disabled>
+                            Select relation...
+                          </option>
+                          <option value="1">Father</option>
+                          <option value="2">Mother</option>
+                          <option value="3">Guardian</option>
                         </select>
                       </FormField>
                       <FormField label="City/Location" htmlFor="parentCity" error={errors.parentCity}>
@@ -315,7 +318,7 @@ function PreAssessmentInner() {
             {/* 9746215919, 9847463335 */}
 
             {/* Bottom fixed submit bar inside container */}
-            <div className="p-4 sm:p-6 flex-shrink-0">
+            <div className="p-4 sm:p-2 flex-shrink-0">
               <div className="flex justify-end">
                 <button
                   type="submit"

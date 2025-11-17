@@ -7,13 +7,40 @@ import { motion } from "framer-motion";
 export default function ThirdSection() {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      // Redirect to pre-assessment form with email as query parameter
-      router.push(`/form/pre-assessment?email=${encodeURIComponent(email)}`);
+    if (email && !isSubmitting) {
+      setIsSubmitting(true);
+      try {
+        // Send email notification
+        const response = await fetch('/api/waiting-list', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          // Redirect to pre-assessment form with email as query parameter
+          router.push(`/form/pre-assessment?email=${encodeURIComponent(email)}`);
+        } else {
+          // Even if email fails, still redirect (email is optional)
+          console.error('Failed to send notification email:', result.message);
+          router.push(`/form/pre-assessment?email=${encodeURIComponent(email)}`);
+        }
+      } catch (error) {
+        console.error('Error submitting waiting list:', error);
+        // Still redirect even if there's an error
+        router.push(`/form/pre-assessment?email=${encodeURIComponent(email)}`);
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -104,7 +131,8 @@ export default function ThirdSection() {
                 />
                 <button
                   type="submit"
-                  className="px-8 py-3 font-semibold text-white text-sm sm:text-base rounded-full transition-all duration-300 bg-[#004AAD] shadow-[0_4px_12px_rgba(0,64,184,0.4)] hover:shadow-[0_6px_16px_rgba(0,64,184,0.6)] hover:translate-y-[-2px]"
+                  disabled={isSubmitting}
+                  className="px-8 py-3 font-semibold text-white text-sm sm:text-base rounded-full transition-all duration-300 bg-[#004AAD] shadow-[0_4px_12px_rgba(0,64,184,0.4)] hover:shadow-[0_6px_16px_rgba(0,64,184,0.6)] hover:translate-y-[-2px] disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ fontFamily: "Foco", 
                     color: "#82B3B4",
                     textAlign: "center",
@@ -114,7 +142,7 @@ export default function ThirdSection() {
                     lineHeight: "normal"
                         }}
                 >
-                  SUBMIT
+                  {isSubmitting ? "SUBMITTING..." : "SUBMIT"}
                 </button>
               </div>
             </motion.form>

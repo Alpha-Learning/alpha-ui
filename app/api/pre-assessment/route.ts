@@ -12,7 +12,12 @@ const submissionSchema = z.object({
   parentFullName: z.string().min(1, "Parent full name is required"),
   parentEmail: z.string().email("Invalid email format"),
   parentPhone: z.string().optional(),
-  relationToChild: z.string().optional(),
+  relationToChild: z
+    .string({ required_error: "Relation to child is required" })
+    .min(1, "Relation to child is required")
+    .refine((value) => ["1", "2", "3"].includes(value), {
+      message: "Relation to child is required",
+    }),
   parentCity: z.string().optional(),
   parentEthnicity: z.string().optional(),
 
