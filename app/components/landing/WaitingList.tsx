@@ -62,25 +62,25 @@ export default function WaitingList() {
         </div>
 
   {/* The Process Section  */}
-<div className="relative w-full h-[260px] sm:h-[300px] md:h-[320px] lg:h-[350px] overflow-hidden pl-[159px]">
-  <div className="mb-6">
+
+
+<div className="relative w-full min-h-[400px] sm:min-h-[300px] md:min-h-[320px] lg:min-h-[350px] overflow-visible pl-4 sm:pl-8 md:pl-12 lg:pl-[159px]">
+  <div className="mb-4 sm:mb-5 md:mb-6">
     <h2
-      className="text-[#004AAD] text-[Foco] text-[47px] font-normal mb-1 pl-6"
+      className="text-[#004AAD] text-[Foco] text-2xl sm:text-3xl md:text-4xl lg:text-[47px] font-normal mb-1 pl-2 sm:pl-4 md:pl-5 lg:pl-6"
       style={{ fontFamily: "Foco, sans-serif", fontStyle: "normal", lineHeight: "normal" }}
     >
       PARTNERSHIP WITH FAMILIES 
     </h2>
   </div>
-  <div className="flex flex-col font-[Foco] sm:flex-row  gap-6 px-6 flex-wrap mb-20">
+  <div className="flex flex-col font-[Foco] sm:flex-row gap-4 sm:gap-5 md:gap-6 px-2 sm:px-4 md:px-5 lg:px-6 flex-wrap mb-12 sm:mb-16 md:mb-18 lg:mb-20">
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, amount: 0.3 }}
       transition={{ duration: 0.6 }}
-      className="text-[#004AAD] text-left relative h-[167px] text-[Foco]"
+      className="text-[#004AAD] text-left relative w-full text-[Foco]"
       style={{
-        transformOrigin: "0 0",
-        transform: "rotate(-90deg) scale(1, 1)",
         fontFamily: "Foco, sans-serif",
         fontSize: "16px",
         fontStyle: "normal",
@@ -98,20 +98,19 @@ export default function WaitingList() {
             fontWeight: "400",
             lineHeight: "normal",
             color: "#004AAD",
+            marginBottom: "1rem",
+            display: "block",
           }}
+          className="block text-lg sm:text-xl md:text-2xl lg:text-2xl mb-4"
         >
           You know your child best. We support what you already know 
-          <br />
-        </span>
-        <span>
-          <br />
         </span>
         <ul 
           style={{ 
             listStyleType: "disc",
             paddingLeft: "20px",
             margin: 0,
-            marginTop: "0.25rem",
+            marginTop: "0.5rem",
             marginBottom: "0.25rem",
           }}
         >
@@ -125,6 +124,7 @@ export default function WaitingList() {
                 lineHeight: "normal",
                 color: "#004AAD",
               }}
+              className="text-sm sm:text-base lg:text-base"
             >
               Daily Insights: Understand your child's natural learning patterns, emotional rhythms, and social growth.
             </span>
@@ -139,6 +139,7 @@ export default function WaitingList() {
                 lineHeight: "normal",
                 color: "#004AAD",
               }}
+              className="text-sm sm:text-base lg:text-base"
             >
               Home Extensions: Simple ways to continue discovery based learning in your own family rhythm.
             </span>
@@ -153,6 +154,7 @@ export default function WaitingList() {
                 lineHeight: "normal",
                 color: "#004AAD",
               }}
+              className="text-sm sm:text-base lg:text-base"
             >
               Regular Conversations: Deep discussions with your child's mentor about their development and needs.
             </span>
@@ -167,6 +169,7 @@ export default function WaitingList() {
                 lineHeight: "normal",
                 color: "#004AAD",
               }}
+              className="text-sm sm:text-base lg:text-base"
             >
               Family Learning: Workshops and events that bring our community together around shared values.
             </span>
@@ -181,6 +184,7 @@ export default function WaitingList() {
                 lineHeight: "normal",
                 color: "#004AAD",
               }}
+              className="text-sm sm:text-base lg:text-base"
             >
               Your Choice: Decide what information feels helpful and what feels like too much. This is your family's journey.
             </span>
@@ -196,6 +200,7 @@ export default function WaitingList() {
             color: "#004AAD",
             marginTop: "0.25rem",
           }}
+          className="block text-sm sm:text-base lg:text-base mt-2"
         >
           We don't replace parenting; we support it. You remain the expert on your child.
         </span>
@@ -203,6 +208,8 @@ export default function WaitingList() {
     </motion.div>
   </div>
 </div>
+
+
 
  <motion.div
           className="relative w-full h-[390px] sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden rounded-b-2xl shadow-md"
@@ -221,19 +228,14 @@ export default function WaitingList() {
 
         {/* Investment in Natural Development Section */}
 
-<div className="relative w-full h-[331px] overflow-hidden pl-[159px] bg-[#f2e7c7]">
-  <div 
-    className="h-full"
-    style={{
-      width: '1194px',
-      height: '331px',
-    }}
-  >
-    <div className="flex flex-col font-[Foco] gap-6 px-6 flex-wrap h-full">
+
+<div className="relative w-full min-h-[400px] sm:min-h-[350px] md:min-h-[331px] lg:min-h-[331px] overflow-visible pl-4 sm:pl-8 md:pl-12 lg:pl-[159px] bg-[#f2e7c7]">
+  <div className="w-full h-full">
+    <div className="flex flex-col font-[Foco] gap-4 sm:gap-5 md:gap-6 px-2 sm:px-4 md:px-5 lg:px-6 flex-wrap pt-4 sm:pt-5 md:pt-6 pb-4 sm:pb-5 md:pb-6 lg:pb-12">
       {/* Heading */}
-      <div className="mb-2 pt-6">
+      <div className="mb-2 sm:mb-3 md:mb-2 pt-4 sm:pt-5 md:pt-6">
         <h2
-          className="text-[#004AAD] text-[47px] font-normal mb-1"
+          className="text-[#004AAD] text-2xl sm:text-3xl md:text-4xl lg:text-[47px] font-normal mb-1"
           style={{ 
             fontFamily: "Foco, sans-serif", 
             fontStyle: "normal", 
@@ -244,14 +246,14 @@ export default function WaitingList() {
           INVESTMENT IN NATURAL DEVELOPMENT 
         </h2>
       </div>
- 
+
       {/* Content */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, amount: 0.3 }}
         transition={{ duration: 0.6 }}
-        className="text-[#004AAD] text-left relative px-6"
+        className="text-[#004AAD] text-left relative px-2 sm:px-4 md:px-5 lg:px-6"
         style={{
           fontFamily: "Foco, sans-serif",
           fontSize: "16px",
@@ -271,9 +273,9 @@ export default function WaitingList() {
               lineHeight: "normal",
               color: "#004AAD",
             }}
+            className="block text-sm sm:text-base lg:text-base mb-2"
           >
             What this kind of education requires: 
-            <br />
           </span>
           <ul 
             style={{ 
@@ -294,6 +296,7 @@ export default function WaitingList() {
                   lineHeight: "normal",
                   color: "#004AAD",
                 }}
+                className="text-sm sm:text-base lg:text-base"
               >
                 Small learning communities where every child is truly known by caring adults.
               </span>
@@ -308,6 +311,7 @@ export default function WaitingList() {
                   lineHeight: "normal",
                   color: "#004AAD",
                 }}
+                className="text-sm sm:text-base lg:text-base"
               >
                 Hands-on learning environments filled with real materials, not just worksheets and screens.
               </span>
@@ -322,6 +326,7 @@ export default function WaitingList() {
                   lineHeight: "normal",
                   color: "#004AAD",
                 }}
+                className="text-sm sm:text-base lg:text-base"
               >
                 Technology that serves human learning goals rather than driving them.
               </span>
@@ -336,6 +341,7 @@ export default function WaitingList() {
                   lineHeight: "normal",
                   color: "#004AAD",
                 }}
+                className="text-sm sm:text-base lg:text-base"
               >
                 Time for reflection, creativity, and character development, not just academic content coverage.
               </span>
@@ -350,6 +356,7 @@ export default function WaitingList() {
                   lineHeight: "normal",
                   color: "#004AAD",
                 }}
+                className="text-sm sm:text-base lg:text-base"
               >
                 Adults trained in child development who can adapt to each learner's needs.
               </span>
@@ -365,6 +372,7 @@ export default function WaitingList() {
               color: "#004AAD",
               marginTop: "0.25rem",
             }}
+            className="block text-sm sm:text-base lg:text-base mt-2"
           >
             This represents a different category of educational investment, developing humans, not just delivering curriculum.
           </span>
@@ -372,7 +380,7 @@ export default function WaitingList() {
       </motion.div>
     </div>
   </div>
-</div>  
+</div>
 
 <motion.div
   className="relative w-full h-[390px] sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden rounded-b-2xl shadow-md"
@@ -390,10 +398,11 @@ export default function WaitingList() {
 </motion.div>
 
 {/* Who Finds Home at Alphera Section */}
-<div className="relative w-full h-[457px] overflow-visible pl-[159px] bg-[#d8efcd]">
-  <div className="mb-6 pt-4">
+
+<div className="relative w-full min-h-[500px] sm:min-h-[450px] md:min-h-[457px] lg:min-h-[457px] overflow-visible pl-4 sm:pl-8 md:pl-12 lg:pl-[159px] bg-[#d8efcd]">
+  <div className="mb-4 sm:mb-5 md:mb-6 pt-4 sm:pt-5 md:pt-6">
     <h2
-      className="text-[#004AAD] text-left text-[47px] font-normal relative h-[67px] flex items-center justify-start pl-6 pt-4"
+      className="text-[#004AAD] text-left text-2xl sm:text-3xl md:text-4xl lg:text-[47px] font-normal relative flex items-center justify-start pl-2 sm:pl-4 md:pl-5 lg:pl-6 pt-2 sm:pt-3 md:pt-4"
       style={{ 
         fontFamily: "Foco, sans-serif", 
         fontStyle: "normal", 
@@ -403,16 +412,14 @@ export default function WaitingList() {
       WHO FINDS HOME AT ALPHERA
     </h2>
   </div>
-  <div className="flex flex-col font-[Foco] sm:flex-row gap-6 px-6 flex-wrap mb-20">
+  <div className="flex flex-col font-[Foco] sm:flex-row gap-4 sm:gap-5 md:gap-6 px-2 sm:px-4 md:px-5 lg:px-6 flex-wrap pt-2 sm:pt-3 md:pt-4 pb-4 sm:pb-5 md:pb-6 lg:pb-12">
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, amount: 0.3 }}
       transition={{ duration: 0.6 }}
-      className="text-[#004AAD] text-left relative h-[267px]"
+      className="text-[#004AAD] text-left relative w-full text-[Foco]"
       style={{
-        transformOrigin: "0 0",
-        transform: "rotate(-90deg) scale(1, 1)",
         fontFamily: "Foco, sans-serif",
         fontSize: "16px",
         fontStyle: "normal",
@@ -431,9 +438,9 @@ export default function WaitingList() {
             lineHeight: "normal",
             color: "#004AAD",
           }}
+          className="block text-lg sm:text-xl md:text-2xl lg:text-2xl mb-4"
         >
           We serve families who believe: 
-          <br />
         </span>
         <ul 
           style={{ 
@@ -454,6 +461,7 @@ export default function WaitingList() {
                 lineHeight: "normal",
                 color: "#004AAD",
               }}
+              className="text-sm sm:text-base lg:text-base"
             >
               Children learn best through relationships and real experiences, not self-abandonment and conformity 
             </span>
@@ -468,6 +476,7 @@ export default function WaitingList() {
                 lineHeight: "normal",
                 color: "#004AAD",
               }}
+              className="text-sm sm:text-base lg:text-base"
             >
               Small learning communities allow children to be fully known and supported, and to see the value in their contributions. 
             </span>
@@ -482,6 +491,7 @@ export default function WaitingList() {
                 lineHeight: "normal",
                 color: "#004AAD",
               }}
+              className="text-sm sm:text-base lg:text-base"
             >
               Character development matters as much as academic achievement. 
             </span>
@@ -496,6 +506,7 @@ export default function WaitingList() {
                 lineHeight: "normal",
                 color: "#004AAD",
               }}
+              className="text-sm sm:text-base lg:text-base"
             >
               Technology should serve human learning and innovation, never control or determine it. 
             </span>
@@ -510,24 +521,12 @@ export default function WaitingList() {
                 lineHeight: "normal",
                 color: "#004AAD",
               }}
+              className="text-sm sm:text-base lg:text-base"
             >
               Education should honor how children were inherently designed to grow and discover. 
             </span>
           </li>
         </ul>
-        <span
-          style={{
-            fontFamily: "Foco, sans-serif",
-            fontSize: "16px",
-            fontStyle: "normal",
-            fontWeight: "400",
-            lineHeight: "normal",
-            color: "#004AAD",
-            marginTop: "0.25rem",
-          }}
-        >
-          <br />
-        </span>
         <span
           style={{
             fontFamily: "Foco, sans-serif",
@@ -537,9 +536,9 @@ export default function WaitingList() {
             lineHeight: "normal",
             color: "#004AAD",
           }}
+          className="block text-lg sm:text-xl md:text-2xl lg:text-2xl mb-4 mt-4"
         >
           We might not be right for families seeking: 
-          <br />
         </span>
         <ul 
           style={{ 
@@ -560,6 +559,7 @@ export default function WaitingList() {
                 lineHeight: "normal",
                 color: "#004AAD",
               }}
+              className="text-sm sm:text-base lg:text-base"
             >
               Large schools with traditional classroom structures. 
             </span>
@@ -574,6 +574,7 @@ export default function WaitingList() {
                 lineHeight: "normal",
                 color: "#004AAD",
               }}
+              className="text-sm sm:text-base lg:text-base"
             >
               Technology-driven or primarily online education. 
             </span>
@@ -588,6 +589,7 @@ export default function WaitingList() {
                 lineHeight: "normal",
                 color: "#004AAD",
               }}
+              className="text-sm sm:text-base lg:text-base"
             >
               High stakes testing preparation as a primary focus. 
             </span>
@@ -602,6 +604,7 @@ export default function WaitingList() {
                 lineHeight: "normal",
                 color: "#004AAD",
               }}
+              className="text-sm sm:text-base lg:text-base"
             >
               Standardized approaches that treat all children the same way. 
             </span>
@@ -611,8 +614,9 @@ export default function WaitingList() {
     </motion.div>
   </div>
 </div>
+
 <motion.div
-  className="relative w-full overflow-hidden rounded-b-2xl shadow-md"
+  className="relative w-full h-[250px] sm:h-[350px] md:h-[420px] lg:h-[450px] xl:h-[480px] overflow-hidden rounded-b-2xl shadow-md"
   initial={{ opacity: 0, y: -30 }}
   whileInView={{ opacity: 1, y: 0 }}
   viewport={{ once: false, amount: 0.3 }}
@@ -621,16 +625,18 @@ export default function WaitingList() {
   <img
     src="/waitlist4.jpg"
     alt="Alphera Academy Banner"
-    className="w-full h-auto"
+    className="w-full h-full object-cover object-center"
   />
   <div className="absolute inset-0 bg-gradient-to-b from-[#00000025] to-transparent"></div>
 </motion.div>
 
 {/* Ready to see learning through your child's eyes again? Section */}
-<div className="relative w-full h-[457px] overflow-visible pl-[159px] bg-[#dadada]">
-  <div className="mb-6 pt-4">
+
+
+<div className="relative w-full min-h-[400px] sm:min-h-[350px] md:min-h-[400px] lg:min-h-[457px] overflow-visible pl-4 sm:pl-8 md:pl-12 lg:pl-[159px] bg-[#dadada]">
+  <div className="mb-4 sm:mb-5 md:mb-6 pt-4 sm:pt-5 md:pt-6">
     <h2
-      className="text-[#004AAD] text-left text-[36px] font-normal relative h-[67px] flex items-center justify-start pl-6 pt-4"
+      className="text-[#004AAD] text-left text-xl sm:text-2xl md:text-3xl lg:text-[36px] font-normal relative flex items-center justify-start pl-2 sm:pl-4 md:pl-5 lg:pl-6 pt-2 sm:pt-3 md:pt-4"
       style={{ 
         fontFamily: "Foco, sans-serif", 
         fontStyle: "normal", 
@@ -640,16 +646,14 @@ export default function WaitingList() {
       Ready to see learning through your child's eyes again? 
     </h2>
   </div>
-  <div className="flex flex-col font-[Foco] sm:flex-row gap-6 px-6 flex-wrap mb-20">
+  <div className="flex flex-col font-[Foco] sm:flex-row gap-4 sm:gap-5 md:gap-6 px-2 sm:px-4 md:px-5 lg:px-6 flex-wrap pt-2 sm:pt-3 md:pt-4 pb-4 sm:pb-5 md:pb-6 lg:pb-12">
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, amount: 0.3 }}
       transition={{ duration: 0.6 }}
-      className="text-[#004AAD] text-left relative h-[267px]"
+      className="text-[#004AAD] text-left relative w-full text-[Foco]"
       style={{
-        transformOrigin: "0 0",
-        transform: "rotate(-90deg) scale(1, 1)",
         fontFamily: "Foco, sans-serif",
         fontSize: "24px",
         fontStyle: "normal",
@@ -658,7 +662,7 @@ export default function WaitingList() {
         color: "#004AAD",
       }}
     >
-      <span>
+      <span className="block text-base sm:text-lg md:text-xl lg:text-2xl">
         Our enrollment process is designed as a conversation; we want to understand
         your child as a unique individual, and you want to see if Alphera feels right
         for your family. 
@@ -672,8 +676,6 @@ export default function WaitingList() {
         <br />
         Limited enrollment ensures every child receives the individual attention that
         makes authentic learning possible. 
-        <br />
-        <br />
       </span>
     </motion.div>
   </div>
