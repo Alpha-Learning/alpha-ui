@@ -389,8 +389,6 @@ export default function WaitingList() {
   <div className="absolute inset-0 bg-gradient-to-b from-[#00000025] to-transparent"></div>
 </motion.div>
 
-
-
 {/* Who Finds Home at Alphera Section */}
 <div className="relative w-full h-[457px] overflow-visible pl-[159px] bg-[#d8efcd]">
   <div className="mb-6 pt-4">
