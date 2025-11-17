@@ -161,7 +161,23 @@ function PreAssessmentInner() {
                         <Input id="parentOccupation" placeholder="e.g., Engineer, Teacher" {...register("parentOccupation")} error={!!(errors as any).parentOccupation} />
                       </FormField>
                       <FormField label="Relation to Child (optional)" htmlFor="relationToChild" error={errors.relationToChild}>
-                        <Input id="relationToChild" placeholder="e.g., Mother, Father, Guardian" {...register("relationToChild")} error={!!errors.relationToChild} />
+                        <select
+                          id="relationToChild"
+                          {...register("relationToChild")}
+                          className={`w-full rounded-xl border px-4 py-3 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent transition ${
+                            errors.relationToChild ? "border-red-300" : "border-slate-400"
+                          }`}
+                        >
+                          <option value="">Select relation...</option>
+                          <option value="Mother">Mother</option>
+                          <option value="Father">Father</option>
+                          <option value="Guardian">Guardian</option>
+                          <option value="Step-Mother">Step-Mother</option>
+                          <option value="Step-Father">Step-Father</option>
+                          <option value="Grandmother">Grandmother</option>
+                          <option value="Grandfather">Grandfather</option>
+                          <option value="Other">Other</option>
+                        </select>
                       </FormField>
                       <FormField label="City/Location" htmlFor="parentCity" error={errors.parentCity}>
                         <Input id="parentCity" placeholder="Manama" {...register("parentCity")} error={!!errors.parentCity} />

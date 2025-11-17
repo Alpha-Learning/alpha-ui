@@ -1,17 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 export default function ThirdSection() {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
-      setIsSubmitted(true);
-      console.log("Email submitted:", email);
+      // Redirect to pre-assessment form with email as query parameter
+      router.push(`/form/pre-assessment?email=${encodeURIComponent(email)}`);
     }
   };
 
