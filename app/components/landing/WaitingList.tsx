@@ -70,7 +70,7 @@ export default function WaitingList() {
       className="text-[#004AAD] text-[Foco] text-2xl sm:text-3xl md:text-4xl lg:text-[47px] font-normal mb-1 pl-2 sm:pl-4 md:pl-5 lg:pl-6"
       style={{ fontFamily: "Foco, sans-serif", fontStyle: "normal", lineHeight: "normal" }}
     >
-      PARTNERSHIP WITH FAMILIES 
+      PARTNERSHIP WITH FAMILIES  
     </h2>
   </div>
   <div className="flex flex-col font-[Foco] sm:flex-row gap-4 sm:gap-5 md:gap-6 px-2 sm:px-4 md:px-5 lg:px-6 flex-wrap mb-12 sm:mb-16 md:mb-18 lg:mb-20">
