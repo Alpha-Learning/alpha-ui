@@ -74,6 +74,7 @@ export async function POST(req: Request) {
 
     // Create a placeholder hashed password for new users (they will set a real one later)
     let user = await prisma.user.findUnique({ where: { email: parentEmail } });
+    console.log("User:===========>", user);
     if (!user) {
       const placeholderHashed = await hashPassword(globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`);
       user = await prisma.user.create({
