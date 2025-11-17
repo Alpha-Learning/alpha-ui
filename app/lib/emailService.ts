@@ -232,19 +232,9 @@ export async function sendWelcomeEmail(userEmail: string): Promise<boolean> {
               
               <p>Thank you for your interest in Alphera Academy! We're excited that you've taken the first step in your child's educational journey with us.</p>
               
-              <div class="info-box">
-                <h3>📝 Next Steps</h3>
-                <p>To complete your application, please:</p>
-                <ol style="margin-left: 20px; margin-top: 10px;">
-                  <li>Fill out the pre-assessment form with your and your child's information</li>
-                  <li>After submitting the form, you'll be prompted to set up a password for your account</li>
-                  <li>Once your password is set, you can log in to track your application progress</li>
-                </ol>
-              </div>
+          
               
-              <div style="text-align: center; margin: 20px 0;">
-                <a href="${baseUrl}/form/pre-assessment?email=${encodeURIComponent(userEmail)}" class="button">Start Your Application</a>
-              </div>
+             
               
               <h3>🔐 Login Instructions</h3>
               <p>After completing your application and setting up your password, you can log in using:</p>
