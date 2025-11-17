@@ -61,98 +61,147 @@ export default function WaitingList() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#00000025] to-transparent"></div>
         </div>
 
-        {/* The Process Section  */}
-        <div className="text-center mb-10">
-          <h2
-            className="text-[#004AAD] text-[47px] font-normal text-center mb-4"
-  style={{ fontFamily: "Foco, sans-serif", fontStyle: "normal", lineHeight: "normal" }}
->
-            The Process
-          </h2>
-        </div>
-
-       <div className="flex flex-col sm:flex-row justify-center items-center gap-6 px-6 flex-wrap mb-20">
-  {processSteps.map((step, index) => (
-    <React.Fragment key={step.id}>
-
-      <div
-        className="relative flex items-center justify-center"
-        style={{
-          color: "#FFF",
-          textAlign: "center",
-          fontFamily: "Foco",
-          fontSize: "28px",
-          fontStyle: "normal",
-          fontWeight: 400,
-          lineHeight: "normal",
-        }}
-      >
-        {/* Each Card */}
-        <motion.div
-          custom={index}
-          variants={cardVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: false, amount: 0.4 }}
-          className={`relative w-full h-[253px] sm:w-[220px] md:w-[240px] lg:w-[215px]
-            rounded-2xl text-white text-center px-6 font-medium shadow-md flex flex-col justify-center items-center`}
+  {/* The Process Section  */}
+<div className="relative w-full h-[260px] sm:h-[300px] md:h-[320px] lg:h-[350px] overflow-hidden pl-[159px]">
+  <div className="mb-6">
+    <h2
+      className="text-[#004AAD] text-[Foco] text-[47px] font-normal mb-1 pl-6"
+      style={{ fontFamily: "Foco, sans-serif", fontStyle: "normal", lineHeight: "normal" }}
+    >
+      PARTNERSHIP WITH FAMILIES 
+    </h2>
+  </div>
+  <div className="flex flex-col font-[Foco] sm:flex-row  gap-6 px-6 flex-wrap mb-20">
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.6 }}
+      className="text-[#004AAD] text-left relative h-[167px] text-[Foco]"
+      style={{
+        transformOrigin: "0 0",
+        transform: "rotate(-90deg) scale(1, 1)",
+        fontFamily: "Foco, sans-serif",
+        fontSize: "16px",
+        fontStyle: "normal",
+        fontWeight: "400",
+        lineHeight: "normal",
+        color: "#004AAD",
+      }}
+    >
+      <span>
+        <span
           style={{
-            backgroundColor: cardColors[index],
-            fontFamily: "foco, sans-serif",
-            borderRadius: "30px",
+            fontFamily: "Foco, sans-serif",
+            fontSize: "24px",
+            fontStyle: "normal",
+            fontWeight: "400",
+            lineHeight: "normal",
+            color: "#004AAD",
           }}
         >
-          {/* Background Number */}
-          <span
-            className="absolute select-none text-center"
-            style={{
-              color: step.id === 4 ? "#014298" : "rgba(0, 74, 173, 0.17)",
-              fontFamily: "Foco",
-              fontSize: "250px",
-              fontWeight: 300,
-              lineHeight: "normal",
-            }}
-          >
-            {step.id}
-          </span>
-
-          {/* Step Text */}
-          <p className="relative z-10 leading-snug pt-6"
-            style={{ fontFamily: "foco, sans-serif", fontSize: "28px" }}
-          >
-            {step.text}
-          </p>
-        </motion.div>
-      </div>
-
-      {/* Arrow Between Cards ✔ FIXED POSITION */}
-      {index < processSteps.length - 1 && (
-        <motion.div
-          custom={index}
-          variants={arrowVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: false, amount: 0.4 }}
-          className="hidden sm:flex items-center justify-center mx-4"
+          You know your child best. We support what you already know 
+          <br />
+        </span>
+        <span>
+          <br />
+        </span>
+        <ul 
+          style={{ 
+            listStyleType: "disc",
+            paddingLeft: "20px",
+            margin: 0,
+            marginTop: "0.25rem",
+            marginBottom: "0.25rem",
+          }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="37"
-            height="48"
-            viewBox="0 0 37 48"
-            fill="none"
-            style={{ filter: "drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.25))" }}
-          >
-            <path
-              d="M34.1035 19.7751C36.8785 21.7702 36.8784 25.8993 34.1035 27.8944L7.91875 46.7203C4.61099 49.0984 1.37124e-06 46.7345 1.54932e-06 42.6606L3.19513e-06 5.00884C3.3732e-06 0.934904 4.611 -1.42898 7.91876 0.949181L34.1035 19.7751Z"
-              fill="#6EA1E4"
-            />
-          </svg>
-        </motion.div>
-      )}
-
-    </React.Fragment>
-  ))}
+          <li style={{ marginBottom: "0.125rem" }}>
+            <span
+              style={{
+                fontFamily: "Foco, sans-serif",
+                fontSize: "16px",
+                fontStyle: "normal",
+                fontWeight: "400",
+                lineHeight: "normal",
+                color: "#004AAD",
+              }}
+            >
+              Daily Insights: Understand your child's natural learning patterns, emotional rhythms, and social growth.
+            </span>
+          </li>
+          <li style={{ marginBottom: "0.125rem" }}>
+            <span
+              style={{
+                fontFamily: "Foco, sans-serif",
+                fontSize: "16px",
+                fontStyle: "normal",
+                fontWeight: "400",
+                lineHeight: "normal",
+                color: "#004AAD",
+              }}
+            >
+              Home Extensions: Simple ways to continue discovery based learning in your own family rhythm.
+            </span>
+          </li>
+          <li style={{ marginBottom: "0.125rem" }}>
+            <span
+              style={{
+                fontFamily: "Foco, sans-serif",
+                fontSize: "16px",
+                fontStyle: "normal",
+                fontWeight: "400",
+                lineHeight: "normal",
+                color: "#004AAD",
+              }}
+            >
+              Regular Conversations: Deep discussions with your child's mentor about their development and needs.
+            </span>
+          </li>
+          <li style={{ marginBottom: "0.125rem" }}>
+            <span
+              style={{
+                fontFamily: "Foco, sans-serif",
+                fontSize: "16px",
+                fontStyle: "normal",
+                fontWeight: "400",
+                lineHeight: "normal",
+                color: "#004AAD",
+              }}
+            >
+              Family Learning: Workshops and events that bring our community together around shared values.
+            </span>
+          </li>
+          <li style={{ marginBottom: "0.125rem" }}>
+            <span
+              style={{
+                fontFamily: "Foco, sans-serif",
+                fontSize: "16px",
+                fontStyle: "normal",
+                fontWeight: "400",
+                lineHeight: "normal",
+                color: "#004AAD",
+              }}
+            >
+              Your Choice: Decide what information feels helpful and what feels like too much. This is your family's journey.
+            </span>
+          </li>
+        </ul>
+        <span
+          style={{
+            fontFamily: "Foco, sans-serif",
+            fontSize: "16px",
+            fontStyle: "normal",
+            fontWeight: "400",
+            lineHeight: "normal",
+            color: "#004AAD",
+            marginTop: "0.25rem",
+          }}
+        >
+          We don't replace parenting; we support it. You remain the expert on your child.
+        </span>
+      </span>
+    </motion.div>
+  </div>
 </div>
 
  <motion.div
@@ -169,6 +218,161 @@ export default function WaitingList() {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#00000025] to-transparent"></div>
         </motion.div>
+
+        {/* Investment in Natural Development Section */}
+
+<div className="relative w-full h-[331px] overflow-hidden pl-[159px] bg-[#f2e7c7]">
+  <div 
+    className="h-full"
+    style={{
+      width: '1194px',
+      height: '331px',
+    }}
+  >
+    <div className="flex flex-col font-[Foco] gap-6 px-6 flex-wrap h-full">
+      {/* Heading */}
+      <div className="mb-2 pt-6">
+        <h2
+          className="text-[#004AAD] text-[47px] font-normal mb-1"
+          style={{ 
+            fontFamily: "Foco, sans-serif", 
+            fontStyle: "normal", 
+            lineHeight: "normal",
+            color: "#004AAD",
+          }}
+        >
+          INVESTMENT IN NATURAL DEVELOPMENT 
+        </h2>
+      </div>
+
+      {/* Content */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.3 }}
+        transition={{ duration: 0.6 }}
+        className="text-[#004AAD] text-left relative px-6"
+        style={{
+          fontFamily: "Foco, sans-serif",
+          fontSize: "16px",
+          fontStyle: "normal",
+          fontWeight: "400",
+          lineHeight: "normal",
+          color: "#004AAD",
+        }}
+      >
+        <span>
+          <span
+            style={{
+              fontFamily: "Foco, sans-serif",
+              fontSize: "16px",
+              fontStyle: "normal",
+              fontWeight: "400",
+              lineHeight: "normal",
+              color: "#004AAD",
+            }}
+          >
+            What this kind of education requires: 
+            <br />
+          </span>
+          <ul 
+            style={{ 
+              listStyleType: "disc",
+              paddingLeft: "20px",
+              margin: 0,
+              marginTop: "0.25rem",
+              marginBottom: "0.25rem",
+            }}
+          >
+            <li style={{ marginBottom: "0.125rem" }}>
+              <span
+                style={{
+                  fontFamily: "Foco, sans-serif",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "400",
+                  lineHeight: "normal",
+                  color: "#004AAD",
+                }}
+              >
+                Small learning communities where every child is truly known by caring adults.
+              </span>
+            </li>
+            <li style={{ marginBottom: "0.125rem" }}>
+              <span
+                style={{
+                  fontFamily: "Foco, sans-serif",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "400",
+                  lineHeight: "normal",
+                  color: "#004AAD",
+                }}
+              >
+                Hands-on learning environments filled with real materials, not just worksheets and screens.
+              </span>
+            </li>
+            <li style={{ marginBottom: "0.125rem" }}>
+              <span
+                style={{
+                  fontFamily: "Foco, sans-serif",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "400",
+                  lineHeight: "normal",
+                  color: "#004AAD",
+                }}
+              >
+                Technology that serves human learning goals rather than driving them.
+              </span>
+            </li>
+            <li style={{ marginBottom: "0.125rem" }}>
+              <span
+                style={{
+                  fontFamily: "Foco, sans-serif",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "400",
+                  lineHeight: "normal",
+                  color: "#004AAD",
+                }}
+              >
+                Time for reflection, creativity, and character development, not just academic content coverage.
+              </span>
+            </li>
+            <li style={{ marginBottom: "0.125rem" }}>
+              <span
+                style={{
+                  fontFamily: "Foco, sans-serif",
+                  fontSize: "16px",
+                  fontStyle: "normal",
+                  fontWeight: "400",
+                  lineHeight: "normal",
+                  color: "#004AAD",
+                }}
+              >
+                Adults trained in child development who can adapt to each learner's needs.
+              </span>
+            </li>
+          </ul>
+          <span
+            style={{
+              fontFamily: "Foco, sans-serif",
+              fontSize: "16px",
+              fontStyle: "normal",
+              fontWeight: "400",
+              lineHeight: "normal",
+              color: "#004AAD",
+              marginTop: "0.25rem",
+            }}
+          >
+            This represents a different category of educational investment, developing humans, not just delivering curriculum.
+          </span>
+        </span>
+      </motion.div>
+    </div>
+  </div>
+</div>
         {/*  UTL Section  */}
       <motion.section
   initial={{ opacity: 0, y: 60 }}
