@@ -100,7 +100,7 @@ export default function ThirdSection() {
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            Our AI-powered Alphera Learning System (ASLS) integrates academic data, emotional feedback, and progress tracking to shape each learner’s pathway in real time.
+            Our AI-powered Alphera Learning System (ALS) integrates academic data, emotional feedback, and progress tracking to shape each learner’s pathway in real time.
           </motion.p>
 
           {/* FORM */}

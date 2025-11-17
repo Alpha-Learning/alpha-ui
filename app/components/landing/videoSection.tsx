@@ -18,6 +18,11 @@ export default function VideoSection() {
     }
     }
   }, [showImage]);
+  const scrollToWaitingList = () => {
+  const section = document.getElementById("waiting-list");
+  section?.scrollIntoView({ behavior: "smooth" });
+};
+
 
   return (
      <>
@@ -83,11 +88,18 @@ style={{  fontFamily: "Foco",
   best of the British and Arabic curricula with AI-driven personalisation <br/>
   preparing students not just for exams, but for life.
 </span>
-<span
- className="font-[Foco] font-black text-[25px] leading-[100%] tracking-[0%] text-center align-middle "
+<button
+  onClick={scrollToWaitingList}
+  className="font-[Foco] font-black text-[25px] leading-[100%] tracking-[0%] text-center align-middle px-8 py-3 rounded-full transition-all duration-300"
+  style={{
+    background: "rgba(255,255,255,0.25)",
+    backdropFilter: "blur(5px)",
+    border: "2px solid rgba(255,255,255,0.5)",
+  }}
 >
   Join the Waiting List
-</span>
+</button>
+
 </p>
 
  </div>
