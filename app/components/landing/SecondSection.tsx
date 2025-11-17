@@ -79,7 +79,7 @@ const cardVariants: Variants = {
       viewport={{ amount: 0.3 }}
       transition={{ duration: 0.6 }}
     >
-      <img src="/unfoldicon.png" alt="clock icon" className="w-10 h-10 sm:w-14 sm:h-14" />
+      <img src="/unfoldicon.png" alt="clock icon" className="w-21 h-21 sm:w-25 sm:h-25" />
 
       <div>
         <h2
@@ -245,7 +245,7 @@ const cardVariants: Variants = {
       transition={{ duration: 0.5 }}
     >
       {/* Text */}
-      <div className="w-full md:w-[60%]">
+      <div className="w-full md:w-[60%] ml-[77]">
         <h3
           className="text-[#004AAD] font-normal mb-4"
           style={{
@@ -352,7 +352,7 @@ const cardVariants: Variants = {
       transition={{ duration: 0.5 }}
     >
       {/* Text */}
-      <div className="w-full md:w-[60%]">
+      <div className="w-full md:w-[60%] ">
         <h3
           className="text-[#004AAD] font-normal mb-4"
           style={{
@@ -424,7 +424,7 @@ const cardVariants: Variants = {
           />
         </motion.div>
 
-      <section className="bg-[#E2DFB6] py-16">
+      <section className="bg-[#D8EFCD] py-16">
   <div className="mx-auto px-6 md:px-8 lg:px-10">
     <motion.div
       className="flex flex-col md:flex-row-reverse items-center md:items-start gap-6"
@@ -434,7 +434,7 @@ const cardVariants: Variants = {
       transition={{ duration: 0.5 }}
     >
       {/* Text */}
-      <div className="w-full md:w-[60%]">
+      <div className="w-full md:w-[60%]  ">
 
 
         <p
