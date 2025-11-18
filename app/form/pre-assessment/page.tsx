@@ -34,7 +34,10 @@ const schema = z.object({
   childEthnicity: z.string().optional(),
   childSchoolYear: z.string().optional(),
   childCurrentSchool: z.string().optional(),
-  childSchoolType: z.enum(["Public", "Private", "Homeschool", "Other"]).optional(),
+  childSchoolType: z.enum(["Public", "Private", "Homeschool", "Other"], {
+    required_error: "Current school type is required",
+    invalid_type_error: "Current school type is required",
+  }),
   childSchoolTypeOther: z.string().optional(),
   childDiagnosedNeeds: z.string().optional(),
 
@@ -129,16 +132,14 @@ function PreAssessmentInner() {
 
   return (
     // g:[clip-path:polygon(0%_0%,100%_0%,100%_3%,100%_100%,18%_100%,0%_77%)]  xl:[clip-path:polygon(0%_0%,100%_0%,100%_3%,100%_100%,12%_100%,0%_77%)] 
-    // <div className="relative w-full h-screen overflow-hidden  bg-white slide-in-right  p-2">
-      <div className="relative w-full min-h-screen bg-white slide-in-right p-2">
-
-    <div
-      className="relative rounded-xl overflow-hidden bg-gradient-to-r  from-[#C9D0D5] to-[#A7CFE6] h-full"
-    >
-      {/* bottom-left angled white corner like main page */}
-      {/* <div className="hidden sm:flex absolute left-0 bottom-0 z-10 w-[65vw] sm:w-[55vw] md:w-[50vw] lg:w-[45vw] xl:w-[40vw] h-[30vh] sm:h-[35vh] md:h-[38vh] lg:h-[40vh] xl:h-[42vh] bg-white angle-corner" /> */}
-      <div className="relative  z-20 h-full flex items-center justify-center p-1 sm:p-2 md:p-2 lg:p-2">
-        <div className="w-full h-full rounded-2xl flex flex-col overflow-hidden">
+    <div className="relative w-full h-screen overflow-hidden bg-white slide-in-right p-2">
+      <div
+        className="relative rounded-xl overflow-hidden bg-gradient-to-r from-[#C9D0D5] to-[#A7CFE6] h-full"
+      >
+        {/* bottom-left angled white corner like main page */}
+        {/* <div className="hidden sm:flex absolute left-0 bottom-0 z-10 w-[65vw] sm:w-[55vw] md:w-[50vw] lg:w-[45vw] xl:w-[40vw] h-[30vh] sm:h-[35vh] md:h-[38vh] lg:h-[40vh] xl:h-[42vh] bg-white angle-corner" /> */}
+        <div className="relative z-20 h-full flex items-center justify-center p-1 sm:p-2 md:p-2 lg:p-2">
+          <div className="w-full h-full rounded-2xl flex flex-col overflow-hidden">
           <div className="px-4 border-b flex-shrink-0">
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">Pre-Assessment Phase Form</h1>
             <p className="text-slate-600 mt-2">Please complete the following form to help us better understand your child and family's needs.</p>
@@ -171,16 +172,16 @@ function PreAssessmentInner() {
                           id="relationToChild"
                           defaultValue=""
                           {...register("relationToChild")}
-                          className={`w-full rounded-xl border px-4 py-3 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent transition ${
+                          className={`w-full rounded-xl border px-3 py-3 bg-transparent text-slate-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent transition ${
                             errors.relationToChild ? "border-red-300" : "border-slate-400"
                           }`}
                         >
-                          <option value="" disabled>
+                          <option value="" className="py-3" disabled>
                             Select relation...
                           </option>
-                          <option value="1">Father</option>
-                          <option value="2">Mother</option>
-                          <option value="3">Guardian</option>
+                          <option value="1" className="py-3">Father</option>
+                          <option value="2" className="py-3"  >Mother</option>
+                          <option value="3" className="py-3">Guardian</option>
                         </select>
                       </FormField>
                       <FormField label="City/Location" htmlFor="parentCity" error={errors.parentCity}>

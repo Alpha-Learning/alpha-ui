@@ -31,7 +31,10 @@ const submissionSchema = z.object({
   childEthnicity: z.string().optional(),
   childSchoolYear: z.string().optional(),
   childCurrentSchool: z.string().optional(),
-  childSchoolType: SchoolType.optional(),
+  childSchoolType: z.enum(["Public", "Private", "Homeschool", "Other"], {
+    required_error: "Current school type is required",
+    invalid_type_error: "Current school type is required",
+  }),
   childSchoolTypeOther: z.string().optional(),
   childDiagnosedNeeds: z.string().optional(),
 
