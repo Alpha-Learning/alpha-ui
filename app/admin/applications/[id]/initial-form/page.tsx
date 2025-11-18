@@ -154,7 +154,7 @@ export default function InitialFormPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Relation to Child</label>
-            <p className="text-slate-900 bg-slate-50 p-3 rounded-lg">{data.relationToChild || 'Not provided'}</p>
+            <p className="text-slate-900 bg-slate-50 p-3 rounded-lg">{data.relationToChild == "1" ? "Father" : data.relationToChild == "2" ? "Mother" : "Guardian"}</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">City/Location</label>
