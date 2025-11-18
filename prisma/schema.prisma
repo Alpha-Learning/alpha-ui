@@ -66,6 +66,7 @@ model Application {
   parentFullName    String
   parentEmail       String
   parentPhone       String?
+  parentOccupation  String?
   relationToChild   String?
   parentCity        String?
   parentEthnicity   String?

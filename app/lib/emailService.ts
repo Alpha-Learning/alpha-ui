@@ -183,17 +183,36 @@ export async function sendPaymentEmail(data: PaymentEmailData): Promise<boolean>
   }
 }
 
-export async function sendWelcomeEmail(userEmail: string): Promise<boolean> {
+export async function sendWelcomeEmail(userEmail: string, password?: string, userName?: string): Promise<boolean> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:4035';
     const loginUrl = `${baseUrl}/auth/login`;
     console.log('Base URL:', baseUrl);
     console.log('Login URL:', loginUrl);
     console.log('Email Config:', emailConfig);
+    
+    const passwordSection = password ? `
+              <div class="info-box" style="background: #fff3cd; border-color: #ffc107;">
+                <h3>🔐 Your Login Credentials</h3>
+                <p><strong>Email:</strong> ${userEmail}</p>
+                <p><strong>Password:</strong> <code style="background: #f8f9fa; padding: 5px 10px; border-radius: 4px; font-size: 16px; font-weight: bold;">${password}</code></p>
+                <p style="margin-top: 15px; color: #856404; font-size: 14px;">
+                  <strong>⚠️ Important:</strong> Please save this password securely. You will need it to log in to your dashboard.
+                </p>
+              </div>
+    ` : `
+              <h3>🔐 Login Instructions</h3>
+              <p>After completing your application and setting up your password, you can log in using:</p>
+              <ul style="margin-left: 20px;">
+                <li><strong>Email:</strong> ${userEmail}</li>
+                <li><strong>Password:</strong> The password you set during application submission</li>
+              </ul>
+    `;
+    
     const mailOptions = {
       from: `"Alphera Academy" <${emailConfig.auth.user}>`,
       to: userEmail,
-      subject: `Welcome to Alphera Academy - Complete Your Application`,
+      subject: password ? `Welcome to Alphera Academy - Your Account is Ready!` : `Welcome to Alphera Academy - Complete Your Application`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -218,30 +237,22 @@ export async function sendWelcomeEmail(userEmail: string): Promise<boolean> {
               margin: 10px 0;
             }
             .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            code { background: #f8f9fa; padding: 5px 10px; border-radius: 4px; font-family: monospace; }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="header">
               <h1>🎓 Alphera Academy</h1>
-              <h2>Welcome!</h2>
+              <h2>Welcome${userName ? `, ${userName}` : ''}!</h2>
             </div>
             
             <div class="content">
-              <p>Dear Prospective Parent,</p>
+              <p>Dear ${userName || 'Prospective Parent'},</p>
               
-              <p>Thank you for your interest in Alphera Academy! We're excited that you've taken the first step in your child's educational journey with us.</p>
+              <p>Thank you for submitting your application to Alphera Academy! We're excited that you've taken this important step in your child's educational journey with us.</p>
               
-          
-              
-             
-              
-              <h3>🔐 Login Instructions</h3>
-              <p>After completing your application and setting up your password, you can log in using:</p>
-              <ul style="margin-left: 20px;">
-                <li><strong>Email:</strong> ${userEmail}</li>
-                <li><strong>Password:</strong> The password you set during application submission</li>
-              </ul>
+              ${passwordSection}
               
               <div style="text-align: center; margin: 20px 0;">
                 <a href="${loginUrl}" class="button">Login to Dashboard</a>
@@ -260,7 +271,26 @@ export async function sendWelcomeEmail(userEmail: string): Promise<boolean> {
         </body>
         </html>
       `,
-      text: `
+      text: password ? `
+        Welcome to Alphera Academy!
+        
+        Dear ${userName || 'Prospective Parent'},
+        
+        Thank you for submitting your application to Alphera Academy! We're excited that you've taken this important step in your child's educational journey with us.
+        
+        YOUR LOGIN CREDENTIALS:
+        Email: ${userEmail}
+        Password: ${password}
+        
+        ⚠️ Important: Please save this password securely. You will need it to log in to your dashboard.
+        
+        Login URL: ${loginUrl}
+        
+        If you have any questions or need assistance, please don't hesitate to contact us.
+        
+        Best regards,
+        The Alphera Academy Team
+      ` : `
         Welcome to Alphera Academy!
         
         Dear Prospective Parent,

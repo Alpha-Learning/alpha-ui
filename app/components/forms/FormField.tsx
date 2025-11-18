@@ -4,7 +4,7 @@ import React from "react";
 import { FieldError } from "react-hook-form";
 
 type FormFieldProps = {
-  label: string;
+  label: React.ReactNode;
   htmlFor: string;
   children: React.ReactNode;
   error?: FieldError;

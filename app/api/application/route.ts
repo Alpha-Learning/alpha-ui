@@ -14,6 +14,7 @@ const submissionSchema = z.object({
   parentFullName: z.string().min(1, "Parent full name is required"),
   parentEmail: z.string().email("Invalid email format"),
   parentPhone: z.string().optional(),
+  parentOccupation: z.string().optional(),
   relationToChild: z
     .string({ required_error: "Relation to child is required" })
     .min(1, "Relation to child is required")
@@ -107,6 +108,7 @@ export async function POST(req: Request) {
         parentFullName: parsed.data.parentFullName,
         parentEmail: parsed.data.parentEmail,
         parentPhone: parsed.data.parentPhone,
+        parentOccupation: parsed.data.parentOccupation,
         relationToChild: parsed.data.relationToChild,
         parentCity: parsed.data.parentCity,
         parentEthnicity: parsed.data.parentEthnicity,
@@ -137,12 +139,33 @@ export async function POST(req: Request) {
 
     console.log("Application submitted successfully:", application.id);
     
+    // Check if user has a password set
+    // If user has multiple applications, they definitely have a password (went through flow multiple times)
+    // If user has 1 application, check if updatedAt is significantly after createdAt (password was set)
+    const userApplications = await prisma.application.count({
+      where: { userId: user.id }
+    });
+    
+    let hasPassword = false;
+    if (userApplications > 1) {
+      // Multiple applications = definitely has password
+      hasPassword = true;
+    } else if (userApplications === 1) {
+      // Single application: check if user was updated significantly after creation
+      // (accounting for the time it takes to set password after first submission)
+      const timeDiff = user.updatedAt.getTime() - user.createdAt.getTime();
+      const fiveMinutes = 5 * 60 * 1000; // 5 minutes in milliseconds
+      hasPassword = timeDiff > fiveMinutes;
+    }
+    
     return NextResponse.json({
       success: true,
       data: {
         id: application.id,
         status: application.status,
         message: "Application submitted successfully",
+        hasPassword: hasPassword,
+        redirectToLogin: hasPassword,
       },
     });
 
