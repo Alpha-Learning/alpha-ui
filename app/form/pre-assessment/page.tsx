@@ -29,7 +29,10 @@ const schema = z.object({
   // Child Information
   childFullName: z.string().min(1, "Child full name is required"),
   // Removed: childDateOfBirth
-  childAge: z.coerce.number().int().min(1).max(18).optional(),
+  childAge: z.coerce.number({
+    required_error: "Age is required",
+    invalid_type_error: "Age is required",
+  }).int().min(1, "Age is required").max(18, "Age must be 18 or less"),
   // Removed: childGender
   childEthnicity: z.string().optional(),
   childSchoolYear: z.string().optional(),
@@ -282,7 +285,7 @@ function PreAssessmentInner() {
                         <Input id="childFullName" placeholder="Child name" {...register("childFullName")} error={!!errors.childFullName} />
                       </FormField>
                       
-                      <FormField label="Age" htmlFor="childAge" error={errors.childAge as any}>
+                      <FormField label={<span>Age <span className="text-red-500">*</span></span>} htmlFor="childAge" error={errors.childAge as any}>
                         <Input id="childAge" type="number" min={1} max={18} placeholder="8" {...register("childAge")} error={!!errors.childAge} />
                       </FormField>
                       
