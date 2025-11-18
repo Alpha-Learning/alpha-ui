@@ -320,7 +320,7 @@ const cardVariants: Variants = {
     }}
   >
     Think of our ALS technology as an excellent journal that helps Academic
-    guides engage with each child most effectively. The insights are valuable,
+    Guides engage with each child most effectively. The insights are valuable,
     but human wisdom guides everything that happens next.
   </p>
 

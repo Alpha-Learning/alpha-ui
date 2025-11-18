@@ -12,7 +12,7 @@ export default function FirstSection() {
         <div>
           {/*  TOP IMAGE */}
           <div
-            className="relative w-full sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden mb-16  shadow-md"
+            className="relative w-full sm:h-[420px] md:h-[450px] lg:h-[530px] overflow-hidden mb-16  shadow-md"
             // initial={{ opacity: 0, y: -30 }}
             // whileInView={{ opacity: 1, y: 0 }}
             // viewport={{ once: true, amount: 0.2 }}
