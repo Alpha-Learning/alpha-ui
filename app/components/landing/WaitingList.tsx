@@ -616,7 +616,7 @@ export default function WaitingList() {
 </div>
 
 <motion.div
-  className="relative w-full h-[250px] sm:h-[350px] md:h-[420px] lg:h-[450px] xl:h-[480px] overflow-hidden rounded-b-2xl shadow-md"
+  className="relative w-full h-[250px] sm:h-[350px] md:h-[420px] lg:h-[300px] xl:h-[480px] overflow-hidden  shadow-md"
   initial={{ opacity: 0, y: -30 }}
   whileInView={{ opacity: 1, y: 0 }}
   viewport={{ once: false, amount: 0.3 }}

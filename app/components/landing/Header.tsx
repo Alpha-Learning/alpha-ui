@@ -87,7 +87,7 @@ export default function Header() {
 className="w-full fixed top-0 z-50 transition-all duration-300 bg-white/5 backdrop-blur-lg shadow-lg translate-y-0"
 >
       {/* Desktop */}
-      <div className="hidden lg:flex items-center justify-center h-20 bg-[#E9F2FEDB]/[0.76] ">
+      <div className="hidden lg:flex items-center justify-center h-20 bg-[#E9F2FEDB]/[0.5 6] ">
         <nav className="w-full max-w-7xl px-6">
           <div className="flex justify-center items-center gap-x-20">
             {/* Left links */}
