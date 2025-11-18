@@ -19,12 +19,12 @@ export default function FirstSection() {
             // transition={{ duration: 0.6 }}
           >
             <img
-              src="/au1.jpg"
+              src="/treeimage.jpg"
               alt="Alphera Academy Banner"
       className=" object-contain"
 
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#00000025] to-transparent h-[497px]"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-[#00000025] to-transparent h-[390px]"></div>
           </div>
 
           {/*  OUR STORY */}
