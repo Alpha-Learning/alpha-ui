@@ -299,3 +299,16 @@ body {
 .scroll-invisible::-webkit-scrollbar {
   display: none;            /* Chrome, Safari, Opera */
 }
+/*Prevent iOS Safari zoom ONLY on the waitlist form */
+.no-zoom input,
+.no-zoom select,
+.no-zoom textarea {
+  font-size: 16px !important; /* iOS won't zoom if ≥16px */
+}
+
+/* Optional: Slightly larger on desktop for better visuals */
+@media (min-width: 640px) {
+  .no-zoom input {
+    font-size: 1rem; /* 16px */
+  }
+}
