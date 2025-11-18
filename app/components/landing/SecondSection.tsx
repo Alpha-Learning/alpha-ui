@@ -232,14 +232,15 @@ const cardVariants: Variants = {
   {/* Mobile image */}
   <source
     media="(max-width: 768px)"
-    srcSet="/small-circle-mob1.png"
+    srcSet="/our-small-circle-mob.png"
   />
   
   {/* Desktop image */}
   <img
-    src="/opmain.png"
+    src="/girls-desk.png"
     alt="Alphera Academy Banner"
-    className="w-full h-full object-cover object-center"
+    className="w-full h-full object-fill object-center"
+    // className="w-full h-[320px] md:h-[100%] object-cover"
   />
 </picture>
 
