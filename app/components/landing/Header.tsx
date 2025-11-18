@@ -226,7 +226,7 @@ className="w-full fixed top-0 z-50 transition-all duration-300 bg-white/5 backdr
               </li>
               <li>
                 <Link
-                  className={`text-center font-[Foco] text-[16px] font-normal leading-normal uppercase ${
+                  className={` font-[Foco] text-[16px] font-normal leading-normal uppercase ${
                     pathname === "/ourprogram"
                       ? "text-[#004AAD]"
                       : "text-[#82B3B4]"
@@ -239,7 +239,7 @@ className="w-full fixed top-0 z-50 transition-all duration-300 bg-white/5 backdr
               </li>
               <li>
                 <Link
-                  className={`text-center font-[Foco] text-[16px] font-normal leading-normal uppercase ${
+                  className={` font-[Foco] text-[16px] font-normal leading-normal uppercase ${
                     pathname === "/waitlist"
                       ? "text-[#004AAD]"
                       : "text-[#82B3B4]"
@@ -253,7 +253,7 @@ className="w-full fixed top-0 z-50 transition-all duration-300 bg-white/5 backdr
               <li>
                 <a
                   href="#contact"
-                  className={`text-center font-[Foco] text-[16px] font-normal leading-normal uppercase ${
+                  className={` font-[Foco] text-[16px] font-normal leading-normal uppercase ${
                     activeId === "contact"
                       ? "text-[#004AAD]"
                       : "text-[#82B3B4]"

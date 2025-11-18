@@ -6,26 +6,29 @@ import { motion } from "framer-motion";
 export default function FirstSection() {
 
   return (
-    <section id="about" className="sm:py-16 md:py-20 lg:py-0 bg-white">
+    <section id="about" className="sm:py-16  lg:py-0 bg-white">
       <div className="w-full">
         {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> */}
         <div>
           {/*  TOP IMAGE */}
-          <div
-            className="relative w-full sm:h-[420px] md:h-[450px] lg:h-[530px] overflow-hidden mb-16  shadow-md"
-            // initial={{ opacity: 0, y: -30 }}
-            // whileInView={{ opacity: 1, y: 0 }}
-            // viewport={{ once: true, amount: 0.2 }}
-            // transition={{ duration: 0.6 }}
-          >
-            <img
-              src="/treeimage.jpg"
-              alt="Alphera Academy Banner"
-      className=" object-contain"
+          <div className="relative overflow-hidden mb-16">
+          {/* desk */}
+          <img
+            src="/treeimage.jpg"
+            alt="Alphera Academy Banner"
+            className="hidden sm:block w-full sm:h-[420px] md:h-[450px] lg:h-[530px] object-cover"
+          />
 
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#00000025] to-transparent h-[390px]"></div>
-          </div>
+          {/* mob */}
+          <img
+            src="/tree8.png"
+            alt="Alphera Academy Banner Mobile"
+            className="block sm:hidden w-full h-[350px] object-cover"
+          />
+
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#00000025] to-transparent"></div>
+        </div>
 
           {/*  OUR STORY */}
           <motion.div
