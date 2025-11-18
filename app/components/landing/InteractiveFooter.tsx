@@ -33,14 +33,15 @@ const IconInstagram = ({ className = "" }: { className?: string }) => (
     style={{
       width: "42.67px",
       height: "42.67px",
-      opacity: 1,
+      backgroundColor: "#004AAD", 
+      borderRadius: "8px",       
     }}
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      stroke="#004aad" // ✅ White outline (since your footer is blue)
-      fill="#FFFFFF"
+      stroke="#004AAD"    
+      fill="#82B3B4"      
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -54,10 +55,12 @@ const IconInstagram = ({ className = "" }: { className?: string }) => (
       {/* Lens circle */}
       <circle cx="12" cy="12" r="4" />
       {/* Small camera dot */}
-      <circle cx="17.5" cy="6.5" r="1" fill="#FFFFFF" />
+      <circle cx="17.5" cy="6.5" r="1" fill="#004AAD" />
     </svg>
   </div>
 );
+
+
 
 
 
@@ -111,7 +114,7 @@ export default function Footer() {
           <a href="/" className="block hover:text-white">HOME</a>
           <a href="/aboutus" className="block hover:text-white">ABOUT US</a>
           <a href="/ourprogram" className="block hover:text-white">OUR PROGRAM</a>
-          <a href="/waitlist" className="block hover:text-white">WAITING LIST</a>
+          <a href="/waitlist" className="block hover:text-white">FAMILY PARTNERSHIP</a>
           <a href="#contact" className="block hover:text-white">CONTACT US</a>
         </nav>
 

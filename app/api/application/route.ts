@@ -27,7 +27,10 @@ const submissionSchema = z.object({
   // Child Information
   childFullName: z.string().min(1, "Child full name is required"),
   childDateOfBirth: z.string().optional(), // Date string format
-  childAge: z.number().int().min(1).max(18).optional(),
+  childAge: z.number({
+    required_error: "Age is required",
+    invalid_type_error: "Age is required",
+  }).int().min(1, "Age is required").max(18, "Age must be 18 or less"),
   childGender: Gender.optional(),
   childEthnicity: z.string().optional(),
   childSchoolYear: z.string().optional(),

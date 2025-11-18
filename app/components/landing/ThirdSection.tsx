@@ -92,10 +92,7 @@ export default function ThirdSection() {
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            We’d love to talk with you to determine if our Alpha Learning System
-            (ALS) is right for you and your child. Join our waitlist today to
-            speak with one of our expert guides and learn more about how ALS is
-            reshaping education.
+            Join our waitlist today to speak with one of our expert guides and learn more about how ALS is reshaping education.
           </motion.p>
 
           {/* FORM WRAPPED IN .no-zoom → PREVENTS iOS ZOOM */}
@@ -108,11 +105,14 @@ export default function ThirdSection() {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <div
-                className="flex items-center bg-white rounded-full shadow-[0_6px_16px_rgba(0,0,0,0.15)] overflow-hidden w-full"
+                className="flex items-center bg-white rounded-full shadow-[0_6px_16px_rgba(0,0,0,0.15)] overflow-hidden w-full max-w-md mx-auto"
                 style={{
+                  color: "#82B3B4",
                   fontFamily: "Foco",
                   fontSize: "16px",
-                  fontWeight: 400,
+                  fontStyle: "normal",
+                  fontWeight: "400",
+                  lineHeight: "normal",
                 }}
               >
                 <input
@@ -120,9 +120,8 @@ export default function ThirdSection() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="E-Mail Here"
+                  className="flex-1 px-4 py-2 text-[#192951] placeholder-[#82B3B4] focus:outline-none rounded-l-full text-sm sm:text-base font-sans placeholder:font-[Foco]"
                   required
-                  className="flex-1 px-6 py-4 text-[#192951] placeholder-[#82B3B4] focus:outline-none rounded-l-full"
-                  style={{ fontFamily: "Foco, sans-serif" }}
                 />
 
                 <button
