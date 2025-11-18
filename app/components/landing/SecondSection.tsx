@@ -292,9 +292,9 @@ const cardVariants: Variants = {
       lineHeight: "normal",
     }}
   >
-    Our ALS learning system quietly observes each child when they're most
+    Our ALS quietly observes each child when they're most
     focused, what frustrates them, and how they prefer to learn. This helps
-    academic guides understand each child more completely. But here's what
+    Academic Guide understand each child more completely. But here's what
     technology never does at Alphera:
   </p>
 
@@ -331,8 +331,7 @@ const cardVariants: Variants = {
       lineHeight: "normal",
     }}
   >
-    The goal: Children who see technology as a useful tool,
-    not a crutch or master.
+    The goal: Children who use technology with purpose without being overly dependent.
   </p>
 
 </div>
