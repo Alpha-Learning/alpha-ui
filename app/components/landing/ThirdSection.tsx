@@ -100,7 +100,8 @@ export default function ThirdSection() {
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-           We’d love to talk with you to determine if our Alpha Learning System (ALS) is right for you and your child. Join our waitlist today to speak with one of our expert guides and learn more about how ALS is reshaping education.
+         Join our waitlist today to speak with one of our expert guides and learn more about how ALS is reshaping education.
+           {/* We’d love to talk with you to determine if our Alpha Learning System (ALS) is right for you and your child. Join our waitlist today to speak with one of our expert guides and learn more about how ALS is reshaping education. */}
 </motion.p>
 
           {/* FORM */}
@@ -125,14 +126,15 @@ export default function ThirdSection() {
   }}
 >
   <input
-    type="email"
-    value={email}
-    onChange={(e) => setEmail(e.target.value)}
-    placeholder="E-Mail Here"
-    className="flex-1 px-4 py-2 text-[#192951] placeholder-[#82B3B4] focus:outline-none rounded-l-full text-sm sm:text-base"
-    style={{ fontFamily: "Foco, sans-serif" }}
-    required
-  />
+  type="email"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  placeholder="E-Mail Here"
+  className="flex-1 px-4 py-2 text-[#192951] placeholder-[#82B3B4] 
+             focus:outline-none rounded-l-full text-sm sm:text-base 
+             font-sans placeholder:font-[Foco]"
+  required
+/>
 
   <button
     type="submit"

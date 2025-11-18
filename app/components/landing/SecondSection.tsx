@@ -120,7 +120,7 @@ const cardVariants: Variants = {
         {
           time: "8:30",
           title: "Core Learning Pod Time",
-          desc: "Math, Reading, Science, and Arabic, but delivered in ways that match how each child learns best. Some work at tables, others on floor cushions. Some need absolute quiet; others think better with soft background music.\n\nThe Innovative ALS technology\ntracks what's working for each child, but our academic guides make all the decisions about what happens next."
+          desc: "Math, English, Science, and Arabic, but delivered in ways that match how each child learns best. Some work at tables, others on floor cushions. Some need absolute quiet; others think better with soft background music.\n\nThe Innovative ALS technology\ntracks what's working for each child, but our academic guides make all the decisions about what happens next."
         },
         {
           time: "10:30",
@@ -232,7 +232,7 @@ const cardVariants: Variants = {
   {/* Mobile image */}
   <source
     media="(max-width: 768px)"
-    srcSet="/imagegirlsmob.png"
+    srcSet="/small-circle-mob1.png"
   />
   
   {/* Desktop image */}
@@ -388,7 +388,7 @@ const cardVariants: Variants = {
           }}
         >
           Adults trained in human development, not just subject matter. Our guides
-          help children thrive—not by forcing learning, but by understanding how
+          help children thrive not by forcing learning, but by understanding how
           children learn best.
         </p>
 
@@ -397,10 +397,11 @@ const cardVariants: Variants = {
           style={{ fontFamily: "Foco", fontSize: "16px", fontWeight: 400 }}
         >
           <li>Learning Mentors work with a maximum of 15 children, ensuring genuine relationships and individual attention.</li>
-          <li>Development Coaches specialize in emotional intelligence, creativity, and social skills.</li>
-          <li>Experienced Designers. Also this parts terminology confuses me a little. Should we stick to what it is, Academic Guides, Meta Coachs, (family partners is actually a very cool idea but also not something specifically mentioned anywhere in our system as of yet)</li>
+          <li>Development Coaches specialise in emotional intelligence, creativity, and social skills.</li>
+          {/* <li>Experienced Designers. Also this parts terminology confuses me a little. Should we stick to what it is, Academic Guides, Meta Coachs, (family partners is actually a very cool idea but also not something specifically mentioned anywhere in our system as of yet)</li> */}
+          <li>Experienced Designers create hands-on learning that connects to real life.</li>
           <li>Family Partners help parents understand their child's growth and extend learning at home.</li>
-          <li>Adults are chosen for their commitment to honoring every child as a distinct person, rather than producing standardized results.</li>
+          <li>Adults are chosen for their commitment to honoring every child as a distinct person, rather than producing standardised results.</li>
         </ul>
       </div>
 
