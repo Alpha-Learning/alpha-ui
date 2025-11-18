@@ -346,15 +346,9 @@ export async function sendWaitingListNotification(userEmail: string): Promise<bo
                 </p>
               </div>
               
-              <p><strong>Next Steps:</strong></p>
-              <ul style="margin-left: 20px;">
-                <li>The user has received a welcome email with login instructions</li>
-                <li>They will be redirected to complete the pre-assessment form</li>
-                <li>You will receive another notification when they complete the form and set their password</li>
-              </ul>
+             
               
-              <p>Please monitor this application and be ready to follow up if needed.</p>
-              
+            
               <p>Best regards,<br>
               Alphera Academy System</p>
             </div>
