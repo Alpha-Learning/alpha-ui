@@ -135,11 +135,11 @@ style={{  fontFamily: "Foco",
 
       <p className="text-[16px] sm:text-[18px] md:text-[20px] font-normal space-y-4">
         <span className="block">
-          Somewhere between finger paints and final exams, we are taught that learning happens at desks. That children need to sit still, memorize facts, and compete for standardized grades.
+          Somewhere between finger paints and final exams, we are taught that learning happens at desks. That children need to sit still, memorise facts, and compete for standardised grades.
         </span>
 
         <span className="block">
-          But that style of learning goes against our very nature. Humans learn through wonder, inquisition, and experience. Consider the way a young child plays make-believe or explores a garden; A cardboard box becomes a mighty fortress or a rocket ship or a laboratory. A garden is really an infinite universe, with curious creatures and an unfathomably harmonious ecosystem to be discovered.
+          But that style of learning goes against our very nature. Humans learn through wonder, inquisition, and experience. Consider the way a young child plays make-believe or explores a garden; a cardboard box becomes a mighty fortress or a rocket ship or a laboratory. A garden is really an infinite universe, with curious creatures and an unfathomably harmonious ecosystem to be discovered.
         </span>
 
         <span className="block">

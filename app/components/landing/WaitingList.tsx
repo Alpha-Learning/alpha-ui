@@ -606,7 +606,7 @@ export default function WaitingList() {
               }}
               className="text-sm sm:text-base lg:text-base"
             >
-              Standardized approaches that treat all children the same way. 
+              standardised approaches that treat all children the same way. 
             </span>
           </li>
         </ul>
@@ -678,7 +678,7 @@ export default function WaitingList() {
       }}
     >
       <span className="block text-base sm:text-lg md:text-xl lg:text-2xl">
-        Our enrollment process is designed as a conversation; we want to understand
+        Our enrolment process is designed as a conversation; we want to understand
         your child as a unique individual, and you want to see if Alphera feels right
         for your family. 
         <br />
@@ -689,7 +689,7 @@ export default function WaitingList() {
         <br />
         Start the conversation → 
         <br />
-        Limited enrollment ensures every child receives the individual attention that
+        Limited enrolment ensures every child receives the individual attention that
         makes authentic learning possible. 
       </span>
     </motion.div>

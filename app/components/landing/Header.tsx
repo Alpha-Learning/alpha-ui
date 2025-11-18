@@ -78,11 +78,13 @@ export default function Header() {
   return (
     <header
     
-  className={`w-full fixed top-0 z-50 transition-all duration-300 ${
-    scrollY > 100
-      ? "bg-white/5 backdrop-blur-lg shadow-lg"
-      : "bg-transparent"
-  } translate-y-0`}
+//   className={`w-full fixed top-0 z-50 transition-all duration-300 ${
+//     scrollY > 100
+//       ? "bg-white/5 backdrop-blur-lg shadow-lg"
+//       : "bg-transparent"
+//   } translate-y-0`}
+// >
+className="w-full fixed top-0 z-50 transition-all duration-300 bg-white/5 backdrop-blur-lg shadow-lg translate-y-0"
 >
       {/* Desktop */}
       <div className="hidden lg:flex items-center justify-center h-20 bg-[#E9F2FEDB]/[0.76] ">
@@ -112,7 +114,7 @@ export default function Header() {
                   href="/ourprogram"
                   onClick={() => setMobileOpen(false)}
                 >
-                  OUR PROGRAM
+                  OUR PROGRAMME
                 </Link>
               </li>
             </ul>
@@ -142,7 +144,7 @@ export default function Header() {
                   href="/waitlist"
                   onClick={() => setMobileOpen(false)}
                 >
-                  WAITING LIST
+                  FAMILY PARTNERSHIP
                 </Link>
               </li>
               <li>
@@ -165,39 +167,48 @@ export default function Header() {
 
       {/* Mobile */}
       <div className="lg:hidden">
-        <div className="h-16 px-4 flex items-center justify-between">
-          <button
-            aria-label="Toggle menu"
-            className={`transition-colors duration-300 ${
-              scrollY > 100 ? "text-gray-800/80" : "text-[#82B3B4]/80"
-            }`}
-            onClick={() => setMobileOpen((v) => !v)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className={`w-6 h-6 ${
-                scrollY > 100 ? "text-gray-800" : "text-[#82B3B4]"
-              }`}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-              />
-            </svg>
-          </button>
+        {/* <div className="h-16 px-4 flex items-center justify-between"> */}
+    <div className="h-16 px-4 grid grid-cols-3 items-center bg-[#E9F2FEDB]">
+  {/* Left: Toggle Menu */}
+  <button
+    aria-label="Toggle menu"
+    className={`transition-colors duration-300 justify-self-start ${
+      scrollY > 100 ? "text-gray-800/80" : "text-[#82B3B4]/80"
+    }`}
+    onClick={() => setMobileOpen((v) => !v)}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className={`w-6 h-6 ${
+        scrollY > 100 ? "text-[#82B3B4]" : "text-[#82B3B4]"
+      }`}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+      />
+    </svg>
+  </button>
 
-          {/* <img src="/Group.png" alt="logo" className="w-16 h-15 mr-5" /> */}
-          <Link href="/">
-  <div className="flex items-center justify-center">
-              <img src="/Group.png" alt="logo" className="w-18 h-15" />
-            </div>
-</Link>
-        </div>
+  {/* Middle: Logo */}
+  <Link href="/" className="flex justify-center">
+    <img
+      src="/Group.png"
+      alt="logo"
+      className="w-[72px] h-[60px] object-contain p-[5]"
+    />
+  </Link>
+
+  {/* Right: Empty Space (Keeps center alignment) */}
+  <div></div>
+</div>
+
+
 
         {mobileOpen && (
           <div className="px-4 pb-4">
@@ -223,7 +234,7 @@ export default function Header() {
                   href="/ourprogram"
                   onClick={() => setMobileOpen(false)}
                 >
-                  OUR PROGRAM
+                  OUR PROGRAMME
                 </Link>
               </li>
               <li>
@@ -236,7 +247,7 @@ export default function Header() {
                   href="/waitlist"
                   onClick={() => setMobileOpen(false)}
                 >
-                  WAITING LIST
+                  FAMILY PARTNERSHIP
                 </Link>
               </li>
               <li>
