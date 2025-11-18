@@ -606,7 +606,7 @@ export default function WaitingList() {
               }}
               className="text-sm sm:text-base lg:text-base"
             >
-              standardised approaches that treat all children the same way. 
+              Standardised approaches that treat all children the same way. 
             </span>
           </li>
         </ul>

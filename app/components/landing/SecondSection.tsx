@@ -232,14 +232,15 @@ const cardVariants: Variants = {
   {/* Mobile image */}
   <source
     media="(max-width: 768px)"
-    srcSet="/small-circle-mob1.png"
+    srcSet="/our-small-circle-mob.png"
   />
   
   {/* Desktop image */}
   <img
-    src="/opmain.png"
+    src="/girls-desk.png"
     alt="Alphera Academy Banner"
-    className="w-full h-full object-cover object-center"
+    className="w-full h-full object-fill object-center"
+    // className="w-full h-[320px] md:h-[100%] object-cover"
   />
 </picture>
 
@@ -292,9 +293,9 @@ const cardVariants: Variants = {
       lineHeight: "normal",
     }}
   >
-    Our ALS learning system quietly observes each child when they're most
+    Our ALS quietly observes each child when they're most
     focused, what frustrates them, and how they prefer to learn. This helps
-    academic guides understand each child more completely. But here's what
+    Academic Guide understand each child more completely. But here's what
     technology never does at Alphera:
   </p>
 
@@ -331,8 +332,7 @@ const cardVariants: Variants = {
       lineHeight: "normal",
     }}
   >
-    The goal: Children who see technology as a useful tool,
-    not a crutch or master.
+    The goal: Children who use technology with purpose without being overly dependent.
   </p>
 
 </div>
