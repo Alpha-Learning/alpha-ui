@@ -47,7 +47,7 @@ export default function WaitingList() {
     <section id="services">
       <div className="w-full">
          <div
-          className="relative w-full h-[390px] sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden mb-16 rounded-b-2xl shadow-md"
+          className="relative w-full h-[390px] sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden mb-16 shadow-md"
         //   initial={{ opacity: 0, y: -30 }}
         //   whileInView={{ opacity: 1, y: 0 }}
         //   viewport={{ once: false, amount: 0.3 }}
@@ -212,7 +212,7 @@ export default function WaitingList() {
 
 
  <motion.div
-          className="relative w-full h-[390px] sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden rounded-b-2xl shadow-md"
+          className="relative w-full h-[390px] sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden  shadow-md"
           initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.3 }}
@@ -383,7 +383,7 @@ export default function WaitingList() {
 </div>
 
 <motion.div
-  className="relative w-full h-[390px] sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden rounded-b-2xl shadow-md"
+  className="relative w-full h-[390px] sm:h-[420px] md:h-[450px] lg:h-[480px] overflow-hidden  shadow-md"
   initial={{ opacity: 0, y: -30 }}
   whileInView={{ opacity: 1, y: 0 }}
   viewport={{ once: false, amount: 0.3 }}
