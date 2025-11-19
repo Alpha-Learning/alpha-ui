@@ -285,7 +285,7 @@ const cardVariants: Variants = {
     Smart tools serving human relationships
   </p>
 
-  <p
+ <p
     className="text-[#004AAD] leading-[1.7] mb-4 text-[14px] sm:text-[15px] md:text-[16px]"
     style={{
       fontFamily: "Foco",
@@ -293,10 +293,7 @@ const cardVariants: Variants = {
       lineHeight: "normal",
     }}
   >
-    Our ALS quietly observes each child when they're most
-    focused, what frustrates them, and how they prefer to learn. This helps
-    Academic Guide understand each child more completely. But here's what
-    technology never does at Alphera:
+   Our ALS quietly observes each child when they’re most focused and how they prefer to learn. This helps Academic Guide’s understand each child more completely. But here’s what technology never does at Alphera: 
   </p>
 
   {/* Bullet List */}
@@ -304,11 +301,11 @@ const cardVariants: Variants = {
     className="list-disc pl-5 text-[#004AAD] mb-4 text-[14px] sm:text-[15px] md:text-[16px]"
     style={{ fontFamily: "Foco", fontWeight: 400 }}
   >
-    <li>Deliver lessons</li>
-    <li>Make decisions about what a child needs</li>
-    <li>Replace human connection</li>
-    <li>Determine learning goals</li>
-    <li>Provide emotional support</li>
+    <li>It doesn't deliver lessons </li>
+    <li>It doesn't make decisions about what a child needs</li>
+    <li>It doesn’t determine learning goals </li>
+    <li>It doesn’t provide emotional support</li>
+    <li>It never replaces human connection</li>
   </ul>
 
   <p
