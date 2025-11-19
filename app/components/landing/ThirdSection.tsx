@@ -96,7 +96,7 @@ export default function ThirdSection() {
           </motion.p>
 
           {/* FORM WRAPPED IN .no-zoom → PREVENTS iOS ZOOM */}
-          <div className="no-zoom max-w-xl mx-auto">
+          <div className="no-zoom w-full max-w-2xl mx-auto px-4 sm:px-6">
             <motion.form
               onSubmit={handleSubmit}
               initial={{ opacity: 0, y: 20 }}
@@ -105,12 +105,12 @@ export default function ThirdSection() {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <div
-                className="flex items-center bg-white rounded-full shadow-[0_6px_16px_rgba(0,0,0,0.15)] overflow-hidden w-full"
+                className="flex items-stretch bg-white rounded-full shadow-[0_6px_16px_rgba(0,0,0,0.15)] overflow-hidden w-full min-w-0 gap-0"
                 style={{
                   fontFamily: "Foco",
                   fontSize: "16px",
                   fontWeight: 400,
-                }}
+                }}  
               >
                 <input
                   type="email"
@@ -118,20 +118,18 @@ export default function ThirdSection() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="E-Mail Here"
                   required
-                  className="flex-1 px-4 py-2 text-[#192951] placeholder-[#82B3B4] 
-             focus:outline-none rounded-l-full text-sm sm:text-base 
-             font-sans placeholder:font-[Foco]"
-
+                  className="flex-1 min-w-0 px-5 py-2 sm:px-8 sm:py-4 text-[#192951] placeholder-[#82B3B4] focus:outline-none rounded-l-full text-base sm:text-2xl font-sans placeholder:font-[Foco]"
                 />
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-8 py-4 font-bold text-white bg-[#004AAD] rounded-full transition-all duration-300 shadow-[0_4px_12px_rgba(0,64,184,0.4)] hover:shadow-[0_6px_16px_rgba(0,64,184,0.6)] hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-shrink-0 whitespace-nowrap px-4 sm:px-8 py-0 text-[12px] sm:text-[18px] font-bold text-white bg-[#004AAD] rounded-full transition-all duration-300 shadow-[0_4px_12px_rgba(0,64,184,0.4)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                   style={{
                     fontFamily: "Foco",
                     fontSize: "18px",
                     fontWeight: 900,
+                    textAlign: "center",
                   }}
                 >
                   {isSubmitting ? "SUBMITTING..." : "SUBMIT"}
