@@ -67,11 +67,21 @@ export default function UserDashboardLayout({
 
   return (
     <ProtectedRoute>
-      <div className="h-screen bg-slate-50 flex overflow-hidden">
+      <div className="h-screen bg-slate-50 flex overflow-hidden relative">
+      {/* Overlay for mobile - must be before sidebar for proper z-index */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 lg:hidden transition-opacity duration-300"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Mobile Menu Button */}
       <button
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-md"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-md hover:bg-slate-50 transition-colors"
+        aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
       >
         {mobileMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
       </button>
@@ -164,7 +174,7 @@ export default function UserDashboardLayout({
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden relative z-10 bg-slate-50">
         {/* Header */}
         <header className="bg-white shadow-sm border-b border-slate-200 flex-shrink-0">
           <div className="px-4 sm:px-6 lg:px-8">
@@ -182,18 +192,10 @@ export default function UserDashboardLayout({
         </header>
 
         {/* Content Area */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-slate-50">
           {children}
         </main>
       </div>
-
-      {/* Overlay for mobile */}
-      {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
-          onClick={() => setMobileMenuOpen(false)}
-        />
-      )}
       </div>
     </ProtectedRoute>
   );
