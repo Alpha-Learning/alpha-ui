@@ -113,42 +113,42 @@ const cardVariants: Variants = {
 
       const items = [
         {
-          time: "8:00",
+          // time: "8:00",
           title: "Morning Awakening",
           desc: "Children arrive and ease into their day through movement, breathing, and setting intentions. No rushed transitions or jarring bells."
         },
         {
-          time: "8:30",
+          // time: "8:30",
           title: "Core Learning Pod Time",
           desc: "Math, English, Science, and Arabic, but delivered in ways that match how each child learns best. Some work at tables, others on floor cushions. Some need absolute quiet; others think better with soft background music.\n\nThe Innovative ALS technology\ntracks what's working for each child, but our academic guides make all the decisions about what happens next."
         },
         {
-          time: "10:30",
+          // time: "10:30",
           title: "Child-Choice Break",
           desc: "Kids choose how to recharge. Some read quietly. Others run outside. A few keep working because they're in flow. We honor their natural rhythms."
         },
         {
-          time: "11:00",
+          // time: "11:00",
           title: "Hands-On Discovery",
           desc: "Real projects that matter. Children might design solutions to school problems, interview elderly community members about local history, or conduct experiments that answer their own questions."
         },
         {
-          time: "11:45",
+          // time: "11:45",
           title: "Shared Lunch",
           desc: "Social skills develop naturally over shared meals. Children practice conversation, resolve minor conflicts, and build friendships without adult orchestration."
         },
         {
-          time: "12:30",
+          // time: "12:30",
           title: "Creative Application",
           desc: "Morning learning comes alive through art, building, writing, or performance. Children show what they've learned in ways that make sense to them."
         },
         {
-          time: "1:30",
+          // time: "1:30",
           title: "Connection Time",
           desc: "One-on-one conversations with mentors, small group discussions, or quiet reflection time. Children process their experiences and plan ahead."
         },
         {
-          time: "2:00",
+          // time: "2:00",
           title: "Daily Reflection",
           desc: "What did you discover about yourself today? What are you curious about tomorrow? Children develop the self-awareness that makes lifelong learning possible."
         },
@@ -166,7 +166,7 @@ const cardVariants: Variants = {
         >
           <div className="flex items-start gap-6">
             {/* Time */}
-            <div
+            {/* <div
               className="text-[#004AAD] font-[300]"
               style={{
                 fontFamily: "Foco",
@@ -176,7 +176,7 @@ const cardVariants: Variants = {
               }}
             >
               {item.time}
-            </div>
+            </div> */}
 
             {/* Text */}
             <div className="flex-1">
@@ -293,7 +293,7 @@ const cardVariants: Variants = {
       lineHeight: "normal",
     }}
   >
-   Our ALS quietly observes each child when they’re most focused and how they prefer to learn. This helps Academic Guide’s understand each child more completely. But here’s what technology never does at Alphera: 
+   Our ALS quietly observes each child when they’re most focused and how they prefer to learn. This helps Academic Guides understand each child more completely. But here’s what technology never does at Alphera: 
   </p>
 
   {/* Bullet List */}
