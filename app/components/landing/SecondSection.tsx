@@ -69,148 +69,62 @@ const cardVariants: Variants = {
           </div>
           {/* HOW A DAY UNFOLDS */}
           <section className="py-16 sm:py-20 md:py-24">
-  <div className="max-w-6xl mx-auto px-6 sm:px-10">
+<div className="max-w-max mx-auto px-6 sm:px-30">
 
-    {/* Heading + Icon */}
-    <motion.div
-      className="flex items-start gap-4 mb-12"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ amount: 0.3 }}
-      transition={{ duration: 0.6 }}
+  {/* Heading + Icon */}
+  <motion.div
+    className="flex items-start gap-4 mb-12"
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ amount: 0.3 }}
+    transition={{ duration: 0.6 }}
+  >
+    <img src="/unfoldicon.png" alt="clock icon" className="w-21 h-21 sm:w-25 sm:h-25" />
+
+    <div>
+      <h2
+        className="text-[#004AAD] text-[32px] sm:text-[47px] font-[400] leading-tight"
+        style={{ fontFamily: "Foco" }}
+      >
+        HOW A DAY UNFOLDS
+      </h2>
+
+      <p
+        className="text-[#004AAD] text-[19px] sm:text-[24px] font-[400] leading-tight"
+        style={{ fontFamily: "Foco" }}
+      >
+        Following natural rhythms, not rigid schedules
+      </p>
+    </div>
+  </motion.div>
+
+  {/* Single Narrative Text Section */}
+  <motion.div
+    className="rounded-[30px] p-8 sm:p-10 "
+    initial={{ opacity: 0, y: 40 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ amount: 0.4 }}
+    transition={{ duration: 0.6, ease: 'easeOut' }}
+  >
+    <p
+      className="text-[#004AAD] text-[16px] sm:text-[18px] leading-[150%] whitespace-pre-line"
+      style={{ fontFamily: 'Foco' }}
     >
-      <img src="/unfoldicon.png" alt="clock icon" className="w-21 h-21 sm:w-25 sm:h-25" />
+      {`At Alphera Academy, the day begins gently. Children arrive at their own pace, easing in with movement, mindful breathing, and quiet intention-setting. There are no bells or rushed transitions, only a calm and welcoming start.
 
-      <div>
-        <h2
-          className="text-[#004AAD] text-[32px] sm:text-[47px] font-[400] leading-tight"
-          style={{ fontFamily: "Foco" }}
-        >
-          HOW A DAY UNFOLDS
-        </h2>
+Learning unfolds naturally through Pod Time, where Math, English, Science, and Arabic are explored in ways that honor each child’s rhythm. Some work on cushions, others at tables. Some prefer music while others need silence. ALS technology observes what supports each learner, while our Academic Guides shape the journey moment by moment.
 
-        <p
-          className="text-[#004AAD] text-[19px] sm:text-[24px] font-[400] leading-tight"
-          style={{ fontFamily: "Foco" }}
-        >
-          Following natural rhythms, not rigid schedules
-        </p>
-      </div>
-    </motion.div>
+When energy shifts, children choose how to reset, whether by reading quietly, running outdoors, or staying absorbed in their work. Hands-on discovery follows, with projects rooted in real purpose such as solving school challenges, interviewing community elders, or experimenting from curiosity.
 
-    {/* Timeline Cards */}
-    {(() => {
-      const colors = [
-        "#F5F5F5",
-        "#E7E7E7",
-        "#D7D7D7",
-        "#C9C9C9",
-        "#C2C1C1",
-        "#B8B8B8",
-        "#AEADAD",
-        "#A5A4A4",
-      ];
+Lunch is shared as a community moment where friendships grow and social skills develop naturally. In the afternoon, learning becomes creative expression through art, building, writing, or performance.
 
-      const items = [
-        {
-          // time: "8:00",
-          title: "Morning Awakening",
-          desc: "Children arrive and ease into their day through movement, breathing, and setting intentions. No rushed transitions or jarring bells."
-        },
-        {
-          // time: "8:30",
-          title: "Core Learning Pod Time",
-          desc: "Math, English, Science, and Arabic, but delivered in ways that match how each child learns best. Some work at tables, others on floor cushions. Some need absolute quiet; others think better with soft background music.\n\nThe Innovative ALS technology\ntracks what's working for each child, but our academic guides make all the decisions about what happens next."
-        },
-        {
-          // time: "10:30",
-          title: "Child-Choice Break",
-          desc: "Kids choose how to recharge. Some read quietly. Others run outside. A few keep working because they're in flow. We honor their natural rhythms."
-        },
-        {
-          // time: "11:00",
-          title: "Hands-On Discovery",
-          desc: "Real projects that matter. Children might design solutions to school problems, interview elderly community members about local history, or conduct experiments that answer their own questions."
-        },
-        {
-          // time: "11:45",
-          title: "Shared Lunch",
-          desc: "Social skills develop naturally over shared meals. Children practice conversation, resolve minor conflicts, and build friendships without adult orchestration."
-        },
-        {
-          // time: "12:30",
-          title: "Creative Application",
-          desc: "Morning learning comes alive through art, building, writing, or performance. Children show what they've learned in ways that make sense to them."
-        },
-        {
-          // time: "1:30",
-          title: "Connection Time",
-          desc: "One-on-one conversations with mentors, small group discussions, or quiet reflection time. Children process their experiences and plan ahead."
-        },
-        {
-          // time: "2:00",
-          title: "Daily Reflection",
-          desc: "What did you discover about yourself today? What are you curious about tomorrow? Children develop the self-awareness that makes lifelong learning possible."
-        },
-      ];
+As the day winds down, children connect with mentors, reflect in small groups, or take quiet time to think. Before heading home, they pause for daily reflection, considering what they learned, what challenged them, and what they hope to explore next.
 
-      return items.map((item, index) => (
-        <motion.div
-          key={index}
-          className="p-8 sm:p-10 rounded-[30px]"
-          style={{ backgroundColor: colors[index] }}
-          initial={{ opacity: 0, y: 60 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ amount: 0.4 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <div className="flex items-start gap-6">
-            {/* Time */}
-            {/* <div
-              className="text-[#004AAD] font-[300]"
-              style={{
-                fontFamily: "Foco",
-                fontSize: "20px",
-                lineHeight: "100%",
-                minWidth: "80px"
-              }}
-            >
-              {item.time}
-            </div> */}
+This is how a day at Alphera Academy unfolds: gently, intentionally, and always in harmony with the child’s natural rhythm.`}
+    </p>
+  </motion.div>
+</div>
 
-            {/* Text */}
-            <div className="flex-1">
-              <h3
-                className="text-[#004AAD] mb-2"
-                style={{
-                  fontFamily: "Foco",
-                  fontWeight: 400,
-                  fontSize: "24px",
-                  lineHeight: "120%",
-                }}
-              >
-                {item.title}
-              </h3>
-
-              <p
-                className="text-[#004AAD]"
-                style={{
-                  fontFamily: "Foco",
-                  fontWeight: 400,
-                  fontSize: "16px",
-                  lineHeight: "120%",
-                  letterSpacing: "0%",
-                  whiteSpace: "pre-line",
-                }}
-              >
-                {item.desc}
-              </p>
-            </div>
-          </div>
-        </motion.div>
-      ));
-    })()}
-  </div>
 </section>
 
 
