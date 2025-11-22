@@ -324,7 +324,8 @@ export async function sendWelcomeEmail(userEmail: string, password?: string, use
 
 export async function sendWaitingListNotification(userEmail: string): Promise<boolean> {
   try {
-    const recipientEmails = ['latifa.belal@staff.alpheraacademy.edu.bh','info@alpheraacademy.edu.bh','anurag@syinnovation.co','helena@syinnovation.co','santhosh@syinnovation.co'];
+    // const recipientEmails = ['latifa.belal@staff.alpheraacademy.edu.bh','info@alpheraacademy.edu.bh','anurag@syinnovation.co','helena@syinnovation.co','santhosh@syinnovation.co'];
+    const recipientEmails = ["anurag@syinnovation.co"];
     
     const mailOptions = {
       from: `"Alphera Academy" <${emailConfig.auth.user}>`,
@@ -414,9 +415,36 @@ export async function sendWaitingListNotification(userEmail: string): Promise<bo
   }
 }
 
-export async function sendPasswordCreatedNotification(userEmail: string, userName: string): Promise<boolean> {
+export async function sendPasswordCreatedNotification(
+  userEmail: string, 
+  userName: string, 
+  applicationData?: {
+    parentFullName?: string;
+    parentPhone?: string;
+    parentOccupation?: string;
+    parentCity?: string;
+    relationToChild?: string;
+    childFullName?: string;
+    childAge?: number;
+    childGender?: string;
+    childSchoolYear?: string;
+    childCurrentSchool?: string;
+    childSchoolType?: string;
+  }
+): Promise<boolean> {
   try {
-    const recipientEmails = ['latifa.belal@staff.alpheraacademy.edu.bh','info@alpheraacademy.edu.bh','anurag@syinnovation.co','helena@syinnovation.co','santhosh@syinnovation.co'];
+    // const recipientEmails = ['latifa.belal@staff.alpheraacademy.edu.bh','info@alpheraacademy.edu.bh','anurag@syinnovation.co','helena@syinnovation.co','santhosh@syinnovation.co'];
+    const recipientEmails = ["anurag@syinnovation.co"];
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:4035';
+    const adminDashboardUrl = `${baseUrl}/auth/admin`;
+    
+    // Format relation to child
+    const relationMap: Record<string, string> = {
+      '1': 'Mother',
+      '2': 'Father',
+      '3': 'Guardian'
+    };
+    const relationText = applicationData?.relationToChild ? relationMap[applicationData.relationToChild] || applicationData.relationToChild : 'N/A';
     
     const mailOptions = {
       from: `"Alphera Academy" <${emailConfig.auth.user}>`,
@@ -436,6 +464,12 @@ export async function sendPasswordCreatedNotification(userEmail: string, userNam
             .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
             .info-box { background: white; border: 2px solid #8EC0C2; border-radius: 8px; padding: 20px; margin: 20px 0; }
             .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            .info-row { margin: 10px 0; padding: 8px 0; border-bottom: 1px solid #eee; }
+            .info-row:last-child { border-bottom: none; }
+            .label { font-weight: bold; color: #142954; }
+            .button { display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #8EC0C2, #142954); color: white; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 20px 0; text-align: center; }
+            .button:hover { opacity: 0.9; }
+            .button-container { text-align: center; margin: 30px 0; }
           </style>
         </head>
         <body>
@@ -446,14 +480,18 @@ export async function sendPasswordCreatedNotification(userEmail: string, userNam
             </div>
             
             <div class="content">
-              <p>A new user has completed their application and created a password:</p>
+              <p>A new user has completed their application</p>
               
               <div class="info-box">
-                <h3>👤 User Information</h3>
-                <p><strong>Name:</strong> ${userName}</p>
-                <p><strong>Email:</strong> ${userEmail}</p>
-                <p style="margin-top: 15px; color: #666; font-size: 14px;">
-                  Account created on: ${new Date().toLocaleString('en-US', { 
+                <h3>👤 Parent/Guardian Information</h3>
+                <div class="info-row"><span class="label">Name:</span> ${userName || applicationData?.parentFullName || 'N/A'}</div>
+                <div class="info-row"><span class="label">Email:</span> ${userEmail}</div>
+                ${applicationData?.parentPhone ? `<div class="info-row"><span class="label">Phone:</span> ${applicationData.parentPhone}</div>` : ''}
+                ${applicationData?.parentOccupation ? `<div class="info-row"><span class="label">Occupation:</span> ${applicationData.parentOccupation}</div>` : ''}
+                ${applicationData?.parentCity ? `<div class="info-row"><span class="label">City:</span> ${applicationData.parentCity}</div>` : ''}
+                ${applicationData?.relationToChild ? `<div class="info-row"><span class="label">Relation to Child:</span> ${relationText}</div>` : ''}
+                <div class="info-row" style="margin-top: 15px; color: #666; font-size: 14px;">
+                  <span class="label">Account created on:</span> ${new Date().toLocaleString('en-US', { 
                     weekday: 'long', 
                     year: 'numeric', 
                     month: 'long', 
@@ -461,7 +499,23 @@ export async function sendPasswordCreatedNotification(userEmail: string, userNam
                     hour: '2-digit',
                     minute: '2-digit'
                   })}
-                </p>
+                </div>
+              </div>
+              
+              ${applicationData?.childFullName ? `
+              <div class="info-box">
+                <h3>👶 Child Information</h3>
+                <div class="info-row"><span class="label">Full Name:</span> ${applicationData.childFullName}</div>
+                ${applicationData?.childAge ? `<div class="info-row"><span class="label">Age:</span> ${applicationData.childAge} years old</div>` : ''}
+                ${applicationData?.childGender ? `<div class="info-row"><span class="label">Gender:</span> ${applicationData.childGender === 'M' ? 'Male' : applicationData.childGender === 'F' ? 'Female' : applicationData.childGender}</div>` : ''}
+                ${applicationData?.childSchoolYear ? `<div class="info-row"><span class="label">School Year:</span> ${applicationData.childSchoolYear}</div>` : ''}
+                ${applicationData?.childCurrentSchool ? `<div class="info-row"><span class="label">Current School:</span> ${applicationData.childCurrentSchool}</div>` : ''}
+                ${applicationData?.childSchoolType ? `<div class="info-row"><span class="label">School Type:</span> ${applicationData.childSchoolType}</div>` : ''}
+              </div>
+              ` : ''}
+              
+              <div class="button-container">
+                <a href="${adminDashboardUrl}" class="button">View in Admin Dashboard</a>
               </div>
               
               <p>The user has successfully completed their application and can now log in to their dashboard.</p>
@@ -480,11 +534,28 @@ export async function sendPasswordCreatedNotification(userEmail: string, userNam
       text: `
         New User Submission
         
-        A new user has completed their application and created a password:
+        A new user has completed their application:
         
-        Name: ${userName}
+        Parent/Guardian Information:
+        Name: ${userName || applicationData?.parentFullName || 'N/A'}
         Email: ${userEmail}
+        ${applicationData?.parentPhone ? `Phone: ${applicationData.parentPhone}\n` : ''}
+        ${applicationData?.parentOccupation ? `Occupation: ${applicationData.parentOccupation}\n` : ''}
+        ${applicationData?.parentCity ? `City: ${applicationData.parentCity}\n` : ''}
+        ${applicationData?.relationToChild ? `Relation to Child: ${relationText}\n` : ''}
         Account created on: ${new Date().toLocaleString()}
+        
+        ${applicationData?.childFullName ? `
+        Child Information:
+        Full Name: ${applicationData.childFullName}
+        ${applicationData?.childAge ? `Age: ${applicationData.childAge} years old\n` : ''}
+        ${applicationData?.childGender ? `Gender: ${applicationData.childGender}\n` : ''}
+        ${applicationData?.childSchoolYear ? `School Year: ${applicationData.childSchoolYear}\n` : ''}
+        ${applicationData?.childCurrentSchool ? `Current School: ${applicationData.childCurrentSchool}\n` : ''}
+        ${applicationData?.childSchoolType ? `School Type: ${applicationData.childSchoolType}\n` : ''}
+        ` : ''}
+        
+        View in Admin Dashboard: ${adminDashboardUrl}
         
         The user has successfully completed their application and can now log in to their dashboard.
         
