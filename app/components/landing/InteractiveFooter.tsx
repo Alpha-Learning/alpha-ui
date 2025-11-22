@@ -130,6 +130,8 @@ export default function Footer() {
   <p>
     <a href="https://alpheraacademy.edu.bh">https://alpheraacademy.edu.bh</a>
   </p>
+   <p>Building 359, Road 4606, Block 946,</p>
+    <p>Awali, Bahrain</p>
 </div>
 
         </div>
