@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/app/lib/db";
 import { hashPassword } from "@/app/lib/auth";
+import { sendPasswordCreatedNotification, sendWelcomeEmail } from "@/app/lib/emailService";
 
 // Enums matching your DTO
 const Gender = z.enum(["M", "F"]);
@@ -139,6 +140,45 @@ export async function POST(req: Request) {
       }
     });
 
+    // Send welcome email to user when form is submitted
+    try {
+      const welcomeEmailSent = await sendWelcomeEmail(user.email, undefined, user.name);
+      if (welcomeEmailSent) {
+        console.log(`Welcome email sent to: ${user.email}`);
+      } else {
+        console.error(`Failed to send welcome email to: ${user.email}`);
+        // Don't fail the request if email fails
+      }
+    } catch (emailError) {
+      console.error("Error sending welcome email:", emailError);
+      // Don't fail the request if email fails
+    }
+
+    // Send notification email to admins when form is submitted
+    try {
+      const emailSent = await sendPasswordCreatedNotification(user.email, user.name, {
+        parentFullName: parsed.data.parentFullName,
+        parentPhone: parsed.data.parentPhone,
+        parentOccupation: parsed.data.parentOccupation,
+        parentCity: parsed.data.parentCity,
+        relationToChild: parsed.data.relationToChild,
+        childFullName: parsed.data.childFullName,
+        childAge: parsed.data.childAge,
+        childGender: parsed.data.childGender,
+        childSchoolYear: parsed.data.childSchoolYear,
+        childCurrentSchool: parsed.data.childCurrentSchool,
+        childSchoolType: parsed.data.childSchoolType,
+      });
+      if (emailSent) {
+        console.log(`Password created notification sent for: ${user.email}`);
+      } else {
+        console.error(`Failed to send password created notification for: ${user.email}`);
+        // Don't fail the request if email fails
+      }
+    } catch (emailError) {
+      console.error("Error sending password created notification:", emailError);
+      // Don't fail the request if email fails
+    }
     
     // Check if user has a password set
     // If user has multiple applications, they definitely have a password (went through flow multiple times)
