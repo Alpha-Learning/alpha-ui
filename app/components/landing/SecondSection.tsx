@@ -73,7 +73,7 @@ const cardVariants: Variants = {
 
   {/* Heading + Icon */}
   <motion.div
-    className="flex items-start gap-4 mb-12"
+    className="flex items-start gap-7 mb-7"
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ amount: 0.3 }}
@@ -100,14 +100,14 @@ const cardVariants: Variants = {
 
   {/* Single Narrative Text Section */}
   <motion.div
-    className="rounded-[30px] p-8 sm:p-10 "
+    className="rounded-[30px] "
     initial={{ opacity: 0, y: 40 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ amount: 0.4 }}
     transition={{ duration: 0.6, ease: 'easeOut' }}
   >
     <p
-      className="text-[#004AAD] text-[16px] sm:text-[18px] leading-[150%] whitespace-pre-line"
+      className="text-[#004AAD] text-[16px] sm:text-[16px] leading-[150%] whitespace-pre-line"
       style={{ fontFamily: 'Foco' }}
     >
       {`At Alphera Academy, the day begins gently. Children arrive at their own pace, easing in with movement, mindful breathing, and quiet intention-setting. There are no bells or rushed transitions, only a calm and welcoming start.
