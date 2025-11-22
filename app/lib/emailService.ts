@@ -109,7 +109,7 @@ export async function sendPaymentEmail(data: PaymentEmailData): Promise<boolean>
                 </table>
                 
                 <div style="text-align: center; margin: 20px 0;">
-                  <a href="${paymentLink}" class="payment-button">💳 Make Payment Now</a>
+                  <a href="${paymentLink}" class="payment-button" style="color: white !important;">💳 Make Payment Now</a>
                 </div>
               </div>
               
@@ -250,7 +250,7 @@ export async function sendWelcomeEmail(userEmail: string, password?: string, use
               ${passwordSection}
               
               <div style="text-align: center; margin: 20px 0;">
-                <a href="${loginUrl}" class="button">Login to Dashboard</a>
+                <a href="${loginUrl}" class="button" style="color: white !important;">Login to Dashboard</a>
               </div>
               
               <p>If you have any questions or need assistance, please don't hesitate to contact us.</p>
@@ -515,7 +515,7 @@ export async function sendPasswordCreatedNotification(
               ` : ''}
               
               <div class="button-container">
-                <a href="${adminDashboardUrl}" class="button">View in Admin Dashboard</a>
+                <a href="${adminDashboardUrl}" class="button" style="color: white !important;">View in Admin Dashboard</a>
               </div>
               
               <p>The user has successfully completed their application and can now log in to their dashboard.</p>
