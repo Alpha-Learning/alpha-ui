@@ -132,11 +132,8 @@ function PreAssessmentInner() {
 
   const onSubmit = async (data: FormValues) => {
     try {
-      console.log("API Base URL:", process.env.NEXT_PUBLIC_API_BASE_URL);
       
       const result = await apiService.post("/api/application", data);
-      
-      console.log("API Response:", result);
       
       if (result?.success) {
         toast.success("Application submitted successfully");

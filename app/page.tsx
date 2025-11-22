@@ -33,7 +33,6 @@ export default function Home() {
     const video = document.querySelector('video');
     if (video) {
       video.play().catch(error => {
-        console.log('Autoplay prevented:', error);
         // Try to play again after user interaction
         const playVideo = () => {
           video.play();

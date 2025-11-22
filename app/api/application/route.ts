@@ -62,7 +62,6 @@ const submissionSchema = z.object({
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    console.log("Data:===========>", data);
     const parsed = submissionSchema.safeParse(data);
     
     if (!parsed.success) {
@@ -140,7 +139,6 @@ export async function POST(req: Request) {
       }
     });
 
-    console.log("Application submitted successfully:", application.id);
     
     // Check if user has a password set
     // If user has multiple applications, they definitely have a password (went through flow multiple times)
