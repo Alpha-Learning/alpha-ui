@@ -10,6 +10,7 @@ function LoginInner() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string; form?: string }>({});
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const params = useSearchParams();
   const router = useRouter();
   const { login, isLoading } = useAuth();
@@ -17,7 +18,14 @@ function LoginInner() {
   useEffect(() => {
     const incoming = params.get("email");
     if (incoming) setEmail(incoming);
-  }, [params]);
+    
+    // Show success message if password was reset
+    if (params.get("reset") === "success") {
+      setSuccessMessage("Password has been reset successfully! You can now sign in with your new password.");
+      // Clear URL parameter
+      router.replace("/auth/login");
+    }
+  }, [params, router]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -72,6 +80,12 @@ function LoginInner() {
         <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.08)] ring-1 ring-black/5 p-6 sm:p-8">
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 text-center">Welcome back</h1>
           <p className="text-sm text-slate-500 text-center mt-2 mb-6">Sign in to your account</p>
+
+          {successMessage && (
+            <div className="mb-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+              {successMessage}
+            </div>
+          )}
 
           {errors.form && (
             <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
@@ -169,7 +183,7 @@ function LoginInner() {
                 <input type="checkbox" className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600" />
                 <span className="text-slate-600">Remember me</span>
               </label>
-              <Link href="#" className="text-blue-700 hover:text-blue-800 font-medium">Forgot password?</Link>
+              <Link href="/auth/forgot-password" className="text-blue-700 hover:text-blue-800 font-medium">Forgot password?</Link>
             </div>
 
             <button

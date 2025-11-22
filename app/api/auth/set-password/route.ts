@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/app/lib/db";
 import { hashPassword } from "@/app/lib/auth";
-import { sendWelcomeEmail } from "@/app/lib/emailService";
+// import { sendWelcomeEmail } from "@/app/lib/emailService";
 
 const setPasswordSchema = z.object({
   email: z.string().email("Invalid email format"),
@@ -42,18 +42,19 @@ export async function POST(req: Request) {
     });
 
     // Send welcome email to user with password
-    try {
-      const welcomeEmailSent = await sendWelcomeEmail(user.email, password, user.name);
-      if (welcomeEmailSent) {
-        console.log(`Welcome email sent to: ${user.email}`);
-      } else {
-        console.error(`Failed to send welcome email to: ${user.email}`);
-        // Don't fail the request if email fails
-      }
-    } catch (emailError) {
-      console.error("Error sending welcome email:", emailError);
-      // Don't fail the request if email fails
-    }
+    // Commented out - welcome email is now only sent when form is submitted, not when password is set
+    // try {
+    //   const welcomeEmailSent = await sendWelcomeEmail(user.email, password, user.name);
+    //   if (welcomeEmailSent) {
+    //     console.log(`Welcome email sent to: ${user.email}`);
+    //   } else {
+    //     console.error(`Failed to send welcome email to: ${user.email}`);
+    //     // Don't fail the request if email fails
+    //   }
+    // } catch (emailError) {
+    //   console.error("Error sending welcome email:", emailError);
+    //   // Don't fail the request if email fails
+    // }
 
     return NextResponse.json({
       success: true,
