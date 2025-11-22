@@ -11,7 +11,6 @@ const emailConfig = {
   },
 };
 
-console.log('Email Config:', emailConfig);
 // Create transporter
 const transporter = nodemailer.createTransport(emailConfig);
 
@@ -175,7 +174,6 @@ export async function sendPaymentEmail(data: PaymentEmailData): Promise<boolean>
     };
 
     await transporter.sendMail(mailOptions);
-    console.log('Payment email sent successfully to:', data.parentEmail);
     return true;
   } catch (error) {
     console.error('Error sending payment email:', error);
@@ -187,9 +185,6 @@ export async function sendWelcomeEmail(userEmail: string, password?: string, use
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:4035';
     const loginUrl = `${baseUrl}/auth/login`;
-    console.log('Base URL:', baseUrl);
-    console.log('Login URL:', loginUrl);
-    console.log('Email Config:', emailConfig);
     
     const passwordSection = password ? `
               <div class="info-box" style="background: #fff3cd; border-color: #ffc107;">
@@ -329,7 +324,7 @@ export async function sendWelcomeEmail(userEmail: string, password?: string, use
 
 export async function sendWaitingListNotification(userEmail: string): Promise<boolean> {
   try {
-    const recipientEmails = ['anurag@syinnovation.co', 'iamanuragmk@gmail.com','helena@syinnovation.co','santhosh@syinnovation.co'];
+    const recipientEmails = ['latifa.belal@staff.alpheraacademy.edu.bh','info@alpheraacademy.edu.bh','anurag@syinnovation.co','helena@syinnovation.co','santhosh@syinnovation.co'];
     
     const mailOptions = {
       from: `"Alphera Academy" <${emailConfig.auth.user}>`,
@@ -420,9 +415,8 @@ export async function sendWaitingListNotification(userEmail: string): Promise<bo
 }
 
 export async function sendPasswordCreatedNotification(userEmail: string, userName: string): Promise<boolean> {
-  console.log('Sending password created notification to:', userEmail);
   try {
-    const recipientEmails = ['anurag@syinnovation.co', 'iamanuragmk@gmail.com','helena@syinnovation.co','santhosh@syinnovation.co'];
+    const recipientEmails = ['latifa.belal@staff.alpheraacademy.edu.bh','info@alpheraacademy.edu.bh','anurag@syinnovation.co','helena@syinnovation.co','santhosh@syinnovation.co'];
     
     const mailOptions = {
       from: `"Alphera Academy" <${emailConfig.auth.user}>`,

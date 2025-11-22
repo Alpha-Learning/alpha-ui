@@ -64,7 +64,6 @@ export async function POST(req: Request) {
     }
 
     // TODO: Persist to your DB or send to an email/CRM
-    console.log("Pre-Assessment submission:", parsed.data);
 
     // Mock response with generated ID
     const submissionId = `pre_assessment_${Date.now()}`;
