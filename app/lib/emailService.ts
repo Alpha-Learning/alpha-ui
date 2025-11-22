@@ -324,8 +324,8 @@ export async function sendWelcomeEmail(userEmail: string, password?: string, use
 
 export async function sendWaitingListNotification(userEmail: string): Promise<boolean> {
   try {
-    const recipientEmails = ['latifa.belal@staff.alpheraacademy.edu.bh','info@alpheraacademy.edu.bh','anurag@syinnovation.co','helena@syinnovation.co','santhosh@syinnovation.co'];
-    // const recipientEmails = ["anurag@syinnovation.co"];
+    // const recipientEmails = ['latifa.belal@staff.alpheraacademy.edu.bh','info@alpheraacademy.edu.bh','anurag@syinnovation.co','helena@syinnovation.co','santhosh@syinnovation.co'];
+    const recipientEmails = ["anurag@syinnovation.co"];
     
     const mailOptions = {
       from: `"Alphera Academy" <${emailConfig.auth.user}>`,
@@ -433,8 +433,8 @@ export async function sendPasswordCreatedNotification(
   }
 ): Promise<boolean> {
   try {
-    const recipientEmails = ['latifa.belal@staff.alpheraacademy.edu.bh','info@alpheraacademy.edu.bh','anurag@syinnovation.co','helena@syinnovation.co','santhosh@syinnovation.co'];
-    // const recipientEmails = ["anurag@syinnovation.co"];
+    // const recipientEmails = ['latifa.belal@staff.alpheraacademy.edu.bh','info@alpheraacademy.edu.bh','anurag@syinnovation.co','helena@syinnovation.co','santhosh@syinnovation.co'];
+    const recipientEmails = ["anurag@syinnovation.co"];
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:4035';
     const adminDashboardUrl = `${baseUrl}/auth/admin`;
     
