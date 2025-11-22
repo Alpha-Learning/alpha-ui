@@ -573,6 +573,127 @@ export async function sendPasswordCreatedNotification(
   }
 }
 
+export async function sendPasswordResetEmail(
+  userEmail: string,
+  userName: string,
+  resetToken: string
+): Promise<boolean> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:4035';
+    const resetUrl = `${baseUrl}/auth/reset-password?token=${encodeURIComponent(resetToken)}`;
+    
+    const mailOptions = {
+      from: `"Alphera Academy" <${emailConfig.auth.user}>`,
+      to: userEmail,
+      subject: 'Reset Your Password - Alphera Academy',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Reset Your Password</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8EC0C2, #142954); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .info-box { background: white; border: 2px solid #8EC0C2; border-radius: 8px; padding: 20px; margin: 20px 0; }
+            .button { 
+              display: inline-block; 
+              background: linear-gradient(135deg, #8EC0C2, #142954); 
+              color: white !important; 
+              padding: 15px 30px; 
+              text-decoration: none; 
+              border-radius: 5px; 
+              font-weight: bold; 
+              margin: 10px 0;
+            }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            .warning { background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 15px; margin: 20px 0; color: #856404; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🎓 Alphera Academy</h1>
+              <h2>Password Reset Request</h2>
+            </div>
+            
+            <div class="content">
+              <p>Dear ${userName || 'User'},</p>
+              
+              <p>We received a request to reset your password for your Alphera Academy account.</p>
+              
+              <div class="info-box">
+                <p>Click the button below to reset your password:</p>
+                <div style="text-align: center; margin: 20px 0;">
+                  <a href="${resetUrl}" class="button" style="color: white !important;">Reset Password</a>
+                </div>
+                <p style="font-size: 12px; color: #666; margin-top: 15px;">
+                  Or copy and paste this link into your browser:<br>
+                  <a href="${resetUrl}" style="color: #004AAD; word-break: break-all;">${resetUrl}</a>
+                </p>
+              </div>
+              
+              <div class="warning">
+                <p><strong>⚠️ Important:</strong></p>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                  <li>This link will expire in 1 hour</li>
+                  <li>If you didn't request this password reset, please ignore this email</li>
+                  <li>Your password will remain unchanged until you click the link above</li>
+                </ul>
+              </div>
+              
+              <p>If you have any questions or need assistance, please don't hesitate to contact us.</p>
+              
+              <p>Best regards,<br>
+              The Alphera Academy Team</p>
+            </div>
+            
+            <div class="footer">
+              <p>This email was sent to ${userEmail} regarding your Alphera Academy account.</p>
+              <p>If you did not request a password reset, please contact us immediately.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `
+        Password Reset Request - Alphera Academy
+        
+        Dear ${userName || 'User'},
+        
+        We received a request to reset your password for your Alphera Academy account.
+        
+        Click the link below to reset your password:
+        ${resetUrl}
+        
+        ⚠️ Important:
+        - This link will expire in 1 hour
+        - If you didn't request this password reset, please ignore this email
+        - Your password will remain unchanged until you click the link above
+        
+        If you have any questions or need assistance, please don't hesitate to contact us.
+        
+        Best regards,
+        The Alphera Academy Team
+        
+        ---
+        This email was sent to ${userEmail} regarding your Alphera Academy account.
+        If you did not request a password reset, please contact us immediately.
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Password reset email sent successfully to:', userEmail);
+    return true;
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    return false;
+  }
+}
+
 // Test email configuration
 export async function testEmailConnection(): Promise<boolean> {
   try {
