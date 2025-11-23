@@ -181,132 +181,186 @@ export async function sendPaymentEmail(data: PaymentEmailData): Promise<boolean>
   }
 }
 
-export async function sendWelcomeEmail(userEmail: string, password?: string, userName?: string): Promise<boolean> {
+export async function sendWelcomeEmail(userEmail: string, password?: string, userName?: string, userPhone?: string): Promise<boolean> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:4035';
-    const loginUrl = `${baseUrl}/auth/login`;
-    
-    const passwordSection = password ? `
-              <div class="info-box" style="background: #fff3cd; border-color: #ffc107;">
-                <h3>🔐 Your Login Credentials</h3>
-                <p><strong>Email:</strong> ${userEmail}</p>
-                <p><strong>Password:</strong> <code style="background: #f8f9fa; padding: 5px 10px; border-radius: 4px; font-size: 16px; font-weight: bold;">${password}</code></p>
-                <p style="margin-top: 15px; color: #856404; font-size: 14px;">
-                  <strong>⚠️ Important:</strong> Please save this password securely. You will need it to log in to your dashboard.
-                </p>
-              </div>
-    ` : `
-              <h3>🔐 Login Instructions</h3>
-              <p>After completing your application and setting up your password, you can log in using:</p>
-              <ul style="margin-left: 20px;">
-                <li><strong>Email:</strong> ${userEmail}</li>
-                <li><strong>Password:</strong> The password you set during application submission</li>
-              </ul>
-    `;
+    const dashboardUrl = `${baseUrl}/dashboard/user`;
     
     const mailOptions = {
       from: `"Alphera Academy" <${emailConfig.auth.user}>`,
       to: userEmail,
-      subject: password ? `Welcome to Alphera Academy - Your Account is Ready!` : `Welcome to Alphera Academy - Complete Your Application`,
+      subject: `Welcome to Alphera Academy`,
       html: `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Welcome to Alphera Academy</title>
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #8EC0C2, #142954); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-            .info-box { background: white; border: 2px solid #8EC0C2; border-radius: 8px; padding: 20px; margin: 20px 0; }
-            .button { 
-              display: inline-block; 
-              background: linear-gradient(135deg, #8EC0C2, #142954); 
-              color: white; 
-              padding: 15px 30px; 
-              text-decoration: none; 
-              border-radius: 5px; 
-              font-weight: bold; 
-              margin: 10px 0;
-            }
-            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
-            code { background: #f8f9fa; padding: 5px 10px; border-radius: 4px; font-family: monospace; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1>🎓 Alphera Academy</h1>
-              <h2>Welcome${userName ? `, ${userName}` : ''}!</h2>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Alphera Academy</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #004AAD; margin: 0; padding: 0; background-color: #E1D2BA; }
+    .container { max-width: 100%; margin: 0 auto; background-color: #E1D2BA; }
+    .header { background-image: url('http://alpheraacademy.edu.bh/homecrop2.jpg'); background-size: cover; background-position: center; width: 100%; min-height: 610px; position: relative; padding: 0; }
+    .header-logo { max-width: 50px; height: auto; display: block; margin: 20px auto 0; }
+    .content { background-color: #E1D2BA; padding: 30px 200px; }
+    .welcome-title { color: #004AAD; font-size: 32px; font-weight: normal; text-align: center; margin: 20px 0; }
+    .greeting { color: #004AAD; font-size: 16px; margin: 20px 0; }
+    .info-box { background-color: #FBF3E8; border-radius: 40px; padding: 0px; margin: 20px 0; display: flex; }
+    .info-box-left { background-color: #EFE4D2; border-radius: 40px; padding: 15px; margin-right: 20px; min-width: 120px; }
+    .info-box-right { flex: 1; margin-top: 15px; }
+    .info-row { margin: 12px 0; color: #004AAD; font-size: 14px; display: block; }
+    .info-label { font-weight: 500; margin-right: 10px; }
+    /* .waiting-list-box { border: 2px solid #FFC107; border-radius: 8px; padding: 20px; margin: 20px 0; background-color: #FBF3E8; } */
+    .waiting-list-text { color: #004AAD; font-size: 14px; margin: 10px 0; }
+    .button { 
+      display: inline-block; 
+      background-color: #004AAD; 
+      color: white !important; 
+      padding: 15px 40px; 
+      text-decoration: none; 
+      border-radius: 40px; 
+      font-weight: bold; 
+      margin: 20px auto;
+      text-align: center;
+    }
+    .button-container { text-align: center; margin: 30px 0; }
+    .footer { background-color: #004AAD; color: #82B3B4; padding: 30px 400px; display: flex; justify-content: space-between; align-items: center; }
+    .footer-contact { color: #82B3B4; font-size: 14px; display: flex; align-items: center; gap: 2px; flex-wrap: nowrap; white-space: nowrap; }
+    .footer-contact span { white-space: nowrap; }
+    .footer-separator { color: #82B3B4; margin: 0 10px; }
+    .footer-divider { width: 1px; height: 40px; background-color: #82B3B4; margin: 0 20px; }
+    .footer-social { display: flex; align-items: center; gap: 15px; }
+    .footer-social a { color: #82B3B4; text-decoration: none; font-size: 20px; display: flex; gap: 16px;}
+    .content-container { padding: 0 30px; }
+    
+    /* Responsive Styles */
+    @media only screen and (max-width: 768px) {
+      .container { max-width: 100%; }
+      .header { min-height: 300px; }
+      .header-logo { max-width: 50px; margin: 15px auto 0; }
+      .content { padding: 20px 15px; }
+      .welcome-title { font-size: 24px; margin: 15px 0; }
+      .greeting { font-size: 14px; margin: 15px 0; }
+      .info-box { flex-direction: row; border-radius: 20px; padding: 0px; }
+      .info-box-left { margin-right: 10px; margin-bottom: 0; border-radius: 20px; min-width: 90px; padding: 10px; }
+      .info-box-right { margin-top: 10px; display: block; }
+      .info-row { margin: 6px 0; font-size: 12px; display: block; width: 100%; }
+      .button { padding: 10px 40px !important; font-size: 16px !important; font-weight: 700 !important; }
+      .footer { padding: 20px 15px; flex-direction: column; gap: 15px; }
+      .footer-contact { flex-wrap: nowrap; justify-content: center; gap: 5px; font-size: 12px; white-space: nowrap; }
+      .footer-separator { margin: 0 5px; }
+      .footer-divider { width: 100%; height: 1px; margin: 10px 0; }
+      .footer-social { justify-content: center; gap: 10px; }
+      .content-container { padding: 0 0px; }
+    }
+    
+    @media only screen and (max-width: 480px) {
+      .header { min-height: 250px; }
+      .header-logo { max-width: 50px; margin: 10px auto 0; }
+      .content { padding: 15px 10px; }
+      .welcome-title { font-size: 20px; }
+      .greeting { font-size: 13px; }
+      .info-box { flex-direction: row; padding: 0px; border-radius: 15px; }
+      .info-box-left { margin-right: 8px; padding: 8px; min-width: 70px; border-radius: 15px; }
+      .info-box-right { margin-top: 10px; display: block; }
+      .info-row { font-size: 11px; margin: 4px 0; display: block; width: 100%; }
+      .button { padding: 8px 25px !important; font-size: 14px !important; font-weight: 700 !important; }
+      .footer { padding: 15px 10px; }
+      .footer-contact { font-size: 11px; flex-wrap: nowrap; white-space: nowrap; }
+      .footer-social div { width: 20px !important; height: 20px !important; }
+      .footer-social svg { width: 18px !important; height: 18px !important; }
+    }
+    
+    @media only screen and (min-width: 769px) and (max-width: 1024px) {
+      .content { padding: 30px 100px; }
+      .footer { padding: 30px 200px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header" style="text-align: center; padding-top: 20px;">
+      <img src="http://alpheraacademy.edu.bh/Group.png" alt="Alphera Logo" class="header-logo" style="max-width: 70px; height: auto; display: block; margin: 0px auto 0;" />
+    </div>
+    
+    <div class="content">
+      <h1 class="welcome-title">Welcome to Alphera</h1>
+      
+      <p class="greeting">Dear ${userName || 'User'},</p>
+      <div class="content-container">
+
+          <p class="greeting">Welcome Message</p>
+          <p class="greeting">Info shared</p>
+          
+        </div>
+          <div class="info-box">
+              <div class="info-box-left">
+                  <div class="info-row"><span class="info-label">Name :</span></div>
+                  <div class="info-row"><span class="info-label">Email :</span></div>
+                  <div class="info-row"><span class="info-label">Mobile :</span></div>
+                </div>
+                <div class="info-box-right">
+                    <div class="info-row">${userName || 'N/A'}</div>
+                    <div class="info-row">${userEmail}</div>
+                    <div class="info-row">${userPhone || 'N/A'}</div>
+                </div>
             </div>
             
-            <div class="content">
-              <p>Dear ${userName || 'Prospective Parent'},</p>
-              
-              <p>Thank you for submitting your application to Alphera Academy! We're excited that you've taken this important step in your child's educational journey with us.</p>
-              
-              ${passwordSection}
-              
-              <div style="text-align: center; margin: 20px 0;">
-                <a href="${loginUrl}" class="button" style="color: white !important;">Login to Dashboard</a>
-              </div>
-              
-              <p>If you have any questions or need assistance, please don't hesitate to contact us.</p>
-              
-              <p>Best regards,<br>
-              The Alphera Academy Team</p>
+            <div class="waiting-list-box">
+                <p class="waiting-list-text">You're on the waiting list, we will contact you with further details</p>
+                <p class="waiting-list-text">Heres a link to access your profile:</p>
             </div>
             
-            <div class="footer">
-              <p>This email was sent to ${userEmail} regarding your application for Alphera Academy.</p>
-            </div>
-          </div>
-        </body>
-        </html>
+             <div class="button-container">
+                 <a href="${dashboardUrl}" class="button" style="color: #82B3B4 !important; padding: 10px 70px; font-weight: 800; font-size: 22px; background-color: #004AAD !important;">Go To Dashboard</a>
+             </div>
+    </div>
+    
+    <div class="footer">
+      <div class="footer-contact">
+        <span style="white-space: nowrap;">+973&nbsp;88&nbsp;88&nbsp;88&nbsp;88</span>
+        <span class="footer-separator">|</span>
+        <span style="white-space: nowrap;">info@alphera.edu</span>
+        <span class="footer-separator">|</span>
+        <span style="white-space: nowrap;">www.alphera.edu</span>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="footer-social">
+
+
+       
+        <img src="http://alpheraacademy.edu.bh/instagram.png" alt="Instagram" style="width: 29.67px; height: 29.67px; background-color: #82B3B4; margin-top: 0px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+        <img src="http://alpheraacademy.edu.bh/linkedin.png" alt="LinkedIn" style="width: 29.67px; height: 29.67px; background-color: #82B3B4; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+        <img src="http://alpheraacademy.edu.bh/youtube.png" alt="YouTube" style="width: 29.67px; height: 29.67px; background-color: #82B3B4; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+
+    
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
       `,
-      text: password ? `
+      text: `
         Welcome to Alphera Academy!
         
-        Dear ${userName || 'Prospective Parent'},
+        Dear ${userName || 'User'},
         
-        Thank you for submitting your application to Alphera Academy! We're excited that you've taken this important step in your child's educational journey with us.
+        Welcome Message
+        Info shared
         
-        YOUR LOGIN CREDENTIALS:
+        USER INFORMATION:
+        Name: ${userName || 'N/A'}
         Email: ${userEmail}
-        Password: ${password}
+        Mobile: ${userPhone || 'N/A'}
         
-        ⚠️ Important: Please save this password securely. You will need it to log in to your dashboard.
+        You're on the waiting list, we will contact you with further details
+        Here's a link to access your profile: ${dashboardUrl}
         
-        Login URL: ${loginUrl}
+        Go To Dashboard: ${dashboardUrl}
         
-        If you have any questions or need assistance, please don't hesitate to contact us.
-        
-        Best regards,
-        The Alphera Academy Team
-      ` : `
-        Welcome to Alphera Academy!
-        
-        Dear Prospective Parent,
-        
-        Thank you for your interest in Alphera Academy! We're excited that you've taken the first step in your child's educational journey with us.
-        
-        NEXT STEPS:
-        1. Fill out the pre-assessment form with your and your child's information
-        2. After submitting the form, you'll be prompted to set up a password for your account
-        3. Once your password is set, you can log in to track your application progress
-        
-        Start Your Application: ${baseUrl}/form/pre-assessment?email=${encodeURIComponent(userEmail)}
-        
-        LOGIN INSTRUCTIONS:
-        After completing your application and setting up your password, you can log in using:
-        - Email: ${userEmail}
-        - Password: The password you set during application submission
-        
-        Login URL: ${loginUrl}
-        
-        If you have any questions or need assistance, please don't hesitate to contact us.
+        Contact Information:
+        +973 88 88 88 88 | info@alphera.edu | www.alphera.edu
         
         Best regards,
         The Alphera Academy Team

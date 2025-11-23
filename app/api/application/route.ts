@@ -142,7 +142,7 @@ export async function POST(req: Request) {
 
     // Send welcome email to user when form is submitted
     try {
-      const welcomeEmailSent = await sendWelcomeEmail(user.email, undefined, user.name);
+      const welcomeEmailSent = await sendWelcomeEmail(user.email, undefined, user.name, user.phone || undefined);
       if (welcomeEmailSent) {
         console.log(`Welcome email sent to: ${user.email}`);
       } else {
