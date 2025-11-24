@@ -200,7 +200,7 @@ export async function sendWelcomeEmail(userEmail: string, password?: string, use
   <style>
     body { font-family: Arial, sans-serif; line-height: 1.6; color: #004AAD; margin: 0; padding: 0; background-color: #E1D2BA; }
     .container { max-width: 100%; margin: 0 auto; background-color: #E1D2BA; }
-    .header { background-image: url('http://alpheraacademy.edu.bh/homecrop2.jpg'); background-size: cover; background-position: center; width: 100%; min-height: 610px; position: relative; padding: 0; }
+    .header { background-image: url('https://alpheraacademy.edu.bh/homecrop2.jpg'); background-size: cover; background-position: center; width: 100%; min-height: 610px; position: relative; padding: 0; }
     .header-logo { max-width: 50px; height: auto; display: block; margin: 20px auto 0; }
     .content { background-color: #E1D2BA; padding: 30px 200px; }
     .welcome-title { color: #004AAD; font-size: 32px; font-weight: normal; text-align: center; margin: 20px 0; }
@@ -224,63 +224,64 @@ export async function sendWelcomeEmail(userEmail: string, password?: string, use
       text-align: center;
     }
     .button-container { text-align: center; margin: 30px 0; }
-    .footer { background-color: #004AAD; color: #82B3B4; padding: 30px 400px; display: flex; justify-content: space-between; align-items: center; }
-    .footer-contact { color: #82B3B4; font-size: 14px; display: flex; align-items: center; gap: 2px; flex-wrap: nowrap; white-space: nowrap; }
-    .footer-contact span { white-space: nowrap; }
-    .footer-separator { color: #82B3B4; margin: 0 10px; }
-    .footer-divider { width: 1px; height: 40px; background-color: #82B3B4; margin: 0 20px; }
-    .footer-social { display: flex; align-items: center; gap: 15px; }
-    .footer-social a { color: #82B3B4; text-decoration: none; font-size: 20px; display: flex; gap: 16px;}
+    /* Footer with flex-wrap */
+    .footer { background-color: #0A3E84; color: #82B3B4; padding: 30px 200px; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; width: 100%; max-width: 100%; box-sizing: border-box; }
+    .footer .footer-contact { color: #82B3B4; font-size: 16px; display: flex; align-items: center; gap: 2px; flex-wrap: nowrap; white-space: nowrap; }
+    .footer .footer-contact span { white-space: nowrap; }
+    .footer .footer-separator { color: #82B3B4; margin: 0 10px; }
+    .footer .footer-divider { width: 1px; height: 70px; background-color: #1D68CB !important; margin: 0 20px; flex-shrink: 0; }
+    .footer .footer-social { display: flex; align-items: center; gap: 15px; flex-wrap: nowrap; white-space: nowrap; }
+    .footer .footer-social img { display: block; width: 40.67px; height: 40.67px; border-radius: 8px; }
     .content-container { padding: 0 30px; }
     
     /* Responsive Styles */
+    @media only screen and (max-width: 960px) {
+      .footer { flex-direction: column !important; padding: 20px 15px !important; align-items: center !important; }
+      .footer .footer-contact { justify-content: center !important; }
+      .footer .footer-divider { width: 100% !important; height: 1px !important; margin: 10px 0 !important; }
+      .footer .footer-social { justify-content: center !important; }
+    }
+    
     @media only screen and (max-width: 768px) {
-      .container { max-width: 100%; }
-      .header { min-height: 300px; }
-      .header-logo { max-width: 50px; margin: 15px auto 0; }
-      .content { padding: 20px 15px; }
-      .welcome-title { font-size: 24px; margin: 15px 0; }
-      .greeting { font-size: 14px; margin: 15px 0; }
-      .info-box { flex-direction: row; border-radius: 20px; padding: 0px; }
-      .info-box-left { margin-right: 10px; margin-bottom: 0; border-radius: 20px; min-width: 90px; padding: 10px; }
-      .info-box-right { margin-top: 10px; display: block; }
-      .info-row { margin: 6px 0; font-size: 12px; display: block; width: 100%; }
+      .container { max-width: 100% !important; }
+      .header { min-height: 300px !important; }
+      .header-logo { max-width: 50px !important; margin: 15px auto 0 !important; }
+      .content { padding: 20px 15px !important; }
+      .welcome-title { font-size: 24px !important; margin: 15px 0 !important; }
+      .greeting { font-size: 14px !important; margin: 15px 0 !important; }
+      .info-box { flex-direction: row !important; border-radius: 20px !important; padding: 0px !important; }
+      .info-box-left { margin-right: 10px !important; margin-bottom: 0 !important; border-radius: 20px !important; min-width: 90px !important; padding: 10px !important; }
+      .info-box-right { margin-top: 10px !important; display: block !important; }
+      .info-row { margin: 6px 0 !important; font-size: 12px !important; display: block !important; width: 100% !important; }
       .button { padding: 10px 40px !important; font-size: 16px !important; font-weight: 700 !important; }
-      .footer { padding: 20px 15px; flex-direction: column; gap: 15px; }
-      .footer-contact { flex-wrap: nowrap; justify-content: center; gap: 5px; font-size: 12px; white-space: nowrap; }
-      .footer-separator { margin: 0 5px; }
-      .footer-divider { width: 100%; height: 1px; margin: 10px 0; }
-      .footer-social { justify-content: center; gap: 10px; }
-      .content-container { padding: 0 0px; }
+      .content-container { padding: 0 0px !important; }
     }
     
     @media only screen and (max-width: 480px) {
-      .header { min-height: 250px; }
-      .header-logo { max-width: 50px; margin: 10px auto 0; }
-      .content { padding: 15px 10px; }
-      .welcome-title { font-size: 20px; }
-      .greeting { font-size: 13px; }
-      .info-box { flex-direction: row; padding: 0px; border-radius: 15px; }
-      .info-box-left { margin-right: 8px; padding: 8px; min-width: 70px; border-radius: 15px; }
-      .info-box-right { margin-top: 10px; display: block; }
-      .info-row { font-size: 11px; margin: 4px 0; display: block; width: 100%; }
+      .header { min-height: 250px !important; }
+      .header-logo { max-width: 50px !important; margin: 10px auto 0 !important; }
+      .content { padding: 15px 10px !important; }
+      .welcome-title { font-size: 20px !important; }
+      .greeting { font-size: 13px !important; }
+      .info-box { flex-direction: row !important; padding: 0px !important; border-radius: 15px !important; }
+      .info-box-left { margin-right: 8px !important; padding: 8px !important; min-width: 90px !important; border-radius: 15px !important; }
+      .info-box-right { margin-top: 10px !important; display: block !important; }
+      .info-row { font-size: 11px !important; margin: 4px 0 !important; display: block !important; width: 100% !important; }
       .button { padding: 8px 25px !important; font-size: 14px !important; font-weight: 700 !important; }
-      .footer { padding: 15px 10px; }
-      .footer-contact { font-size: 11px; flex-wrap: nowrap; white-space: nowrap; }
       .footer-social div { width: 20px !important; height: 20px !important; }
       .footer-social svg { width: 18px !important; height: 18px !important; }
     }
     
     @media only screen and (min-width: 769px) and (max-width: 1024px) {
-      .content { padding: 30px 100px; }
-      .footer { padding: 30px 200px; }
+      .content { padding: 30px 100px !important; }
+      .footer { padding: 30px 200px !important; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header" style="text-align: center; padding-top: 20px;">
-      <img src="http://alpheraacademy.edu.bh/Group.png" alt="Alphera Logo" class="header-logo" style="max-width: 70px; height: auto; display: block; margin: 0px auto 0;" />
+      <img src="https://alpheraacademy.edu.bh/Group.png" alt="Alphera Logo" class="header-logo" style="max-width: 80px; height: auto; display: block; margin: 0px auto 0;" />
     </div>
     
     <div class="content">
@@ -300,9 +301,9 @@ export async function sendWelcomeEmail(userEmail: string, password?: string, use
                   <div class="info-row"><span class="info-label">Mobile :</span></div>
                 </div>
                 <div class="info-box-right">
-                    <div class="info-row">${userName || 'N/A'}</div>
+                    <div class="info-row">${userName || '-'}</div>
                     <div class="info-row">${userEmail}</div>
-                    <div class="info-row">${userPhone || 'N/A'}</div>
+                    <div class="info-row">${userPhone || '-'}</div>
                 </div>
             </div>
             
@@ -312,29 +313,24 @@ export async function sendWelcomeEmail(userEmail: string, password?: string, use
             </div>
             
              <div class="button-container">
-                 <a href="${dashboardUrl}" class="button" style="color: #82B3B4 !important; padding: 10px 70px; font-weight: 800; font-size: 22px; background-color: #004AAD !important;">Go To Dashboard</a>
+                 <a href="${dashboardUrl}" class="button" style="color: #82B3B4 !important; padding: 10px 70px; font-weight: 800; background-color: #0A3E84 !important;"><span style="font-size: 24px;">Go To Dashboard</span></a>
              </div>
     </div>
     
+    <!-- Footer with flex-wrap -->
     <div class="footer">
       <div class="footer-contact">
-        <span style="white-space: nowrap;">+973&nbsp;88&nbsp;88&nbsp;88&nbsp;88</span>
+        <span style="white-space: nowrap; color: #82B3B4 !important;">+973&nbsp;88&nbsp;88&nbsp;88&nbsp;88</span>
         <span class="footer-separator">|</span>
-        <span style="white-space: nowrap;">info@alphera.edu</span>
+        <a href="mailto:info@alphera.edu" style="white-space: nowrap; color: #82B3B4 !important; text-decoration: none !important;">info@alphera.edu</a>
         <span class="footer-separator">|</span>
-        <span style="white-space: nowrap;">www.alphera.edu</span>
+        <a href="http://www.alphera.edu" style="white-space: nowrap; color: #82B3B4 !important; text-decoration: none !important;">www.alphera.edu</a>
       </div>
       <div class="footer-divider"></div>
       <div class="footer-social">
-
-
-       
-        <img src="http://alpheraacademy.edu.bh/instagram.png" alt="Instagram" style="width: 29.67px; height: 29.67px; background-color: #82B3B4; margin-top: 0px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-        <img src="http://alpheraacademy.edu.bh/linkedin.png" alt="LinkedIn" style="width: 29.67px; height: 29.67px; background-color: #82B3B4; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
-        <img src="http://alpheraacademy.edu.bh/youtube.png" alt="YouTube" style="width: 29.67px; height: 29.67px; background-color: #82B3B4; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
-
-    
-
+        <img src="http://alpheraacademy.edu.bh/instagram.png" alt="Instagram">
+        <img src="http://alpheraacademy.edu.bh/linkedin.png" alt="LinkedIn">
+        <img src="http://alpheraacademy.edu.bh/youtube.png" alt="YouTube">
       </div>
     </div>
   </div>
