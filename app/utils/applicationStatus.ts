@@ -9,7 +9,6 @@ export type ApplicationWithCompletion = {
   isSeventhFormCompleted?: boolean;
   isEighthFormCompleted?: boolean;
   isNinthFormCompleted?: boolean;
-  isTenthFormCompleted?: boolean;
   isParentGuardianFormCompleted?: boolean;
   isCaregiverFormCompleted?: boolean;
   isOutsiderFormCompleted?: boolean;
@@ -35,7 +34,6 @@ export function determineApplicationStatus(application: ApplicationWithCompletio
     { name: 'Guided Observations Procedure', completed: application.isSeventhFormCompleted },
     { name: 'Initial Form', completed: application.isEighthFormCompleted },
     { name: 'Parent-Child Dynamic Observation', completed: application.isNinthFormCompleted },
-    { name: 'Understanding The Learning Comprehensive Profile Sheet', completed: application.isTenthFormCompleted },
   ];
 
   const completedForms = formStatuses.filter(f => f.completed).map(f => f.name);
@@ -65,6 +63,7 @@ export function determineApplicationStatus(application: ApplicationWithCompletio
  * Updates application status based on form completion
  */
 export async function updateApplicationStatus(applicationId: string, prisma: any) {
+  console.log("applicationId======",applicationId);
   const application = await prisma.application.findUnique({
     where: { id: applicationId },
     select: {
@@ -77,7 +76,6 @@ export async function updateApplicationStatus(applicationId: string, prisma: any
       isSeventhFormCompleted: true,
       isEighthFormCompleted: true,
       isNinthFormCompleted: true,
-      isTenthFormCompleted: true,
       isParentGuardianFormCompleted: true,
       isCaregiverFormCompleted: true,
       isOutsiderFormCompleted: true,

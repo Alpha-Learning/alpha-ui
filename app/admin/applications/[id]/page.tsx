@@ -17,17 +17,17 @@ function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: {
   const forms = [
     {
       name: "Parent/Guardian Form",
-      url: `${baseUrl}/admin/applications/${applicationId}/parent-guardian-form`,
+      url: `${baseUrl}/form/parent-guardian/${applicationId}`,
       color: "blue"
     },
     {
       name: "Caregiver Form", 
-      url: `${baseUrl}/admin/applications/${applicationId}/caregiver-form`,
+      url: `${baseUrl}/form/caregiver/${applicationId}`,
       color: "green"
     },
     {
       name: "Outsider Form",
-      url: `${baseUrl}/admin/applications/${applicationId}/outsider-form`,
+      url: `${baseUrl}/form/outsider/${applicationId}`,
       color: "purple"
     }
   ];
@@ -127,17 +127,17 @@ function Stage7Dropdown({ applicationId, isCompleted, stageTitle }: {
   const forms = [
     {
       name: "KS1 Interview Questions",
-      url: `${baseUrl}/admin/applications/${applicationId}/ks1interview`,
+      url: `${baseUrl}/form/ks1-interview/${applicationId}`,
       color: "teal"
     },
     {
       name: "KS2 Interview Questions", 
-      url: `${baseUrl}/admin/applications/${applicationId}/ks2interview`,
+      url: `${baseUrl}/form/ks2-interview/${applicationId}`,
       color: "orange"
     },
     {
       name: "Guided Observation Procedure",
-      url: `${baseUrl}/admin/applications/${applicationId}/guided-observations-procedure`,
+      url: `${baseUrl}/form/guided-observation/${applicationId}`,
       color: "purple"
     }
   ];

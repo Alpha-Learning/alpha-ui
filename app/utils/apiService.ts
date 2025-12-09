@@ -69,7 +69,14 @@ class ApiService {
       // Handle different response statuses
       if (response.status === 401) {
         // For public endpoints, don't redirect automatically
-        const publicEndpoints = ['/auth/login', '/application', '/pre-assessment'];
+        const publicEndpoints = [
+          '/auth/login', 
+          '/application', 
+          '/pre-assessment',
+          '/api/admin/parent-guardian-form',
+          '/api/admin/caregiver-form',
+          '/api/admin/outsider-form'
+        ];
         if (publicEndpoints.some(publicEndpoint => endpoint.includes(publicEndpoint))) {
           throw new Error('401 Unauthorized - Invalid credentials');
         }
