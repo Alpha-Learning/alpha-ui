@@ -216,7 +216,6 @@ export default function KS1InterviewQuestionsPage() {
           totalScore: "",
           applicationNumber: params.id,
           observerName: "",
-          date: "",
           assessmentDate: "",
           loggedToSystemDate: "",
           loggedBy: "",

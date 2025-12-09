@@ -1,9 +1,24 @@
 "use client";
 import Link from "next/link";
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { FiCheckCircle, FiHome } from "react-icons/fi";
 
 export default function QuestionnaireSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen flex items-center justify-center bg-slate-50 p-6">
+          <div className="text-slate-600 text-lg">Loading...</div>
+        </main>
+      }
+    >
+      <SuccessContent />
+    </Suspense>
+  );
+}
+
+function SuccessContent() {
   const searchParams = useSearchParams();
   const formType = searchParams.get("type") || "questionnaire";
   const applicationId = searchParams.get("applicationId");

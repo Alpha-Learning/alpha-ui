@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, type UseFormRegister, type FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
@@ -351,8 +351,8 @@ function FormTextArea({
 }: {
   label: string;
   name: keyof OutsiderFormData;
-  register: ReturnType<typeof useForm>["register"];
-  errors: any;
+  register: UseFormRegister<OutsiderFormData>;
+  errors: FieldErrors<OutsiderFormData>;
   rows?: number;
 }) {
   return (
