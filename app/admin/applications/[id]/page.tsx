@@ -41,7 +41,6 @@ function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: {
       setCopied(formName);
       setTimeout(() => setCopied(null), 2000);
     } catch (err) {
-      console.error('Failed to copy: ', err);
     }
   };
 
@@ -151,7 +150,6 @@ function Stage7Dropdown({ applicationId, isCompleted, stageTitle }: {
       setCopied(formName);
       setTimeout(() => setCopied(null), 2000);
     } catch (err) {
-      console.error('Failed to copy: ', err);
     }
   };
 
@@ -268,6 +266,8 @@ export default function AdminApplicationDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [showOdooModal, setShowOdooModal] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  const [rejecting, setRejecting] = useState(false);
+  const [showRejectConfirm, setShowRejectConfirm] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -344,10 +344,37 @@ export default function AdminApplicationDetailPage() {
     return null;
   };
 
+  // Helper function to validate and format school_year
+  const normalizeSchoolYear = (schoolYear: string | null | undefined): string | null => {
+    if (!schoolYear) return null;
+    
+    // If it's already a valid year (4 digits), format as date
+    const yearMatch = schoolYear.match(/^(\d{4})$/);
+    if (yearMatch) {
+      return `${yearMatch[1]}-01-01`; // Format as date: YYYY-01-01
+    }
+    
+    // If it's already a valid date format (YYYY-MM-DD), return as is
+    const dateMatch = schoolYear.match(/^\d{4}-\d{2}-\d{2}$/);
+    if (dateMatch) {
+      return schoolYear;
+    }
+    
+    // Try to parse as date
+    const parsedDate = new Date(schoolYear);
+    if (!isNaN(parsedDate.getTime())) {
+      return parsedDate.toISOString().split("T")[0];
+    }
+    
+    // If it's not a valid year/date, return null to avoid Odoo errors
+    return null;
+  };
+
   // Handle syncing application to Odoo - calls API directly
   const handleSyncToOdoo = async () => {
     if (!data) return;
 
+    // Get the login-generated token from localStorage
     const sessionSid = typeof window !== 'undefined' ? localStorage.getItem('odooToken') : null;
     if (!sessionSid) {
       toast.error("Please login to Odoo first");
@@ -373,7 +400,7 @@ export default function AdminApplicationDetailPage() {
           : null,
         age: data.childAge || null,
         gender: normalizeGender(data.childGender),
-        school_year: data.childSchoolYear || null,
+        school_year: normalizeSchoolYear(data.childSchoolYear),
         current_school: data.childCurrentSchool || null,
         school_type: data.childSchoolType || null,
       };
@@ -389,26 +416,56 @@ export default function AdminApplicationDetailPage() {
         id: Math.floor(Math.random() * 100000),
       };
 
+      // Browsers don't allow manually setting Cookie headers, so we'll use our backend proxy
+      // The backend can set the Cookie header properly
+      console.log("Sending request to Odoo via backend proxy with session_id:", sessionSid);
+      console.log("Payload:", payload);
+      
       const response = await axios.post(
-        "https://smslive.alpheraacademy.edu.bh/api/admission/create",
-        payload,
+        "/api/odoo/admission/create",
+        {
+          sessionSid,
+          parent,
+          student,
+        },
         {
           headers: {
             "Content-Type": "application/json",
-            "Cookie": `session_id=${sessionSid}`,
           },
-          withCredentials: true,
         }
       );
 
-      if (response.data.error || !response.data.result) {
-        toast.error(response.data.error?.message || response.data.error?.data?.message || "Failed to create admission in Odoo");
-      } else {
+      console.log("Odoo response:", response);
+      console.log("Response status:", response.status);
+      console.log("Response data:", response.data);
+
+      if (response.data.success && response.data.data) {
         toast.success("Application synced to Odoo successfully!");
+      } else {
+        // Show detailed error message
+        const errorMsg = response.data.error?.message || 
+                        response.data.error?.data?.message || 
+                        response.data.message || 
+                        "Failed to create admission in Odoo";
+        console.error("Odoo sync failed:", response.data);
+        toast.error(errorMsg);
       }
     } catch (error: any) {
       console.error("Sync error:", error);
-      toast.error(error.response?.data?.message || error.message || "Failed to sync to Odoo");
+      console.error("Error response:", error.response);
+      console.error("Error status:", error.response?.status);
+      console.error("Error data:", error.response?.data);
+      
+      if (error.response?.status === 404) {
+        toast.error("Odoo endpoint not found. Please check the API URL.");
+      } else if (error.response?.status === 401) {
+        toast.error("Session expired. Please login to Odoo again.");
+        localStorage.removeItem("odooToken");
+        localStorage.removeItem("odooSession");
+        setShowOdooModal(true);
+      } else {
+        toast.error(error.response?.data?.error?.message || error.response?.data?.message || error.message || "Failed to sync to Odoo");
+      }
     } finally {
       setSyncing(false);
     }
@@ -421,6 +478,34 @@ export default function AdminApplicationDetailPage() {
       setTimeout(() => {
         handleSyncToOdoo();
       }, 500);
+    }
+  };
+
+  // Handle rejecting application
+  const handleRejectApplication = async () => {
+    if (!data) return;
+
+    try {
+      setRejecting(true);
+      const response = await apiService.post("/api/admin/applications/status", {
+        id: data.id,
+        status: "rejected",
+        adminComment: "Application rejected by admin",
+      });
+
+      if (response.success) {
+        toast.success("Application rejected successfully");
+        // Update local state
+        setData({ ...data, status: "rejected" });
+        setShowRejectConfirm(false);
+      } else {
+        toast.error(response.message || "Failed to reject application");
+      }
+    } catch (error: any) {
+      console.error("Reject error:", error);
+      toast.error(error.message || "Failed to reject application");
+    } finally {
+      setRejecting(false);
     }
   };
 
@@ -533,6 +618,32 @@ export default function AdminApplicationDetailPage() {
                       Login to Odoo
                     </button>
                   )}
+                </div>
+              )}
+
+              {/* Reject Application Button */}
+              {data.status !== 'rejected' && (
+                <div>
+                  <button
+                    onClick={() => setShowRejectConfirm(true)}
+                    disabled={rejecting}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium flex items-center justify-center gap-2 text-sm disabled:opacity-50 w-full"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                    {rejecting ? "Rejecting..." : "Reject Application"}
+                  </button>
                 </div>
               )}
             </div>
@@ -678,6 +789,56 @@ export default function AdminApplicationDetailPage() {
           onClose={() => setShowOdooModal(false)}
           onSuccess={handleOdooLoginSuccess}
         />
+
+        {/* Reject Confirmation Modal */}
+        {showRejectConfirm && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md mx-4">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-red-900">Reject Application</h2>
+                <button
+                  onClick={() => setShowRejectConfirm(false)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <p className="text-sm text-gray-600 mb-6">
+                Are you sure you want to reject this application? This action cannot be undone.
+              </p>
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowRejectConfirm(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleRejectApplication}
+                  disabled={rejecting}
+                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {rejecting ? "Rejecting..." : "Confirm Reject"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

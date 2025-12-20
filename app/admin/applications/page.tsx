@@ -238,14 +238,12 @@ export default function AdminApplicationsPage() {
   useEffect(() => { load(); }, [statusFilter, paymentFilter, search, pageIndex]);
 
   const openModal = (id: string, currentStatus: string, currentComment?: string | null) => {
-    console.log("Opening modal for:", { id, currentStatus, currentComment });
     setModal({ id, open: true });
     setNewStatus(currentStatus);
     setComment(currentComment || "");
   };
 
   const openBottomSheet = (id: string, currentStatus: string, currentComment?: string | null) => {
-    console.log("Opening bottom sheet for:", { id, currentStatus, currentComment });
     setSheet({ id, open: true });
     setNewStatus(currentStatus);
     setComment(currentComment || "");
@@ -260,8 +258,6 @@ export default function AdminApplicationsPage() {
         adminComment: comment.trim() || undefined
       };
       
-      console.log("Sending payload:", payload);
-      
       const res = await apiService.post(`/api/admin/applications/status`, payload);
       if (res.success) {
         setModal({ id: "", open: false });
@@ -272,7 +268,6 @@ export default function AdminApplicationsPage() {
         alert(res.message || "Failed to update");
       }
     } catch (e: any) {
-      console.error("Status update error:", e);
       alert(e?.message || "Failed to update");
     } finally {
       setSaving(false);
@@ -335,7 +330,6 @@ export default function AdminApplicationsPage() {
         <Modal isOpen={modal.open} onClose={() => setModal({ id: '', open: false })} title="Update Status">
           <div className="p-5 space-y-4 text-slate-900">
             <select value={newStatus} onChange={(e) => {
-              console.log("Modal status changed to:", e.target.value);
               setNewStatus(e.target.value);
             }} className="w-full border rounded-lg px-3 py-2">
               {['submitted','completed','rejected'].map(s => (
@@ -378,7 +372,6 @@ export default function AdminApplicationsPage() {
             <div className="text-slate-900 text-lg font-semibold mb-3">Update Status</div>
             <div className="space-y-4">
               <select value={newStatus} onChange={(e) => {
-                console.log("Bottom sheet status changed to:", e.target.value);
                 setNewStatus(e.target.value);
               }} className="w-full border rounded-lg px-3 py-2 text-slate-900">
                 {['submitted','completed','rejected'].map(s => (

@@ -55,7 +55,8 @@ export default function OdooLoginModal({
         }
       );
 
-      console.log("response", response);
+      console.log("Login response:", response);
+      console.log("Response headers:", response.headers);
 
       const data = response.data;
 
@@ -65,11 +66,39 @@ export default function OdooLoginModal({
       }
 
       const sessionInfo = data.result;
-      const token = sessionInfo.session_sid || sessionInfo.session_id || sessionInfo.uid || "authenticated";
+      
+      // Try to extract session_id from response headers (Set-Cookie) first
+      let sessionId = null;
+      const setCookieHeader = response.headers['set-cookie'];
+      if (setCookieHeader) {
+        // set-cookie can be a string or array
+        const cookies = Array.isArray(setCookieHeader) ? setCookieHeader : [setCookieHeader];
+        for (const cookie of cookies) {
+          const match = cookie.match(/session_id=([^;]+)/);
+          if (match && match[1]) {
+            sessionId = match[1];
+            break;
+          }
+        }
+      }
+      
+      // Fallback to extracting from response body
+      if (!sessionId) {
+        sessionId = sessionInfo.session_sid || sessionInfo.session_id || sessionInfo.uid;
+      }
+      
+      if (!sessionId) {
+        console.error("Session info:", sessionInfo);
+        toast.error("Failed to get session token from Odoo");
+        return;
+      }
 
-      // Store session info
-      localStorage.setItem("odooToken", token);
+      // Store the login-generated token for use in cookie headers
+      // This token will be passed as session_id in the Cookie header for subsequent API calls
+      localStorage.setItem("odooToken", String(sessionId));
       localStorage.setItem("odooSession", JSON.stringify(sessionInfo));
+      
+      console.log("Odoo login successful. Session token stored:", sessionId);
       
       toast.success("Successfully logged in to Odoo!");
       onSuccess?.();
