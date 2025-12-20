@@ -33,23 +33,25 @@ export default function OdooLoginModal({
       setLoading(true);
       
       // Call Odoo API directly with axios
+      const payload = {
+        jsonrpc: "2.0",
+        method: "call",
+        params: {
+          db: ODOO_DB,
+          login: email,
+          password: password,
+        },
+        id: Math.floor(Math.random() * 100000),
+      };
+
       const response = await axios.post(
         `${ODOO_BASE_URL}/web/session/authenticate`,
-        {
-          jsonrpc: "2.0",
-          method: "call",
-          params: {
-            db: ODOO_DB,
-            login: email,
-            password: password,
-          },
-          id: Math.floor(Math.random() * 100000),
-        },
+        payload,
         {
           headers: {
             "Content-Type": "application/json",
           },
-          withCredentials: true, // VERY IMPORTANT
+          withCredentials: true,
         }
       );
 
@@ -63,7 +65,7 @@ export default function OdooLoginModal({
       }
 
       const sessionInfo = data.result;
-      const token = sessionInfo.session_id || sessionInfo.uid || "authenticated";
+      const token = sessionInfo.session_sid || sessionInfo.session_id || sessionInfo.uid || "authenticated";
 
       // Store session info
       localStorage.setItem("odooToken", token);

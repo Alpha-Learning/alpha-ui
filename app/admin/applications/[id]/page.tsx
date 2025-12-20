@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { apiService } from "@/app/utils";
 import OdooLoginModal from "@/app/components/OdooLoginModal";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 // Stage 3 Dropdown Component
 function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: { 
@@ -229,7 +231,15 @@ type AppDetail = {
   id: string;
   parentFullName: string;
   parentEmail: string;
+  parentPhone?: string | null;
+  relationToChild?: string | null;
   childFullName: string;
+  childDateOfBirth?: string | Date | null;
+  childAge?: number | null;
+  childGender?: string | null;
+  childSchoolYear?: string | null;
+  childCurrentSchool?: string | null;
+  childSchoolType?: string | null;
   status: string;
   isPaid: boolean;
   paymentAmount?: number | null;
@@ -257,6 +267,7 @@ export default function AdminApplicationDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showOdooModal, setShowOdooModal] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -305,6 +316,113 @@ export default function AdminApplicationDetailPage() {
     "8. Understanding The Parent",
     "9. UTL Comprehensive Profile Sheet",
   ];
+
+  // Check if user is already logged in to Odoo
+  const isOdooLoggedIn = typeof window !== 'undefined' && !!localStorage.getItem('odooToken');
+
+  // Helper function to map relation to child ID
+  const mapRelationToChildId = (relation: string | null): number => {
+    if (!relation) return 1;
+    const relationLower = relation.toLowerCase().trim();
+    const mapping: Record<string, number> = {
+      "father": 1, "dad": 1, "mother": 2, "mom": 2, "parent": 1, "guardian": 3, "other": 4,
+    };
+    for (const [key, id] of Object.entries(mapping)) {
+      if (relationLower.includes(key)) return id;
+    }
+    const numValue = parseInt(relation);
+    return !isNaN(numValue) ? numValue : 1;
+  };
+
+  // Helper function to normalize gender
+  const normalizeGender = (gender: string | null | undefined): string | null => {
+    if (!gender) return null;
+    const genderLower = gender.toLowerCase();
+    if (genderLower === "f" || genderLower === "m") return genderLower;
+    if (genderLower.startsWith("f") || genderLower === "female") return "f";
+    if (genderLower.startsWith("m") || genderLower === "male") return "m";
+    return null;
+  };
+
+  // Handle syncing application to Odoo - calls API directly
+  const handleSyncToOdoo = async () => {
+    if (!data) return;
+
+    const sessionSid = typeof window !== 'undefined' ? localStorage.getItem('odooToken') : null;
+    if (!sessionSid) {
+      toast.error("Please login to Odoo first");
+      setShowOdooModal(true);
+      return;
+    }
+
+    try {
+      setSyncing(true);
+      
+      // Format data for Odoo
+      const parent = {
+        full_name: data.parentFullName || "",
+        email: data.parentEmail || "",
+        phone: data.parentPhone || "",
+        relation_to_child_id: mapRelationToChildId(data.relationToChild || null),
+      };
+
+      const student = {
+        full_name: data.childFullName || "",
+        date_of_birth: data.childDateOfBirth
+          ? new Date(data.childDateOfBirth).toISOString().split("T")[0]
+          : null,
+        age: data.childAge || null,
+        gender: normalizeGender(data.childGender),
+        school_year: data.childSchoolYear || null,
+        current_school: data.childCurrentSchool || null,
+        school_type: data.childSchoolType || null,
+      };
+
+      // Call Odoo admission API directly
+      const payload = {
+        jsonrpc: "2.0",
+        method: "call",
+        params: {
+          parent,
+          student,
+        },
+        id: Math.floor(Math.random() * 100000),
+      };
+
+      const response = await axios.post(
+        "https://smslive.alpheraacademy.edu.bh/api/admission/create",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Cookie": `session_id=${sessionSid}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (response.data.error || !response.data.result) {
+        toast.error(response.data.error?.message || response.data.error?.data?.message || "Failed to create admission in Odoo");
+      } else {
+        toast.success("Application synced to Odoo successfully!");
+      }
+    } catch (error: any) {
+      console.error("Sync error:", error);
+      toast.error(error.response?.data?.message || error.message || "Failed to sync to Odoo");
+    } finally {
+      setSyncing(false);
+    }
+  };
+
+  // Handle Odoo login success - automatically sync after login
+  const handleOdooLoginSuccess = async () => {
+    if (data) {
+      // Wait a bit for token to be stored
+      setTimeout(() => {
+        handleSyncToOdoo();
+      }, 500);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-6">
@@ -370,28 +488,51 @@ export default function AdminApplicationDetailPage() {
                 )}
               </div>
               
-              {/* Odoo Authentication Button */}
+              {/* Odoo Sync Button */}
               {allFormsCompleted && data.status === 'completed' && (
-                <div>
-                  <button
-                    onClick={() => setShowOdooModal(true)}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2 text-sm"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                <div className="space-y-2">
+                  {isOdooLoggedIn ? (
+                    <button
+                      onClick={handleSyncToOdoo}
+                      disabled={syncing}
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center justify-center gap-2 text-sm disabled:opacity-50"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      />
-                    </svg>
-                    Sync to Odoo
-                  </button>
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 10V3L4 14h7v7l9-11h-7z"
+                        />
+                      </svg>
+                      {syncing ? "Syncing..." : "Sync to Odoo"}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setShowOdooModal(true)}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2 text-sm"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                        />
+                      </svg>
+                      Login to Odoo
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -535,9 +676,7 @@ export default function AdminApplicationDetailPage() {
         <OdooLoginModal
           isOpen={showOdooModal}
           onClose={() => setShowOdooModal(false)}
-          onSuccess={() => {
-            console.log("Odoo login successful - Application can now be synced");
-          }}
+          onSuccess={handleOdooLoginSuccess}
         />
       </div>
     </div>
