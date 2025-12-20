@@ -47,7 +47,7 @@ export async function GET(req: Request) {
       }, { status: 404 });
     }
 
-    // Get user's latest application
+    // Get user's latest application with completion status
     const latestApplication = await prisma.application.findFirst({
       where: { userId: user.id },
       orderBy: { createdAt: 'desc' },
@@ -56,8 +56,30 @@ export async function GET(req: Request) {
         status: true,
         createdAt: true,
         updatedAt: true,
+        isFirstFormCompleted: true,
+        isSecondFormCompleted: true,
+        isThirdFormCompleted: true,
+        isFourthFormCompleted: true,
+        isFifthFormCompleted: true,
+        isSixthFormCompleted: true,
+        isSeventhFormCompleted: true,
+        isEighthFormCompleted: true,
+        isNinthFormCompleted: true,
       }
     });
+
+    // Calculate if all forms are completed
+    const allFormsCompleted = latestApplication ? [
+      latestApplication.isFirstFormCompleted,
+      latestApplication.isSecondFormCompleted,
+      latestApplication.isThirdFormCompleted,
+      latestApplication.isFourthFormCompleted,
+      latestApplication.isFifthFormCompleted,
+      latestApplication.isSixthFormCompleted,
+      latestApplication.isSeventhFormCompleted,
+      latestApplication.isEighthFormCompleted,
+      latestApplication.isNinthFormCompleted,
+    ].every(Boolean) : false;
 
     return NextResponse.json({
       success: true,
@@ -65,6 +87,8 @@ export async function GET(req: Request) {
         ...user,
         applicationStatus: latestApplication?.status || "No Application",
         submittedAt: latestApplication?.createdAt || null,
+        applicationId: latestApplication?.id || null,
+        allFormsCompleted: allFormsCompleted,
       },
     });
 

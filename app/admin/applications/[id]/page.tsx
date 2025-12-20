@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { apiService } from "@/app/utils";
+import OdooLoginModal from "@/app/components/OdooLoginModal";
 
 // Stage 3 Dropdown Component
 function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: { 
@@ -255,6 +256,7 @@ export default function AdminApplicationDetailPage() {
   const [data, setData] = useState<AppDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showOdooModal, setShowOdooModal] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -290,6 +292,7 @@ export default function AdminApplicationDetailPage() {
   ];
   const completedCount = completionFields.filter(Boolean).length;
   const pct = Math.round((completedCount / 9) * 100);
+  const allFormsCompleted = completedCount === 9;
   
   const stageTitles = [
     "1. Application form",
@@ -343,25 +346,52 @@ export default function AdminApplicationDetailPage() {
               </div>
             </div>
             
-            {/* Payment Status */}
-            <div className="lg:text-right">
-              <div className="text-sm text-gray-600 mb-1">Payment Status</div>
-              {data.isPaid ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-green-700 font-semibold">
-                    Paid ${data.paymentAmount ?? 150}
-                  </span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <span className="text-red-700 font-semibold">Unpaid</span>
-                </div>
-              )}
-              {data.paidAt && (
-                <div className="text-xs text-gray-500 mt-1">
-                  {new Date(data.paidAt).toLocaleDateString()}
+            {/* Payment Status & Odoo Actions */}
+            <div className="lg:text-right space-y-3">
+              <div>
+                <div className="text-sm text-gray-600 mb-1">Payment Status</div>
+                {data.isPaid ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span className="text-green-700 font-semibold">
+                      Paid ${data.paymentAmount ?? 150}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                    <span className="text-red-700 font-semibold">Unpaid</span>
+                  </div>
+                )}
+                {data.paidAt && (
+                  <div className="text-xs text-gray-500 mt-1">
+                    {new Date(data.paidAt).toLocaleDateString()}
+                  </div>
+                )}
+              </div>
+              
+              {/* Odoo Authentication Button */}
+              {allFormsCompleted && data.status === 'completed' && (
+                <div>
+                  <button
+                    onClick={() => setShowOdooModal(true)}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2 text-sm"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
+                    </svg>
+                    Sync to Odoo
+                  </button>
                 </div>
               )}
             </div>
@@ -500,6 +530,15 @@ export default function AdminApplicationDetailPage() {
             })}
           </div>
         </div>
+
+        {/* Odoo Login Modal */}
+        <OdooLoginModal
+          isOpen={showOdooModal}
+          onClose={() => setShowOdooModal(false)}
+          onSuccess={() => {
+            console.log("Odoo login successful - Application can now be synced");
+          }}
+        />
       </div>
     </div>
   );

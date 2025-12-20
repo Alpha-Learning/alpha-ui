@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { apiService } from "@/app/utils";
+import OdooLoginModal from "@/app/components/OdooLoginModal";
 
 interface UserData {
   id: string;
@@ -10,12 +11,15 @@ interface UserData {
   city?: string;
   applicationStatus: string;
   submittedAt: string | null;
+  applicationId?: string | null;
+  allFormsCompleted?: boolean;
 }
 
 export default function UserDashboard() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showOdooModal, setShowOdooModal] = useState(false);
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -106,6 +110,7 @@ export default function UserDashboard() {
             <p className="text-sm text-slate-500">Current Status</p>
             <div className="mt-1">
               <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                userData?.applicationStatus === 'completed' ? 'bg-green-100 text-green-800' :
                 userData?.applicationStatus === 'approved' ? 'bg-green-100 text-green-800' :
                 userData?.applicationStatus === 'rejected' ? 'bg-red-100 text-red-800' :
                 userData?.applicationStatus === 'No Application' ? 'bg-gray-100 text-gray-800' :
@@ -122,6 +127,39 @@ export default function UserDashboard() {
               {userData?.submittedAt ? new Date(userData.submittedAt).toLocaleDateString() : 'No application submitted'}
             </p>
           </div>
+
+          {/* Odoo Login Button - Show when all forms are completed */}
+          {userData?.allFormsCompleted && userData?.applicationStatus === 'completed' && (
+            <div className="pt-4 border-t border-gray-200">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 className="text-sm font-semibold text-blue-900 mb-2">
+                  🎉 All Forms Completed!
+                </h4>
+                <p className="text-sm text-blue-800 mb-3">
+                  Your application has been completed. Login to Odoo to sync your registration data.
+                </p>
+                <button
+                  onClick={() => setShowOdooModal(true)}
+                  className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                  Login to Odoo
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -165,6 +203,16 @@ export default function UserDashboard() {
           </button>
         </div>
       </div> */}
+
+      {/* Odoo Login Modal */}
+      <OdooLoginModal
+        isOpen={showOdooModal}
+        onClose={() => setShowOdooModal(false)}
+        onSuccess={() => {
+          // Optionally refresh data or show success message
+          console.log("Odoo login successful");
+        }}
+      />
     </div>
   );
 }

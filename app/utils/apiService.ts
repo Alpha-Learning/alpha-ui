@@ -75,7 +75,8 @@ class ApiService {
           '/pre-assessment',
           '/api/admin/parent-guardian-form',
           '/api/admin/caregiver-form',
-          '/api/admin/outsider-form'
+          '/api/admin/outsider-form',
+          '/api/odoo/login'
         ];
         if (publicEndpoints.some(publicEndpoint => endpoint.includes(publicEndpoint))) {
           throw new Error('401 Unauthorized - Invalid credentials');
