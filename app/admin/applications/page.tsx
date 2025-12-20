@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { apiService } from "@/app/utils";
 import Modal from "@/app/components/Modal";
 import DataTable, { TableColumn } from "react-data-table-component";
-import Link from "next/link";
+import Link from "next/link"; 
 
 type AdminApp = {
   id: string;
