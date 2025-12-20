@@ -14,8 +14,7 @@ export async function POST(req: Request) {
         login: email,
         password: password,
       },
-    };
-console.log("payload", payload);
+    };    
 const response = await fetch(`${ODOO_BASE_URL}/web/session/authenticate`, {
     method: "POST",
     body: JSON.stringify({

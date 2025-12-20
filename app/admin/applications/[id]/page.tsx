@@ -418,8 +418,6 @@ export default function AdminApplicationDetailPage() {
 
       // Browsers don't allow manually setting Cookie headers, so we'll use our backend proxy
       // The backend can set the Cookie header properly
-      console.log("Sending request to Odoo via backend proxy with session_id:", sessionSid);
-      console.log("Payload:", payload);
       
       const response = await axios.post(
         "/api/odoo/admission/create",
@@ -435,10 +433,6 @@ export default function AdminApplicationDetailPage() {
         }
       );
 
-      console.log("Odoo response:", response);
-      console.log("Response status:", response.status);
-      console.log("Response data:", response.data);
-
       if (response.data.success && response.data.data) {
         toast.success("Application synced to Odoo successfully!");
       } else {
@@ -447,15 +441,9 @@ export default function AdminApplicationDetailPage() {
                         response.data.error?.data?.message || 
                         response.data.message || 
                         "Failed to create admission in Odoo";
-        console.error("Odoo sync failed:", response.data);
         toast.error(errorMsg);
       }
     } catch (error: any) {
-      console.error("Sync error:", error);
-      console.error("Error response:", error.response);
-      console.error("Error status:", error.response?.status);
-      console.error("Error data:", error.response?.data);
-      
       if (error.response?.status === 404) {
         toast.error("Odoo endpoint not found. Please check the API URL.");
       } else if (error.response?.status === 401) {
@@ -502,7 +490,6 @@ export default function AdminApplicationDetailPage() {
         toast.error(response.message || "Failed to reject application");
       }
     } catch (error: any) {
-      console.error("Reject error:", error);
       toast.error(error.message || "Failed to reject application");
     } finally {
       setRejecting(false);

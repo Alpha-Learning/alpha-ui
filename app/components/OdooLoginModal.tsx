@@ -55,9 +55,6 @@ export default function OdooLoginModal({
         }
       );
 
-      console.log("Login response:", response);
-      console.log("Response headers:", response.headers);
-
       const data = response.data;
 
       if (data.error || !data.result) {
