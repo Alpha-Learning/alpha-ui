@@ -348,22 +348,24 @@ export default function AdminApplicationDetailPage() {
   const normalizeSchoolYear = (schoolYear: string | null | undefined): string | null => {
     if (!schoolYear) return null;
     
-    // If it's already a valid year (4 digits), format as date
-    const yearMatch = schoolYear.match(/^(\d{4})$/);
+    const yearStr = String(schoolYear).trim();
+    
+    // If it's already a valid year (4 digits), return as is
+    const yearMatch = yearStr.match(/^(\d{4})$/);
     if (yearMatch) {
-      return `${yearMatch[1]}-01-01`; // Format as date: YYYY-01-01
+      return yearMatch[1]; // Return just the year, e.g., "2000" or "2025"
     }
     
-    // If it's already a valid date format (YYYY-MM-DD), return as is
-    const dateMatch = schoolYear.match(/^\d{4}-\d{2}-\d{2}$/);
+    // If it's a date format (YYYY-MM-DD), extract just the year
+    const dateMatch = yearStr.match(/^(\d{4})-\d{2}-\d{2}$/);
     if (dateMatch) {
-      return schoolYear;
+      return dateMatch[1]; // Extract and return just the year part
     }
     
-    // Try to parse as date
+    // Try to parse as date and extract year
     const parsedDate = new Date(schoolYear);
     if (!isNaN(parsedDate.getTime())) {
-      return parsedDate.toISOString().split("T")[0];
+      return String(parsedDate.getFullYear()); // Return just the year as string
     }
     
     // If it's not a valid year/date, return null to avoid Odoo errors
