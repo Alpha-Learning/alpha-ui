@@ -1,9 +1,19 @@
 import { NextResponse } from "next/server";
 
-const ODOO_BASE_URL = process.env.ODOO_BASE_URL;
+const ODOO_BASE_URL = process.env.ODOO_BASE_URL || "https://smslive.alpheraacademy.edu.bh";
 
 export async function POST(req: Request) {
   try {
+    if (!ODOO_BASE_URL) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "ODOO_BASE_URL is not configured",
+        },
+        { status: 500 }
+      );
+    }
+
     const body = await req.json();
     const { sessionSid, parent, student } = body;
 
@@ -78,8 +88,11 @@ export async function POST(req: Request) {
     };
 
     // Call Odoo admission API with session_sid as cookie
+    const odooUrl = `${ODOO_BASE_URL}/api/admission/create`;
+    console.log("Calling Odoo API:", odooUrl);
+    console.log("Payload:", JSON.stringify(payload, null, 2));
     
-    const response = await fetch(`${ODOO_BASE_URL}/api/admission/create`, {
+    const response = await fetch(odooUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -88,30 +101,49 @@ export async function POST(req: Request) {
       body: JSON.stringify(payload),
     });
 
+    console.log("Odoo response status:", response.status);
+    console.log("Odoo response headers:", Object.fromEntries(response.headers.entries()));
     
     const responseText = await response.text();
+    console.log("Odoo response text:", responseText.substring(0, 500));
     
     let data;
     try {
       data = JSON.parse(responseText);
     } catch (parseError) {
       console.error("Failed to parse Odoo response as JSON:", parseError);
+      console.error("Full response text:", responseText);
       return NextResponse.json(
         {
           success: false,
           message: `Odoo server returned invalid response: ${responseText.substring(0, 200)}`,
+          error: {
+            type: "parse_error",
+            message: parseError instanceof Error ? parseError.message : String(parseError),
+            responseText: responseText.substring(0, 500),
+          },
         },
         { status: response.status || 500 }
       );
     }
 
     if (data.error || !data.result) {
-      console.error("Odoo error:", data.error);
+      console.error("Odoo error response:", JSON.stringify(data.error, null, 2));
+      const errorMessage = data.error?.message || 
+                          data.error?.data?.message || 
+                          data.error?.data?.debug || 
+                          JSON.stringify(data.error) ||
+                          "Failed to create admission";
+      
       return NextResponse.json(
         {
           success: false,
-          message: data.error?.message || data.error?.data?.message || "Failed to create admission",
-          error: data.error,
+          message: "Odoo Server Error",
+          error: {
+            ...data.error,
+            message: errorMessage,
+            fullError: data.error,
+          },
         },
         { status: response.status || 500 }
       );
@@ -124,12 +156,18 @@ export async function POST(req: Request) {
     });
   } catch (error: any) {
     console.error("Odoo admission create error:", error);
+    console.error("Error stack:", error.stack);
   
     return NextResponse.json(
       {
         success: false,
-        message: error.message || "Failed to connect to Odoo server",
-        error: error.toString(),
+        message: "Odoo Server Error",
+        error: {
+          type: "connection_error",
+          message: error.message || "Failed to connect to Odoo server",
+          details: error.toString(),
+          stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+        },
       },
       { status: 500 }
     );

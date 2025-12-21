@@ -116,6 +116,160 @@ function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: {
   );
 }
 
+// AI Assessment Card Component
+function AIAssessmentCard({ applicationId, childName }: { 
+  applicationId: string; 
+  childName: string;
+}) {
+  const [loading, setLoading] = useState(false);
+  const [checking, setChecking] = useState(true);
+  const [hasAssessment, setHasAssessment] = useState(false);
+
+  useEffect(() => {
+    checkExistingAssessment();
+  }, [applicationId]);
+
+  const checkExistingAssessment = async () => {
+    try {
+      setChecking(true);
+      const response = await apiService.get(`/api/admin/applications/${applicationId}/ai-assessment`);
+      // If response.success is true and data exists, assessment exists
+      if (response.success && response.data) {
+        setHasAssessment(true);
+      } else {
+        // success: false means no assessment exists yet (expected)
+        setHasAssessment(false);
+      }
+    } catch (error: any) {
+      // If apiService throws an error, treat as no assessment exists
+      // This can happen if the API is unreachable or returns an error
+      // The card will still show, allowing user to try generating
+      console.warn('Could not check for existing assessment:', error?.message || error);
+      setHasAssessment(false);
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  const handleGenerateAssessment = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      setLoading(true);
+      const response = await apiService.post(`/api/admin/applications/${applicationId}/ai-assessment/generate`);
+      if (response.success) {
+        toast.success("AI Assessment generated successfully!");
+        setHasAssessment(true);
+        // Navigate to assessment page after a short delay
+        setTimeout(() => {
+          window.location.href = `/admin/applications/${applicationId}/ai-assessment`;
+        }, 500);
+      } else {
+        toast.error(response.message || "Failed to generate assessment");
+      }
+    } catch (error: any) {
+      console.error("Error generating assessment:", error);
+      toast.error(error?.response?.data?.message || "Failed to generate assessment");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (checking) {
+    return (
+      <div className="relative h-full">
+        <div className="p-4 rounded-lg border-2 bg-gray-50 border-gray-200 h-full min-h-[180px] flex flex-col items-center justify-center">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600"></div>
+          <p className="text-xs text-gray-500 mt-2">Checking...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative h-full">
+      <div 
+        className={`p-4 rounded-lg border-2 transition-all duration-200 h-full min-h-[180px] flex flex-col ${
+          hasAssessment
+            ? 'bg-gradient-to-br from-purple-50 to-purple-100 border-purple-300 hover:border-purple-400 hover:shadow-md' 
+            : 'bg-gradient-to-br from-purple-50 to-indigo-50 border-purple-200 hover:border-purple-300'
+        }`}
+      >
+        <div className="flex items-start justify-between mb-3">
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+            hasAssessment
+              ? 'bg-purple-500 text-white' 
+              : 'bg-gradient-to-br from-purple-500 to-indigo-600 text-white'
+          }`}>
+            {hasAssessment ? '✓' : 'AI'}
+          </div>
+          <div className={`w-3 h-3 rounded-full ${
+            hasAssessment ? 'bg-purple-500' : 'bg-purple-400 animate-pulse'
+          }`}></div>
+        </div>
+        <div className="text-sm font-medium text-gray-900 mb-1">
+          AI Assessment
+        </div>
+        <div className="text-xs text-gray-600 mb-3">
+          {hasAssessment 
+            ? "View comprehensive AI-powered assessment report"
+            : "Generate comprehensive assessment using all form data"
+          }
+        </div>
+        <div className="flex items-center justify-between mt-auto">
+          {hasAssessment ? (
+            <>
+              <div className="text-xs font-medium text-purple-600 flex items-center gap-1">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Assessment Ready
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.location.href = `/admin/applications/${applicationId}/ai-assessment`;
+                }}
+                className="px-4 py-2 bg-purple-600 text-white text-xs font-medium rounded-lg hover:bg-purple-700 transition-colors shadow-sm flex items-center gap-1"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                View Report
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="text-xs text-gray-500">
+                Not generated yet
+              </div>
+              <button
+                onClick={handleGenerateAssessment}
+                disabled={loading}
+                className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-medium rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center gap-1"
+              >
+                {loading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Generate
+                  </>
+                )}
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Stage 7 Dropdown Component
 function Stage7Dropdown({ applicationId, isCompleted, stageTitle }: { 
   applicationId: string; 
@@ -443,11 +597,22 @@ export default function AdminApplicationDetailPage() {
         toast.success("Application synced to Odoo successfully!");
       } else {
         // Show detailed error message
-        const errorMsg = response.data.error?.message || 
-                        response.data.error?.data?.message || 
+        const error = response.data.error || {};
+        const errorMsg = error.message || 
+                        error.data?.message || 
+                        error.data?.debug ||
                         response.data.message || 
                         "Failed to create admission in Odoo";
         console.error("Odoo sync failed:", response.data);
+        console.error("Full error object:", JSON.stringify(error, null, 2));
+        
+        // Show more detailed error in console for debugging
+        if (error.type === "parse_error") {
+          console.error("Odoo returned invalid JSON response");
+        } else if (error.type === "connection_error") {
+          console.error("Failed to connect to Odoo server:", error.details);
+        }
+        
         toast.error(errorMsg);
       }
     } catch (error: any) {
@@ -780,6 +945,14 @@ export default function AdminApplicationDetailPage() {
                 <div key={idx}>{inner}</div>
               );
             })}
+            
+            {/* AI Assessment Card - Only show when all 9 forms are completed */}
+            {allFormsCompleted && (
+              <AIAssessmentCard 
+                applicationId={data.id}
+                childName={data.childFullName}
+              />
+            )}
           </div>
         </div>
 

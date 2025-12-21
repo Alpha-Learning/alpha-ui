@@ -41,3 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 /app/generated/prisma
+
+# Add these lines to your .gitignore
+node_modules/
+.pnpm-store/
