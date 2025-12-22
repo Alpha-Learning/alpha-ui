@@ -4,7 +4,7 @@ import { apiService } from "@/app/utils";
 import Modal from "@/app/components/Modal";
 import DataTable, { TableColumn } from "react-data-table-component";
 import Link from "next/link"; 
-
+ 
 type AdminApp = {
   id: string;
   status: string;
