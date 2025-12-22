@@ -100,7 +100,7 @@ export async function GET(req: Request) {
     });
 
     // Format the response data to match Odoo payload structure
-    const registrations = completedApplications.map((app, index) => {
+    const registrations = completedApplications.map((app:any, index:any) => {
       // Normalize gender to lowercase (f/m) as expected by Odoo
       let gender = app.childGender?.toLowerCase() || null;
       if (gender && gender !== "f" && gender !== "m") {

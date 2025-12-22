@@ -37,51 +37,102 @@ export async function POST(req: Request) {
       );
     }
 
-    // Helper function to validate and format school_year
-    const normalizeSchoolYear = (schoolYear: string | null | undefined): string | null => {
-      if (!schoolYear) return null;
+    // Helper function to normalize and validate strings
+    const normalizeString = (value: any, defaultValue: string = ""): string => {
+      if (!value) return defaultValue;
+      return String(value).trim();
+    };
+
+    // Helper function to normalize date to YYYY-MM-DD format
+    const normalizeDate = (date: any): string | null => {
+      if (!date) return null;
       
-      // If it's already a valid year (4 digits), format as date
-      const yearMatch = String(schoolYear).match(/^(\d{4})$/);
-      if (yearMatch) {
-        return `${yearMatch[1]}-01-01`; // Format as date: YYYY-01-01
+      // If already in YYYY-MM-DD format, return as is
+      if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        return date;
       }
       
-      // If it's already a valid date format (YYYY-MM-DD), return as is
-      const dateMatch = String(schoolYear).match(/^\d{4}-\d{2}-\d{2}$/);
-      if (dateMatch) {
-        return schoolYear;
-      }
-      
-      // Try to parse as date
-      const parsedDate = new Date(schoolYear);
+      // Try to parse as Date object
+      const parsedDate = new Date(date);
       if (!isNaN(parsedDate.getTime())) {
         return parsedDate.toISOString().split("T")[0];
+      }
+      
+      return null;
+    };
+
+    // Helper function to normalize age to number
+    const normalizeAge = (age: any): number | null => {
+      if (age === null || age === undefined) return null;
+      const numAge = typeof age === "number" ? age : parseInt(String(age), 10);
+      return isNaN(numAge) ? null : numAge;
+    };
+
+    // Helper function to normalize gender to 'f' or 'm'
+    const normalizeGender = (gender: any): string | null => {
+      if (!gender) return null;
+      const genderStr = String(gender).toLowerCase().trim();
+      if (genderStr === "f" || genderStr === "female" || genderStr.startsWith("f")) return "f";
+      if (genderStr === "m" || genderStr === "male" || genderStr.startsWith("m")) return "m";
+      return null;
+    };
+
+    // Helper function to normalize relation_to_child_id to number
+    const normalizeRelationToChildId = (relation: any): number => {
+      if (relation === null || relation === undefined) return 1;
+      const numRelation = typeof relation === "number" ? relation : parseInt(String(relation), 10);
+      return isNaN(numRelation) ? 1 : numRelation;
+    };
+
+    // Helper function to validate and format school_year (returns only year as string, e.g., "2000" or "2025")
+    const normalizeSchoolYear = (schoolYear: any): string | null => {
+      if (!schoolYear) return null;
+      
+      const yearStr = String(schoolYear).trim();
+      
+      // If it's already a valid year (4 digits), return as is
+      const yearMatch = yearStr.match(/^(\d{4})$/);
+      if (yearMatch) {
+        return yearMatch[1]; // Return just the year, e.g., "2000" or "2025"
+      }
+      
+      // If it's a date format (YYYY-MM-DD), extract just the year
+      const dateMatch = yearStr.match(/^(\d{4})-\d{2}-\d{2}$/);
+      if (dateMatch) {
+        return dateMatch[1]; // Extract and return just the year part
+      }
+      
+      // Try to parse as date and extract year
+      const parsedDate = new Date(schoolYear);
+      if (!isNaN(parsedDate.getTime())) {
+        return String(parsedDate.getFullYear()); // Return just the year as string
       }
       
       // If it's not a valid year/date, return null to avoid Odoo errors
       return null;
     };
+    console.log("school year", normalizeSchoolYear(student.school_year));
 
-    // Format payload according to Odoo's expected structure
+    // Format payload according to Odoo's expected structure with validation
+    // This ensures the payload always matches the exact structure required
     const payload = {
       jsonrpc: "2.0",
       method: "call",
       params: {
         parent: {
-          full_name: parent.full_name,
-          email: parent.email,
-          phone: parent.phone || "",
-          relation_to_child_id: parent.relation_to_child_id || 1,
+          full_name: normalizeString(parent.full_name, ""),
+          email: normalizeString(parent.email, ""),
+          phone: normalizeString(parent.phone, ""),
+          relation_to_child_id: normalizeRelationToChildId(parent.relation_to_child_id),
         },
         student: {
-          full_name: student.full_name,
-          date_of_birth: student.date_of_birth,
-          age: student.age,
-          gender: student.gender,
+          full_name: normalizeString(student.full_name, ""),
+          date_of_birth: normalizeDate(student.date_of_birth),
+          age: normalizeAge(student.age),
+          gender: normalizeGender(student.gender),
           school_year: normalizeSchoolYear(student.school_year),
-          current_school: student.current_school || null,
-          school_type: student.school_type || null,
+          current_school: normalizeString(student.current_school) || null,
+          school_type: normalizeString(student.school_type) || null,
         },
       },
       id: Math.floor(Math.random() * 100000),
