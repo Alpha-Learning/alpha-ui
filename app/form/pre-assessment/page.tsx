@@ -28,12 +28,17 @@ const schema = z.object({
 
   // Child Information
   childFullName: z.string().min(1, "Child full name is required"),
-  // Removed: childDateOfBirth
+  childDateOfBirth: z.string({
+    required_error: "Date of birth is required",
+  }).min(1, "Date of birth is required"),
   childAge: z.coerce.number({
     required_error: "Age is required",
     invalid_type_error: "Age is required",
   }).int().min(1, "Age is required").max(18, "Age must be 18 or less"),
-  // Removed: childGender
+  childGender: z.enum(["M", "F"], {
+    required_error: "Gender is required",
+    invalid_type_error: "Gender is required",
+  }),
   childEthnicity: z.string().optional(),
   childSchoolYear: z.string().optional(),
   childCurrentSchool: z.string().optional(),
@@ -129,6 +134,26 @@ function PreAssessmentInner() {
   }, [emailFromQuery, setValue]);
 
   const schoolType = watch("childSchoolType");
+  const childDob = watch("childDateOfBirth");
+
+  // Automatically calculate age when date of birth is entered/changed
+  useEffect(() => {
+    if (!childDob) return;
+
+    const dob = new Date(childDob);
+    if (isNaN(dob.getTime())) return;
+
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+      age--;
+    }
+
+    if (age > 0 && age <= 18) {
+      setValue("childAge", age, { shouldValidate: true, shouldDirty: true });
+    }
+  }, [childDob, setValue]);
 
   const onSubmit = async (data: FormValues) => {
     try {
@@ -282,10 +307,32 @@ function PreAssessmentInner() {
                         <Input id="childFullName" placeholder="Child name" {...register("childFullName")} error={!!errors.childFullName} />
                       </FormField>
                       
+                      <FormField label={<span>Date of Birth <span className="text-red-500">*</span></span>} htmlFor="childDateOfBirth" error={errors.childDateOfBirth as any}>
+                        <Input
+                          id="childDateOfBirth"
+                          type="date"
+                          {...register("childDateOfBirth")}
+                          error={!!errors.childDateOfBirth}
+                        />
+                      </FormField>
+
                       <FormField label={<span>Age <span className="text-red-500">*</span></span>} htmlFor="childAge" error={errors.childAge as any}>
                         <Input id="childAge" type="number" min={1} max={18} placeholder="8" {...register("childAge")} error={!!errors.childAge} />
                       </FormField>
                       
+                      <FormField label={<span>Gender <span className="text-red-500">*</span></span>} htmlFor="childGender" error={errors.childGender as any}>
+                        <div className="flex gap-4 text-sm text-slate-700">
+                          <label className="inline-flex items-center gap-2">
+                            <input type="radio" value="M" {...register("childGender")} />
+                            <span>Male</span>
+                          </label>
+                          <label className="inline-flex items-center gap-2">
+                            <input type="radio" value="F" {...register("childGender")} />
+                            <span>Female</span>
+                          </label>
+                        </div>
+                      </FormField>
+
                       <FormField label="Ethnicity (you may list multiple)" htmlFor="childEthnicity" error={errors.childEthnicity}>
                         <Input id="childEthnicity" placeholder="e.g., Bahraini, Indian" {...register("childEthnicity")} error={!!errors.childEthnicity} />
                       </FormField>
