@@ -54,11 +54,28 @@ export async function POST(req: Request) {
       access_token: token
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Login error:", error);
+    console.error("Error stack:", error?.stack);
+    console.error("Error details:", {
+      message: error?.message,
+      name: error?.name,
+      cause: error?.cause
+    });
+    
+    // Provide more detailed error message
+    const errorMessage = error?.message || 'Internal server error';
+    const isDatabaseError = error?.message?.includes('Prisma') || 
+                           error?.message?.includes('database') ||
+                           error?.code === 'P1001' || // Prisma connection error
+                           error?.code === 'P2002';  // Prisma unique constraint
+    
     return NextResponse.json({
       success: false,
-      message: "Internal server error",
+      message: isDatabaseError 
+        ? "Database connection error. Please check your database configuration."
+        : `Internal server error: ${errorMessage}`,
+      error: process.env.NODE_ENV === 'development' ? errorMessage : undefined
     }, { status: 500 });
   }
 }
