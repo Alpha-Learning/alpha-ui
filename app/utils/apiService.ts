@@ -42,7 +42,18 @@ class ApiService {
 
   // Generic request method
   async request(endpoint: string, options: { headers?: Record<string, string>; [key: string]: any } = {}) {
-    const url = `${this.baseURL}${endpoint}`;
+    // Handle relative URLs (for Next.js API routes)
+    let url: string;
+    if (endpoint.startsWith('http')) {
+      url = endpoint; // Absolute URL
+    } else if (endpoint.startsWith('/')) {
+      // Relative URL starting with / - use baseURL if set, otherwise use as-is (Next.js will handle it)
+      url = this.baseURL ? `${this.baseURL}${endpoint}` : endpoint;
+    } else {
+      // Relative URL without / - prepend baseURL or /
+      url = this.baseURL ? `${this.baseURL}/${endpoint}` : `/${endpoint}`;
+    }
+    
     const config = {
       ...options,
       headers: this.getHeaders(options.headers),
@@ -52,7 +63,34 @@ class ApiService {
 
     try {
       const response = await fetch(url, config);
-      const data = await response.json();
+      
+      // Check content type before parsing
+      const contentType = response.headers.get('content-type');
+      const isJson = contentType && contentType.includes('application/json');
+      
+      // Try to parse JSON, but handle non-JSON responses
+      let data: any = {};
+      let responseText: string | null = null;
+      
+      try {
+        if (isJson) {
+          data = await response.json();
+        } else {
+          // If not JSON, read as text
+          responseText = await response.text();
+          // For error responses, store text in data.message
+          if (!response.ok) {
+            console.error(`Non-JSON error response from ${endpoint}:`, responseText.substring(0, 500));
+            data = { message: responseText.substring(0, 200) || 'Server error' };
+          } else {
+            // For successful non-JSON responses, return the text directly
+            data = responseText;
+          }
+        }
+      } catch (parseError) {
+        console.error(`Failed to parse response from ${endpoint}:`, parseError);
+        data = { message: 'Failed to parse server response' };
+      }
 
       // Handle different response statuses
       if (response.status === 401) {
@@ -96,12 +134,15 @@ class ApiService {
       }
 
       if (response.status === 500) {
-        throw new Error('500 Internal server error');
+        const errorMessage = data?.message || data?.error || 'Internal server error';
+        console.error(`500 Error from ${endpoint}:`, data);
+        throw new Error(`500 Internal server error: ${errorMessage}`);
       }
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        // We've already parsed the response above, so use the data we have
+        const errorMessage = data?.message || data?.error || `HTTP error! status: ${response.status}`;
+        throw new Error(errorMessage);
       }
       if(response.ok && (response.status === 200 || response.status === 201) && options.method !== 'GET'){
         try {
@@ -111,15 +152,10 @@ class ApiService {
         } catch {}
       }
 
-      // Check if response has content
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        return data;
-      } else if (contentType && contentType.includes('text/')) {
-        return await response.text();
-      } else {
-        return response;
-      }
+      // Return the parsed data (we've already handled JSON vs text parsing above)
+      // If it was JSON, data contains the parsed object
+      // If it wasn't JSON, data contains { message: ... }
+      return data;
 
     } catch (error) {
       console.error(`API Request failed for ${endpoint}:`, error);

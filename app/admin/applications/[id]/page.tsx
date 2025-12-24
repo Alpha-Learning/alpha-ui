@@ -581,6 +581,8 @@ export default function AdminApplicationDetailPage() {
           sessionSid,
           parent,
           student,
+          // Pass the Alpha application ID so Odoo can store it as temp_student
+          applicationId: data.id,
         },
         {
           headers: {

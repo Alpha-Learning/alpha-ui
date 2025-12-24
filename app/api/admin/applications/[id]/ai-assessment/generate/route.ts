@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
 import { verifyToken } from "@/app/lib/auth";
 
-const FRANK_API_BASE_URL = process.env.FRANK_API_BASE_URL || "https://295d6df344e2.ngrok-free.app/api/v1";
+const FRANK_API_BASE_URL = process.env.FRANK_API_BASE_URL || "https://bio.alphalearning.me/api/v1";
+const FRANK_API_KEY = process.env.FRANK_API_KEY || "";
 
 // Helper function to create timeout signal (compatible with older Node.js versions)
 function createTimeoutSignal(ms: number): AbortSignal {
@@ -365,18 +366,16 @@ export async function POST(
     // Check if report already exists - if so, return it without regenerating
     try {
       console.log("Checking if assessment already exists for student:", studentId);
+      // Check existing reports using GET endpoint
       const existingReportResponse = await fetch(
-        `${FRANK_API_BASE_URL}/students/${studentId}/reports/utl-analysis`,
+        `${FRANK_API_BASE_URL}/students/${studentId}/reports/utl`,
         {
-          method: 'POST',
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            'x-api-key': FRANK_API_KEY,
             'ngrok-skip-browser-warning': 'true',
           },
-          body: JSON.stringify({
-            include_recommendations: true,
-            detail_level: 'full',
-          }),
           signal: createTimeoutSignal(30000),
         }
       );
@@ -395,22 +394,29 @@ export async function POST(
       else if (existingReportResponse.ok) {
         try {
           const existingReportData = JSON.parse(existingReportText);
-          if (existingReportData.report_id) {
-            console.log("✅ Existing assessment found, returning without regenerating");
-            console.log(`Report ID: ${existingReportData.report_id}`);
-            return NextResponse.json({
-              success: true,
-              message: "AI Assessment already exists",
-              data: {
-                reportId: existingReportData.report_id,
-                studentId: studentId,
-                report: existingReportData,
-                generatedAt: existingReportData.generated_at,
-                fromCache: true,
+          // GET /reports/utl returns { reports: [...] }
+          if (existingReportData.reports && Array.isArray(existingReportData.reports)) {
+            const analysisReport = existingReportData.reports.find((r: any) => r.type === "UTL_ANALYSIS");
+            if (analysisReport && analysisReport.downloadUrl) {
+              // Download the actual analysis content
+              try {
+                const analysisResponse = await fetch(analysisReport.downloadUrl);
+                const analysisData = await analysisResponse.json();
+                console.log("✅ Existing assessment found, returning without regenerating");
+                console.log(`Report ID: ${analysisReport.id}`);
+                return NextResponse.json({
+                  success: true,
+                  message: "AI Assessment already exists",
+                  data: analysisData,
+                });
+              } catch (fetchError) {
+                console.log("Could not download analysis content, proceeding with generation");
               }
-            });
+            } else {
+              console.log("No analysis report found in response, proceeding with generation");
+            }
           } else {
-            console.log("No existing report found (no report_id in response), proceeding with generation");
+            console.log("No existing report found (no reports array in response), proceeding with generation");
           }
         } catch (parseError) {
           // If parsing fails, continue with generation
@@ -478,6 +484,7 @@ export async function POST(
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-api-key': FRANK_API_KEY,
           'ngrok-skip-browser-warning': 'true', // Skip ngrok warning page
         },
         body: JSON.stringify({
@@ -547,6 +554,7 @@ export async function POST(
           {
             headers: {
               'Content-Type': 'application/json',
+              'x-api-key': FRANK_API_KEY,
               'ngrok-skip-browser-warning': 'true', // Skip ngrok warning page
             },
             signal: createTimeoutSignal(10000), // 10 second timeout
@@ -640,6 +648,7 @@ export async function POST(
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-api-key': FRANK_API_KEY,
           'ngrok-skip-browser-warning': 'true', // Skip ngrok warning page
         },
         body: JSON.stringify(dataPayload),
@@ -717,29 +726,28 @@ export async function POST(
     }
 
     // Step 3: Generate UTL Analysis Report (AI analyzes the submitted data)
+    // Using POST /reports/utl with content to generate both raw and analysis reports
     try {
       console.log('\n=== STEP 3: GENERATING UTL ANALYSIS REPORT ===');
       console.log(`Student ID: ${studentId}`);
-      console.log(`Endpoint: ${FRANK_API_BASE_URL}/students/${studentId}/reports/utl-analysis`);
-      console.log('Request payload:', {
-        include_recommendations: true,
-        detail_level: 'full',
-      });
+      console.log(`Endpoint: ${FRANK_API_BASE_URL}/students/${studentId}/reports/utl`);
+      console.log('Content length:', assessmentContent.length, 'characters');
       console.log('⏳ Requesting AI to analyze the submitted data and generate report...');
       
       const reportResponse = await fetch(
-        `${FRANK_API_BASE_URL}/students/${studentId}/reports/utl-analysis`,
+        `${FRANK_API_BASE_URL}/students/${studentId}/reports/utl`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'x-api-key': FRANK_API_KEY,
             'ngrok-skip-browser-warning': 'true', // Skip ngrok warning page
           },
           body: JSON.stringify({
-            include_recommendations: true,
-            detail_level: 'full',
+            content: assessmentContent,
+            fileName: `utl_assessment_${applicationId}_${new Date().toISOString().split('T')[0]}.txt`,
           }),
-          signal: createTimeoutSignal(60000), // 60 second timeout for report generation
+          signal: createTimeoutSignal(120000), // 120 second timeout for report generation (AI processing takes time)
         }
       );
       
@@ -799,10 +807,15 @@ export async function POST(
       }
       
       console.log('\n✅ Report generated successfully!');
-      console.log(`Report ID: ${reportData.report_id || 'N/A'}`);
-      console.log(`Generated at: ${reportData.generated_at || 'N/A'}`);
-      console.log(`Primary learner type: ${reportData.primary_learner_type || 'N/A'}`);
-      console.log(`Report summary: ${reportData.overall_summary ? reportData.overall_summary.substring(0, 200) + '...' : 'N/A'}`);
+      // Handle response format from POST /reports/utl (returns rawReport, analysisReport, and analysis)
+      const reportId = reportData.analysisReport?.id || reportData.report_id || 'N/A';
+      const generatedAt = reportData.analysisReport?.createdAt || reportData.generated_at || new Date().toISOString();
+      const analysisData = reportData.analysis || reportData;
+      
+      console.log(`Report ID: ${reportId}`);
+      console.log(`Generated at: ${generatedAt}`);
+      console.log(`Primary learner type: ${analysisData.learningStyle?.primary || analysisData.primary_learner_type || 'N/A'}`);
+      console.log(`Report summary: ${analysisData.summary || analysisData.overall_summary ? (analysisData.summary || analysisData.overall_summary).substring(0, 200) + '...' : 'N/A'}`);
 
       // Note: Report is stored in Frank API, we don't need to store it locally
       // The report can be retrieved anytime using the student_id
@@ -810,7 +823,7 @@ export async function POST(
 
       console.log('\n=== AI ASSESSMENT GENERATION COMPLETE ===');
       console.log(`✅ Successfully generated UTL Analysis Report`);
-      console.log(`Report ID: ${reportData.report_id}`);
+      console.log(`Report ID: ${reportId}`);
       console.log(`Student ID: ${studentId}`);
       console.log(`Session ID: ${sessionId}`);
       console.log('==========================================\n');
@@ -819,11 +832,11 @@ export async function POST(
         success: true,
         message: "AI Assessment generated successfully",
         data: {
-          reportId: reportData.report_id,
+          reportId: reportId,
           studentId: studentId,
           sessionId: sessionId,
-          report: reportData,
-          generatedAt: reportData.generated_at,
+          report: analysisData,
+          generatedAt: generatedAt,
         }
       });
     } catch (error: any) {

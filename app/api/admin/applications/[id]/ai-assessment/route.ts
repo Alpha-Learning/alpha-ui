@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
 import { verifyToken } from "@/app/lib/auth";
 
-const FRANK_API_BASE_URL = process.env.FRANK_API_BASE_URL || "https://295d6df344e2.ngrok-free.app/api/v1";
+const FRANK_API_BASE_URL = process.env.FRANK_API_BASE_URL || "https://bio.alphalearning.me/api/v1";
+const FRANK_API_KEY = process.env.FRANK_API_KEY || "";
 
 // Helper function to create timeout signal (compatible with older Node.js versions)
 function createTimeoutSignal(ms: number): AbortSignal {
@@ -35,18 +36,16 @@ export async function GET(
     try {
       console.log("Checking for existing assessment for student:", studentId);
       
+      // Use GET endpoint to retrieve existing UTL reports
       const reportResponse = await fetch(
-        `${FRANK_API_BASE_URL}/students/${studentId}/reports/utl-analysis`,
+        `${FRANK_API_BASE_URL}/students/${studentId}/reports/utl`,
         {
-          method: 'POST',
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            'x-api-key': FRANK_API_KEY,
             'ngrok-skip-browser-warning': 'true', // Skip ngrok warning page
           },
-          body: JSON.stringify({
-            include_recommendations: true,
-            detail_level: 'full',
-          }),
         }
       );
 
@@ -102,10 +101,35 @@ export async function GET(
       }
       console.log("Assessment found for student:", studentId);
 
-      return NextResponse.json({
-        success: true,
-        data: reportData
-      });
+      // GET /reports/utl returns { reports: [...] } - need to download analysis content
+      if (reportData.reports && Array.isArray(reportData.reports)) {
+        const analysisReport = reportData.reports.find((r: any) => r.type === "UTL_ANALYSIS");
+        if (analysisReport && analysisReport.downloadUrl) {
+          try {
+            const analysisResponse = await fetch(analysisReport.downloadUrl);
+            const analysisData = await analysisResponse.json();
+            return NextResponse.json({
+              success: true,
+              data: analysisData
+            });
+          } catch (fetchError: any) {
+            console.error("Failed to download analysis content:", fetchError);
+            throw new Error("Failed to download analysis content from storage");
+          }
+        } else {
+          return NextResponse.json({ 
+            success: false, 
+            message: 'No analysis report found in reports list.',
+            data: null
+          }, { status: 200 });
+        }
+      } else {
+        // If response format is different, return as-is
+        return NextResponse.json({
+          success: true,
+          data: reportData
+        });
+      }
     } catch (error: any) {
       console.error("Report retrieval error:", error);
       console.error("Error details:", {

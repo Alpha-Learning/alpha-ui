@@ -86,6 +86,8 @@ export async function syncApplicationToOdoo(application: any) {
   const response = await axios.post("/api/odoo/admission/create", {
     sessionSid,
     ...formattedData,
+    // Pass Alpha application ID so backend can forward it as temp_student to Odoo
+    applicationId: application.id,
   });
 
   if (!response.data.success) {

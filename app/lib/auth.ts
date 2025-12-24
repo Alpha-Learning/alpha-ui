@@ -32,27 +32,33 @@ export function verifyToken(token: string): UserPayload | null {
 }
 
 export async function authenticateUser(email: string, password: string) {
-  const user = await prisma.user.findUnique({
-    where: { email }
-  })
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email }
+    })
 
-  if (!user) {
-    return null
-  }
+    if (!user) {
+      return null
+    }
 
-  const isValidPassword = await verifyPassword(password, user.password)
-  if (!isValidPassword) {
-    return null
-  }
+    const isValidPassword = await verifyPassword(password, user.password)
+    if (!isValidPassword) {
+      return null
+    }
 
-  return {
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    role: user.role,
-    phone: user.phone,
-    city: user.city,
-    createdAt: user.createdAt
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      phone: user.phone,
+      city: user.city,
+      createdAt: user.createdAt
+    }
+  } catch (error: any) {
+    console.error('Database error in authenticateUser:', error);
+    // Re-throw with more context
+    throw new Error(`Authentication failed: ${error?.message || 'Database error'}`);
   }
 }
 

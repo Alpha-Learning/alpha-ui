@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { sessionSid, parent, student } = body;
+    const { sessionSid, parent, student, applicationId } = body;
 
     if (!sessionSid) {
       return NextResponse.json(
@@ -133,6 +133,8 @@ export async function POST(req: Request) {
           school_year: normalizeSchoolYear(student.school_year),
           current_school: normalizeString(student.current_school) || null,
           school_type: normalizeString(student.school_type) || null,
+          // Temporary student ID should match our application ID, sent with other student fields
+          temp_student: applicationId ?? null,
         },
       },
       id: Math.floor(Math.random() * 100000),
