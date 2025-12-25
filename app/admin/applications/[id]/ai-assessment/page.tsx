@@ -5,55 +5,82 @@ import { apiService } from "@/app/utils";
 import toast from "react-hot-toast";
 
 interface UTLReport {
-  student_id: string;
-  report_id: string;
-  generated_at: string;
-  primary_learner_type?: string;
-  learner_type_breakdown?: {
-    visual: number;
-    auditory: number;
-    kinesthetic: number;
-    reading_writing: number;
+  summary?: string;
+  overallReadiness?: "emerging" | "basic" | "strong" | "exceptional";
+  learningStyle?: {
+    primary: "visual" | "auditory" | "kinesthetic" | "reading_writing";
+    secondary?: string;
+    description: string;
   };
-  learner_type_insights?: string;
-  personality_traits?: Array<{
-    trait_name: string;
-    score: number;
-    interpretation: string;
-    implications: string[];
+  dominantIntelligences?: Array<{
+    type: string;
+    strength: "high" | "moderate" | "emerging";
+    evidence: string;
   }>;
-  personality_summary?: string;
-  subject_levels?: Array<{
-    subject: string;
-    current_level: number;
-    recommended_level: number;
-    gap_analysis: string;
-    focus_areas: string[];
-  }>;
-  meta_learning_review?: {
-    [key: string]: {
-      score: number;
-      analysis: string;
-    };
+  cognitiveProfile?: {
+    attention: { description: string; score?: number; optimalConditions?: string; };
+    memory: { description: string; strategies: string[]; };
+    processing: { description: string; preference: "sequential" | "holistic" | "mixed"; };
+    executiveFunction: { description: string; observations: string[]; };
   };
-  meta_learning_summary?: string;
-  skillmatrix_analysis?: Array<{
-    skill_category: string;
-    current_level: number;
-    target_level: number;
-    development_suggestions: string[];
-  }>;
-  recommended_meta_labs?: Array<{
-    challenge_name: string;
-    difficulty_level: string;
-    skills_addressed: string[];
-    priority: number;
+  metaLearningPillars?: {
+    selfRegulation: { score: number; notes: string; developmentStrategy?: string; };
+    emotionalIntelligence: { score: number; notes: string; developmentStrategy?: string; };
+    socialCommunication: { score: number; notes: string; developmentStrategy?: string; };
+    cognitiveFlexibility: { score: number; notes: string; developmentStrategy?: string; };
+    resilienceConfidence: { score: number; notes: string; developmentStrategy?: string; };
+    creativityExpression: { score: number; notes: string; developmentStrategy?: string; };
+  };
+  academicReadiness?: {
+    english: { level: string; notes: string; entryPoint?: string; };
+    maths: { level: string; notes: string; entryPoint?: string; };
+    science: { level: string; notes: string; entryPoint?: string; };
+    technologyComfort: string;
+    overallNotes: string;
+  };
+  emotionalProfile?: {
+    triggers: string[];
+    regulationStrategies: string[];
+    motivationFactors: string[];
+    supportNeeds: string[];
+  };
+  socialProfile?: {
+    peerDynamics: string;
+    socialRole: string;
+    collaborationStyle: string;
+    communicationStrength: string;
+  };
+  observationalInsights?: {
+    preferredZones: string[];
+    engagementPatterns: string;
+    behavioralNotes: string[];
+  };
+  familyContext?: {
+    parentingStyle: string;
+    homeEnvironment: string;
+    familySupport: string;
+    alignmentWithPhilosophy: string;
+  };
+  strengths?: string[];
+  challenges?: string[];
+  recommendations?: Array<{
+    category: string;
+    action: string;
+    priority: "high" | "medium" | "low";
     rationale: string;
   }>;
-  strengths?: string[];
-  areas_for_development?: string[];
-  overall_summary?: string;
-  immediate_actions?: string[];
+  keyStageLevel?: {
+    keyStage: string;
+    developmentalStage: string;
+    ageGroup: string;
+    subjectPlacements?: {
+      english: { yearLevel: string; entryTopic: string; notes: string; };
+      maths: { yearLevel: string; entryTopic: string; notes: string; };
+      science: { yearLevel: string; entryTopic: string; notes: string; };
+    };
+    teachingApproaches?: string[];
+    suggestedActions?: string[];
+  };
 }
 
 export default function AIAssessmentPage() {
@@ -85,10 +112,6 @@ export default function AIAssessmentPage() {
     }
   };
 
-  const hasInsufficientData = (text?: string) => {
-    return text?.toLowerCase().includes("insufficient data") || false;
-  };
-
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString);
@@ -101,6 +124,34 @@ export default function AIAssessmentPage() {
       });
     } catch {
       return dateString;
+    }
+  };
+
+  const getReadinessColor = (readiness?: string) => {
+    switch (readiness) {
+      case "exceptional": return "text-green-600 bg-green-100";
+      case "strong": return "text-blue-600 bg-blue-100";
+      case "basic": return "text-yellow-600 bg-yellow-100";
+      case "emerging": return "text-orange-600 bg-orange-100";
+      default: return "text-gray-600 bg-gray-100";
+    }
+  };
+
+  const getPriorityColor = (priority?: string) => {
+    switch (priority) {
+      case "high": return "bg-red-100 text-red-700 border-red-300";
+      case "medium": return "bg-yellow-100 text-yellow-700 border-yellow-300";
+      case "low": return "bg-blue-100 text-blue-700 border-blue-300";
+      default: return "bg-gray-100 text-gray-700 border-gray-300";
+    }
+  };
+
+  const getStrengthColor = (strength?: string) => {
+    switch (strength) {
+      case "high": return "text-green-600 bg-green-100";
+      case "moderate": return "text-blue-600 bg-blue-100";
+      case "emerging": return "text-yellow-600 bg-yellow-100";
+      default: return "text-gray-600 bg-gray-100";
     }
   };
 
@@ -167,15 +218,11 @@ export default function AIAssessmentPage() {
     );
   }
 
-  const insufficientDataWarning = hasInsufficientData(report.overall_summary) || 
-    hasInsufficientData(report.learner_type_insights) ||
-    hasInsufficientData(report.personality_summary);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="mb-8 bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
           <button
             onClick={() => router.back()}
             className="text-gray-600 hover:text-gray-900 mb-4 flex items-center gap-2 transition-colors"
@@ -187,187 +234,437 @@ export default function AIAssessmentPage() {
           </button>
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">AI Assessment Report</h1>
-              <div className="flex items-center gap-4 text-gray-600">
-                <span className="flex items-center gap-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  {formatDate(report.generated_at)}
-                </span>
-                <span className="text-sm bg-purple-100 text-purple-700 px-3 py-1 rounded-full font-medium">
-                  Report ID: {report.report_id}
+              <h1 className="text-4xl font-bold text-gray-900 mb-2">UTL AI Analysis Report</h1>
+              {report.overallReadiness && (
+                <div className="flex items-center gap-3 mt-3">
+                  <span className={`px-3 py-1 rounded-full text-sm font-semibold capitalize ${getReadinessColor(report.overallReadiness)}`}>
+                    {report.overallReadiness} Readiness
                 </span>
               </div>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Insufficient Data Warning */}
-        {insufficientDataWarning && (
-          <div className="mb-6 bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-4">
-            <div className="flex items-start">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-yellow-800">Limited Data Available</h3>
-                <div className="mt-2 text-sm text-yellow-700">
-                  <p>Some sections of this report show "Insufficient data" because the assessment data is incomplete or limited. Please ensure all 9 forms are fully completed with detailed information for a comprehensive analysis.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Overall Summary */}
-        {report.overall_summary && !hasInsufficientData(report.overall_summary) && (
-          <div className="bg-gradient-to-r from-purple-50 via-indigo-50 to-purple-50 rounded-xl shadow-lg border border-purple-200 p-8 mb-8">
+        {/* Summary */}
+        {report.summary && (
+          <div className="bg-gradient-to-r from-purple-50 via-indigo-50 to-purple-50 rounded-xl shadow-lg border border-purple-200 p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
               <span className="text-purple-600">📊</span>
-              Overall Summary
+              Executive Summary
             </h2>
-            <p className="text-gray-700 leading-relaxed text-lg">{report.overall_summary}</p>
+            <p className="text-gray-700 leading-relaxed text-lg">{report.summary}</p>
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {/* Learner Type */}
-          {report.primary_learner_type && (
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Learning Style */}
+          {report.learningStyle && (
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="text-purple-600">🎯</span>
-                Primary Learning Style
+                Learning Style
               </h2>
-              <div className="mb-4">
-                <div className="text-4xl font-bold text-purple-600 capitalize mb-3">
-                  {report.primary_learner_type}
-                </div>
-                {report.learner_type_breakdown && Object.values(report.learner_type_breakdown).some(v => v > 0) && (
-                  <div className="space-y-3 mt-4">
-                    {Object.entries(report.learner_type_breakdown).map(([key, value]) => (
-                      <div key={key}>
-                        <div className="flex justify-between text-sm mb-1">
-                          <span className="capitalize text-gray-700 font-medium">{key.replace('_', ' ')}</span>
-                          <span className="font-semibold text-gray-900">{value}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2.5">
-                          <div
-                            className="bg-gradient-to-r from-purple-500 to-purple-600 h-2.5 rounded-full transition-all duration-500"
-                            style={{ width: `${value}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    ))}
+              <div className="space-y-3">
+                <div>
+                  <div className="text-3xl font-bold text-purple-600 capitalize mb-2">
+                    {report.learningStyle.primary}
+                  </div>
+                  {report.learningStyle.secondary && (
+                    <div className="text-sm text-gray-600">
+                      Secondary: <span className="font-semibold capitalize">{report.learningStyle.secondary}</span>
                   </div>
                 )}
-              </div>
-              {report.learner_type_insights && !hasInsufficientData(report.learner_type_insights) && (
-                <div className="mt-4 p-4 bg-purple-50 rounded-lg">
-                  <p className="text-gray-700 text-sm leading-relaxed">{report.learner_type_insights}</p>
                 </div>
-              )}
+                <p className="text-gray-700 text-sm leading-relaxed bg-purple-50 p-4 rounded-lg">
+                  {report.learningStyle.description}
+                </p>
+              </div>
             </div>
           )}
 
-          {/* Personality Traits */}
-          {report.personality_summary && !hasInsufficientData(report.personality_summary) && (
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow">
+          {/* Dominant Intelligences */}
+          {report.dominantIntelligences && report.dominantIntelligences.length > 0 && (
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="text-indigo-600">🧠</span>
-                Personality Profile
+                Dominant Intelligences
               </h2>
-              <p className="text-gray-700 text-sm leading-relaxed mb-4">{report.personality_summary}</p>
-              {report.personality_traits && report.personality_traits.length > 0 && (
                 <div className="space-y-3">
-                  {report.personality_traits.slice(0, 3).map((trait, idx) => (
+                {report.dominantIntelligences.map((intelligence, idx) => (
                     <div key={idx} className="border-l-4 border-indigo-500 pl-4 py-2 bg-indigo-50 rounded-r-lg">
                       <div className="flex justify-between items-center mb-1">
-                        <span className="font-semibold text-gray-900">{trait.trait_name}</span>
-                        <span className="text-sm font-bold text-indigo-600 bg-white px-2 py-1 rounded">{trait.score}%</span>
-                      </div>
-                      <p className="text-xs text-gray-600">{trait.interpretation}</p>
+                      <span className="font-semibold text-gray-900 capitalize">
+                        {intelligence.type.replace('_', ' ')}
+                      </span>
+                      <span className={`text-xs px-2 py-1 rounded-full font-semibold capitalize ${getStrengthColor(intelligence.strength)}`}>
+                        {intelligence.strength}
+                      </span>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Meta-Learning Pillars */}
-          {report.meta_learning_review && (
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow">
-              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="text-blue-600">📚</span>
-                Meta-Learning Pillars
-              </h2>
-              {report.meta_learning_summary && !hasInsufficientData(report.meta_learning_summary) && (
-                <p className="text-gray-700 text-sm leading-relaxed mb-4">{report.meta_learning_summary}</p>
-              )}
-              <div className="space-y-3">
-                {Object.entries(report.meta_learning_review).map(([key, value]) => {
-                  const isInsufficient = hasInsufficientData(value.analysis);
-                  return (
-                    <div key={key} className={`border-l-4 ${isInsufficient ? 'border-gray-300' : 'border-blue-500'} pl-4 py-2 ${isInsufficient ? 'bg-gray-50' : 'bg-blue-50'} rounded-r-lg`}>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="font-semibold text-gray-900 capitalize">
-                          {key.replace('_', ' ')}
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-bold text-blue-600 bg-white px-2 py-1 rounded">{value.score}/5</span>
-                        </div>
-                      </div>
-                      <p className={`text-xs ${isInsufficient ? 'text-gray-500 italic' : 'text-gray-600'}`}>{value.analysis}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Subject Levels */}
-          {report.subject_levels && report.subject_levels.length > 0 && (
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow">
-              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="text-green-600">📖</span>
-                Subject Levels
-              </h2>
-              <div className="space-y-4">
-                {report.subject_levels.map((subject, idx) => (
-                  <div key={idx} className="border border-gray-200 rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="font-semibold text-gray-900">{subject.subject}</span>
-                      <div className="flex gap-3">
-                        <span className="text-sm text-gray-600 bg-white px-2 py-1 rounded">Current: {subject.current_level}</span>
-                        <span className="text-sm font-bold text-purple-600 bg-white px-2 py-1 rounded">
-                          Target: {subject.recommended_level}
-                        </span>
-                      </div>
-                    </div>
-                    <p className="text-xs text-gray-600 mb-2">{subject.gap_analysis}</p>
-                    {subject.focus_areas && subject.focus_areas.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {subject.focus_areas.map((area, aidx) => (
-                          <span
-                            key={aidx}
-                            className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded-full font-medium"
-                          >
-                            {area}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                    <p className="text-xs text-gray-600 mt-1">{intelligence.evidence}</p>
                   </div>
                 ))}
               </div>
             </div>
           )}
+        </div>
 
-          {/* Strengths */}
+        {/* Cognitive Profile */}
+        {report.cognitiveProfile && (
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <span className="text-blue-600">🧩</span>
+              Cognitive Profile
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Attention */}
+              {report.cognitiveProfile.attention && (
+                <div className="border border-gray-200 rounded-lg p-4 bg-blue-50">
+                  <h3 className="font-semibold text-gray-900 mb-2">Attention</h3>
+                  {report.cognitiveProfile.attention.score && (
+                    <div className="mb-2">
+                      <div className="flex justify-between text-sm mb-1">
+                        <span>Score</span>
+                        <span className="font-bold">{report.cognitiveProfile.attention.score}/5</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-blue-600 h-2 rounded-full"
+                          style={{ width: `${(report.cognitiveProfile.attention.score / 5) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  )}
+                  <p className="text-sm text-gray-700 mb-2">{report.cognitiveProfile.attention.description}</p>
+                  {report.cognitiveProfile.attention.optimalConditions && (
+                    <p className="text-xs text-gray-600 italic">
+                      <strong>Optimal:</strong> {report.cognitiveProfile.attention.optimalConditions}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Memory */}
+              {report.cognitiveProfile.memory && (
+                <div className="border border-gray-200 rounded-lg p-4 bg-green-50">
+                  <h3 className="font-semibold text-gray-900 mb-2">Memory</h3>
+                  <p className="text-sm text-gray-700 mb-3">{report.cognitiveProfile.memory.description}</p>
+                  {report.cognitiveProfile.memory.strategies && report.cognitiveProfile.memory.strategies.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-gray-700 mb-2">Strategies:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {report.cognitiveProfile.memory.strategies.map((strategy, idx) => (
+                          <span key={idx} className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full">
+                            {strategy}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Processing */}
+              {report.cognitiveProfile.processing && (
+                <div className="border border-gray-200 rounded-lg p-4 bg-purple-50">
+                  <h3 className="font-semibold text-gray-900 mb-2">Processing</h3>
+                  <p className="text-sm text-gray-700 mb-2">{report.cognitiveProfile.processing.description}</p>
+                  {report.cognitiveProfile.processing.preference && (
+                    <span className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded-full capitalize">
+                      {report.cognitiveProfile.processing.preference}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Executive Function */}
+              {report.cognitiveProfile.executiveFunction && (
+                <div className="border border-gray-200 rounded-lg p-4 bg-orange-50">
+                  <h3 className="font-semibold text-gray-900 mb-2">Executive Function</h3>
+                  <p className="text-sm text-gray-700 mb-3">{report.cognitiveProfile.executiveFunction.description}</p>
+                  {report.cognitiveProfile.executiveFunction.observations && report.cognitiveProfile.executiveFunction.observations.length > 0 && (
+                    <ul className="space-y-1">
+                      {report.cognitiveProfile.executiveFunction.observations.map((obs, idx) => (
+                        <li key={idx} className="text-xs text-gray-600 flex items-start gap-2">
+                          <span className="text-orange-600 mt-1">▸</span>
+                          <span>{obs}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </div>
+            </div>
+          )}
+
+          {/* Meta-Learning Pillars */}
+        {report.metaLearningPillars && (
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <span className="text-teal-600">📚</span>
+                Meta-Learning Pillars
+              </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Object.entries(report.metaLearningPillars).map(([key, pillar]) => (
+                <div key={key} className="border border-gray-200 rounded-lg p-4 bg-teal-50">
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="font-semibold text-gray-900 capitalize text-sm">
+                      {key.replace(/([A-Z])/g, ' $1').trim()}
+                    </h3>
+                    <span className="text-xs font-bold text-teal-600 bg-white px-2 py-1 rounded">
+                      {pillar.score}/5
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
+                    <div
+                      className="bg-teal-600 h-2 rounded-full"
+                      style={{ width: `${(pillar.score / 5) * 100}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-700 mb-2">{pillar.notes}</p>
+                  {pillar.developmentStrategy && (
+                    <p className="text-xs text-gray-600 italic">
+                      <strong>Strategy:</strong> {pillar.developmentStrategy}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Academic Readiness */}
+        {report.academicReadiness && (
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <span className="text-green-600">📖</span>
+              Academic Readiness
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              {report.academicReadiness.english && (
+                <div className="border border-gray-200 rounded-lg p-4 bg-blue-50">
+                  <h3 className="font-semibold text-gray-900 mb-2">English</h3>
+                  <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full capitalize mb-2 inline-block">
+                    {report.academicReadiness.english.level}
+                  </span>
+                  <p className="text-sm text-gray-700 mb-2">{report.academicReadiness.english.notes}</p>
+                  {report.academicReadiness.english.entryPoint && (
+                    <p className="text-xs text-gray-600">
+                      <strong>Entry Point:</strong> {report.academicReadiness.english.entryPoint}
+                    </p>
+                  )}
+                </div>
+              )}
+              {report.academicReadiness.maths && (
+                <div className="border border-gray-200 rounded-lg p-4 bg-green-50">
+                  <h3 className="font-semibold text-gray-900 mb-2">Maths</h3>
+                  <span className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full capitalize mb-2 inline-block">
+                    {report.academicReadiness.maths.level}
+                  </span>
+                  <p className="text-sm text-gray-700 mb-2">{report.academicReadiness.maths.notes}</p>
+                  {report.academicReadiness.maths.entryPoint && (
+                    <p className="text-xs text-gray-600">
+                      <strong>Entry Point:</strong> {report.academicReadiness.maths.entryPoint}
+                    </p>
+                  )}
+                </div>
+              )}
+              {report.academicReadiness.science && (
+                <div className="border border-gray-200 rounded-lg p-4 bg-purple-50">
+                  <h3 className="font-semibold text-gray-900 mb-2">Science</h3>
+                  <span className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded-full capitalize mb-2 inline-block">
+                    {report.academicReadiness.science.level}
+                        </span>
+                  <p className="text-sm text-gray-700 mb-2">{report.academicReadiness.science.notes}</p>
+                  {report.academicReadiness.science.entryPoint && (
+                    <p className="text-xs text-gray-600">
+                      <strong>Entry Point:</strong> {report.academicReadiness.science.entryPoint}
+                    </p>
+                  )}
+                        </div>
+              )}
+                      </div>
+            {report.academicReadiness.technologyComfort && (
+              <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm text-gray-700">
+                  <strong>Technology Comfort:</strong> {report.academicReadiness.technologyComfort}
+                </p>
+                    </div>
+            )}
+            {report.academicReadiness.overallNotes && (
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <p className="text-sm text-gray-700">{report.academicReadiness.overallNotes}</p>
+              </div>
+            )}
+            </div>
+          )}
+
+        {/* Emotional Profile */}
+        {report.emotionalProfile && (
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <span className="text-pink-600">💝</span>
+              Emotional Profile
+              </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {report.emotionalProfile.triggers && report.emotionalProfile.triggers.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Triggers</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {report.emotionalProfile.triggers.map((trigger, idx) => (
+                      <span key={idx} className="text-xs px-3 py-1 bg-red-100 text-red-700 rounded-full">
+                        {trigger}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {report.emotionalProfile.regulationStrategies && report.emotionalProfile.regulationStrategies.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Regulation Strategies</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {report.emotionalProfile.regulationStrategies.map((strategy, idx) => (
+                      <span key={idx} className="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-full">
+                        {strategy}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {report.emotionalProfile.motivationFactors && report.emotionalProfile.motivationFactors.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Motivation Factors</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {report.emotionalProfile.motivationFactors.map((factor, idx) => (
+                      <span key={idx} className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-full">
+                        {factor}
+                        </span>
+                    ))}
+                      </div>
+                    </div>
+              )}
+              {report.emotionalProfile.supportNeeds && report.emotionalProfile.supportNeeds.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Support Needs</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {report.emotionalProfile.supportNeeds.map((need, idx) => (
+                      <span key={idx} className="text-xs px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full">
+                        {need}
+                          </span>
+                        ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Social Profile */}
+        {report.socialProfile && (
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <span className="text-indigo-600">👥</span>
+              Social Profile
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Peer Dynamics</h3>
+                <p className="text-sm text-gray-700">{report.socialProfile.peerDynamics}</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Social Role</h3>
+                <span className="text-xs px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full capitalize">
+                  {report.socialProfile.socialRole}
+                </span>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Collaboration Style</h3>
+                <p className="text-sm text-gray-700">{report.socialProfile.collaborationStyle}</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Communication Strength</h3>
+                <p className="text-sm text-gray-700">{report.socialProfile.communicationStrength}</p>
+              </div>
+            </div>
+                      </div>
+                    )}
+
+        {/* Observational Insights */}
+        {report.observationalInsights && (
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <span className="text-amber-600">👁️</span>
+              Observational Insights
+            </h2>
+            <div className="space-y-4">
+              {report.observationalInsights.preferredZones && report.observationalInsights.preferredZones.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Preferred Zones</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {report.observationalInsights.preferredZones.map((zone, idx) => (
+                      <span key={idx} className="text-xs px-3 py-1 bg-amber-100 text-amber-700 rounded-full">
+                        {zone}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {report.observationalInsights.engagementPatterns && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Engagement Patterns</h3>
+                  <p className="text-sm text-gray-700">{report.observationalInsights.engagementPatterns}</p>
+                </div>
+              )}
+              {report.observationalInsights.behavioralNotes && report.observationalInsights.behavioralNotes.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Behavioral Notes</h3>
+                  <ul className="space-y-2">
+                    {report.observationalInsights.behavioralNotes.map((note, idx) => (
+                      <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
+                        <span className="text-amber-600 mt-1">▸</span>
+                        <span>{note}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Family Context */}
+        {report.familyContext && (
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <span className="text-rose-600">🏠</span>
+              Family Context
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Parenting Style</h3>
+                <p className="text-sm text-gray-700">{report.familyContext.parentingStyle}</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Home Environment</h3>
+                <p className="text-sm text-gray-700">{report.familyContext.homeEnvironment}</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Family Support</h3>
+                <p className="text-sm text-gray-700">{report.familyContext.familySupport}</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Alignment with Philosophy</h3>
+                <p className="text-sm text-gray-700">{report.familyContext.alignmentWithPhilosophy}</p>
+              </div>
+              </div>
+            </div>
+          )}
+
+        {/* Strengths & Challenges */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {report.strengths && report.strengths.length > 0 && (
-            <div className="bg-white rounded-xl shadow-lg border border-green-200 p-6 hover:shadow-xl transition-shadow">
+            <div className="bg-white rounded-xl shadow-lg border border-green-200 p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="text-green-600 text-2xl">✓</span>
                 Strengths
@@ -383,18 +680,17 @@ export default function AIAssessmentPage() {
             </div>
           )}
 
-          {/* Areas for Development */}
-          {report.areas_for_development && report.areas_for_development.length > 0 && (
-            <div className="bg-white rounded-xl shadow-lg border border-yellow-200 p-6 hover:shadow-xl transition-shadow">
+          {report.challenges && report.challenges.length > 0 && (
+            <div className="bg-white rounded-xl shadow-lg border border-yellow-200 p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="text-yellow-600 text-2xl">↗</span>
-                Areas for Development
+                Challenges
               </h2>
               <ul className="space-y-3">
-                {report.areas_for_development.map((area, idx) => (
+                {report.challenges.map((challenge, idx) => (
                   <li key={idx} className="flex items-start gap-3 text-gray-700">
                     <span className="text-yellow-600 mt-1 text-xl font-bold">•</span>
-                    <span className="text-base">{area}</span>
+                    <span className="text-base">{challenge}</span>
                   </li>
                 ))}
               </ul>
@@ -402,95 +698,131 @@ export default function AIAssessmentPage() {
           )}
         </div>
 
-        {/* Recommended Meta Labs */}
-        {report.recommended_meta_labs && report.recommended_meta_labs.length > 0 && (
-          <div className="bg-white rounded-xl shadow-lg border border-blue-200 p-6 mb-6">
+        {/* Recommendations */}
+        {report.recommendations && report.recommendations.length > 0 && (
+          <div className="bg-white rounded-xl shadow-lg border border-blue-200 p-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <span className="text-blue-600">🔬</span>
-              Recommended Meta Labs
+              <span className="text-blue-600">💡</span>
+              Recommendations
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {report.recommended_meta_labs.map((lab, idx) => (
-                <div key={idx} className="border border-gray-200 rounded-lg p-5 bg-gradient-to-br from-blue-50 to-indigo-50 hover:shadow-md transition-shadow">
+              {report.recommendations.map((rec, idx) => (
+                <div key={idx} className={`border rounded-lg p-5 ${getPriorityColor(rec.priority)}`}>
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <h3 className="font-bold text-gray-900 text-lg">{lab.challenge_name}</h3>
-                      <span className="text-xs text-gray-500 capitalize bg-white px-2 py-1 rounded-full mt-1 inline-block">
-                        {lab.difficulty_level}
+                      <h3 className="font-bold text-gray-900 text-lg">{rec.action}</h3>
+                      <span className="text-xs text-gray-600 capitalize bg-white px-2 py-1 rounded-full mt-1 inline-block">
+                        {rec.category}
                       </span>
                     </div>
-                    <span className="text-xs px-3 py-1 bg-blue-600 text-white rounded-full font-bold">
-                      Priority {lab.priority}
+                    <span className={`text-xs px-3 py-1 rounded-full font-bold capitalize ${getPriorityColor(rec.priority)}`}>
+                      {rec.priority}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-700 mb-3 leading-relaxed">{lab.rationale}</p>
-                  {lab.skills_addressed && lab.skills_addressed.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {lab.skills_addressed.map((skill, sidx) => (
-                        <span
-                          key={sidx}
-                          className="text-xs px-2 py-1 bg-white text-gray-700 rounded-full capitalize font-medium border border-gray-200"
-                        >
-                          {skill.replace('_', ' ')}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                  <p className="text-sm text-gray-700 leading-relaxed">{rec.rationale}</p>
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* Immediate Actions */}
-        {report.immediate_actions && report.immediate_actions.length > 0 && (
-          <div className="bg-white rounded-xl shadow-lg border border-red-200 p-6 mb-6">
+        {/* Key Stage Level */}
+        {report.keyStageLevel && (
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <span className="text-red-600 text-3xl">⚡</span>
-              Immediate Actions
+              <span className="text-violet-600">🎓</span>
+              Key Stage Level
             </h2>
-            <ul className="space-y-3">
-              {report.immediate_actions.map((action, idx) => (
-                <li key={idx} className="flex items-start gap-4 text-gray-700 p-4 bg-red-50 rounded-lg border-l-4 border-red-500">
-                  <span className="text-red-600 mt-1 font-bold text-xl bg-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
-                    {idx + 1}
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Key Stage</h3>
+                  <span className="text-sm px-3 py-1 bg-violet-100 text-violet-700 rounded-full">
+                    {report.keyStageLevel.keyStage}
                   </span>
-                  <span className="text-base pt-1">{action}</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Developmental Stage</h3>
+                  <span className="text-sm px-3 py-1 bg-violet-100 text-violet-700 rounded-full capitalize">
+                    {report.keyStageLevel.developmentalStage}
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Age Group</h3>
+                  <span className="text-sm px-3 py-1 bg-violet-100 text-violet-700 rounded-full">
+                    {report.keyStageLevel.ageGroup}
+                  </span>
+                </div>
+              </div>
+              {report.keyStageLevel.subjectPlacements && (
+                <div className="mt-6">
+                  <h3 className="font-semibold text-gray-900 mb-4">Subject Placements</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {report.keyStageLevel.subjectPlacements.english && (
+                      <div className="border border-gray-200 rounded-lg p-4 bg-blue-50">
+                        <h4 className="font-semibold text-gray-900 mb-2">English</h4>
+                        <p className="text-sm text-gray-700 mb-1">
+                          <strong>Year Level:</strong> {report.keyStageLevel.subjectPlacements.english.yearLevel}
+                        </p>
+                        <p className="text-sm text-gray-700 mb-1">
+                          <strong>Entry Topic:</strong> {report.keyStageLevel.subjectPlacements.english.entryTopic}
+                        </p>
+                        <p className="text-xs text-gray-600">{report.keyStageLevel.subjectPlacements.english.notes}</p>
+                      </div>
+                    )}
+                    {report.keyStageLevel.subjectPlacements.maths && (
+                      <div className="border border-gray-200 rounded-lg p-4 bg-green-50">
+                        <h4 className="font-semibold text-gray-900 mb-2">Maths</h4>
+                        <p className="text-sm text-gray-700 mb-1">
+                          <strong>Year Level:</strong> {report.keyStageLevel.subjectPlacements.maths.yearLevel}
+                        </p>
+                        <p className="text-sm text-gray-700 mb-1">
+                          <strong>Entry Topic:</strong> {report.keyStageLevel.subjectPlacements.maths.entryTopic}
+                        </p>
+                        <p className="text-xs text-gray-600">{report.keyStageLevel.subjectPlacements.maths.notes}</p>
+                      </div>
+                    )}
+                    {report.keyStageLevel.subjectPlacements.science && (
+                      <div className="border border-gray-200 rounded-lg p-4 bg-purple-50">
+                        <h4 className="font-semibold text-gray-900 mb-2">Science</h4>
+                        <p className="text-sm text-gray-700 mb-1">
+                          <strong>Year Level:</strong> {report.keyStageLevel.subjectPlacements.science.yearLevel}
+                        </p>
+                        <p className="text-sm text-gray-700 mb-1">
+                          <strong>Entry Topic:</strong> {report.keyStageLevel.subjectPlacements.science.entryTopic}
+                        </p>
+                        <p className="text-xs text-gray-600">{report.keyStageLevel.subjectPlacements.science.notes}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+              {report.keyStageLevel.teachingApproaches && report.keyStageLevel.teachingApproaches.length > 0 && (
+                <div className="mt-4">
+                  <h3 className="font-semibold text-gray-900 mb-3">Teaching Approaches</h3>
+                  <ul className="space-y-2">
+                    {report.keyStageLevel.teachingApproaches.map((approach, idx) => (
+                      <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
+                        <span className="text-violet-600 mt-1">▸</span>
+                        <span>{approach}</span>
                 </li>
               ))}
             </ul>
           </div>
         )}
-
-        {/* Skill Matrix Analysis */}
-        {report.skillmatrix_analysis && report.skillmatrix_analysis.length > 0 && (
-          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <span className="text-teal-600">📈</span>
-              Skill Matrix Analysis
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {report.skillmatrix_analysis.map((skill, idx) => (
-                <div key={idx} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-semibold text-gray-900">{skill.skill_category}</h3>
-                    <div className="flex gap-2">
-                      <span className="text-sm text-gray-600">Current: {skill.current_level}</span>
-                      <span className="text-sm font-bold text-teal-600">Target: {skill.target_level}</span>
-                    </div>
-                  </div>
-                  {skill.development_suggestions && skill.development_suggestions.length > 0 && (
-                    <ul className="mt-3 space-y-1">
-                      {skill.development_suggestions.map((suggestion, sidx) => (
-                        <li key={sidx} className="text-sm text-gray-600 flex items-start gap-2">
-                          <span className="text-teal-600 mt-1">▸</span>
-                          <span>{suggestion}</span>
+              {report.keyStageLevel.suggestedActions && report.keyStageLevel.suggestedActions.length > 0 && (
+                <div className="mt-4">
+                  <h3 className="font-semibold text-gray-900 mb-3">Suggested Actions</h3>
+                  <ul className="space-y-2">
+                    {report.keyStageLevel.suggestedActions.map((action, idx) => (
+                      <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
+                        <span className="text-violet-600 mt-1">▸</span>
+                        <span>{action}</span>
                         </li>
                       ))}
                     </ul>
-                  )}
                 </div>
-              ))}
+              )}
             </div>
           </div>
         )}

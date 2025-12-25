@@ -6,7 +6,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, Input, Textarea, FormSectionHeader } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
+import { getAutofillData } from "@/app/utils/autofillData";
 import { guidedObservationSchema, type GuidedObservationFormData } from "@/app/lib/validations/guided-observation";
+import { useFormPersistence } from "@/app/hooks/useFormPersistence";
 
 export default function GuidedObservationsProcedurePage() {
   const params = useParams<{ id: string }>();
@@ -95,6 +97,14 @@ export default function GuidedObservationsProcedurePage() {
   });
 
   // Load existing data
+  // Form persistence - saves to localStorage and restores on load
+  const { clearStorage } = useFormPersistence(
+    watch,
+    setValue,
+    'guided-observation',
+    params.id as string
+  );
+
   useEffect(() => { 
     loadGuidedObservationData();
   }, [params.id]);
@@ -215,6 +225,34 @@ export default function GuidedObservationsProcedurePage() {
     }
   };
 
+  const handleAutofill = () => {
+    const autofillData = getAutofillData('guidedObservation');
+    const currentValues = watch();
+    
+    // Preserve personal information fields
+    const personalInfoFields = ['childName', 'age', 'date'];
+    const preservedValues: Partial<GuidedObservationFormData> = {};
+    personalInfoFields.forEach(field => {
+      if (currentValues[field as keyof GuidedObservationFormData]) {
+        preservedValues[field as keyof GuidedObservationFormData] = currentValues[field as keyof GuidedObservationFormData];
+      }
+    });
+
+    // Apply autofill data while preserving personal info
+    Object.keys(autofillData).forEach((key) => {
+      if (!personalInfoFields.includes(key)) {
+        setValue(key as keyof GuidedObservationFormData, autofillData[key as keyof typeof autofillData] as any);
+      }
+    });
+
+    // Restore preserved personal info
+    Object.keys(preservedValues).forEach((key) => {
+      setValue(key as keyof GuidedObservationFormData, preservedValues[key as keyof GuidedObservationFormData] as any);
+    });
+
+    setMessage({ type: 'success', text: 'Form autofilled successfully (personal information preserved)' });
+  };
+
   const onSubmit = async (formData: GuidedObservationFormData) => {
     try {
       setSaving(true);
@@ -238,6 +276,8 @@ export default function GuidedObservationsProcedurePage() {
       const res = await apiService.post("/api/admin/guided-observations-procedure", payload);
 
       if (res.success) {
+        // Clear localStorage after successful save
+        clearStorage();
         router.push(
           `/form/questionnaire-success?type=guided-observation&applicationId=${params.id}`
         );
@@ -265,8 +305,19 @@ export default function GuidedObservationsProcedurePage() {
         <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-6">
-              <div className="text-xl font-bold text-slate-900">Examiner Form: Guided Observation</div>
-              <div className="text-sm text-slate-600">Application ID: {params.id}</div>
+              <div className="flex justify-between items-start">
+                <div>
+                  <div className="text-xl font-bold text-slate-900">Examiner Form: Guided Observation</div>
+                  <div className="text-sm text-slate-600">Application ID: {params.id}</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAutofill}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                >
+                  Autofill Form
+                </button>
+              </div>
             </div>
 
           {/* Basic Information */}

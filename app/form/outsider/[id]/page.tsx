@@ -12,6 +12,8 @@ import {
   FormSectionHeader,
 } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
+import { getAutofillData } from "@/app/utils/autofillData";
+import { useFormPersistence } from "@/app/hooks/useFormPersistence";
 
 const outsiderFormSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -47,6 +49,8 @@ export default function OutsiderPublicFormPage() {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
+    watch,
   } = useForm<OutsiderFormData>({
     resolver: zodResolver(outsiderFormSchema),
     defaultValues: {
@@ -67,6 +71,14 @@ export default function OutsiderPublicFormPage() {
       loggedBy: "",
     },
   });
+
+  // Form persistence - saves to localStorage and restores on load
+  const { clearStorage } = useFormPersistence(
+    watch,
+    setValue,
+    'outsider',
+    params.id as string
+  );
 
   useEffect(() => {
     loadFormData();
@@ -126,6 +138,34 @@ export default function OutsiderPublicFormPage() {
     }
   };
 
+  const handleAutofill = () => {
+    const autofillData = getAutofillData('outsider');
+    const currentValues = watch();
+    
+    // Preserve personal information fields
+    const personalInfoFields = ['fullName', 'childName', 'date'];
+    const preservedValues: Partial<OutsiderFormData> = {};
+    personalInfoFields.forEach(field => {
+      if (currentValues[field as keyof OutsiderFormData]) {
+        preservedValues[field as keyof OutsiderFormData] = currentValues[field as keyof OutsiderFormData];
+      }
+    });
+
+    // Apply autofill data while preserving personal info
+    Object.keys(autofillData).forEach((key) => {
+      if (!personalInfoFields.includes(key)) {
+        setValue(key as keyof OutsiderFormData, autofillData[key as keyof typeof autofillData] as any);
+      }
+    });
+
+    // Restore preserved personal info
+    Object.keys(preservedValues).forEach((key) => {
+      setValue(key as keyof OutsiderFormData, preservedValues[key as keyof OutsiderFormData] as any);
+    });
+
+    setMessage({ type: "success", text: "Form autofilled successfully (personal information preserved)" });
+  };
+
   const onSubmit = async (data: OutsiderFormData) => {
     try {
       setSaving(true);
@@ -135,6 +175,8 @@ export default function OutsiderPublicFormPage() {
         ...data,
       });
       if (res.success) {
+        // Clear localStorage after successful save
+        clearStorage();
         // Redirect to success page
         router.push(
           `/form/questionnaire-success?type=outsider&applicationId=${params.id}`
@@ -168,11 +210,22 @@ export default function OutsiderPublicFormPage() {
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
           <div className="mb-4">
-            <div className="text-xl font-bold text-slate-900">
-              Outside Party Questionnaire
-            </div>
-            <div className="text-sm text-slate-600">
-              Application ID: {params.id}
+            <div className="flex justify-between items-start">
+              <div>
+                <div className="text-xl font-bold text-slate-900">
+                  Outside Party Questionnaire
+                </div>
+                <div className="text-sm text-slate-600">
+                  Application ID: {params.id}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleAutofill}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+              >
+                Autofill Form
+              </button>
             </div>
           </div>
 

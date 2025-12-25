@@ -335,6 +335,8 @@ export async function POST(
         isEighthFormCompleted: true,
         isNinthFormCompleted: true,
         childFullName: true,
+        childAge: true,
+        parentFullName: true,
       }
     });
 
@@ -361,7 +363,107 @@ export async function POST(
       }, { status: 400 });
     }
 
+    // Use student_ prefix to match GET route format
     const studentId = `student_${applicationId}`;
+    const studentName = application.childFullName || 'Unknown Student';
+    const studentAge = application.childAge ? parseInt(application.childAge.toString()) : undefined;
+
+    // Check API key first
+    if (!FRANK_API_KEY) {
+      return NextResponse.json({ 
+        success: false, 
+        message: "FRANK_API_KEY environment variable is not set. Please configure it in your .env file."
+      }, { status: 500 });
+    }
+
+    // Step 1: Create student if it doesn't exist (optional - API may auto-create)
+    // According to API docs, we can create the student first to ensure it exists
+    try {
+      console.log('\n=== CHECKING/CREATING STUDENT ===');
+      console.log(`Student ID (alsStudentId): ${studentId}`);
+      console.log(`Student Name: ${studentName}`);
+      
+      // Try to get the student first
+      const getStudentResponse = await fetch(
+        `${FRANK_API_BASE_URL}/students/${studentId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': FRANK_API_KEY,
+          },
+          signal: createTimeoutSignal(10000),
+        }
+      );
+
+      // If student doesn't exist (404), create it
+      if (getStudentResponse.status === 404) {
+        console.log('Student not found, creating new student...');
+        const createStudentResponse = await fetch(
+          `${FRANK_API_BASE_URL}/students`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-key': FRANK_API_KEY,
+            },
+            body: JSON.stringify({
+              alsStudentId: studentId,
+              name: studentName,
+              ...(studentAge && { age: studentAge }),
+              ...(application.parentFullName && { parentName: application.parentFullName }),
+            }),
+            signal: createTimeoutSignal(10000),
+          }
+        );
+
+        if (!createStudentResponse.ok) {
+          const errorText = await createStudentResponse.text();
+          console.warn(`Failed to create student (${createStudentResponse.status}), continuing anyway:`, errorText);
+          // Continue anyway - API might auto-create the student
+        } else {
+          const studentData = await createStudentResponse.json();
+          console.log('✅ Student created successfully:', studentData.id || studentData.alsStudentId);
+        }
+      } else if (getStudentResponse.ok) {
+        const studentData = await getStudentResponse.json();
+        console.log('✅ Student already exists:', studentData.id || studentData.alsStudentId);
+      } else {
+        console.warn(`Unexpected response when checking student (${getStudentResponse.status}), continuing anyway`);
+        // Continue anyway - API might auto-create the student
+      }
+    } catch (error: any) {
+      // If student creation/check fails, continue anyway - API might auto-create
+      console.warn('Could not check/create student, continuing anyway:', error.message);
+    }
+
+    // Collect all form data first
+    let assessmentContent: string;
+    try {
+      console.log("\n=== DATA COLLECTION START ===");
+      console.log("Application ID:", applicationId);
+      console.log("Student ID:", studentId);
+      assessmentContent = await collectAllFormData(applicationId);
+      console.log("✅ Assessment content collected successfully");
+      console.log("Content length:", assessmentContent.length, "characters");
+      if (assessmentContent.length === 0) {
+        console.warn("⚠️  WARNING: Collected content is empty!");
+      }
+      console.log("=== DATA COLLECTION END ===\n");
+    } catch (error: any) {
+      console.error("\n❌ DATA COLLECTION FAILED!");
+      console.error("Error type:", error?.name || 'Unknown');
+      console.error("Error message:", error?.message || 'Unknown error');
+      console.error("Error stack:", error?.stack || 'No stack trace');
+      if (error?.code) {
+        console.error("Error code:", error.code);
+      }
+      return NextResponse.json({ 
+        success: false, 
+        message: `Failed to collect form data: ${error?.message || 'Unknown error'}`,
+        error: process.env.NODE_ENV === 'development' ? (error?.stack || error?.message) : undefined
+      }, { status: 500 });
+    }
 
     // Check if report already exists - if so, return it without regenerating
     try {
@@ -402,17 +504,17 @@ export async function POST(
               try {
                 const analysisResponse = await fetch(analysisReport.downloadUrl);
                 const analysisData = await analysisResponse.json();
-                console.log("✅ Existing assessment found, returning without regenerating");
+            console.log("✅ Existing assessment found, returning without regenerating");
                 console.log(`Report ID: ${analysisReport.id}`);
-                return NextResponse.json({
-                  success: true,
-                  message: "AI Assessment already exists",
+            return NextResponse.json({
+              success: true,
+              message: "AI Assessment already exists",
                   data: analysisData,
                 });
               } catch (fetchError) {
                 console.log("Could not download analysis content, proceeding with generation");
               }
-            } else {
+          } else {
               console.log("No analysis report found in response, proceeding with generation");
             }
           } else {
@@ -437,303 +539,21 @@ export async function POST(
       console.log("Could not check for existing report, proceeding with generation:", error.message);
     }
 
-    // Collect all form data (only if report doesn't exist)
-    let assessmentContent: string;
+    // According to API docs: POST /students/:id/reports/utl
+    // This endpoint submits the data AND generates the analysis automatically in one call
+    // No need for sessions or separate data submission
     try {
-      console.log("\n=== DATA COLLECTION START ===");
-      console.log("Application ID:", applicationId);
-      console.log("Student ID:", studentId);
-      assessmentContent = await collectAllFormData(applicationId);
-      console.log("✅ Assessment content collected successfully");
-      console.log("Content length:", assessmentContent.length, "characters");
-      if (assessmentContent.length === 0) {
-        console.warn("⚠️  WARNING: Collected content is empty!");
-      }
-      console.log("=== DATA COLLECTION END ===\n");
-    } catch (error: any) {
-      console.error("\n❌ DATA COLLECTION FAILED!");
-      console.error("Error type:", error?.name || 'Unknown');
-      console.error("Error message:", error?.message || 'Unknown error');
-      console.error("Error stack:", error?.stack || 'No stack trace');
-      if (error?.code) {
-        console.error("Error code:", error.code);
-      }
-      return NextResponse.json({ 
-        success: false, 
-        message: `Failed to collect form data: ${error?.message || 'Unknown error'}`,
-        error: process.env.NODE_ENV === 'development' ? (error?.stack || error?.message) : undefined
-      }, { status: 500 });
-    }
-
-    // Step 1: Create or get session (initializes student's knowledge base)
-    let sessionId: string;
-    try {
-      console.log('\n=== STEP 1: CREATING/GETTING SESSION ===');
+      console.log('\n=== GENERATING UTL ANALYSIS REPORT ===');
       console.log(`Student ID: ${studentId}`);
+      console.log(`Student Name: ${studentName}`);
       console.log(`Frank API URL: ${FRANK_API_BASE_URL}`);
-      console.log(`Endpoint: ${FRANK_API_BASE_URL}/sessions`);
-      console.log('Request payload:', {
-        user_id: studentId,
-        metadata: {
-          source: "als_platform",
-          application_id: applicationId,
-        }
-      });
-      
-      const sessionResponse = await fetch(`${FRANK_API_BASE_URL}/sessions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': FRANK_API_KEY,
-          'ngrok-skip-browser-warning': 'true', // Skip ngrok warning page
-        },
-        body: JSON.stringify({
-          user_id: studentId,
-          metadata: {
-            source: "als_platform",
-            application_id: applicationId,
-          }
-        }),
-        // Add timeout to prevent hanging
-        signal: createTimeoutSignal(30000), // 30 second timeout
-      });
-
-      // Check if response is HTML (ngrok warning page)
-      const contentType = sessionResponse.headers.get('content-type');
-      if (contentType && contentType.includes('text/html')) {
-        const htmlText = await sessionResponse.text();
-        console.error("Received HTML response instead of JSON - ngrok warning page");
-        throw new Error("Frank API returned HTML instead of JSON. The API may be unreachable or ngrok is showing a warning page.");
-      }
-
-      // Check response status - 201 means session was created successfully
-      if (sessionResponse.status === 201 || sessionResponse.ok) {
-        const responseText = await sessionResponse.text();
-        let sessionData;
-        try {
-          sessionData = JSON.parse(responseText);
-        } catch (parseError) {
-          console.error("Failed to parse session response as JSON:", responseText.substring(0, 200));
-          throw new Error("Invalid response from session API - may be ngrok warning page");
-        }
-        
-        // Verify response structure matches documentation: { session: { id: ... } }
-        if (sessionData.session && sessionData.session.id) {
-          sessionId = sessionData.session.id;
-          console.log('✅ Session created successfully!');
-          console.log(`Session ID: ${sessionId}`);
-          console.log(`Status: ${sessionData.session.status || 'active'}`);
-          console.log(`Expires at: ${sessionData.session.expires_at || 'N/A'}`);
-          console.log(`Is active: ${sessionData.session.is_active !== false}`);
-        } else if (sessionData.id) {
-          // Handle case where response might be just the session object
-          sessionId = sessionData.id;
-          console.log('✅ Session created successfully! (alternative format)');
-          console.log(`Session ID: ${sessionId}`);
-        } else {
-          console.error("❌ Unexpected session response structure");
-          console.error("Response received:", JSON.stringify(sessionData).substring(0, 500));
-          throw new Error("Session response missing 'session.id' or 'id' field");
-        }
-      } else {
-        // Session creation failed - try to get existing active session
-        const errorText = await sessionResponse.text();
-        let errorData;
-        try {
-          errorData = JSON.parse(errorText);
-        } catch {
-          errorData = { message: errorText };
-        }
-        
-        console.warn(`Session creation returned ${sessionResponse.status}, trying to get existing session...`);
-        console.warn("Error details:", errorData);
-        
-        // Try to get existing active session for this user
-        const userSessionsResponse = await fetch(
-          `${FRANK_API_BASE_URL}/sessions/user/${studentId}?active_only=true`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'x-api-key': FRANK_API_KEY,
-              'ngrok-skip-browser-warning': 'true', // Skip ngrok warning page
-            },
-            signal: createTimeoutSignal(10000), // 10 second timeout
-          }
-        );
-        
-        // Check if response is HTML
-        const sessionsContentType = userSessionsResponse.headers.get('content-type');
-        if (sessionsContentType && sessionsContentType.includes('text/html')) {
-          console.error("Received HTML response when getting sessions");
-          throw new Error("Frank API returned HTML instead of JSON when getting sessions");
-        }
-        
-        if (userSessionsResponse.ok) {
-          const responseText = await userSessionsResponse.text();
-          let sessionsData;
-          try {
-            sessionsData = JSON.parse(responseText);
-          } catch (parseError) {
-            console.error("Failed to parse sessions response as JSON:", responseText.substring(0, 200));
-            throw new Error("Invalid response from sessions API - may be ngrok warning page");
-          }
-          
-          // Verify response structure: { sessions: [{ id: ... }], total: ... }
-          if (sessionsData.sessions && Array.isArray(sessionsData.sessions) && sessionsData.sessions.length > 0) {
-            // Get the first active session
-            const activeSession = sessionsData.sessions.find((s: any) => s.is_active !== false) || sessionsData.sessions[0];
-            sessionId = activeSession.id;
-            console.log('✅ Found existing active session!');
-            console.log(`Session ID: ${sessionId}`);
-            console.log(`Status: ${activeSession.status || 'active'}`);
-            console.log(`Expires at: ${activeSession.expires_at || 'N/A'}`);
-            console.log(`Total sessions found: ${sessionsData.total || sessionsData.sessions.length}`);
-          } else {
-            console.error(`❌ No active sessions found. Create failed with status ${sessionResponse.status}`);
-            throw new Error(`Failed to create session (${sessionResponse.status}). No existing active session found for user.`);
-          }
-        } else {
-          const errorText2 = await userSessionsResponse.text();
-          let errorData2;
-          try {
-            errorData2 = JSON.parse(errorText2);
-          } catch {
-            errorData2 = { message: errorText2 };
-          }
-          throw new Error(`Failed to create or retrieve session. Create failed: ${sessionResponse.status} ${errorData.message || sessionResponse.statusText}. Get sessions also failed: ${userSessionsResponse.status} ${errorData2.message || ''}`);
-        }
-      }
-    } catch (error: any) {
-      console.error("Session creation error:", error);
-      console.error("Error details:", {
-        message: error.message,
-        stack: error.stack,
-        name: error.name
-      });
-      return NextResponse.json({ 
-        success: false, 
-        message: `Failed to create session: ${error.message}`,
-        error: process.env.NODE_ENV === 'development' ? error.stack : undefined
-      }, { status: 500 });
-    }
-
-    // Step 2: Submit UTL assessment data to /students/{student_id}/data endpoint
-    try {
-      console.log('\n=== STEP 2: SUBMITTING UTL ASSESSMENT DATA ===');
-      console.log(`Student ID: ${studentId}`);
-      console.log(`Endpoint: ${FRANK_API_BASE_URL}/students/${studentId}/data`);
-      console.log(`Content length: ${assessmentContent.length} characters`);
-      console.log(`Content preview (first 500 chars):\n${assessmentContent.substring(0, 500)}...`);
-      
-      const dataPayload = {
-        data_type: 'utl',
-        content: assessmentContent,
-        source_id: `application_${applicationId}`,
-        timestamp: new Date().toISOString(),
-        metadata: {
-          application_id: applicationId,
-          assessment_date: new Date().toISOString(),
-        }
-      };
-      
-      console.log('Request payload structure:', {
-        data_type: dataPayload.data_type,
-        source_id: dataPayload.source_id,
-        timestamp: dataPayload.timestamp,
-        metadata: dataPayload.metadata,
-        content_length: dataPayload.content.length,
-      });
-      
-      const dataResponse = await fetch(`${FRANK_API_BASE_URL}/students/${studentId}/data`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': FRANK_API_KEY,
-          'ngrok-skip-browser-warning': 'true', // Skip ngrok warning page
-        },
-        body: JSON.stringify(dataPayload),
-        signal: createTimeoutSignal(30000), // 30 second timeout
-      });
-      
-      console.log(`Data submission response status: ${dataResponse.status} ${dataResponse.statusText}`);
-
-      // Read response text first (can only be read once)
-      const dataResponseText = await dataResponse.text();
-      
-      // Check if response is HTML
-      const dataContentType = dataResponse.headers.get('content-type');
-      console.log(`Response content-type: ${dataContentType}`);
-      
-      if (dataContentType && dataContentType.includes('text/html')) {
-        console.error("❌ ERROR: Received HTML response instead of JSON when submitting data");
-        console.error("HTML response preview:", dataResponseText.substring(0, 500));
-        throw new Error("Frank API returned HTML instead of JSON when submitting data. The API may be unreachable.");
-      }
-      
-      if (!dataResponse.ok) {
-        let errorData;
-        try {
-          errorData = JSON.parse(dataResponseText);
-        } catch {
-          errorData = { message: dataResponseText || "Failed to submit data" };
-        }
-        console.error("❌ Data submission failed!");
-        console.error("Status:", dataResponse.status, dataResponse.statusText);
-        console.error("Error response:", JSON.stringify(errorData, null, 2));
-        
-        // Handle session expired error (410) - try to extend or recreate session
-        if (dataResponse.status === 410 || errorData.detail?.error_code === 'SESSION_EXPIRED') {
-          console.warn("⚠️ Session expired, attempting to extend or recreate...");
-          // For now, we'll just throw the error - in the future we could add session extension logic here
-          throw new Error("Session expired. Please try generating the assessment again.");
-        }
-        
-        // Handle ingestion errors specifically
-        if (dataResponse.status === 500 && errorData.detail?.error_code === 'INGESTION_ERROR') {
-          console.error("❌ INGESTION_ERROR: Failed to store data in knowledge base");
-          throw new Error("Failed to store assessment data in knowledge base. The AI system may be experiencing issues.");
-        }
-        
-        throw new Error(errorData.detail?.message || errorData.message || "Failed to submit data");
-      }
-      
-      // Success - parse response (already read as text above, so parse it)
-      let dataResponseJson;
-      try {
-        dataResponseJson = JSON.parse(dataResponseText);
-      } catch (parseError) {
-        console.error("❌ Failed to parse successful data response as JSON");
-        throw new Error("Invalid JSON response from data submission endpoint");
-      }
-      
-      console.log('✅ Data submission successful!');
-      console.log('Response:', JSON.stringify(dataResponseJson, null, 2));
-      console.log(`Data ID: ${dataResponseJson.data_id || 'N/A'}`);
-      console.log(`Status: ${dataResponseJson.status || 'N/A'}`);
-      console.log(`Message: ${dataResponseJson.message || 'N/A'}`);
-    } catch (error: any) {
-      console.error("\n❌ Data submission error occurred!");
-      console.error("Error type:", error.name);
-      console.error("Error message:", error.message);
-      if (error.stack) {
-        console.error("Error stack:", error.stack);
-      }
-      return NextResponse.json({ 
-        success: false, 
-        message: `Failed to submit assessment data: ${error.message}`,
-        error: process.env.NODE_ENV === 'development' ? error.stack : undefined
-      }, { status: 500 });
-    }
-
-    // Step 3: Generate UTL Analysis Report (AI analyzes the submitted data)
-    // Using POST /reports/utl with content to generate both raw and analysis reports
-    try {
-      console.log('\n=== STEP 3: GENERATING UTL ANALYSIS REPORT ===');
-      console.log(`Student ID: ${studentId}`);
       console.log(`Endpoint: ${FRANK_API_BASE_URL}/students/${studentId}/reports/utl`);
-      console.log('Content length:', assessmentContent.length, 'characters');
-      console.log('⏳ Requesting AI to analyze the submitted data and generate report...');
+      console.log(`API Key present: ${FRANK_API_KEY ? 'Yes (length: ' + FRANK_API_KEY.length + ')' : 'No - THIS IS THE PROBLEM!'}`);
+      console.log(`Content length: ${assessmentContent.length} characters`);
+      console.log('⏳ Submitting UTL data and generating analysis report...');
       
+      // According to API docs, POST /students/:id/reports/utl accepts:
+      // { content: string, fileName?: string }
       const reportResponse = await fetch(
         `${FRANK_API_BASE_URL}/students/${studentId}/reports/utl`,
         {
@@ -778,18 +598,49 @@ export async function POST(
         console.error("Error response:", JSON.stringify(errorData, null, 2));
         
         // Handle specific error codes from documentation
-        if (reportResponse.status === 404 && errorData.detail?.error_code === 'DATA_NOT_FOUND') {
-          console.error("❌ DATA_NOT_FOUND: No student data found in knowledge base");
-          throw new Error("No student data found. Please ensure data was submitted successfully in Step 2.");
+        if (reportResponse.status === 401) {
+          console.error("❌ UNAUTHORIZED: Invalid or missing API key");
+          throw new Error("Authentication failed. Please check your API key configuration.");
         }
         
-        if (reportResponse.status === 410 || errorData.detail?.error_code === 'SESSION_EXPIRED') {
-          console.error("❌ SESSION_EXPIRED: Session has expired");
-          throw new Error("Session expired. Please try generating the assessment again.");
+        if (reportResponse.status === 404) {
+          console.error("❌ NOT_FOUND: Student or resource not found");
+          // Try to create the student and retry once
+          try {
+            console.log("Attempting to create student and retry...");
+            const createStudentResponse = await fetch(
+              `${FRANK_API_BASE_URL}/students`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-api-key': FRANK_API_KEY,
+                },
+                body: JSON.stringify({
+                  alsStudentId: studentId,
+                  name: studentName,
+                  ...(studentAge && { age: studentAge }),
+                  ...(application.parentFullName && { parentName: application.parentFullName }),
+                }),
+                signal: createTimeoutSignal(10000),
+              }
+            );
+            if (createStudentResponse.ok) {
+              console.log("Student created, but report generation already failed. Please try again.");
+            }
+          } catch (createError) {
+            console.warn("Could not create student during error handling:", createError);
+          }
+          throw new Error("Student not found. Please ensure the student exists in the system.");
         }
         
-        if (reportResponse.status === 500 && errorData.detail?.error_code === 'REPORT_ERROR') {
-          console.error("❌ REPORT_ERROR: Failed to generate AI report");
+        if (reportResponse.status === 400 && errorData.code === 'VALIDATION_ERROR') {
+          console.error("❌ VALIDATION_ERROR: Invalid request body");
+          throw new Error(`Validation error: ${errorData.error || errorData.message || 'Invalid request'}`);
+        }
+        
+        if (reportResponse.status === 500) {
+          console.error("❌ SERVER_ERROR: Internal server error");
           throw new Error("Failed to generate AI report. The AI system may be experiencing issues.");
         }
         
@@ -825,7 +676,6 @@ export async function POST(
       console.log(`✅ Successfully generated UTL Analysis Report`);
       console.log(`Report ID: ${reportId}`);
       console.log(`Student ID: ${studentId}`);
-      console.log(`Session ID: ${sessionId}`);
       console.log('==========================================\n');
       
       return NextResponse.json({
@@ -834,7 +684,6 @@ export async function POST(
         data: {
           reportId: reportId,
           studentId: studentId,
-          sessionId: sessionId,
           report: analysisData,
           generatedAt: generatedAt,
         }

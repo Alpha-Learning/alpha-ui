@@ -11,6 +11,8 @@ import {
   FormSectionHeader,
 } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
+import { getAutofillData } from "@/app/utils/autofillData";
+import { useFormPersistence } from "@/app/hooks/useFormPersistence";
 import {
   parentGuardianQuestionnaireSchema,
   ParentGuardianQuestionnaireFormData,
@@ -30,6 +32,8 @@ export default function ParentGuardianPublicFormPage() {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
+    watch,
   } = useForm<ParentGuardianQuestionnaireFormData>({
     resolver: zodResolver(parentGuardianQuestionnaireSchema),
     defaultValues: {
@@ -62,6 +66,14 @@ export default function ParentGuardianPublicFormPage() {
       loggedBy: "",
     },
   });
+
+  // Form persistence - saves to localStorage and restores on load
+  const { clearStorage } = useFormPersistence(
+    watch,
+    setValue,
+    'parent-guardian',
+    params.id as string
+  );
 
   useEffect(() => {
     loadFormData();
@@ -147,6 +159,35 @@ export default function ParentGuardianPublicFormPage() {
       setLoading(false);
     }
   };
+
+  const handleAutofill = () => {
+    const autofillData = getAutofillData('parentGuardian');
+    const currentValues = watch();
+    
+    // Preserve personal information fields
+    const personalInfoFields = ['fullName', 'childName', 'date'];
+    const preservedValues: Partial<ParentGuardianQuestionnaireFormData> = {};
+    personalInfoFields.forEach(field => {
+      if (currentValues[field as keyof ParentGuardianQuestionnaireFormData]) {
+        preservedValues[field as keyof ParentGuardianQuestionnaireFormData] = currentValues[field as keyof ParentGuardianQuestionnaireFormData];
+      }
+    });
+
+    // Apply autofill data while preserving personal info
+    Object.keys(autofillData).forEach((key) => {
+      if (!personalInfoFields.includes(key)) {
+        setValue(key as keyof ParentGuardianQuestionnaireFormData, autofillData[key as keyof typeof autofillData] as any);
+      }
+    });
+
+    // Restore preserved personal info
+    Object.keys(preservedValues).forEach((key) => {
+      setValue(key as keyof ParentGuardianQuestionnaireFormData, preservedValues[key as keyof ParentGuardianQuestionnaireFormData] as any);
+    });
+
+    setMessage({ type: "success", text: "Form autofilled successfully (personal information preserved)" });
+  };
+
 console.log("errors",errors);
   const onSubmit = async (data: ParentGuardianQuestionnaireFormData) => {
     try {
@@ -158,6 +199,8 @@ console.log("errors",errors);
         ...data,
       });
       if (res.success) {
+        // Clear localStorage after successful save
+        clearStorage();
         // Redirect to success page
         router.push(
           `/form/questionnaire-success?type=parent-guardian&applicationId=${params.id}`
@@ -191,14 +234,25 @@ console.log("errors",errors);
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
           <div className="mb-4">
-            <div className="text-xl font-bold text-slate-900">
-              Parent/Guardian Questionnaire
-            </div>
-            <div className="text-sm text-slate-600">
-              Application ID: {params.id}
-            </div>
-            <div className="text-xs text-slate-500">
-              Version v1.0 | Reviewed AUG 2025
+            <div className="flex justify-between items-start">
+              <div>
+                <div className="text-xl font-bold text-slate-900">
+                  Parent/Guardian Questionnaire
+                </div>
+                <div className="text-sm text-slate-600">
+                  Application ID: {params.id}
+                </div>
+                <div className="text-xs text-slate-500">
+                  Version v1.0 | Reviewed AUG 2025
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleAutofill}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+              >
+                Autofill Form
+              </button>
             </div>
           </div>
 

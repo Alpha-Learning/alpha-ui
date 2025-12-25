@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, Input, Textarea, FormSectionHeader } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
 import { guidedObservationSchema, type GuidedObservationFormData } from "@/app/lib/validations/guided-observation";
+import { useFormPersistence } from "@/app/hooks/useFormPersistence";
 
 export default function GuidedObservationsProcedurePage() {
   const params = useParams<{ id: string }>();
@@ -93,6 +94,14 @@ export default function GuidedObservationsProcedurePage() {
       recommendationsForSupport: "",
     },
   });
+
+  // Form persistence - saves to localStorage and restores on load
+  const { clearStorage } = useFormPersistence(
+    watch,
+    setValue,
+    'admin-guided-observation',
+    params.id as string
+  );
 
   // Load existing data
   useEffect(() => { 
@@ -238,6 +247,8 @@ export default function GuidedObservationsProcedurePage() {
       const res = await apiService.post("/api/admin/guided-observations-procedure", payload);
 
       if (res.success) {
+        // Clear localStorage after successful save
+        clearStorage();
         setMessage({ type: 'success', text: 'Guided observation data saved successfully!' });
         router.push(`/admin/applications/${params.id}`);
       } else {

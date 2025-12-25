@@ -12,6 +12,8 @@ import {
   FormSectionHeader,
 } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
+import { getAutofillData } from "@/app/utils/autofillData";
+import { useFormPersistence } from "@/app/hooks/useFormPersistence";
 
 const schema = z.object({
   // Child Information
@@ -199,6 +201,8 @@ export default function ComprehensiveProfileSheetPage() {
     control,
     formState: { errors },
     reset,
+    setValue,
+    watch,
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -358,6 +362,14 @@ export default function ComprehensiveProfileSheetPage() {
       compiledDate: "",
     },
   });
+
+  // Form persistence - saves to localStorage and restores on load
+  const { clearStorage } = useFormPersistence(
+    watch,
+    setValue,
+    'admin-comprehensive-profile-sheet',
+    params.id as string
+  );
 
   useEffect(() => {
     (async () => {
@@ -561,6 +573,8 @@ export default function ComprehensiveProfileSheetPage() {
       });
       
       if (response.success) {
+        // Clear localStorage after successful save
+        clearStorage();
         router.push(`/admin/applications/${params.id}`);
       } else {
         console.error("Form submission failed:", response.error);
@@ -574,14 +588,53 @@ export default function ComprehensiveProfileSheetPage() {
     }
   };
 
+  const handleAutofill = () => {
+    const autofillData = getAutofillData('comprehensiveProfileSheet');
+    const currentValues = watch();
+    
+    // Preserve personal information fields
+    const personalInfoFields = ['childName', 'childAge', 'assessmentDate'];
+    const preservedValues: Partial<FormValues> = {};
+    personalInfoFields.forEach(field => {
+      if (currentValues[field as keyof FormValues]) {
+        preservedValues[field as keyof FormValues] = currentValues[field as keyof FormValues];
+      }
+    });
+
+    // Apply autofill data while preserving personal info
+    Object.keys(autofillData).forEach((key) => {
+      if (!personalInfoFields.includes(key)) {
+        setValue(key as keyof FormValues, autofillData[key as keyof typeof autofillData] as any);
+      }
+    });
+
+    // Restore preserved personal info
+    Object.keys(preservedValues).forEach((key) => {
+      setValue(key as keyof FormValues, preservedValues[key as keyof FormValues] as any);
+    });
+
+    alert("Form autofilled successfully (personal information preserved)");
+  };
+
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
-        <div className="text-xl font-bold text-slate-900">
-          Understanding The Learning Comprehensive Profile Sheet
-        </div>
-        <div className="text-sm text-slate-600">
-          Application ID: {params.id}
+        <div className="flex justify-between items-start">
+          <div>
+            <div className="text-xl font-bold text-slate-900">
+              Understanding The Learning Comprehensive Profile Sheet
+            </div>
+            <div className="text-sm text-slate-600">
+              Application ID: {params.id}
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={handleAutofill}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+          >
+            Autofill Form
+          </button>
         </div>
       </div>
 
