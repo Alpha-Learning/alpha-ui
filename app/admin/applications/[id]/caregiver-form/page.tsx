@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, Input, Textarea, FormSectionHeader } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
 import { z } from "zod";
+import { useFormPersistence } from "@/app/hooks/useFormPersistence";
 
 // Validation schema for caregiver form
 const caregiverFormSchema = z.object({
@@ -52,6 +53,8 @@ export default function CaregiverFormPage() {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
+    watch,
   } = useForm<CaregiverFormData>({
     resolver: zodResolver(caregiverFormSchema),
     defaultValues: {
@@ -75,6 +78,14 @@ export default function CaregiverFormPage() {
       loggedBy: "",
     },
   });
+
+  // Form persistence - saves to localStorage and restores on load
+  const { clearStorage } = useFormPersistence(
+    watch,
+    setValue,
+    'admin-caregiver',
+    params.id as string
+  );
 
   // Load existing data
   useEffect(() => {
@@ -155,6 +166,8 @@ export default function CaregiverFormPage() {
       });
 
       if (res.success) {
+        // Clear localStorage after successful save
+        clearStorage();
         setMessage({ type: 'success', text: 'Caregiver questionnaire submitted successfully!' });
         // Redirect to stage listing page after successful submission
         setTimeout(() => {

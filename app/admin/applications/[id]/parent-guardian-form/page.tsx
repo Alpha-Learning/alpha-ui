@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, Input, Textarea, FormSectionHeader } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
 import { parentGuardianQuestionnaireSchema, ParentGuardianQuestionnaireFormData } from "@/app/lib/validations/parent-guardian-questionnaire";
+import { useFormPersistence } from "@/app/hooks/useFormPersistence";
 
 export default function ParentGuardianFormPage() {
   const params = useParams<{ id: string }>();
@@ -20,6 +21,8 @@ export default function ParentGuardianFormPage() {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
+    watch,
   } = useForm<ParentGuardianQuestionnaireFormData>({
     resolver: zodResolver(parentGuardianQuestionnaireSchema),
     defaultValues: {
@@ -52,6 +55,14 @@ export default function ParentGuardianFormPage() {
       loggedBy: "",
     },
   });
+
+  // Form persistence - saves to localStorage and restores on load
+  const { clearStorage } = useFormPersistence(
+    watch,
+    setValue,
+    'admin-parent-guardian',
+    params.id as string
+  );
 
   // Load existing data
   useEffect(() => {
@@ -150,6 +161,8 @@ export default function ParentGuardianFormPage() {
       });
 
       if (res.success) {
+        // Clear localStorage after successful save
+        clearStorage();
         setMessage({ type: 'success', text: 'Parent/Guardian questionnaire submitted successfully!' });
         // Redirect to stage listing page after successful submission
         setTimeout(() => {

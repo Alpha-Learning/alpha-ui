@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, Input, Textarea, FormSectionHeader } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
 import { z } from "zod";
+import { useFormPersistence } from "@/app/hooks/useFormPersistence";
 
 // Validation schema for outsider form
 const outsiderFormSchema = z.object({
@@ -49,6 +50,8 @@ export default function OutsiderFormPage() {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
+    watch,
   } = useForm<OutsiderFormData>({
     resolver: zodResolver(outsiderFormSchema),
     defaultValues: {
@@ -69,6 +72,14 @@ export default function OutsiderFormPage() {
       loggedBy: "",
     },
   });
+
+  // Form persistence - saves to localStorage and restores on load
+  const { clearStorage } = useFormPersistence(
+    watch,
+    setValue,
+    'admin-outsider',
+    params.id as string
+  );
 
   // Load existing data
   useEffect(() => {
@@ -143,6 +154,8 @@ export default function OutsiderFormPage() {
       });
 
       if (res.success) {
+        // Clear localStorage after successful save
+        clearStorage();
         setMessage({ type: 'success', text: 'Outsider questionnaire submitted successfully!' });
         // Redirect to stage listing page after successful submission
         setTimeout(() => {

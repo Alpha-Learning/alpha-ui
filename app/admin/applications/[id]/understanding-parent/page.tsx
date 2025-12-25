@@ -6,6 +6,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, Input, Textarea, FormSectionHeader } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
+import { getAutofillData } from "@/app/utils/autofillData";
+import { useFormPersistence } from "@/app/hooks/useFormPersistence";
 
 const schema = z.object({
   childName: z.string().optional(),
@@ -24,7 +26,7 @@ export default function UnderstandingParentPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const [saving, setSaving] = useState(false);
-  const { register, handleSubmit, reset, setValue } = useForm<FormValues>({
+  const { register, handleSubmit, reset, setValue, watch } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       childName: "",
@@ -65,6 +67,14 @@ export default function UnderstandingParentPage() {
     })();
   }, [params.id, reset, setValue]);
 
+  // Form persistence - saves to localStorage and restores on load
+  const { clearStorage } = useFormPersistence(
+    watch,
+    setValue,
+    'admin-understanding-parent',
+    params.id as string
+  );
+
   const onSubmit = async (values: FormValues) => {
     setSaving(true);
     try {
@@ -73,6 +83,8 @@ export default function UnderstandingParentPage() {
         ...values,
       });
       if (response.success) {
+        // Clear localStorage after successful save
+        clearStorage();
         router.push(`/admin/applications/${params.id}`);
       } else {
         alert(`Error saving form: ${response.error || "Unknown error"}`);
@@ -84,11 +96,50 @@ export default function UnderstandingParentPage() {
     }
   };
 
+  const handleAutofill = () => {
+    const autofillData = getAutofillData('understandingParent');
+    const currentValues = watch();
+    
+    // Preserve personal information fields
+    const personalInfoFields = ['childName', 'age', 'date'];
+    const preservedValues: Partial<FormValues> = {};
+    personalInfoFields.forEach(field => {
+      if (currentValues[field as keyof FormValues]) {
+        preservedValues[field as keyof FormValues] = currentValues[field as keyof FormValues];
+      }
+    });
+
+    // Apply autofill data while preserving personal info
+    Object.keys(autofillData).forEach((key) => {
+      if (!personalInfoFields.includes(key)) {
+        setValue(key as keyof FormValues, autofillData[key as keyof typeof autofillData] as any);
+      }
+    });
+
+    // Restore preserved personal info
+    Object.keys(preservedValues).forEach((key) => {
+      setValue(key as keyof FormValues, preservedValues[key as keyof FormValues] as any);
+    });
+
+    alert("Form autofilled successfully (personal information preserved)");
+  };
+
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
-        <div className="text-xl font-bold text-slate-900">Understanding the Parent</div>
-        <div className="text-sm text-slate-600">Application ID: {params.id}</div>
+        <div className="flex justify-between items-start">
+          <div>
+            <div className="text-xl font-bold text-slate-900">Understanding the Parent</div>
+            <div className="text-sm text-slate-600">Application ID: {params.id}</div>
+          </div>
+          <button
+            type="button"
+            onClick={handleAutofill}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+          >
+            Autofill Form
+          </button>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>

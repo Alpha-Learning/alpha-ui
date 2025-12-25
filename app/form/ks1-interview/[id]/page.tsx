@@ -12,6 +12,8 @@ import {
   FormSectionHeader,
 } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
+import { getAutofillData } from "@/app/utils/autofillData";
+import { useFormPersistence } from "@/app/hooks/useFormPersistence";
 
 const schema = z.object({
   // Child Information (required)
@@ -79,6 +81,8 @@ export default function KS1InterviewQuestionsPage() {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
+    watch,
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -122,6 +126,14 @@ export default function KS1InterviewQuestionsPage() {
       loggedBy: "",
     },
   });
+
+  // Form persistence - saves to localStorage and restores on load
+  const { clearStorage } = useFormPersistence(
+    watch,
+    setValue,
+    'ks1-interview',
+    params.id as string
+  );
 
   useEffect(() => {
     loadFormData();
@@ -238,6 +250,8 @@ export default function KS1InterviewQuestionsPage() {
       });
 
       if (response.success) {
+        // Clear localStorage after successful save
+        clearStorage();
         router.push(
           `/form/questionnaire-success?type=ks1-interview&applicationId=${params.id}`
         );
@@ -257,6 +271,34 @@ export default function KS1InterviewQuestionsPage() {
     }
   };
 
+  const handleAutofill = () => {
+    const autofillData = getAutofillData('ks1Interview');
+    const currentValues = watch();
+    
+    // Preserve personal information fields
+    const personalInfoFields = ['fullName', 'age', 'date'];
+    const preservedValues: Partial<FormValues> = {};
+    personalInfoFields.forEach(field => {
+      if (currentValues[field as keyof FormValues]) {
+        preservedValues[field as keyof FormValues] = currentValues[field as keyof FormValues];
+      }
+    });
+
+    // Apply autofill data while preserving personal info
+    Object.keys(autofillData).forEach((key) => {
+      if (!personalInfoFields.includes(key)) {
+        setValue(key as keyof FormValues, autofillData[key as keyof typeof autofillData] as any);
+      }
+    });
+
+    // Restore preserved personal info
+    Object.keys(preservedValues).forEach((key) => {
+      setValue(key as keyof FormValues, preservedValues[key as keyof FormValues] as any);
+    });
+
+    setMessage({ type: "success", text: "Form autofilled successfully (personal information preserved)" });
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -270,11 +312,22 @@ export default function KS1InterviewQuestionsPage() {
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
           <div className="mb-4">
-            <div className="text-xl font-bold text-slate-900">
-              KS1 Interview Questions
-            </div>
-            <div className="text-sm text-slate-600">
-              Application ID: {params.id}
+            <div className="flex justify-between items-start">
+              <div>
+                <div className="text-xl font-bold text-slate-900">
+                  KS1 Interview Questions
+                </div>
+                <div className="text-sm text-slate-600">
+                  Application ID: {params.id}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleAutofill}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+              >
+                Autofill Form
+              </button>
             </div>
           </div>
 

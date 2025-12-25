@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, Input, Textarea, FormSectionHeader } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
 import { screeningCallSchema, type ScreeningCallFormData } from "@/app/lib/validations/screening-call";
+import { getAutofillData, AutofillDataKey } from "@/app/utils/autofillData";
+import { useFormPersistence } from "@/app/hooks/useFormPersistence";
 
 export default function ScreeningCallFormPage() {
   const params = useParams<{ id: string }>();
@@ -50,6 +52,14 @@ export default function ScreeningCallFormPage() {
       loggedBy: "",
     },
   });
+
+  // Form persistence - saves to localStorage and restores on load
+  const { clearStorage } = useFormPersistence(
+    watch,
+    setValue,
+    'screening-call',
+    params.id as string
+  );
 
   // Load existing data
   useEffect(() => {
@@ -131,6 +141,34 @@ export default function ScreeningCallFormPage() {
     }
   };
 const router = useRouter();
+  const handleAutofill = () => {
+    const autofillData = getAutofillData('screeningCall');
+    const currentValues = watch();
+    
+    // Preserve personal information fields
+    const personalInfoFields = ['fullName', 'date', 'callerName'];
+    const preservedValues: Record<string, any> = {};
+    personalInfoFields.forEach(field => {
+      if (currentValues[field as keyof ScreeningCallFormData]) {
+        preservedValues[field] = currentValues[field as keyof ScreeningCallFormData];
+      }
+    });
+
+    // Apply autofill data while preserving personal info
+    Object.keys(autofillData).forEach((key) => {
+      if (!personalInfoFields.includes(key)) {
+        setValue(key as keyof ScreeningCallFormData, autofillData[key as keyof typeof autofillData] as any);
+      }
+    });
+
+    // Restore preserved personal info
+    Object.keys(preservedValues).forEach((key) => {
+      setValue(key as keyof ScreeningCallFormData, preservedValues[key] as any);
+    });
+
+    alert("Form autofilled successfully (personal information preserved)");
+  };
+
   const onSubmit = async (data: ScreeningCallFormData) => {
     try {
       setSaving(true);
@@ -142,6 +180,8 @@ const router = useRouter();
       });
 
       if (res.success) {
+        // Clear localStorage after successful save
+        clearStorage();
         setMessage({ type: 'success', text: 'Screening call data saved successfully!' });
         router.push(`/admin/applications/${params.id}`);
       } else {
@@ -165,11 +205,20 @@ console.log("errors========",errors);
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
-        <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-4">
-          <div className="text-xl font-bold text-slate-900">Screening Call & Flow Script</div>
-          <div className="text-sm text-slate-600">Application ID: {params.id}</div>
+        <div className="mb-4 flex justify-between items-start">
+          <div>
+            <div className="text-xl font-bold text-slate-900">Screening Call & Flow Script</div>
+            <div className="text-sm text-slate-600">Application ID: {params.id}</div>
+          </div>
+          <button
+            type="button"
+            onClick={handleAutofill}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+          >
+            Autofill Form
+          </button>
         </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* LEFT SIDE */}
           <div className="space-y-8">

@@ -103,7 +103,16 @@ export async function GET(
 
       // GET /reports/utl returns { reports: [...] } - need to download analysis content
       if (reportData.reports && Array.isArray(reportData.reports)) {
-        const analysisReport = reportData.reports.find((r: any) => r.type === "UTL_ANALYSIS");
+        // Get all UTL_ANALYSIS reports and sort by createdAt to get the latest one
+        const analysisReports = reportData.reports
+          .filter((r: any) => r.type === "UTL_ANALYSIS")
+          .sort((a: any, b: any) => {
+            const dateA = new Date(a.createdAt).getTime();
+            const dateB = new Date(b.createdAt).getTime();
+            return dateB - dateA; // Sort descending (newest first)
+          });
+        
+        const analysisReport = analysisReports[0]; // Get the latest one
         if (analysisReport && analysisReport.downloadUrl) {
           try {
             const analysisResponse = await fetch(analysisReport.downloadUrl);
@@ -125,10 +134,10 @@ export async function GET(
         }
       } else {
         // If response format is different, return as-is
-        return NextResponse.json({
-          success: true,
-          data: reportData
-        });
+      return NextResponse.json({
+        success: true,
+        data: reportData
+      });
       }
     } catch (error: any) {
       console.error("Report retrieval error:", error);

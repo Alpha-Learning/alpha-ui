@@ -13,6 +13,8 @@ import {
   FormSectionHeader,
 } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
+import { getAutofillData } from "@/app/utils/autofillData";
+import { useFormPersistence } from "@/app/hooks/useFormPersistence";
 
 const caregiverFormSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -51,6 +53,8 @@ export default function CaregiverPublicFormPage() {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
+    watch,
   } = useForm<CaregiverFormData>({
     resolver: zodResolver(caregiverFormSchema),
     defaultValues: {
@@ -74,6 +78,14 @@ export default function CaregiverPublicFormPage() {
       loggedBy: "",
     },
   });
+
+  // Form persistence - saves to localStorage and restores on load
+  const { clearStorage } = useFormPersistence(
+    watch,
+    setValue,
+    'caregiver',
+    params.id as string
+  );
 
   useEffect(() => {
     loadFormData();
@@ -139,6 +151,34 @@ export default function CaregiverPublicFormPage() {
     }
   };
 
+  const handleAutofill = () => {
+    const autofillData = getAutofillData('caregiver');
+    const currentValues = watch();
+    
+    // Preserve personal information fields
+    const personalInfoFields = ['fullName', 'childName', 'date'];
+    const preservedValues: Partial<CaregiverFormData> = {};
+    personalInfoFields.forEach(field => {
+      if (currentValues[field as keyof CaregiverFormData]) {
+        preservedValues[field as keyof CaregiverFormData] = currentValues[field as keyof CaregiverFormData];
+      }
+    });
+
+    // Apply autofill data while preserving personal info
+    Object.keys(autofillData).forEach((key) => {
+      if (!personalInfoFields.includes(key)) {
+        setValue(key as keyof CaregiverFormData, autofillData[key as keyof typeof autofillData] as any);
+      }
+    });
+
+    // Restore preserved personal info
+    Object.keys(preservedValues).forEach((key) => {
+      setValue(key as keyof CaregiverFormData, preservedValues[key as keyof CaregiverFormData] as any);
+    });
+
+    setMessage({ type: "success", text: "Form autofilled successfully (personal information preserved)" });
+  };
+
   const onSubmit = async (data: CaregiverFormData) => {
     try {
       setSaving(true);
@@ -148,6 +188,8 @@ export default function CaregiverPublicFormPage() {
         ...data,
       });
       if (res.success) {
+        // Clear localStorage after successful save
+        clearStorage();
         // Redirect to success page
         router.push(
           `/form/questionnaire-success?type=caregiver&applicationId=${params.id}`
@@ -181,12 +223,23 @@ export default function CaregiverPublicFormPage() {
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
           <div className="mb-4">
-            <div className="text-xl font-bold text-slate-900">
-              Caregiver/Nanny Questionnaire
-            </div>
-            <div className="text-sm text-slate-600">Application ID: {params.id}</div>
-            <div className="text-xs text-slate-500 italic">
-              To be completed by the person most frequently caring for the child outside parents.
+            <div className="flex justify-between items-start">
+              <div>
+                <div className="text-xl font-bold text-slate-900">
+                  Caregiver/Nanny Questionnaire
+                </div>
+                <div className="text-sm text-slate-600">Application ID: {params.id}</div>
+                <div className="text-xs text-slate-500 italic">
+                  To be completed by the person most frequently caring for the child outside parents.
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleAutofill}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+              >
+                Autofill Form
+              </button>
             </div>
           </div>
 
