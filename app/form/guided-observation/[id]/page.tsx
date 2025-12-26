@@ -233,8 +233,9 @@ export default function GuidedObservationsProcedurePage() {
     const personalInfoFields = ['childName', 'age', 'date'];
     const preservedValues: Partial<GuidedObservationFormData> = {};
     personalInfoFields.forEach(field => {
-      if (currentValues[field as keyof GuidedObservationFormData]) {
-        preservedValues[field as keyof GuidedObservationFormData] = currentValues[field as keyof GuidedObservationFormData];
+      const fieldKey = field as keyof GuidedObservationFormData;
+      if (currentValues[fieldKey]) {
+        preservedValues[fieldKey] = currentValues[fieldKey] as any;
       }
     });
 

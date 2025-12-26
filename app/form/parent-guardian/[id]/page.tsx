@@ -168,8 +168,9 @@ export default function ParentGuardianPublicFormPage() {
     const personalInfoFields = ['fullName', 'childName', 'date'];
     const preservedValues: Partial<ParentGuardianQuestionnaireFormData> = {};
     personalInfoFields.forEach(field => {
-      if (currentValues[field as keyof ParentGuardianQuestionnaireFormData]) {
-        preservedValues[field as keyof ParentGuardianQuestionnaireFormData] = currentValues[field as keyof ParentGuardianQuestionnaireFormData];
+      const fieldKey = field as keyof ParentGuardianQuestionnaireFormData;
+      if (currentValues[fieldKey]) {
+        preservedValues[fieldKey] = currentValues[fieldKey] as any;
       }
     });
 

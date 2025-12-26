@@ -146,8 +146,9 @@ export default function OutsiderPublicFormPage() {
     const personalInfoFields = ['fullName', 'childName', 'date'];
     const preservedValues: Partial<OutsiderFormData> = {};
     personalInfoFields.forEach(field => {
-      if (currentValues[field as keyof OutsiderFormData]) {
-        preservedValues[field as keyof OutsiderFormData] = currentValues[field as keyof OutsiderFormData];
+      const fieldKey = field as keyof OutsiderFormData;
+      if (currentValues[fieldKey]) {
+        preservedValues[fieldKey] = currentValues[fieldKey] as any;
       }
     });
 

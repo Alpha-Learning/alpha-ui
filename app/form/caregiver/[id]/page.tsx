@@ -159,8 +159,9 @@ export default function CaregiverPublicFormPage() {
     const personalInfoFields = ['fullName', 'childName', 'date'];
     const preservedValues: Partial<CaregiverFormData> = {};
     personalInfoFields.forEach(field => {
-      if (currentValues[field as keyof CaregiverFormData]) {
-        preservedValues[field as keyof CaregiverFormData] = currentValues[field as keyof CaregiverFormData];
+      const fieldKey = field as keyof CaregiverFormData;
+      if (currentValues[fieldKey]) {
+        preservedValues[fieldKey] = currentValues[fieldKey] as any;
       }
     });
 

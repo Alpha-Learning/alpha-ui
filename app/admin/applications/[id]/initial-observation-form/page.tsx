@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, Input, Textarea, FormSectionHeader } from "@/app/components/forms/FormField";
+import ImageUpload from "@/app/components/ImageUpload";
 import { apiService } from "@/app/utils";
 import { getAutofillData } from "@/app/utils/autofillData";
 import { z } from "zod";
@@ -16,6 +17,7 @@ const initialObservationFormSchema = z.object({
   age: z.string().min(1, "Age is required"),
   date: z.string().min(1, "Date is required"),
   examiner: z.string().min(1, "Examiner is required"),
+  childImage: z.string().optional(), // Optional base64 image
   
   // Zone-Based Engagement Grid
   zoneATimeSpent: z.string().min(1, "Zone A time spent is required"),
@@ -106,6 +108,7 @@ export default function InitialObservationFormPage() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [childImage, setChildImage] = useState<string | null>(null);
 
   const {
     register,
@@ -122,6 +125,7 @@ export default function InitialObservationFormPage() {
       age: "",
       date: "",
       examiner: "",
+      childImage: "",
       // Zone-Based Engagement Grid
       zoneATimeSpent: "",
       zoneASelfDirected: "",
@@ -227,6 +231,7 @@ export default function InitialObservationFormPage() {
           age: data.age || "",
           date: data.date || "",
           examiner: data.examiner || "",
+          childImage: data.childImage || "",
           // Zone-Based Engagement Grid
           zoneATimeSpent: data.zoneATimeSpent || "",
           zoneASelfDirected: data.zoneASelfDirected || "",
@@ -299,6 +304,10 @@ export default function InitialObservationFormPage() {
           loggedToSystemDate: data.loggedToSystemDate || "",
           loggedBy: data.loggedBy || "",
         });
+        // Set image preview if image exists
+        if (data.childImage) {
+          setChildImage(data.childImage);
+        }
       } else if (appRes.success && appRes.data) {
         // Auto-fill with application data if no existing form data
         const appData = appRes.data;
@@ -308,6 +317,7 @@ export default function InitialObservationFormPage() {
           age: appData.childAge ? appData.childAge.toString() : "",
           date: new Date().toISOString().split('T')[0],
           examiner: "",
+          childImage: "",
           // Zone-Based Engagement Grid
           zoneATimeSpent: "",
           zoneASelfDirected: "",
@@ -443,8 +453,9 @@ export default function InitialObservationFormPage() {
     const personalInfoFields = ['fullName', 'age', 'date'];
     const preservedValues: Partial<InitialObservationFormData> = {};
     personalInfoFields.forEach(field => {
-      if (currentValues[field as keyof InitialObservationFormData]) {
-        preservedValues[field as keyof InitialObservationFormData] = currentValues[field as keyof InitialObservationFormData];
+      const fieldKey = field as keyof InitialObservationFormData;
+      if (currentValues[fieldKey]) {
+        preservedValues[fieldKey] = currentValues[fieldKey] as any;
       }
     });
 
@@ -538,6 +549,21 @@ export default function InitialObservationFormPage() {
                   <p className="text-red-500 text-sm mt-1">{errors.examiner.message}</p>
                 )}
               </FormField>
+              </div>
+              <div className="mt-4">
+                <ImageUpload
+                  label="Child Image (Optional)"
+                  value={childImage || watch("childImage") || undefined}
+                  onChange={(base64Image) => {
+                    setChildImage(base64Image);
+                    if (base64Image) {
+                      setValue("childImage", base64Image);
+                    } else {
+                      setValue("childImage", "");
+                    }
+                  }}
+                  className="mt-2"
+                />
               </div>
             </section>
 
