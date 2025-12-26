@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
       age,
       date,
       examiner,
+      childImage,
       // Zone-Based Engagement Grid
       zoneATimeSpent,
       zoneASelfDirected,
@@ -107,6 +108,7 @@ export async function POST(request: NextRequest) {
           age,
           date,
           examiner,
+          childImage,
           // Zone-Based Engagement Grid
           zoneATimeSpent,
           zoneASelfDirected,
@@ -189,6 +191,7 @@ export async function POST(request: NextRequest) {
           age,
           date,
           examiner,
+          childImage,
           // Zone-Based Engagement Grid
           zoneATimeSpent,
           zoneASelfDirected,

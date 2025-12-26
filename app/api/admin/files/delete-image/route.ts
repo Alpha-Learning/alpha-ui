@@ -55,7 +55,7 @@ export async function DELETE(request: NextRequest) {
           applicationId: applicationId,
         },
         data: {
-          childObservationImage: null,
+          childImage: null,
         },
       });
     } catch (dbError) {

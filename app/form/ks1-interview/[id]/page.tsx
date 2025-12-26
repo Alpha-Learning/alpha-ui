@@ -279,8 +279,9 @@ export default function KS1InterviewQuestionsPage() {
     const personalInfoFields = ['fullName', 'age', 'date'];
     const preservedValues: Partial<FormValues> = {};
     personalInfoFields.forEach(field => {
-      if (currentValues[field as keyof FormValues]) {
-        preservedValues[field as keyof FormValues] = currentValues[field as keyof FormValues];
+      const fieldKey = field as keyof FormValues;
+      if (currentValues[fieldKey]) {
+        preservedValues[fieldKey] = currentValues[fieldKey] as any;
       }
     });
 

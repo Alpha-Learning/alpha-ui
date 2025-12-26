@@ -149,8 +149,9 @@ const router = useRouter();
     const personalInfoFields = ['fullName', 'date', 'callerName'];
     const preservedValues: Record<string, any> = {};
     personalInfoFields.forEach(field => {
-      if (currentValues[field as keyof ScreeningCallFormData]) {
-        preservedValues[field] = currentValues[field as keyof ScreeningCallFormData];
+      const fieldKey = field as keyof ScreeningCallFormData;
+      if (currentValues[fieldKey]) {
+        preservedValues[field] = currentValues[fieldKey] as any;
       }
     });
 

@@ -375,6 +375,7 @@ model InitialObservationForm {
   age      String
   date     String @default("")
   examiner String @default("")
+  childImage String? // Base64 encoded image
 
   // Zone-Based Engagement Grid
   zoneATimeSpent String
