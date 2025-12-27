@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
 import { verifyToken } from "@/app/lib/auth";
 
-const FRANK_API_BASE_URL = process.env.FRANK_API_BASE_URL || "https://bio.alphalearning.me/api/v1";
-const FRANK_API_KEY = process.env.FRANK_API_KEY || "";
+const FRANK_API_BASE_URL = process.env.FRANK_API_BASE_URL;
+const FRANK_API_KEY = process.env.FRANK_API_KEY;
 
 // Increase the maximum duration for this route to handle long-running AI processing
 // Default is 10 seconds, we need up to 120 seconds for AI assessment generation
@@ -375,11 +375,18 @@ export async function POST(
     const studentName = application.childFullName || 'Unknown Student';
     const studentAge = application.childAge ? parseInt(application.childAge.toString()) : undefined;
 
-    // Check API key first
+    // Check API key and URL first
     if (!FRANK_API_KEY) {
       return NextResponse.json({ 
         success: false, 
         message: "FRANK_API_KEY environment variable is not set. Please configure it in your .env file."
+      }, { status: 500 });
+    }
+
+    if (!FRANK_API_BASE_URL) {
+      return NextResponse.json({ 
+        success: false, 
+        message: "FRANK_API_BASE_URL environment variable is not set. Please configure it in your .env file."
       }, { status: 500 });
     }
 

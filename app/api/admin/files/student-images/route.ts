@@ -2,20 +2,52 @@ import { NextRequest, NextResponse } from "next/server";
 import { S3Client, ListObjectsV2Command, HeadObjectCommand } from "@aws-sdk/client-s3";
 import { prisma } from "@/app/lib/db";
 
-// Initialize S3 client
-const s3Client = new S3Client({
-  region: process.env.AWS_REGION || "me-south-1",
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
-  },
-});
-
 export async function GET(request: NextRequest) {
   try {
-    const projectRoot = process.env.S3_PROJECT_ROOT || "alpha-learning";
-    const bucketName = process.env.S3_BUCKET_NAME || "mls-s3-storage";
-    const region = process.env.AWS_REGION || "me-south-1";
+    // Validate required environment variables
+    const region = process.env.AWS_REGION;
+    const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+    const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+    const projectRoot = process.env.S3_PROJECT_ROOT;
+    const bucketName = process.env.S3_BUCKET_NAME;
+
+    if (!region) {
+      return NextResponse.json({ 
+        success: false, 
+        message: "AWS_REGION environment variable is not set. Please configure it in your .env file." 
+      }, { status: 500 });
+    }
+
+    if (!accessKeyId || !secretAccessKey) {
+      return NextResponse.json({ 
+        success: false, 
+        message: "AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables are not set. Please configure them in your .env file." 
+      }, { status: 500 });
+    }
+
+    if (!bucketName) {
+      return NextResponse.json({ 
+        success: false, 
+        message: "S3_BUCKET_NAME environment variable is not set. Please configure it in your .env file." 
+      }, { status: 500 });
+    }
+
+    if (!projectRoot) {
+      return NextResponse.json({ 
+        success: false, 
+        message: "S3_PROJECT_ROOT environment variable is not set. Please configure it in your .env file." 
+      }, { status: 500 });
+    }
+
+    // Initialize S3 client
+    const s3Client = new S3Client({
+      region: region,
+      credentials: {
+        accessKeyId: accessKeyId,
+        secretAccessKey: secretAccessKey,
+      },
+    });
+
     const prefix = `${projectRoot}/utl/`;
 
     // List all objects in the utl folder
@@ -43,7 +75,7 @@ export async function GET(request: NextRequest) {
         .map(async (obj) => {
           const key = obj.Key || "";
           
-          // Extract application ID from path: alpha-learning/utl/{applicationId}/{applicationId}.jpg
+          // Extract application ID from path: {projectRoot}/utl/{applicationId}/{applicationId}.jpg
           const parts = key.split("/");
           const applicationId = parts.length >= 3 ? parts[parts.length - 2] : "unknown";
 
