@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { apiService } from "@/app/utils";
@@ -125,11 +125,7 @@ function AIAssessmentCard({ applicationId, childName }: {
   const [checking, setChecking] = useState(true);
   const [hasAssessment, setHasAssessment] = useState(false);
 
-  useEffect(() => {
-    checkExistingAssessment();
-  }, [applicationId]);
-
-  const checkExistingAssessment = async () => {
+  const checkExistingAssessment = useCallback(async () => {
     try {
       setChecking(true);
       const response = await apiService.get(`/api/admin/applications/${applicationId}/ai-assessment`);
@@ -149,7 +145,11 @@ function AIAssessmentCard({ applicationId, childName }: {
     } finally {
       setChecking(false);
     }
-  };
+  }, [applicationId]);
+
+  useEffect(() => {
+    checkExistingAssessment();
+  }, [checkExistingAssessment]);
 
   const handleGenerateAssessment = async (e: React.MouseEvent) => {
     e.stopPropagation();

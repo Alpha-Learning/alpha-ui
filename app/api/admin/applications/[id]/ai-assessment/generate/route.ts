@@ -2,8 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
 import { verifyToken } from "@/app/lib/auth";
 
-const FRANK_API_BASE_URL = process.env.FRANK_API_BASE_URL || "https://bio.alphalearning.me/api/v1";
-const FRANK_API_KEY = process.env.FRANK_API_KEY || "";
+const FRANK_API_BASE_URL = process.env.FRANK_API_BASE_URL;
+const FRANK_API_KEY = process.env.FRANK_API_KEY;
+
+// Increase the maximum duration for this route to handle long-running AI processing
+// Default is 10 seconds, we need up to 120 seconds for AI assessment generation
+// Note: If using nginx as a reverse proxy, you may also need to increase nginx timeout:
+// proxy_read_timeout 120s; proxy_connect_timeout 120s; proxy_send_timeout 120s;
+export const maxDuration = 120;
+export const dynamic = 'force-dynamic';
 
 // Helper function to create timeout signal (compatible with older Node.js versions)
 function createTimeoutSignal(ms: number): AbortSignal {
@@ -365,14 +372,21 @@ export async function POST(
 
     // Use student_ prefix to match GET route format
     const studentId = `student_${applicationId}`;
-    const studentName = application.childFullName || 'Unknown Student';
+    const studentName = application.childFullName || '-';
     const studentAge = application.childAge ? parseInt(application.childAge.toString()) : undefined;
 
-    // Check API key first
+    // Check API key and URL first
     if (!FRANK_API_KEY) {
       return NextResponse.json({ 
         success: false, 
         message: "FRANK_API_KEY environment variable is not set. Please configure it in your .env file."
+      }, { status: 500 });
+    }
+
+    if (!FRANK_API_BASE_URL) {
+      return NextResponse.json({ 
+        success: false, 
+        message: "FRANK_API_BASE_URL environment variable is not set. Please configure it in your .env file."
       }, { status: 500 });
     }
 

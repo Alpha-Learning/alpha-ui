@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
 import { verifyToken } from "@/app/lib/auth";
 
-const FRANK_API_BASE_URL = process.env.FRANK_API_BASE_URL || "https://bio.alphalearning.me/api/v1";
-const FRANK_API_KEY = process.env.FRANK_API_KEY || "";
+const FRANK_API_BASE_URL = process.env.FRANK_API_BASE_URL;
+const FRANK_API_KEY = process.env.FRANK_API_KEY;
 
 // Helper function to create timeout signal (compatible with older Node.js versions)
 function createTimeoutSignal(ms: number): AbortSignal {
@@ -27,6 +27,21 @@ export async function GET(
     const user = verifyToken(token);
     if (!user || user.role !== 'admin') {
       return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
+    }
+
+    // Check API key and URL first
+    if (!FRANK_API_KEY) {
+      return NextResponse.json({ 
+        success: false, 
+        message: "FRANK_API_KEY environment variable is not set. Please configure it in your .env file."
+      }, { status: 500 });
+    }
+
+    if (!FRANK_API_BASE_URL) {
+      return NextResponse.json({ 
+        success: false, 
+        message: "FRANK_API_BASE_URL environment variable is not set. Please configure it in your .env file."
+      }, { status: 500 });
     }
 
     const { id: applicationId } = await params;
