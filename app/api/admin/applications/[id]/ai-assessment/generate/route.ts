@@ -5,6 +5,13 @@ import { verifyToken } from "@/app/lib/auth";
 const FRANK_API_BASE_URL = process.env.FRANK_API_BASE_URL || "https://bio.alphalearning.me/api/v1";
 const FRANK_API_KEY = process.env.FRANK_API_KEY || "";
 
+// Increase the maximum duration for this route to handle long-running AI processing
+// Default is 10 seconds, we need up to 120 seconds for AI assessment generation
+// Note: If using nginx as a reverse proxy, you may also need to increase nginx timeout:
+// proxy_read_timeout 120s; proxy_connect_timeout 120s; proxy_send_timeout 120s;
+export const maxDuration = 120;
+export const dynamic = 'force-dynamic';
+
 // Helper function to create timeout signal (compatible with older Node.js versions)
 function createTimeoutSignal(ms: number): AbortSignal {
   const controller = new AbortController();
