@@ -173,8 +173,8 @@ export default function FilesPage() {
                   <div className="p-3 bg-white space-y-1.5">
                     <div>
                       <div className="text-[10px] font-semibold text-slate-500 uppercase">Student Name</div>
-                      <div className="text-xs font-semibold text-slate-900 truncate" title={image.childName || "Unknown"}>
-                        {image.childName || "Unknown Student"}
+                      <div className="text-xs font-semibold text-slate-900 truncate" title={image.childName || "-"}>
+                        {image.childName || "-"}
                       </div>
                     </div>
                     <div>

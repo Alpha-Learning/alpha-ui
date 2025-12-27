@@ -372,7 +372,7 @@ export async function POST(
 
     // Use student_ prefix to match GET route format
     const studentId = `student_${applicationId}`;
-    const studentName = application.childFullName || 'Unknown Student';
+    const studentName = application.childFullName || '-';
     const studentAge = application.childAge ? parseInt(application.childAge.toString()) : undefined;
 
     // Check API key and URL first
