@@ -617,6 +617,7 @@ export default function AdminApplicationDetailPage() {
         school_year: normalizeSchoolYear(data.childSchoolYear),
         current_school: data.childCurrentSchool || null,
         school_type: data.childSchoolType || null,
+        parent_pwd: (data as any).parentPassword || null,
       };
 
       // Use apiService to call the backend proxy endpoint

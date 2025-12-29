@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { prisma } from "@/app/lib/db";
 
 export async function POST(req: Request) {
   try {
@@ -17,6 +18,32 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     const { sessionSid, parent, student, applicationId } = body;
+    
+    // Fetch parent password from database using applicationId
+    let parentPwd = null;
+    if (applicationId) {
+      try {
+        const application = await prisma.application.findUnique({
+          where: { id: applicationId },
+          include: {
+            user: {
+              select: {
+                password: true,
+              },
+            },
+          },
+        });
+        parentPwd = application?.user?.password || null;
+      } catch (error) {
+        console.error("Error fetching parent password:", error);
+        // Continue without password if fetch fails
+      }
+    }
+    
+    // Also check if parent_pwd was passed directly in student object (for backward compatibility)
+    if (!parentPwd && student?.parent_pwd) {
+      parentPwd = student.parent_pwd;
+    }
 
     if (!sessionSid) {
       return NextResponse.json(
@@ -136,6 +163,8 @@ export async function POST(req: Request) {
           school_type: normalizeString(student.school_type) || null,
           // Temporary student ID should match our application ID, sent with other student fields
           temp_student: applicationId ?? null,
+          // Parent password from pre-assessment form
+          parent_pwd: parentPwd ? String(parentPwd) : null,
         },
       },
       id: Math.floor(Math.random() * 100000),

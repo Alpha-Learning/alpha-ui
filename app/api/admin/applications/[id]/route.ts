@@ -11,10 +11,25 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     if (!user || user.role !== 'admin') return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
 
     const { id } = await params;
-    const app = await prisma.application.findUnique({ where: { id } });
+    const app = await prisma.application.findUnique({ 
+      where: { id },
+      include: {
+        user: {
+          select: {
+            password: true,
+          },
+        },
+      },
+    });
     if (!app) return NextResponse.json({ success: false, message: 'Not found' }, { status: 404 });
 
-    return NextResponse.json({ success: true, data: app });
+    // Include password in the response
+    const appWithPassword = {
+      ...app,
+      parentPassword: app.user?.password || null,
+    };
+
+    return NextResponse.json({ success: true, data: appWithPassword });
   } catch (e) {
     console.error('Admin get app detail error:', e);
     return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
