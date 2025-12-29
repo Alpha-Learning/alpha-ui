@@ -1,10 +1,32 @@
 import { NextResponse } from "next/server";
 
-const ODOO_BASE_URL = process.env.ODOO_BASE_URL || "https://smslive.alphalearning.me";
-const ODOO_DB = process.env.ODOO_DB || "sms_new_db";
-
 export async function POST(req: Request) {
   try {
+    const ODOO_BASE_URL = process.env.ODOO_BASE_URL;
+    const ODOO_DB = process.env.ODOO_DB;
+
+    if (!ODOO_BASE_URL) {
+      console.error("ODOO_BASE_URL environment variable is not set");
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Server configuration error",
+        },
+        { status: 500 }
+      );
+    }
+
+    if (!ODOO_DB) {
+      console.error("ODOO_DB environment variable is not set");
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Server configuration error",
+        },
+        { status: 500 }
+      );
+    }
+
     const { email, password } = await req.json();
 
     const payload = {

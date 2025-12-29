@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
 
-const ODOO_BASE_URL = process.env.ODOO_BASE_URL || "https://smslive.alphalearning.me";
-
 export async function POST(req: Request) {
   try {
+    const ODOO_BASE_URL = process.env.ODOO_BASE_URL;
+
     if (!ODOO_BASE_URL) {
+      console.error("ODOO_BASE_URL environment variable is not set");
       return NextResponse.json(
         {
           success: false,
-          message: "ODOO_BASE_URL is not configured",
+          message: "Server configuration error",
         },
         { status: 500 }
       );
