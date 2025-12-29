@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const ODOO_BASE_URL = process.env.ODOO_BASE_URL || "https://smslive.alpheraacademy.edu.bh";
+const ODOO_BASE_URL = process.env.ODOO_BASE_URL || "https://smslive.alphalearning.me";
 const ODOO_DB = process.env.ODOO_DB || "sms_new_db";
 
 export async function POST(req: Request) {
@@ -14,22 +14,15 @@ export async function POST(req: Request) {
         login: email,
         password: password,
       },
-    };    
-const response = await fetch(`${ODOO_BASE_URL}/web/session/authenticate`, {
-    method: "POST",
-    body: JSON.stringify({
-      jsonrpc: "2.0",
-    //   method: "call",
-      params: {
-        service: "common",
-        method: "login",
-        args: [ODOO_DB, email, password],
+    };
+    
+    const response = await fetch(`${ODOO_BASE_URL}/web/session/authenticate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    }),
-  });
-  
-  
-    console.log("response", response);
+      body: JSON.stringify(payload),
+    });
 
     const data = await response.json();
     console.log("data", data);
@@ -40,15 +33,18 @@ const response = await fetch(`${ODOO_BASE_URL}/web/session/authenticate`, {
           success: false,
           message: data.error?.message || data.error?.data?.message || "Invalid credentials",
         },
-        { status: 401 }
+        { status: 200 }
       );
     }
 
     const sessionInfo = data.result;
+    
+    // Odoo uses session_sid (with underscore), not session_id
+    const sessionToken = sessionInfo.session_sid || sessionInfo.session_id || sessionInfo.uid || "authenticated";
 
     return NextResponse.json({
       success: true,
-      token: sessionInfo.session_id || sessionInfo.uid || "authenticated",
+      token: sessionToken,
       message: "Login successful",
       session: sessionInfo,
     });

@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { apiService } from "@/app/utils";
 import OdooLoginModal from "@/app/components/OdooLoginModal";
+import toast from "react-hot-toast";
 
 interface UserData {
   id: string;
@@ -20,6 +21,9 @@ export default function UserDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showOdooModal, setShowOdooModal] = useState(false);
+  const [isOdooLoggedIn, setIsOdooLoggedIn] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [applicationData, setApplicationData] = useState<any>(null);
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -31,6 +35,24 @@ export default function UserDashboard() {
         
         if (response.success) {
           setUserData(response.data);
+          
+          // If user has an application ID, try to fetch application details for syncing
+          if (response.data.applicationId) {
+            try {
+              // Try to get application from user's applications list
+              const appsResponse = await apiService.get("/api/applications/user");
+              if (appsResponse.success && appsResponse.data?.applications) {
+                const app = appsResponse.data.applications.find(
+                  (a: any) => a.id === response.data.applicationId
+                );
+                if (app) {
+                  setApplicationData(app);
+                }
+              }
+            } catch (err) {
+              console.log("Could not fetch application details:", err);
+            }
+          }
         } else {
           setError(response.message || "Failed to load user data");
         }
@@ -44,6 +66,167 @@ export default function UserDashboard() {
 
     loadUserData();
   }, []);
+
+  // Check Odoo login status
+  useEffect(() => {
+    const checkOdooLoginStatus = () => {
+      const odooToken = localStorage.getItem("odooToken");
+      setIsOdooLoggedIn(!!odooToken);
+    };
+
+    checkOdooLoginStatus();
+    // Also check when storage changes (e.g., after login)
+    window.addEventListener("storage", checkOdooLoginStatus);
+    return () => window.removeEventListener("storage", checkOdooLoginStatus);
+  }, []);
+
+  // Helper function to map relation to child ID
+  const mapRelationToChildId = (relation: string | null): number => {
+    if (!relation) return 1;
+    const relationLower = relation.toLowerCase().trim();
+    const mapping: Record<string, number> = {
+      "father": 1, "dad": 1, "mother": 2, "mom": 2, "parent": 1, "guardian": 3, "other": 4,
+    };
+    for (const [key, id] of Object.entries(mapping)) {
+      if (relationLower.includes(key)) return id;
+    }
+    const numValue = parseInt(relation);
+    return !isNaN(numValue) ? numValue : 1;
+  };
+
+  // Helper function to normalize gender
+  const normalizeGender = (gender: string | null | undefined): string | null => {
+    if (!gender) return null;
+    const genderLower = gender.toLowerCase();
+    if (genderLower === "f" || genderLower === "m") return genderLower;
+    if (genderLower.startsWith("f") || genderLower === "female") return "f";
+    if (genderLower.startsWith("m") || genderLower === "male") return "m";
+    return null;
+  };
+
+  // Helper function to validate and format school_year
+  const normalizeSchoolYear = (schoolYear: string | null | undefined): string | null => {
+    if (!schoolYear) return null;
+    const yearStr = String(schoolYear).trim();
+    const yearMatch = yearStr.match(/^(\d{4})$/);
+    if (yearMatch) return yearMatch[1];
+    const dateMatch = yearStr.match(/^(\d{4})-\d{2}-\d{2}$/);
+    if (dateMatch) return dateMatch[1];
+    const parsedDate = new Date(schoolYear);
+    if (!isNaN(parsedDate.getTime())) return String(parsedDate.getFullYear());
+    return null;
+  };
+
+  // Handle syncing application to Odoo
+  const handleSyncToOdoo = async (): Promise<boolean> => {
+    if (!applicationData || !userData?.applicationId) {
+      toast.error("Application data not available for syncing");
+      return false;
+    }
+
+    const sessionSid = localStorage.getItem('odooToken');
+    if (!sessionSid) {
+      toast.error("Please login to Odoo first");
+      return false;
+    }
+
+    try {
+      setSyncing(true);
+      
+      const parent = {
+        full_name: applicationData.parentFullName || userData.name || "",
+        email: applicationData.parentEmail || userData.email || "",
+        phone: userData.phone || "",
+        relation_to_child_id: 1, // Default to parent
+      };
+
+      const student = {
+        full_name: applicationData.childFullName || "",
+        date_of_birth: null, // May not be available in user dashboard data
+        age: applicationData.childAge || null,
+        gender: normalizeGender(null),
+        school_year: normalizeSchoolYear(applicationData.childGrade || null),
+        current_school: null,
+        school_type: null,
+      };
+
+      const response = await apiService.post("/api/odoo/admission/create", {
+        sessionSid,
+        parent,
+        student,
+        applicationId: userData.applicationId,
+      });
+
+      if (response.success && response.data) {
+        // Toast will be shown by the caller in automatic flow
+        return true;
+      } else {
+        const errorMsg = response.message || "Failed to create admission in Odoo";
+        console.error("Odoo sync failed:", response);
+        toast.error(errorMsg, {
+          style: {
+            background: "#ef4444",
+            color: "#fff",
+          },
+        });
+        return false;
+      }
+    } catch (error: any) {
+      const errorMsg = error.message || "Failed to sync to Odoo";
+      console.error("Odoo sync error:", error);
+      toast.error(errorMsg, {
+        style: {
+          background: "#ef4444",
+          color: "#fff",
+        },
+      });
+      return false;
+    } finally {
+      setSyncing(false);
+    }
+  };
+
+  // Handle Odoo logout
+  const handleOdooLogout = async (suppressToast: boolean = false) => {
+    try {
+      const odooToken = localStorage.getItem("odooToken");
+      
+      if (odooToken) {
+        await apiService.post("/api/odoo/logout", {
+          sessionToken: odooToken,
+        });
+      }
+
+      // Clear local storage
+      localStorage.removeItem("odooToken");
+      localStorage.removeItem("odooSession");
+      setIsOdooLoggedIn(false);
+      
+      if (!suppressToast) {
+        toast.success("Successfully logged out from Odoo!", {
+          style: {
+            background: "#3b82f6",
+            color: "#fff",
+          },
+        });
+      }
+    } catch (error: any) {
+      console.error("Odoo logout error:", error);
+      // Still clear local storage even if API call fails
+      localStorage.removeItem("odooToken");
+      localStorage.removeItem("odooSession");
+      setIsOdooLoggedIn(false);
+      
+      if (!suppressToast) {
+        toast.success("Logged out from Odoo", {
+          style: {
+            background: "#3b82f6",
+            color: "#fff",
+          },
+        });
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -128,7 +311,7 @@ export default function UserDashboard() {
             </p>
           </div>
 
-          {/* Odoo Login Button - Show when all forms are completed */}
+          {/* Odoo Approve/Logout Button - Show when all forms are completed */}
           {userData?.allFormsCompleted && userData?.applicationStatus === 'completed' && (
             <div className="pt-4 border-t border-gray-200">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -136,27 +319,52 @@ export default function UserDashboard() {
                   🎉 All Forms Completed!
                 </h4>
                 <p className="text-sm text-blue-800 mb-3">
-                  Your application has been completed. Login to Odoo to sync your registration data.
+                  {isOdooLoggedIn 
+                    ? "You are logged in to Odoo. You can logout when done."
+                    : "Your application has been completed. Approve student to sync your registration data."
+                  }
                 </p>
-                <button
-                  onClick={() => setShowOdooModal(true)}
-                  className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                {isOdooLoggedIn ? (
+                  <button
+                    onClick={() => handleOdooLogout(false)}
+                    className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium flex items-center justify-center gap-2"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 10V3L4 14h7v7l9-11h-7z"
-                    />
-                  </svg>
-                  Login to Odoo
-                </button>
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    Logout Odoo
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setShowOdooModal(true)}
+                    className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Approve Student
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -207,10 +415,101 @@ export default function UserDashboard() {
       {/* Odoo Login Modal */}
       <OdooLoginModal
         isOpen={showOdooModal}
-        onClose={() => setShowOdooModal(false)}
-        onSuccess={() => {
-          // Optionally refresh data or show success message
-          console.log("Odoo login successful");
+        onClose={() => {
+          setShowOdooModal(false);
+          // Check login status after modal closes
+          const odooToken = localStorage.getItem("odooToken");
+          setIsOdooLoggedIn(!!odooToken);
+        }}
+        onSuccess={async () => {
+          // Update login status after successful login
+          setIsOdooLoggedIn(true);
+          
+          // Step 1: Show login success (blue/info)
+          toast("✅ Successfully logged in to Odoo!", {
+            icon: "🔵",
+            style: {
+              background: "#3b82f6",
+              color: "#fff",
+            },
+            duration: 2000,
+          });
+          
+          // Wait 1.5 seconds before starting sync
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          
+          if (applicationData && userData?.applicationId) {
+            // Step 2: Show syncing message (yellow/loading)
+            toast.loading("⏳ Syncing application to Odoo...", { 
+              id: "syncing",
+              style: {
+                background: "#f59e0b",
+                color: "#fff",
+              },
+            });
+            
+            // Wait 1 second before actually syncing (for visual effect)
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            const syncSuccess = await handleSyncToOdoo();
+            
+            if (syncSuccess) {
+              // Dismiss loading toast
+              toast.dismiss("syncing");
+              
+              // Wait 0.5 seconds
+              await new Promise(resolve => setTimeout(resolve, 500));
+              
+              // Step 3: Show sync success (green)
+              toast.success("✅ Sync completed successfully!", {
+                style: {
+                  background: "#10b981",
+                  color: "#fff",
+                },
+                duration: 2000,
+              });
+              
+              // Wait 2 seconds before showing logout message
+              await new Promise(resolve => setTimeout(resolve, 2000));
+              
+              // Step 4: Show logout message (blue/info)
+              toast("🔄 Logging out from Odoo...", {
+                icon: "🔵",
+                style: {
+                  background: "#3b82f6",
+                  color: "#fff",
+                },
+                duration: 2000,
+              });
+              
+              // Wait 1.5 seconds before actually logging out
+              await new Promise(resolve => setTimeout(resolve, 1500));
+              
+              await handleOdooLogout(true); // suppressToast = true
+              
+              // Wait 0.5 seconds
+              await new Promise(resolve => setTimeout(resolve, 500));
+              
+              // Step 5: Show final success (green)
+              toast.success("🎉 Process completed successfully!", {
+                style: {
+                  background: "#10b981",
+                  color: "#fff",
+                },
+                duration: 3000,
+              });
+            } else {
+              toast.dismiss("syncing");
+              // Don't logout if sync failed - let user try again
+            }
+          } else {
+            toast.error("❌ Application data not available. Please contact support.", {
+              style: {
+                background: "#ef4444",
+                color: "#fff",
+              },
+            });
+          }
         }}
       />
     </div>

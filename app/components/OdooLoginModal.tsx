@@ -1,10 +1,7 @@
 "use client";
 import { useState } from "react";
-import axios from "axios";
 import toast from "react-hot-toast";
-
-const ODOO_BASE_URL = process.env.NEXT_PUBLIC_ODOO_BASE_URL || "https://smslive.alpheraacademy.edu.bh";
-const ODOO_DB = process.env.NEXT_PUBLIC_ODOO_DB || "sms_new_db";
+import { apiService } from "@/app/utils";
 
 interface OdooLoginModalProps {
   isOpen: boolean;
@@ -32,70 +29,34 @@ export default function OdooLoginModal({
     try {
       setLoading(true);
       
-      // Call Odoo API directly with axios
-      const payload = {
-        jsonrpc: "2.0",
-        method: "call",
-        params: {
-          db: ODOO_DB,
-          login: email,
-          password: password,
-        },
-        id: Math.floor(Math.random() * 100000),
-      };
+      // Use our Next.js API route to login to Odoo
+      const response = await apiService.post("/api/odoo/login", {
+        email,
+        password,
+      });
 
-      const response = await axios.post(
-        `${ODOO_BASE_URL}/web/session/authenticate`,
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-
-      const data = response.data;
-
-      if (data.error || !data.result) {
-        toast.error(data.error?.message || data.error?.data?.message || "Invalid credentials");
+      if (!response.success) {
+        toast.error(response.message || "Invalid credentials");
         return;
       }
 
-      const sessionInfo = data.result;
+      // Extract session token from response
+      const sessionToken = response.token;
       
-      // Try to extract session_id from response headers (Set-Cookie) first
-      let sessionId = null;
-      const setCookieHeader = response.headers['set-cookie'];
-      if (setCookieHeader) {
-        // set-cookie can be a string or array
-        const cookies = Array.isArray(setCookieHeader) ? setCookieHeader : [setCookieHeader];
-        for (const cookie of cookies) {
-          const match = cookie.match(/session_id=([^;]+)/);
-          if (match && match[1]) {
-            sessionId = match[1];
-            break;
-          }
-        }
-      }
-      
-      // Fallback to extracting from response body
-      if (!sessionId) {
-        sessionId = sessionInfo.session_sid || sessionInfo.session_id || sessionInfo.uid;
-      }
-      
-      if (!sessionId) {
-        console.error("Session info:", sessionInfo);
+      if (!sessionToken) {
+        console.error("Login response:", response);
         toast.error("Failed to get session token from Odoo");
         return;
       }
 
       // Store the login-generated token for use in cookie headers
       // This token will be passed as session_id in the Cookie header for subsequent API calls
-      localStorage.setItem("odooToken", String(sessionId));
-      localStorage.setItem("odooSession", JSON.stringify(sessionInfo));
+      localStorage.setItem("odooToken", String(sessionToken));
+      if (response.session) {
+        localStorage.setItem("odooSession", JSON.stringify(response.session));
+      }
       
-      console.log("Odoo login successful. Session token stored:", sessionId);
+      console.log("Odoo login successful. Session token stored:", sessionToken);
       
       toast.success("Successfully logged in to Odoo!");
       onSuccess?.();
@@ -106,7 +67,7 @@ export default function OdooLoginModal({
       setPassword("");
     } catch (error: any) {
       console.error("Odoo login error:", error);
-      toast.error(error.response?.data?.error?.message || error.message || "Failed to connect to Odoo server");
+      toast.error(error.message || "Failed to connect to Odoo server");
     } finally {
       setLoading(false);
     }
