@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
 
-const ODOO_BASE_URL = process.env.ODOO_BASE_URL || "https://smslive.alpheraacademy.edu.bh";
-
 export async function POST(req: Request) {
   try {
+    const ODOO_BASE_URL = process.env.ODOO_BASE_URL;
+
     if (!ODOO_BASE_URL) {
+      console.error("ODOO_BASE_URL environment variable is not set");
       return NextResponse.json(
         {
           success: false,
-          message: "ODOO_BASE_URL is not configured",
+          message: "Server configuration error",
         },
         { status: 500 }
       );
@@ -141,7 +142,9 @@ export async function POST(req: Request) {
     };
 
     // Call Odoo admission API with session_sid as cookie
-    const odooUrl = `${ODOO_BASE_URL}/api/admission/create`;
+    // Handle trailing slash in base URL
+    const baseUrl = ODOO_BASE_URL.endsWith('/') ? ODOO_BASE_URL.slice(0, -1) : ODOO_BASE_URL;
+    const odooUrl = `${baseUrl}/api/admission/create`;
     console.log("Calling Odoo API:", odooUrl);
     console.log("Payload:", JSON.stringify(payload, null, 2));
     
@@ -160,12 +163,47 @@ export async function POST(req: Request) {
     const responseText = await response.text();
     console.log("Odoo response text:", responseText.substring(0, 500));
     
+    // Handle 404 - endpoint doesn't exist on Odoo server
+    if (response.status === 404) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `Odoo endpoint not found: ${odooUrl}. Please ensure the /api/admission/create endpoint is configured in Odoo.`,
+          error: {
+            type: "endpoint_not_found",
+            message: "The /api/admission/create endpoint does not exist on the Odoo server",
+            url: odooUrl,
+            status: 404,
+          },
+        },
+        { status: 404 }
+      );
+    }
+    
     let data;
     try {
       data = JSON.parse(responseText);
     } catch (parseError) {
       console.error("Failed to parse Odoo response as JSON:", parseError);
       console.error("Full response text:", responseText);
+      
+      // If it's an HTML response (likely an error page), provide a clearer message
+      if (responseText.trim().startsWith('<!') || responseText.trim().startsWith('<html')) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: `Odoo server returned an HTML error page (${response.status}). The endpoint ${odooUrl} may not exist or there's a server configuration issue.`,
+            error: {
+              type: "html_error_response",
+              message: "Odoo returned HTML instead of JSON",
+              status: response.status,
+              url: odooUrl,
+            },
+          },
+          { status: response.status || 500 }
+        );
+      }
+      
       return NextResponse.json(
         {
           success: false,
