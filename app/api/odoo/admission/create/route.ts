@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
+import { sendOdooSyncSuccessEmail } from "@/app/lib/emailService";
 
 export async function POST(req: Request) {
   try {
@@ -267,6 +268,41 @@ export async function POST(req: Request) {
         },
         { status: response.status || 500 }
       );
+    }
+
+    // Send approval email to parent after successful sync
+    if (applicationId) {
+      try {
+        const application = await prisma.application.findUnique({
+          where: { id: applicationId },
+          include: {
+            user: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
+          },
+        });
+
+        if (application?.user?.email && application?.user?.name) {
+          const emailSent = await sendOdooSyncSuccessEmail({
+            parentName: application.user.name,
+            parentEmail: application.user.email,
+            childName: application.childFullName || student.full_name || "Your child",
+            applicationId: applicationId,
+          });
+
+          if (emailSent) {
+            console.log(`Approval email sent successfully to ${application.user.email}`);
+          } else {
+            console.error(`Failed to send approval email to ${application.user.email}`);
+          }
+        }
+      } catch (emailError) {
+        console.error("Error sending approval email:", emailError);
+        // Don't fail the request if email fails
+      }
     }
 
     return NextResponse.json({

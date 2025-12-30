@@ -154,20 +154,78 @@ function AIAssessmentCard({ applicationId, childName }: {
     e.stopPropagation();
     try {
       setLoading(true);
-      const response = await apiService.post(`/api/admin/applications/${applicationId}/ai-assessment/generate`);
-      if (response.success) {
-        toast.success("AI Assessment generated successfully!");
-        setHasAssessment(true);
-        // Navigate to assessment page after a short delay
-        setTimeout(() => {
-          window.location.href = `/admin/applications/${applicationId}/ai-assessment`;
-        }, 500);
-      } else {
-        toast.error(response.message || "Failed to generate assessment");
+      
+      // Create an AbortController with a 130-second timeout (backend has 120s maxDuration)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 130000); // 130 seconds
+      
+      try {
+        // Use fetch directly with timeout signal for this long-running request
+        const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+        const response = await fetch(`/api/admin/applications/${applicationId}/ai-assessment/generate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token && { 'Authorization': `Bearer ${token}` }),
+          },
+          signal: controller.signal,
+        });
+        
+        clearTimeout(timeoutId);
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          toast.success("AI Assessment generated successfully!");
+          setHasAssessment(true);
+          // Navigate to assessment page after a short delay
+          setTimeout(() => {
+            window.location.href = `/admin/applications/${applicationId}/ai-assessment`;
+          }, 500);
+        } else {
+          toast.error(data.message || "Failed to generate assessment");
+        }
+      } catch (fetchError: any) {
+        clearTimeout(timeoutId);
+        
+        // If the request was aborted (timeout), check if assessment was actually created
+        if (fetchError.name === 'AbortError' || fetchError.message?.includes('aborted')) {
+          console.log("Request timed out, checking if assessment was created...");
+          
+          // Wait a moment for the backend to finish
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          
+          // Check if assessment was actually created
+          try {
+            const checkResponse = await apiService.get(`/api/admin/applications/${applicationId}/ai-assessment`);
+            if (checkResponse.success && checkResponse.data) {
+              // Assessment was created successfully despite timeout
+              toast.success("AI Assessment generated successfully! (This may take a moment to appear)");
+              setHasAssessment(true);
+              setTimeout(() => {
+                window.location.href = `/admin/applications/${applicationId}/ai-assessment`;
+              }, 500);
+              return;
+            }
+          } catch (checkError) {
+            console.error("Could not verify assessment creation:", checkError);
+          }
+          
+          toast.error("Generation is taking longer than expected. Please wait a moment and refresh the page to check if it was created.");
+        } else {
+          throw fetchError; // Re-throw other errors
+        }
       }
     } catch (error: any) {
       console.error("Error generating assessment:", error);
-      toast.error(error?.response?.data?.message || "Failed to generate assessment");
+      const errorMessage = error?.message || "Failed to generate assessment";
+      
+      // If it's a network/timeout error, provide helpful message
+      if (errorMessage.includes('aborted') || errorMessage.includes('timeout') || errorMessage.includes('network')) {
+        toast.error("Generation is taking longer than expected. Please wait a moment and refresh the page to check if it was created.");
+      } else {
+        toast.error(errorMessage);
+      }
     } finally {
       setLoading(false);
     }

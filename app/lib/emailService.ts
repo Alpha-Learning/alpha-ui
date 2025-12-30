@@ -744,6 +744,340 @@ export async function sendPasswordResetEmail(
   }
 }
 
+export interface OdooSyncEmailData {
+  parentName: string;
+  parentEmail: string;
+  childName: string;
+  applicationId: string;
+}
+
+export async function sendOdooSyncSuccessEmail(data: OdooSyncEmailData): Promise<boolean> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const dashboardUrl = `${baseUrl}/dashboard/user`;
+    
+    const mailOptions = {
+      from: `"Alphera Academy" <${emailConfig.auth.user}>`,
+      to: data.parentEmail,
+      subject: `🎉 Application Approved - Welcome to Alphera Academy!`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Application Approved - Alphera Academy</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8EC0C2, #142954); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .success-box { background: #d4edda; border: 2px solid #28a745; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center; }
+            .success-box h2 { color: #155724; margin: 0 0 10px 0; }
+            .info-box { background: white; border: 2px solid #8EC0C2; border-radius: 8px; padding: 20px; margin: 20px 0; }
+            .details-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            .details-table td { padding: 10px; border-bottom: 1px solid #eee; }
+            .details-table td:first-child { font-weight: bold; width: 40%; color: #142954; }
+            .button { 
+              display: inline-block; 
+              background: linear-gradient(135deg, #8EC0C2, #142954); 
+              color: white !important; 
+              padding: 15px 30px; 
+              text-decoration: none; 
+              border-radius: 5px; 
+              font-weight: bold; 
+              margin: 10px 0;
+            }
+            .button-container { text-align: center; margin: 30px 0; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            .celebration { font-size: 48px; margin: 20px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🎓 Alphera Academy</h1>
+              <h2>Application Approved!</h2>
+            </div>
+            
+            <div class="content">
+              <div class="success-box">
+                <div class="celebration">🎉</div>
+                <h2>Congratulations!</h2>
+                <p style="color: #155724; font-size: 18px; margin: 10px 0;">Your application has been approved!</p>
+              </div>
+              
+              <p>Dear ${data.parentName},</p>
+              
+              <p>We are thrilled to inform you that your application for <strong>${data.childName}</strong> has been reviewed and <strong>approved</strong>! Your child's admission has been successfully processed and synced to our student management system.</p>
+              
+              <div class="info-box">
+                <h3>📋 Application Details</h3>
+                <table class="details-table">
+                  <tr>
+                    <td>Child's Name:</td>
+                    <td><strong>${data.childName}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Application ID:</td>
+                    <td>${data.applicationId}</td>
+                  </tr>
+                  <tr>
+                    <td>Status:</td>
+                    <td><strong style="color: #28a745;">✅ Approved</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Date Approved:</td>
+                    <td>${new Date().toLocaleDateString('en-US', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}</td>
+                  </tr>
+                </table>
+              </div>
+              
+              <h3>🎯 What's Next?</h3>
+              <ul style="line-height: 2;">
+                <li>Your child's information has been successfully added to our student management system</li>
+                <li>You will receive further communication regarding enrollment procedures</li>
+                <li>Our team will be in touch with you shortly to discuss the next steps</li>
+                <li>You can access your dashboard to view your application status and updates</li>
+              </ul>
+              
+              <div class="button-container">
+                <a href="${dashboardUrl}" class="button" style="color: white !important;">View Your Dashboard</a>
+              </div>
+              
+              <p>We are excited to welcome <strong>${data.childName}</strong> to the Alphera Academy family! Our team is committed to providing an exceptional learning experience.</p>
+              
+              <p>If you have any questions or need assistance, please don't hesitate to contact us.</p>
+              
+              <p>Best regards,<br>
+              <strong>The Alphera Academy Team</strong></p>
+            </div>
+            
+            <div class="footer">
+              <p>This email was sent regarding your application for Alphera Academy.</p>
+              <p>If you have any questions, please contact us at info@alpheraacademy.edu.bh</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `
+        Application Approved - Alphera Academy
+        
+        Dear ${data.parentName},
+        
+        Congratulations! We are thrilled to inform you that your application for ${data.childName} has been reviewed and APPROVED!
+        
+        APPLICATION DETAILS:
+        Child's Name: ${data.childName}
+        Application ID: ${data.applicationId}
+        Status: ✅ Approved
+        Date Approved: ${new Date().toLocaleDateString()}
+        
+        WHAT'S NEXT?
+        - Your child's information has been successfully added to our student management system
+        - You will receive further communication regarding enrollment procedures
+        - Our team will be in touch with you shortly to discuss the next steps
+        - You can access your dashboard to view your application status and updates
+        
+        View Your Dashboard: ${dashboardUrl}
+        
+        We are excited to welcome ${data.childName} to the Alphera Academy family!
+        
+        If you have any questions or need assistance, please don't hesitate to contact us.
+        
+        Best regards,
+        The Alphera Academy Team
+        
+        ---
+        This email was sent regarding your application for Alphera Academy.
+        If you have any questions, please contact us at info@alpheraacademy.edu.bh
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Odoo sync success email sent successfully to:', data.parentEmail);
+    return true;
+  } catch (error) {
+    console.error('Error sending Odoo sync success email:', error);
+    return false;
+  }
+}
+
+export interface ApplicationRejectionEmailData {
+  parentName: string;
+  parentEmail: string;
+  childName: string;
+  applicationId: string;
+  adminComment?: string;
+}
+
+export async function sendApplicationRejectionEmail(data: ApplicationRejectionEmailData): Promise<boolean> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const dashboardUrl = `${baseUrl}/dashboard/user`;
+    
+    const mailOptions = {
+      from: `"Alphera Academy" <${emailConfig.auth.user}>`,
+      to: data.parentEmail,
+      subject: `Application Update - Alphera Academy`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Application Update - Alphera Academy</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8EC0C2, #142954); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .info-box { background: white; border: 2px solid #8EC0C2; border-radius: 8px; padding: 20px; margin: 20px 0; }
+            .details-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            .details-table td { padding: 10px; border-bottom: 1px solid #eee; }
+            .details-table td:first-child { font-weight: bold; width: 40%; color: #142954; }
+            .button { 
+              display: inline-block; 
+              background: linear-gradient(135deg, #8EC0C2, #142954); 
+              color: white !important; 
+              padding: 15px 30px; 
+              text-decoration: none; 
+              border-radius: 5px; 
+              font-weight: bold; 
+              margin: 10px 0;
+            }
+            .button-container { text-align: center; margin: 30px 0; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            .apology-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 4px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🎓 Alphera Academy</h1>
+              <h2>Application Update</h2>
+            </div>
+            
+            <div class="content">
+              <p>Dear ${data.parentName},</p>
+              
+              <p>Thank you for your interest in Alphera Academy and for taking the time to complete the application process for <strong>${data.childName}</strong>.</p>
+              
+              <div class="apology-box">
+                <p style="margin: 0; color: #856404;"><strong>We regret to inform you</strong> that after careful review, we are unable to proceed with your application at this time.</p>
+              </div>
+              
+              <p>We understand that this news may be disappointing, and we sincerely apologize for any inconvenience this may cause. Please know that this decision was made after thorough consideration of all applications received.</p>
+              
+              <div class="info-box">
+                <h3>📋 Application Details</h3>
+                <table class="details-table">
+                  <tr>
+                    <td>Child's Name:</td>
+                    <td><strong>${data.childName}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Application ID:</td>
+                    <td>${data.applicationId}</td>
+                  </tr>
+                  <tr>
+                    <td>Status:</td>
+                    <td>Not Accepted</td>
+                  </tr>
+                  <tr>
+                    <td>Date:</td>
+                    <td>${new Date().toLocaleDateString('en-US', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}</td>
+                  </tr>
+                </table>
+              </div>
+              
+              ${data.adminComment ? `
+              <div class="info-box">
+                <h3>📝 Additional Information</h3>
+                <p style="color: #666;">${data.adminComment}</p>
+              </div>
+              ` : ''}
+              
+              <h3>💡 Future Opportunities</h3>
+              <p>We encourage you to consider applying again in the future. Our admissions process is ongoing, and we welcome new applications for upcoming enrollment periods.</p>
+              
+              <p>If you have any questions about this decision or would like to discuss your application further, please feel free to reach out to us. We are here to assist you.</p>
+              
+              <div class="button-container">
+                <a href="${dashboardUrl}" class="button" style="color: white !important;">View Your Dashboard</a>
+              </div>
+              
+              <p>Thank you again for your interest in Alphera Academy. We wish you and ${data.childName} all the best in your educational journey.</p>
+              
+              <p>Best regards,<br>
+              <strong>The Alphera Academy Team</strong></p>
+            </div>
+            
+            <div class="footer">
+              <p>This email was sent regarding your application for Alphera Academy.</p>
+              <p>If you have any questions, please contact us at info@alpheraacademy.edu.bh</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `
+        Application Update - Alphera Academy
+        
+        Dear ${data.parentName},
+        
+        Thank you for your interest in Alphera Academy and for taking the time to complete the application process for ${data.childName}.
+        
+        We regret to inform you that after careful review, we are unable to proceed with your application at this time.
+        
+        We understand that this news may be disappointing, and we sincerely apologize for any inconvenience this may cause. Please know that this decision was made after thorough consideration of all applications received.
+        
+        APPLICATION DETAILS:
+        Child's Name: ${data.childName}
+        Application ID: ${data.applicationId}
+        Status: Not Accepted
+        Date: ${new Date().toLocaleDateString()}
+        
+        ${data.adminComment ? `Additional Information: ${data.adminComment}\n` : ''}
+        
+        FUTURE OPPORTUNITIES:
+        We encourage you to consider applying again in the future. Our admissions process is ongoing, and we welcome new applications for upcoming enrollment periods.
+        
+        If you have any questions about this decision or would like to discuss your application further, please feel free to reach out to us. We are here to assist you.
+        
+        View Your Dashboard: ${dashboardUrl}
+        
+        Thank you again for your interest in Alphera Academy. We wish you and ${data.childName} all the best in your educational journey.
+        
+        Best regards,
+        The Alphera Academy Team
+        
+        ---
+        This email was sent regarding your application for Alphera Academy.
+        If you have any questions, please contact us at info@alpheraacademy.edu.bh
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Application rejection email sent successfully to:', data.parentEmail);
+    return true;
+  } catch (error) {
+    console.error('Error sending application rejection email:', error);
+    return false;
+  }
+}
+
 // Test email configuration
 export async function testEmailConnection(): Promise<boolean> {
   try {
