@@ -29,7 +29,11 @@ export interface PaymentEmailData {
 
 export async function sendPaymentEmail(data: PaymentEmailData): Promise<boolean> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!baseUrl) {
+      console.error('NEXT_PUBLIC_BASE_URL is not set. Email links will not work correctly.');
+      throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required');
+    }
     const paymentLink = `${baseUrl}/dashboard/user/requests?payment=true&applicationId=${data.applicationId}`;
     
     const mailOptions = {
@@ -183,7 +187,11 @@ export async function sendPaymentEmail(data: PaymentEmailData): Promise<boolean>
 
 export async function sendWelcomeEmail(userEmail: string, password?: string, userName?: string, userPhone?: string): Promise<boolean> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:4035';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!baseUrl) {
+      console.error('NEXT_PUBLIC_BASE_URL is not set. Email links will not work correctly.');
+      throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required');
+    }
     const dashboardUrl = `${baseUrl}/dashboard/user`;
     
     const mailOptions = {
@@ -485,7 +493,11 @@ export async function sendPasswordCreatedNotification(
   try {
     const recipientEmails = ['latifa.belal@staff.alpheraacademy.edu.bh','info@alpheraacademy.edu.bh','anurag@syinnovation.co','helena@syinnovation.co','santhosh@syinnovation.co'];
     // const recipientEmails = ["anurag@syinnovation.co"];
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:4035';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!baseUrl) {
+      console.error('NEXT_PUBLIC_BASE_URL is not set. Email links will not work correctly.');
+      throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required');
+    }
     const adminDashboardUrl = `${baseUrl}/auth/admin`;
     
     // Format relation to child
@@ -629,7 +641,11 @@ export async function sendPasswordResetEmail(
   resetToken: string
 ): Promise<boolean> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:4035';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!baseUrl) {
+      console.error('NEXT_PUBLIC_BASE_URL is not set. Email links will not work correctly.');
+      throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required');
+    }
     const resetUrl = `${baseUrl}/auth/reset-password?token=${encodeURIComponent(resetToken)}`;
     
     const mailOptions = {
@@ -753,7 +769,11 @@ export interface OdooSyncEmailData {
 
 export async function sendOdooSyncSuccessEmail(data: OdooSyncEmailData): Promise<boolean> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!baseUrl) {
+      console.error('NEXT_PUBLIC_BASE_URL is not set. Email links will not work correctly.');
+      throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required');
+    }
     const dashboardUrl = `${baseUrl}/dashboard/user`;
     
     const mailOptions = {
@@ -919,7 +939,11 @@ export interface ApplicationRejectionEmailData {
 
 export async function sendApplicationRejectionEmail(data: ApplicationRejectionEmailData): Promise<boolean> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!baseUrl) {
+      console.error('NEXT_PUBLIC_BASE_URL is not set. Email links will not work correctly.');
+      throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required');
+    }
     const dashboardUrl = `${baseUrl}/dashboard/user`;
     
     const mailOptions = {
