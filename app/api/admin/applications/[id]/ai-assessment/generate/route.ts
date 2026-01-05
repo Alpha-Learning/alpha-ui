@@ -24,8 +24,6 @@ function createTimeoutSignal(ms: number): AbortSignal {
 // Helper function to collect all form data
 async function collectAllFormData(applicationId: string) {
   try {
-    console.log(`[collectAllFormData] Starting data collection for application: ${applicationId}`);
-    
     const application = await prisma.application.findUnique({
       where: { id: applicationId },
       include: {
@@ -47,22 +45,6 @@ async function collectAllFormData(applicationId: string) {
     if (!application) {
       throw new Error("Application not found");
     }
-
-    console.log(`[collectAllFormData] Application found: ${application.childFullName}`);
-    console.log(`[collectAllFormData] Forms present:`, {
-      screeningCall: !!application.screeningCall,
-      parentGuardianQuestionnaire: !!application.parentGuardianQuestionnaire,
-      caregiverQuestionnaire: !!application.caregiverQuestionnaire,
-      outsiderQuestionnaire: !!application.outsiderQuestionnaire,
-      initialObservationForm: !!application.initialObservationForm,
-      ks1InterviewQuestions: !!application.ks1InterviewQuestions,
-      ks2InterviewQuestions: !!application.ks2InterviewQuestions,
-      guidedObservationsProcedure: !!application.guidedObservationsProcedure,
-      parentChildDynamicObservation: !!application.parentChildDynamicObservation,
-      peerDynamicObservation: !!application.peerDynamicObservation,
-      understandingParent: !!application.understandingParent,
-      comprehensiveProfileSheet: !!application.comprehensiveProfileSheet,
-    });
 
     // Build comprehensive content from all forms
     let content = `=== UTL ASSESSMENT COMPREHENSIVE DATA ===\n`;
@@ -161,8 +143,6 @@ async function collectAllFormData(applicationId: string) {
       if (cps.finalSummaryTargetedSupport) content += `Final Summary - Targeted Support: ${cps.finalSummaryTargetedSupport}\n`;
       if (cps.homeSupportTips) content += `Home Support Tips: ${cps.homeSupportTips}\n`;
       content += `\n`;
-    } else {
-      console.warn(`[collectAllFormData] Comprehensive Profile Sheet not found for application ${applicationId}`);
     }
 
     // Screening Call (Form 2)
@@ -296,8 +276,6 @@ async function collectAllFormData(applicationId: string) {
       content += `\n`;
     }
 
-    console.log(`[collectAllFormData] Content collection complete. Total length: ${content.length} characters`);
-    console.log(`[collectAllFormData] Content preview (first 500 chars):\n${content.substring(0, 500)}...`);
     return content;
   } catch (error: any) {
     console.error(`[collectAllFormData] ❌ ERROR collecting form data!`);
@@ -393,10 +371,6 @@ export async function POST(
     // Step 1: Create student if it doesn't exist (optional - API may auto-create)
     // According to API docs, we can create the student first to ensure it exists
     try {
-      console.log('\n=== CHECKING/CREATING STUDENT ===');
-      console.log(`Student ID (alsStudentId): ${studentId}`);
-      console.log(`Student Name: ${studentName}`);
-      
       // Try to get the student first
       const getStudentResponse = await fetch(
         `${FRANK_API_BASE_URL}/students/${studentId}`,
@@ -412,7 +386,6 @@ export async function POST(
 
       // If student doesn't exist (404), create it
       if (getStudentResponse.status === 404) {
-        console.log('Student not found, creating new student...');
         const createStudentResponse = await fetch(
           `${FRANK_API_BASE_URL}/students`,
           {
@@ -432,38 +405,17 @@ export async function POST(
         );
 
         if (!createStudentResponse.ok) {
-          const errorText = await createStudentResponse.text();
-          console.warn(`Failed to create student (${createStudentResponse.status}), continuing anyway:`, errorText);
           // Continue anyway - API might auto-create the student
-        } else {
-          const studentData = await createStudentResponse.json();
-          console.log('✅ Student created successfully:', studentData.id || studentData.alsStudentId);
         }
-      } else if (getStudentResponse.ok) {
-        const studentData = await getStudentResponse.json();
-        console.log('✅ Student already exists:', studentData.id || studentData.alsStudentId);
-      } else {
-        console.warn(`Unexpected response when checking student (${getStudentResponse.status}), continuing anyway`);
-        // Continue anyway - API might auto-create the student
       }
     } catch (error: any) {
       // If student creation/check fails, continue anyway - API might auto-create
-      console.warn('Could not check/create student, continuing anyway:', error.message);
     }
 
     // Collect all form data first
     let assessmentContent: string;
     try {
-      console.log("\n=== DATA COLLECTION START ===");
-      console.log("Application ID:", applicationId);
-      console.log("Student ID:", studentId);
       assessmentContent = await collectAllFormData(applicationId);
-      console.log("✅ Assessment content collected successfully");
-      console.log("Content length:", assessmentContent.length, "characters");
-      if (assessmentContent.length === 0) {
-        console.warn("⚠️  WARNING: Collected content is empty!");
-      }
-      console.log("=== DATA COLLECTION END ===\n");
     } catch (error: any) {
       console.error("\n❌ DATA COLLECTION FAILED!");
       console.error("Error type:", error?.name || 'Unknown');
@@ -481,7 +433,6 @@ export async function POST(
 
     // Check if report already exists - if so, return it without regenerating
     try {
-      console.log("Checking if assessment already exists for student:", studentId);
       // Check existing reports using GET endpoint
       const existingReportResponse = await fetch(
         `${FRANK_API_BASE_URL}/students/${studentId}/reports/utl`,
@@ -503,7 +454,6 @@ export async function POST(
       
       // Check if response is HTML (ngrok warning page)
       if (existingReportContentType && existingReportContentType.includes('text/html')) {
-        console.log("Received HTML response when checking for existing report - API may be unreachable, proceeding with generation");
         // Continue with generation - don't throw error
       }
       // If response is successful (200 OK), check if report exists
@@ -518,56 +468,32 @@ export async function POST(
               try {
                 const analysisResponse = await fetch(analysisReport.downloadUrl);
                 const analysisData = await analysisResponse.json();
-            console.log("✅ Existing assessment found, returning without regenerating");
-                console.log(`Report ID: ${analysisReport.id}`);
-            return NextResponse.json({
-              success: true,
-              message: "AI Assessment already exists",
+                return NextResponse.json({
+                  success: true,
+                  message: "AI Assessment already exists",
                   data: analysisData,
                 });
               } catch (fetchError) {
-                console.log("Could not download analysis content, proceeding with generation");
+                // Continue with generation
               }
-          } else {
-              console.log("No analysis report found in response, proceeding with generation");
             }
-          } else {
-            console.log("No existing report found (no reports array in response), proceeding with generation");
           }
         } catch (parseError) {
           // If parsing fails, continue with generation
-          console.log("Could not parse existing report response, proceeding with generation");
         }
-      }
-      // If response is 404 or DATA_NOT_FOUND, no report exists yet - this is expected for new students
-      else if (existingReportResponse.status === 404) {
-        console.log("No existing assessment found (404) - this is expected for new students, proceeding with generation");
-        // Continue with generation - this is the expected case for new forms
-      }
-      // For other error statuses, log but continue (don't block generation)
-      else {
-        console.log(`Existing report check returned status ${existingReportResponse.status}, proceeding with generation anyway`);
       }
     } catch (error: any) {
       // If checking for existing report fails, continue with generation
-      console.log("Could not check for existing report, proceeding with generation:", error.message);
     }
 
     // According to API docs: POST /students/:id/reports/utl
     // This endpoint submits the data AND generates the analysis automatically in one call
     // No need for sessions or separate data submission
     try {
-      console.log('\n=== GENERATING UTL ANALYSIS REPORT ===');
-      console.log(`Student ID: ${studentId}`);
-      console.log(`Student Name: ${studentName}`);
-      console.log(`Frank API URL: ${FRANK_API_BASE_URL}`);
-      console.log(`Endpoint: ${FRANK_API_BASE_URL}/students/${studentId}/reports/utl`);
-      console.log(`API Key present: ${FRANK_API_KEY ? 'Yes (length: ' + FRANK_API_KEY.length + ')' : 'No - THIS IS THE PROBLEM!'}`);
-      console.log(`Content length: ${assessmentContent.length} characters`);
-      console.log('⏳ Submitting UTL data and generating analysis report...');
-      
       // According to API docs, POST /students/:id/reports/utl accepts:
       // { content: string, fileName?: string }
+      // console.log("frank api base url=====================>==================", FRANK_API_BASE_URL);
+      console.log("assessmentContent=====================>", assessmentContent);
       const reportResponse = await fetch(
         `${FRANK_API_BASE_URL}/students/${studentId}/reports/utl`,
         {
@@ -575,7 +501,7 @@ export async function POST(
           headers: {
             'Content-Type': 'application/json',
             'x-api-key': FRANK_API_KEY,
-            'ngrok-skip-browser-warning': 'true', // Skip ngrok warning page
+            // 'ngrok-skip-browser-warning': 'true', // Skip ngrok warning page
           },
           body: JSON.stringify({
             content: assessmentContent,
@@ -584,15 +510,13 @@ export async function POST(
           signal: createTimeoutSignal(120000), // 120 second timeout for report generation (AI processing takes time)
         }
       );
-      
-      console.log(`Report generation response status: ${reportResponse.status} ${reportResponse.statusText}`);
+      console.log("reportResponse=====================>", reportResponse);
 
       // Read response text first (can only be read once)
       const reportResponseText = await reportResponse.text();
       
       // Check if response is HTML
       const reportContentType = reportResponse.headers.get('content-type');
-      console.log(`Response content-type: ${reportContentType}`);
       
       if (reportContentType && reportContentType.includes('text/html')) {
         console.error("❌ ERROR: Received HTML response instead of JSON when generating report");
@@ -621,7 +545,6 @@ export async function POST(
           console.error("❌ NOT_FOUND: Student or resource not found");
           // Try to create the student and retry once
           try {
-            console.log("Attempting to create student and retry...");
             const createStudentResponse = await fetch(
               `${FRANK_API_BASE_URL}/students`,
               {
@@ -639,11 +562,8 @@ export async function POST(
                 signal: createTimeoutSignal(10000),
               }
             );
-            if (createStudentResponse.ok) {
-              console.log("Student created, but report generation already failed. Please try again.");
-            }
           } catch (createError) {
-            console.warn("Could not create student during error handling:", createError);
+            console.error("Could not create student during error handling:", createError);
           }
           throw new Error("Student not found. Please ensure the student exists in the system.");
         }
@@ -671,26 +591,14 @@ export async function POST(
         throw new Error("Invalid JSON response from report generation endpoint");
       }
       
-      console.log('\n✅ Report generated successfully!');
       // Handle response format from POST /reports/utl (returns rawReport, analysisReport, and analysis)
       const reportId = reportData.analysisReport?.id || reportData.report_id || 'N/A';
       const generatedAt = reportData.analysisReport?.createdAt || reportData.generated_at || new Date().toISOString();
       const analysisData = reportData.analysis || reportData;
-      
-      console.log(`Report ID: ${reportId}`);
-      console.log(`Generated at: ${generatedAt}`);
-      console.log(`Primary learner type: ${analysisData.learningStyle?.primary || analysisData.primary_learner_type || 'N/A'}`);
-      console.log(`Report summary: ${analysisData.summary || analysisData.overall_summary ? (analysisData.summary || analysisData.overall_summary).substring(0, 200) + '...' : 'N/A'}`);
 
       // Note: Report is stored in Frank API, we don't need to store it locally
       // The report can be retrieved anytime using the student_id
       // The session is active and can be used for future queries/reports
-
-      console.log('\n=== AI ASSESSMENT GENERATION COMPLETE ===');
-      console.log(`✅ Successfully generated UTL Analysis Report`);
-      console.log(`Report ID: ${reportId}`);
-      console.log(`Student ID: ${studentId}`);
-      console.log('==========================================\n');
       
       return NextResponse.json({
         success: true,
