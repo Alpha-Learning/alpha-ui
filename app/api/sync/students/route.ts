@@ -67,12 +67,12 @@ export async function GET(req: NextRequest) {
       expectedApiKey = expectedApiKey.slice(1, -1);
     }
     
-    console.log("Received apiKey:", apiKey);
-    console.log("Expected apiKey from env (raw):", process.env.UTL_ALS_API_KEY);
-    console.log("Expected apiKey from env (processed):", expectedApiKey);
-    console.log("Expected apiKey type:", typeof expectedApiKey);
-    console.log("Expected apiKey length:", expectedApiKey?.length);
-    console.log("Keys match:", apiKey === expectedApiKey);
+    // console.log("Received apiKey:", apiKey);
+    // console.log("Expected apiKey from env (raw):", process.env.UTL_ALS_API_KEY);
+    // console.log("Expected apiKey from env (processed):", expectedApiKey);
+    // console.log("Expected apiKey type:", typeof expectedApiKey);
+    // console.log("Expected apiKey length:", expectedApiKey?.length);
+    // console.log("Keys match:", apiKey === expectedApiKey);
     
     if (!apiKey || !expectedApiKey || apiKey !== expectedApiKey) {
       return NextResponse.json(
@@ -84,7 +84,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    console.log("after if block================================");
+    // console.log("after if block================================");
     // Get query parameters
     const searchParams = req.nextUrl.searchParams;
     const status = searchParams.get("status");
@@ -93,7 +93,7 @@ export async function GET(req: NextRequest) {
 
     const limit = limitParam ? parseInt(limitParam, 10) : undefined;
     const offset = offsetParam ? parseInt(offsetParam, 10) : 0;
-console.log("limit===========================================");
+// console.log("limit===========================================");
     // Validate limit and offset
     if (limit !== undefined && (isNaN(limit) || limit < 1)) {
       return NextResponse.json(
