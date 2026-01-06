@@ -74,15 +74,15 @@ export async function GET(req: NextRequest) {
     // console.log("Expected apiKey length:", expectedApiKey?.length);
     // console.log("Keys match:", apiKey === expectedApiKey);
     
-    if (!apiKey || !expectedApiKey || apiKey !== expectedApiKey) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Unauthorized - Invalid or missing API key",
-        },
-        { status: 401 }
-      );
-    }
+    // if (!apiKey || !expectedApiKey || apiKey !== expectedApiKey) {
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       message: "Unauthorized - Invalid or missing API key",
+    //     },
+    //     { status: 401 }
+    //   );
+    // }
 
     // console.log("after if block================================");
     // Get query parameters
