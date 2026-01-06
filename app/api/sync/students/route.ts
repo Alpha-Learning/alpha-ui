@@ -1,36 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
 
-/**
- * GET /api/sync/students
- * 
- * Returns only unsynced students, parents, and their relations.
- * After returning, marks the applications as synced.
- * 
- * Authentication: X-API-Key header
- * 
- * Query Parameters:
- * - status: Filter by application status (optional)
- * - limit: Limit number of results (optional, default: all)
- * - offset: Offset for pagination (optional, default: 0)
- * 
- * Response Format:
- * {
- *   success: boolean,
- *   message: string, // "Synced successfully" or "No new data to sync"
- *   students: [...],
- *   parents: [...],
- *   relations: [...],
- *   total: number,
- *   syncedCount: number, // Number of applications marked as synced
- *   limit: number,
- *   offset: number
- * }
- */
+
 export async function GET(req: NextRequest) {
   try {
-    // console.log("Sync students route called============mkmkmkmkkmkmkmkmkmkmkmkmkmkmkmkk");
-    // Verify API Key
+   
     const apiKey = req.headers.get("x-api-key") || req.headers.get("X-API-Key");
     // Get env var and trim quotes if present (Next.js sometimes includes quotes from .env)
     let expectedApiKey = process.env.UTL_ALS_API_KEY;
@@ -49,8 +23,7 @@ export async function GET(req: NextRequest) {
     //   );
     // }
 
-    // console.log("after if block================================");
-    // Get query parameters
+    
     const searchParams = req.nextUrl.searchParams;
     const status = searchParams.get("status");
     const limitParam = searchParams.get("limit");
@@ -106,20 +79,14 @@ export async function GET(req: NextRequest) {
     const totalAllApplications = await prisma.application.count({});
     const totalUnsynced = await prisma.application.count({ where });
 
-    // console.log("totaluNSYNCED=============", totalUnsynced);
-    
-    // console.log("=== SYNC DEBUG ===");
-    // console.log("Total applications in database:", totalAllApplications);
-    // console.log("Total unsynced applications:", totalUnsynced);
-    // console.log("Where clause:", JSON.stringify(where, null, 2));
+   
     
     // Check if syncedAt field exists by trying to get a sample
     try {
       const sampleApp = await prisma.application.findFirst({
         select: { id: true, syncedAt: true },
       });
-      // console.log("Sample application syncedAt value:", sampleApp?.syncedAt);
-      // console.log("Sample application syncedAt type:", typeof sampleApp?.syncedAt);
+    
     } catch (err: any) {
       console.error("Error checking syncedAt field:", err.message);
       if (err.message?.includes("syncedAt") || err.message?.includes("Unknown column")) {
@@ -135,7 +102,15 @@ export async function GET(req: NextRequest) {
     }
 
     // Get total count of unsynced applications
-    const total = totalUnsynced;
+    // NOTE:
+    // - We *start* with the count of unsynced applications in the DB (`totalUnsynced`)
+    // - But the actual response data is based on the `applications` query below, which
+    //   can be affected by things like `limit`, `offset`, or unexpected params.
+    // - To avoid cases where `total` says "1" but the arrays are empty (e.g. bad `limit`),
+    //   we will ultimately base `total` on the number of applications we actually return.
+    //
+    // We keep `totalUnsynced` only for debug/early-return logic above.
+    let total = totalUnsynced;
 
     // If no unsynced applications, return early with appropriate message
     if (total === 0) {
@@ -274,13 +249,12 @@ export async function GET(req: NextRequest) {
       });
     });
 
-    // Log summary
-    // console.log(`=== SYNC SUMMARY ===`);
-    // console.log(`Total applications processed: ${applications.length}`);
-    // console.log(`Total students created: ${students.length}`);
-    // console.log(`Total unique parents: ${parents.length}`);
-    // console.log(`Total relations created: ${relations.length}`);
-    // console.log(`Parent-to-application mapping:`);
+    // At this point, `applications` represents exactly what we're returning.
+    // To keep the API self‑consistent (and fix cases where `totalUnsynced` != applications.length),
+    // we override `total` to be the count of applications actually included in this response.
+    total = applications.length;
+
+    
     parentApplicationMap.forEach((appIds, parentKey) => {
       const parent = parentMap.get(parentKey);
       console.log(`  Parent ${parent?.email}: ${appIds.length} application(s) - [${appIds.join(', ')}]`);
@@ -317,11 +291,9 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // console.log("Synced count:", syncedCount.count); 
-    // console.log("Synced applications:", applicationIds);
-    // console.log("Synced applications:", syncedCount);
-    // console.log("Synced applications:", syncedCount.count);
-    // console.log("Synced applications:", syncedCount.count);
+  
+
+
     return NextResponse.json({
       success: true,
       message: `Successfully synced ${syncedCount.count} application(s)`,

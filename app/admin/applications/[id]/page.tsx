@@ -328,32 +328,45 @@ function AIAssessmentCard({ applicationId, childName }: {
 }
 
 // Stage 7 Dropdown Component
-function Stage7Dropdown({ applicationId, isCompleted, stageTitle }: { 
+function Stage7Dropdown({ applicationId, isCompleted, stageTitle, childAge }: { 
   applicationId: string; 
   isCompleted: boolean; 
-  stageTitle: string; 
+  stageTitle: string;
+  childAge?: number | null;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
 
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-  const forms = [
-    {
-      name: "KS1 Interview Questions",
-      url: `${baseUrl}/form/ks1-interview/${applicationId}`,
-      color: "teal"
-    },
-    {
-      name: "KS2 Interview Questions", 
-      url: `${baseUrl}/form/ks2-interview/${applicationId}`,
-      color: "orange"
-    },
-    {
-      name: "Guided Observation Procedure",
-      url: `${baseUrl}/form/guided-observation/${applicationId}`,
-      color: "purple"
+  
+  // Dynamically determine which forms to show based on child's age
+  // Age 5-7 → KS1, Age 8-11 → KS2
+  const forms: Array<{ name: string; url: string; color: string }> = [];
+  
+  if (childAge !== null && childAge !== undefined) {
+    if (childAge >= 5 && childAge <= 7) {
+      // KS1 for ages 5-7
+      forms.push({
+        name: "KS1 Interview Questions",
+        url: `${baseUrl}/form/ks1-interview/${applicationId}`,
+        color: "teal"
+      });
+    } else if (childAge >= 8 && childAge <= 11) {
+      // KS2 for ages 8-11
+      forms.push({
+        name: "KS2 Interview Questions", 
+        url: `${baseUrl}/form/ks2-interview/${applicationId}`,
+        color: "orange"
+      });
     }
-  ];
+  }
+  
+  // Always include Guided Observation Procedure
+  forms.push({
+    name: "Guided Observation Procedure",
+    url: `${baseUrl}/form/guided-observation/${applicationId}`,
+    color: "purple"
+  });
 
   const copyToClipboard = async (url: string, formName: string) => {
     try {
@@ -1083,6 +1096,7 @@ export default function AdminApplicationDetailPage() {
                      applicationId={data.id} 
                      isCompleted={isCompleted}
                      stageTitle={stageTitles[idx]}
+                     childAge={data.childAge}
                    />
                  );
                }

@@ -135,9 +135,9 @@ export async function POST(request: NextRequest) {
       record = await prisma.kS2InterviewQuestions.create({ data: { applicationId, ...payload } });
     }
 
-    // Check if both KS1 and KS2 forms are completed to mark stage 5 as complete
-    const ks1Form = await prisma.kS1InterviewQuestions.findUnique({ where: { applicationId } });
-    const isStage5Complete = !!ks1Form; // Both KS1 and KS2 (just completed) must exist
+    // Check if KS2 (just completed) and Guided Observation Procedure are both completed to mark stage 5 as complete
+    const guidedObservationForm = await prisma.guidedObservationsProcedure.findUnique({ where: { applicationId } });
+    const isStage5Complete = !!guidedObservationForm; // KS2 (just completed) and Guided Observation must both exist
     
     await prisma.application.update({ 
       where: { id: applicationId }, 

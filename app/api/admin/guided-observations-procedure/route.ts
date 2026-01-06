@@ -310,10 +310,23 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Check if all three Stage 5 forms are completed (KS1, KS2, and Guided Observation Procedure)
-    const ks1Form = await prisma.kS1InterviewQuestions.findUnique({ where: { applicationId } });
-    const ks2Form = await prisma.kS2InterviewQuestions.findUnique({ where: { applicationId } });
-    const isStage5Complete = !!(ks1Form && ks2Form); // All three forms must exist
+    // Check if the appropriate interview form (KS1 or KS2 based on age) and Guided Observation Procedure are both completed
+    // Age 5-7 → KS1, Age 8-11 → KS2
+    const childAge = application.childAge;
+    let isStage5Complete = false;
+    
+    if (childAge !== null && childAge !== undefined) {
+      if (childAge >= 5 && childAge <= 7) {
+        // For ages 5-7, check if KS1 form exists
+        const ks1Form = await prisma.kS1InterviewQuestions.findUnique({ where: { applicationId } });
+        isStage5Complete = !!ks1Form; // KS1 and Guided Observation (just completed) must both exist
+      } else if (childAge >= 8 && childAge <= 11) {
+        // For ages 8-11, check if KS2 form exists
+        const ks2Form = await prisma.kS2InterviewQuestions.findUnique({ where: { applicationId } });
+        isStage5Complete = !!ks2Form; // KS2 and Guided Observation (just completed) must both exist
+      }
+      // If age is outside range or missing, stage 5 is not complete
+    }
     
     // Update application current stage to 5 and mark guided observation as completed
     await prisma.application.update({
