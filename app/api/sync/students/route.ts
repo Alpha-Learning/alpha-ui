@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
 
-// API Key for sync access - should be set in environment variables
-const EXTERNAL_API_KEY = process.env.UTL_ALS_API_KEY;
-
 /**
  * GET /api/sync/students
  * 
@@ -61,11 +58,23 @@ const EXTERNAL_API_KEY = process.env.UTL_ALS_API_KEY;
  */
 export async function GET(req: NextRequest) {
   try {
-    console.log("Sync students route called============");
+    console.log("Sync students route called============mkmkmkmkkmkmkmkmkmkmkmkmkmkmkmkk");
     // Verify API Key
     const apiKey = req.headers.get("x-api-key") || req.headers.get("X-API-Key");
-    console.log("apiKey", apiKey);
-    if (!apiKey || apiKey !== EXTERNAL_API_KEY) {
+    // Get env var and trim quotes if present (Next.js sometimes includes quotes from .env)
+    let expectedApiKey = process.env.UTL_ALS_API_KEY;
+    if (expectedApiKey && (expectedApiKey.startsWith('"') || expectedApiKey.startsWith("'"))) {
+      expectedApiKey = expectedApiKey.slice(1, -1);
+    }
+    
+    console.log("Received apiKey:", apiKey);
+    console.log("Expected apiKey from env (raw):", process.env.UTL_ALS_API_KEY);
+    console.log("Expected apiKey from env (processed):", expectedApiKey);
+    console.log("Expected apiKey type:", typeof expectedApiKey);
+    console.log("Expected apiKey length:", expectedApiKey?.length);
+    console.log("Keys match:", apiKey === expectedApiKey);
+    
+    if (!apiKey || !expectedApiKey || apiKey !== expectedApiKey) {
       return NextResponse.json(
         {
           success: false,
@@ -75,6 +84,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    console.log("after if block================================");
     // Get query parameters
     const searchParams = req.nextUrl.searchParams;
     const status = searchParams.get("status");
@@ -83,7 +93,7 @@ export async function GET(req: NextRequest) {
 
     const limit = limitParam ? parseInt(limitParam, 10) : undefined;
     const offset = offsetParam ? parseInt(offsetParam, 10) : 0;
-
+console.log("limit===========================================");
     // Validate limit and offset
     if (limit !== undefined && (isNaN(limit) || limit < 1)) {
       return NextResponse.json(
