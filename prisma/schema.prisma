@@ -42,6 +42,9 @@ model Application {
   paymentAmount  Int?
   paidAt         DateTime?
 
+  // Sync tracking
+  syncedAt       DateTime? // Timestamp when synced to external system
+
   // Application progress
   currentStage   Int      @default(1)
   totalStages    Int      @default(9)
