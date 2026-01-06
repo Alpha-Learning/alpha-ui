@@ -106,20 +106,20 @@ export async function GET(req: NextRequest) {
     const totalAllApplications = await prisma.application.count({});
     const totalUnsynced = await prisma.application.count({ where });
 
-    console.log("totaluNSYNCED=============", totalUnsynced);
+    // console.log("totaluNSYNCED=============", totalUnsynced);
     
-    console.log("=== SYNC DEBUG ===");
-    console.log("Total applications in database:", totalAllApplications);
-    console.log("Total unsynced applications:", totalUnsynced);
-    console.log("Where clause:", JSON.stringify(where, null, 2));
+    // console.log("=== SYNC DEBUG ===");
+    // console.log("Total applications in database:", totalAllApplications);
+    // console.log("Total unsynced applications:", totalUnsynced);
+    // console.log("Where clause:", JSON.stringify(where, null, 2));
     
     // Check if syncedAt field exists by trying to get a sample
     try {
       const sampleApp = await prisma.application.findFirst({
         select: { id: true, syncedAt: true },
       });
-      console.log("Sample application syncedAt value:", sampleApp?.syncedAt);
-      console.log("Sample application syncedAt type:", typeof sampleApp?.syncedAt);
+      // console.log("Sample application syncedAt value:", sampleApp?.syncedAt);
+      // console.log("Sample application syncedAt type:", typeof sampleApp?.syncedAt);
     } catch (err: any) {
       console.error("Error checking syncedAt field:", err.message);
       if (err.message?.includes("syncedAt") || err.message?.includes("Unknown column")) {
@@ -207,7 +207,7 @@ export async function GET(req: NextRequest) {
     const parentMap = new Map<string | number, any>();
     const parentApplicationMap = new Map<string | number, string[]>(); // Track which applications belong to each parent
 
-    console.log(`Processing ${applications.length} applications...`);
+    // console.log(`Processing ${applications.length} applications...`);
     
     applications.forEach((app) => {
       const studentId = `student_${app.id}`;
@@ -275,12 +275,12 @@ export async function GET(req: NextRequest) {
     });
 
     // Log summary
-    console.log(`=== SYNC SUMMARY ===`);
-    console.log(`Total applications processed: ${applications.length}`);
-    console.log(`Total students created: ${students.length}`);
-    console.log(`Total unique parents: ${parents.length}`);
-    console.log(`Total relations created: ${relations.length}`);
-    console.log(`Parent-to-application mapping:`);
+    // console.log(`=== SYNC SUMMARY ===`);
+    // console.log(`Total applications processed: ${applications.length}`);
+    // console.log(`Total students created: ${students.length}`);
+    // console.log(`Total unique parents: ${parents.length}`);
+    // console.log(`Total relations created: ${relations.length}`);
+    // console.log(`Parent-to-application mapping:`);
     parentApplicationMap.forEach((appIds, parentKey) => {
       const parent = parentMap.get(parentKey);
       console.log(`  Parent ${parent?.email}: ${appIds.length} application(s) - [${appIds.join(', ')}]`);
@@ -317,12 +317,11 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    console.log("Synced count:", syncedCount.count);
-    console.log("Synced applications:", applicationIds);
-    console.log("Synced applications:", syncedCount);
-    console.log("Synced applications:", syncedCount.count);
-    console.log("Synced applications:", syncedCount.count);
-    console.log("Synced applications:", syncedCount.count);
+    // console.log("Synced count:", syncedCount.count); 
+    // console.log("Synced applications:", applicationIds);
+    // console.log("Synced applications:", syncedCount);
+    // console.log("Synced applications:", syncedCount.count);
+    // console.log("Synced applications:", syncedCount.count);
     return NextResponse.json({
       success: true,
       message: `Successfully synced ${syncedCount.count} application(s)`,
