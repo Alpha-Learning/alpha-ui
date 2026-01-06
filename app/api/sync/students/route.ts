@@ -39,15 +39,15 @@ export async function GET(req: NextRequest) {
     }
     
     // Verify API Key
-    if (!apiKey || !expectedApiKey || apiKey !== expectedApiKey) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Unauthorized - Invalid or missing API key",
-        },
-        { status: 401 }
-      );
-    }
+    // if (!apiKey || !expectedApiKey || apiKey !== expectedApiKey) {
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       message: "Unauthorized - Invalid or missing API key",
+    //     },
+    //     { status: 401 }
+    //   );
+    // }
 
     // console.log("after if block================================");
     // Get query parameters
@@ -62,25 +62,25 @@ export async function GET(req: NextRequest) {
     const offset = offsetParam ? parseInt(offsetParam, 10) : 0;
 // console.log("limit===========================================");
     // Validate limit and offset
-    if (limit !== undefined && (isNaN(limit) || limit < 1)) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid limit parameter. Must be a positive integer.",
-        },
-        { status: 400 }
-      );
-    }
+    // if (limit !== undefined && (isNaN(limit) || limit < 1)) {
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       message: "Invalid limit parameter. Must be a positive integer.",
+    //     },
+    //     { status: 400 }
+    //   );
+    // }
 
-    if (isNaN(offset) || offset < 0) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid offset parameter. Must be a non-negative integer.",
-        },
-        { status: 400 }
-      );
-    }
+    // if (isNaN(offset) || offset < 0) {
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       message: "Invalid offset parameter. Must be a non-negative integer.",
+    //     },
+    //     { status: 400 }
+    //   );
+    // }
 
     // If resetSync is true, reset all syncedAt to null (for testing/debugging)
     if (resetSync) {
