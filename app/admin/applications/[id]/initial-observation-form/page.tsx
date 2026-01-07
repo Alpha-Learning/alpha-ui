@@ -91,7 +91,7 @@ const initialObservationFormSchema = z.object({
   initialLearningStyleImpressions: z.string().min(1, "Initial learning style impressions is required"),
   earlyFlagsNeedsFollowUp: z.string().min(1, "Early flags/needs for follow-up is required"),
   selfDirectedVsSeekingGuidance: z.string().min(1, "Self-directed vs seeking guidance is required"),
-  flagIndicators: z.string().min(1, "Flag indicators is required"),
+  flagIndicators: z.array(z.string()).optional(), // Checkbox array - optional field
   additionalNotesObservations: z.string().min(1, "Additional notes/observations is required"),
   
   // Office Use Only
@@ -191,7 +191,7 @@ export default function InitialObservationFormPage() {
       initialLearningStyleImpressions: "",
       earlyFlagsNeedsFollowUp: "",
       selfDirectedVsSeekingGuidance: "",
-      flagIndicators: "",
+      flagIndicators: [],
       additionalNotesObservations: "",
       // Office Use Only
       applicationNumber: "",
@@ -297,7 +297,7 @@ export default function InitialObservationFormPage() {
           initialLearningStyleImpressions: data.initialLearningStyleImpressions || "",
           earlyFlagsNeedsFollowUp: data.earlyFlagsNeedsFollowUp || "",
           selfDirectedVsSeekingGuidance: data.selfDirectedVsSeekingGuidance || "",
-          flagIndicators: data.flagIndicators || "",
+          flagIndicators: data.flagIndicators ? (typeof data.flagIndicators === 'string' ? data.flagIndicators.split(',').filter(Boolean) : data.flagIndicators) : [],
           additionalNotesObservations: data.additionalNotesObservations || "",
           // Office Use Only
           applicationNumber: data.applicationNumber || "",
@@ -383,7 +383,7 @@ export default function InitialObservationFormPage() {
           initialLearningStyleImpressions: "",
           earlyFlagsNeedsFollowUp: "",
           selfDirectedVsSeekingGuidance: "",
-          flagIndicators: "",
+          flagIndicators: [],
           additionalNotesObservations: "",
           // Office Use Only
           applicationNumber: params.id,
@@ -425,6 +425,8 @@ export default function InitialObservationFormPage() {
         parentProximity: data.parentProximity.join(','),
         parentInterventionLevel: data.parentInterventionLevel.join(','),
         parentInterventionStyle: data.parentInterventionStyle.join(','),
+        // Convert flag indicators array to comma-separated string
+        flagIndicators: data.flagIndicators ? data.flagIndicators.join(',') : '',
       });
 
       if (res.success) {
@@ -1690,27 +1692,49 @@ export default function InitialObservationFormPage() {
                 </div>
 
                 <div className="border border-slate-200 rounded-lg p-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">Flag Indicators</label>
-                      <div className="text-sm text-slate-600">
-                        <p>P - Excessive parental interference</p>
-                        <p>T - Technology discomfort</p>
-                        <p>C - Confidence/independence concerns</p>
-                        <p>E - Exceptional performance in specific area</p>
-                      </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-3">Flag Indicators</label>
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2">
+                        <input 
+                          type="checkbox" 
+                          value="P" 
+                          {...register("flagIndicators")}
+                          className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+                        />
+                        <span className="text-sm text-slate-700">P – Excessive parental interference</span>
+                      </label>
+                      <label className="flex items-center gap-2">
+                        <input 
+                          type="checkbox" 
+                          value="T" 
+                          {...register("flagIndicators")}
+                          className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+                        />
+                        <span className="text-sm text-slate-700">T – Technology discomfort</span>
+                      </label>
+                      <label className="flex items-center gap-2">
+                        <input 
+                          type="checkbox" 
+                          value="C" 
+                          {...register("flagIndicators")}
+                          className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+                        />
+                        <span className="text-sm text-slate-700">C – Confidence / independence concerns</span>
+                      </label>
+                      <label className="flex items-center gap-2">
+                        <input 
+                          type="checkbox" 
+                          value="E" 
+                          {...register("flagIndicators")}
+                          className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+                        />
+                        <span className="text-sm text-slate-700">E – Exceptional performance in specific area</span>
+                      </label>
                     </div>
-                    <div>
-                      <Textarea 
-                        rows={6}
-                        {...register("flagIndicators")}
-                        placeholder="Record any flag indicators observed..."
-                        className={errors.flagIndicators ? "border-red-500" : ""}
-                      />
-                      {errors.flagIndicators && (
-                        <p className="text-red-500 text-sm mt-1">{errors.flagIndicators.message}</p>
-                      )}
-                    </div>
+                    {errors.flagIndicators && (
+                      <p className="text-red-500 text-sm mt-2">{errors.flagIndicators.message}</p>
+                    )}
                   </div>
                 </div>
 

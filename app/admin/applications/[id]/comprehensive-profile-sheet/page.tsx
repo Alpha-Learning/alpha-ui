@@ -1169,7 +1169,7 @@ export default function ComprehensiveProfileSheetPage() {
               </FormField>
             </div>
 
-            {/* Verbal/Linguistic */}
+            {/* Verbal (Linguistic) */}
             <div className="border border-slate-200 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Controller
@@ -1184,7 +1184,7 @@ export default function ComprehensiveProfileSheetPage() {
                     />
                   )}
                 />
-                <span className="font-medium text-slate-900">Verbal/Linguistic</span>
+                <span className="font-medium text-slate-900">Verbal (Linguistic)</span>
               </div>
               <FormField label="Evidence:" htmlFor="verbalLinguisticObservedEvidence">
                 <Textarea
@@ -1221,7 +1221,7 @@ export default function ComprehensiveProfileSheetPage() {
               </FormField>
             </div>
 
-            {/* Social/Interpersonal */}
+            {/* Social (Interpersonal) */}
             <div className="border border-slate-200 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Controller
@@ -1236,7 +1236,7 @@ export default function ComprehensiveProfileSheetPage() {
                     />
                   )}
                 />
-                <span className="font-medium text-slate-900">Social/Interpersonal</span>
+                <span className="font-medium text-slate-900">Social (Interpersonal)</span>
               </div>
               <FormField label="Evidence:" htmlFor="socialInterpersonalObservedEvidence">
                 <Textarea
@@ -1247,7 +1247,7 @@ export default function ComprehensiveProfileSheetPage() {
               </FormField>
             </div>
 
-            {/* Solitary/Intrapersonal */}
+            {/* Solitary (Intrapersonal) */}
             <div className="border border-slate-200 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Controller
@@ -1262,7 +1262,7 @@ export default function ComprehensiveProfileSheetPage() {
                     />
                   )}
                 />
-                <span className="font-medium text-slate-900">Solitary/Intrapersonal</span>
+                <span className="font-medium text-slate-900">Solitary (Intrapersonal)</span>
               </div>
               <FormField label="Evidence:" htmlFor="solitaryIntrapersonalObservedEvidence">
                 <Textarea

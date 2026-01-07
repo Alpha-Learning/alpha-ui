@@ -62,10 +62,6 @@ const schema = z.object({
   playingWithFriends: z.string().min(1, "Required"),
   playingWithFriendsNotes: z.string().optional(),
   
-  // Parental Interference
-  parentalInterferenceFlagged: z.boolean().default(false),
-  parentalInterferenceNotes: z.string().optional(),
-  
   // Total Score
   totalScore: z.string().optional(),
   
@@ -140,8 +136,6 @@ export default function KS2InterviewQuestionsPage() {
       digitalTasksNotes: "",
       playingWithFriends: "",
       playingWithFriendsNotes: "",
-      parentalInterferenceFlagged: false,
-      parentalInterferenceNotes: "",
       totalScore: "",
       applicationNumber: "",
       observerName: "",
@@ -220,8 +214,6 @@ export default function KS2InterviewQuestionsPage() {
           digitalTasksNotes: res.data.digitalTasksNotes || "",
           playingWithFriends: res.data.playingWithFriends || "",
           playingWithFriendsNotes: res.data.playingWithFriendsNotes || "",
-          parentalInterferenceFlagged: res.data.parentalInterferenceFlagged || false,
-          parentalInterferenceNotes: res.data.parentalInterferenceNotes || "",
           totalScore: res.data.totalScore || "",
           applicationNumber: res.data.applicationNumber || "",
           observerName: res.data.observerName || "",
@@ -275,8 +267,6 @@ export default function KS2InterviewQuestionsPage() {
           digitalTasksNotes: "",
           playingWithFriends: "",
           playingWithFriendsNotes: "",
-          parentalInterferenceFlagged: false,
-          parentalInterferenceNotes: "",
           totalScore: "",
           applicationNumber: params.id,
           observerName: "",
@@ -417,10 +407,6 @@ export default function KS2InterviewQuestionsPage() {
           <div className="mt-3 text-slate-700 mb-4">
             <p>
               <strong>Scoring:</strong> 1-5 scale per item
-            </p>
-            <p>
-              <strong>Flag 'P':</strong> If there is significant parental
-              interference (e.g., prompting, leading answers)
             </p>
           </div>
 
@@ -1283,43 +1269,6 @@ export default function KS2InterviewQuestionsPage() {
                 </FormField>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Parental Interference */}
-        <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
-          <FormSectionHeader
-            title="Parental Interference"
-            bgClassName="bg-teal-700"
-          />
-          <div className="mt-3">
-            <FormField
-              label="If a parent helps or answers for the child repeatedly, flag:"
-              htmlFor="parentalInterferenceFlagged"
-            >
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    {...register("parentalInterferenceFlagged", {
-                      setValueAs: (value) => value === "on" || value === true
-                    })}
-                    className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                  />
-                  <span className="text-slate-700">Flag 'P': Yes</span>
-                </label>
-              </div>
-            </FormField>
-            <FormField
-              label="Additional Notes (if flagged):"
-              htmlFor="parentalInterferenceNotes"
-            >
-              <Textarea
-                rows={4}
-                id="parentalInterferenceNotes"
-                {...register("parentalInterferenceNotes")}
-              />
-            </FormField>
           </div>
         </section>
 

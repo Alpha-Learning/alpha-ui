@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
       childAge,
       date,
       examiner,
+      parentPresence,
       // Joint Story Creation (10 minutes)
       sharedIdeaExchangeRating,
       sharedIdeaExchangeNotes,
@@ -127,6 +128,8 @@ export async function POST(request: NextRequest) {
       childAge,
       date,
       examiner,
+      parentPresence,
+      parentPresence,
       // Joint Story Creation (10 minutes) - convert string ratings to integers
       sharedIdeaExchangeRating: sharedIdeaExchangeRating ? parseInt(sharedIdeaExchangeRating) : null,
       sharedIdeaExchangeNotes,
