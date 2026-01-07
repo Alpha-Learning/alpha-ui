@@ -17,6 +17,7 @@ import { useFormPersistence } from "@/app/hooks/useFormPersistence";
 
 const schema = z.object({
   // Observation Details
+  groupID: z.string().optional(),
   childName: z.string().min(1, "Required"),
   date: z.string().min(1, "Required"),
   examiner: z.string().min(1, "Required"),
@@ -141,6 +142,7 @@ export default function PeerDynamicObservationPage() {
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
+      groupID: "",
       childName: "",
       date: "",
       examiner: "",
@@ -265,6 +267,7 @@ export default function PeerDynamicObservationPage() {
         const appData = appRes.data;
         reset({
           // Observation Details
+          groupID: appData.groupID || "",
           childName: appData.childFullName || "",
           date: "",
           examiner: "",
@@ -404,7 +407,7 @@ export default function PeerDynamicObservationPage() {
     const currentValues = watch();
     
     // Preserve personal information fields
-    const personalInfoFields = ['childName', 'age', 'date'];
+    const personalInfoFields = ['childName', 'age', 'date', 'groupID'];
     const preservedValues: Partial<FormValues> = {};
     personalInfoFields.forEach(field => {
       const fieldKey = field as keyof FormValues;
@@ -434,7 +437,7 @@ export default function PeerDynamicObservationPage() {
         <div className="flex justify-between items-start">
           <div>
             <div className="text-xl font-bold text-slate-900">
-              Examiner Form: Peer Dynamic Observation
+              Observer Form: Peer Dynamic Observation
             </div>
             <div className="text-sm text-slate-600">
               Application ID: {params.id}
@@ -459,6 +462,13 @@ export default function PeerDynamicObservationPage() {
           />
           <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
+              label="Group ID"
+              htmlFor="groupID"
+              error={errors.groupID as any}
+            >
+              <Input id="groupID" {...register("groupID")} placeholder="Enter Group ID" />
+            </FormField>
+            <FormField
               label="Child Name"
               htmlFor="childName"
               error={errors.childName as any}
@@ -471,7 +481,7 @@ export default function PeerDynamicObservationPage() {
             <FormField label="Date" htmlFor="date" error={errors.date as any}>
               <Input id="date" {...register("date")} />
             </FormField>
-            <FormField label="Examiner" htmlFor="examiner" error={errors.examiner as any}>
+            <FormField label="Observer" htmlFor="examiner" error={errors.examiner as any}>
               <Input id="examiner" {...register("examiner")} />
             </FormField>
             <FormField label="Session Start Time" htmlFor="sessionStartTime" error={errors.sessionStartTime as any}>
@@ -1090,7 +1100,7 @@ export default function PeerDynamicObservationPage() {
                     </label>
                   </div>
                 </FormField>
-                <FormField label="Supporting Behaviour / Task Observed" htmlFor="linguisticNotes">
+                <FormField label="Supporting Behavior (Zone or Task)" htmlFor="linguisticNotes">
                   <Textarea
                     rows={3}
                     id="linguisticNotes"
@@ -1128,7 +1138,7 @@ export default function PeerDynamicObservationPage() {
                     </label>
                   </div>
                 </FormField>
-                <FormField label="Supporting Behaviour / Task Observed" htmlFor="logicalMathematicalNotes">
+                <FormField label="Supporting Behavior (Zone or Task)" htmlFor="logicalMathematicalNotes">
                   <Textarea
                     rows={3}
                     id="logicalMathematicalNotes"
@@ -1166,7 +1176,7 @@ export default function PeerDynamicObservationPage() {
                     </label>
                   </div>
                 </FormField>
-                <FormField label="Supporting Behaviour / Task Observed" htmlFor="spatialNotes">
+                <FormField label="Supporting Behavior (Zone or Task)" htmlFor="spatialNotes">
                   <Textarea
                     rows={3}
                     id="spatialNotes"
@@ -1204,7 +1214,7 @@ export default function PeerDynamicObservationPage() {
                     </label>
                   </div>
                 </FormField>
-                <FormField label="Supporting Behaviour / Task Observed" htmlFor="bodilyKinestheticNotes">
+                <FormField label="Supporting Behavior (Zone or Task)" htmlFor="bodilyKinestheticNotes">
                   <Textarea
                     rows={3}
                     id="bodilyKinestheticNotes"
@@ -1242,7 +1252,7 @@ export default function PeerDynamicObservationPage() {
                     </label>
                   </div>
                 </FormField>
-                <FormField label="Supporting Behaviour / Task Observed" htmlFor="musicalNotes">
+                <FormField label="Supporting Behavior (Zone or Task)" htmlFor="musicalNotes">
                   <Textarea
                     rows={3}
                     id="musicalNotes"
@@ -1280,7 +1290,7 @@ export default function PeerDynamicObservationPage() {
                     </label>
                   </div>
                 </FormField>
-                <FormField label="Supporting Behaviour / Task Observed" htmlFor="interpersonalNotes">
+                <FormField label="Supporting Behavior (Zone or Task)" htmlFor="interpersonalNotes">
                   <Textarea
                     rows={3}
                     id="interpersonalNotes"
@@ -1318,7 +1328,7 @@ export default function PeerDynamicObservationPage() {
                     </label>
                   </div>
                 </FormField>
-                <FormField label="Supporting Behaviour / Task Observed" htmlFor="intrapersonalNotes">
+                <FormField label="Supporting Behavior (Zone or Task)" htmlFor="intrapersonalNotes">
                   <Textarea
                     rows={3}
                     id="intrapersonalNotes"
@@ -1356,7 +1366,7 @@ export default function PeerDynamicObservationPage() {
                     </label>
                   </div>
                 </FormField>
-                <FormField label="Supporting Behaviour / Task Observed" htmlFor="naturalisticNotes">
+                <FormField label="Supporting Behavior (Zone or Task)" htmlFor="naturalisticNotes">
                   <Textarea
                     rows={3}
                     id="naturalisticNotes"
@@ -1394,7 +1404,7 @@ export default function PeerDynamicObservationPage() {
                     </label>
                   </div>
                 </FormField>
-                <FormField label="Supporting Behaviour / Task Observed" htmlFor="existentialNotes">
+                <FormField label="Supporting Behavior (Zone or Task)" htmlFor="existentialNotes">
                   <Textarea
                     rows={3}
                     id="existentialNotes"

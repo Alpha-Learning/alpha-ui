@@ -737,6 +737,7 @@ model PeerDynamicObservation {
   application       Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   
   // Observation Details
+  groupID        String?
   childName         String?
   date              String?
   examiner          String?
