@@ -47,12 +47,13 @@ export default function AdminArchivePage() {
     { 
       name: "Age", 
       selector: (row: AdminApp) => String(row.childAge ?? ""), 
-      width: "80px" 
+     // width: "80px" 
     },
     { 
       name: "Year", 
       selector: (row: AdminApp) => row.childSchoolYear ?? "", 
-      sortable: true 
+      sortable: true ,
+      // width: "180px",
     },
       {
       name: "Rejection Date",
@@ -64,7 +65,7 @@ export default function AdminArchivePage() {
         return `${day}/${month}/${year}`;
       },
       sortable: true,
-      width: "180px",
+     //width: "180px",
     },
     {
       name: "View",
@@ -77,7 +78,7 @@ export default function AdminArchivePage() {
         </Link>
       ),
       ignoreRowClick: true,
-      width: "100px",
+      //width: "100px",
     },
   ], []);
 
