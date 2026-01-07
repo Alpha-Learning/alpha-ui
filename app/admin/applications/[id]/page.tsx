@@ -7,10 +7,12 @@ import OdooLoginModal from "@/app/components/OdooLoginModal";
 import toast from "react-hot-toast";
 
 // Stage 3 Dropdown Component
-function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: { 
+// function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: { 
+function Stage3Dropdown({ applicationId, isCompleted, stageTitle, isArchived = false }: {
   applicationId: string; 
   isCompleted: boolean; 
   stageTitle: string; 
+    isArchived?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
@@ -35,6 +37,7 @@ function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: {
   ];
 
   const copyToClipboard = async (url: string, formName: string) => {
+     if (isArchived) return;
     try {
       await navigator.clipboard.writeText(url);
       setCopied(formName);
@@ -47,11 +50,18 @@ function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: {
     <div className="relative h-full">
       <div 
         className={`p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 h-full min-h-[180px] flex flex-col ${
-          isCompleted 
-            ? 'bg-green-50 border-green-200 hover:border-green-300' 
-            : 'bg-gray-50 border-gray-200 hover:border-gray-300'
+        //   isCompleted 
+        //     ? 'bg-green-50 border-green-200 hover:border-green-300' 
+        //     : 'bg-gray-50 border-gray-200 hover:border-gray-300'
+        // }`}
+        // onClick={() => setIsOpen(!isOpen)}
+        isArchived
+            ? 'bg-gray-100 border-gray-300 opacity-75 cursor-not-allowed'
+            : isCompleted 
+            ? 'bg-green-50 border-green-200 hover:border-green-300 cursor-pointer' 
+            : 'bg-gray-50 border-gray-200 hover:border-gray-300 cursor-pointer'
         }`}
-        onClick={() => setIsOpen(!isOpen)}
+         onClick={() => !isArchived && setIsOpen(!isOpen)}
       >
         <div className="flex items-start justify-between mb-3">
           <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
@@ -64,6 +74,11 @@ function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: {
           <div className={`w-3 h-3 rounded-full ${
             isCompleted ? 'bg-green-500' : 'bg-gray-300'
           }`}></div>
+                    {/* {isArchived && (
+            <div className="mt-2 text-xs text-gray-500 italic">
+              Rejected
+            </div>
+          )} */}
         </div>
         <div className="text-sm font-medium text-gray-900 mb-1">{stageTitle}</div>
         <div className="flex items-center justify-between">
@@ -76,7 +91,8 @@ function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: {
         </div>
       </div>
       
-      {isOpen && (
+      {/* {isOpen && ( */}
+            {isOpen && !isArchived && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl z-20">
           <div className="p-4">
             <div className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
@@ -91,19 +107,35 @@ function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: {
                     <span className="text-sm font-medium text-gray-700">{form.name}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button
+                                        <button
+                      onClick={() => copyToClipboard(form.url, form.name)}
+                      disabled={isArchived}
+                      className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {copied === form.name ? 'Copied!' : 'Copy'}
+                    </button>
+                    {!isArchived && (
+                      <Link
+                        href={form.url}
+                        className="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors font-medium"
+                        target="_blank"
+                      >
+                        Open
+                      </Link>
+                    )}
+                    {/* <button
                       onClick={() => copyToClipboard(form.url, form.name)}
                       className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors font-medium"
                     >
                       {copied === form.name ? 'Copied!' : 'Copy'}
-                    </button>
-                    <Link
+                    </button> */}
+                    {/* <Link
                       href={form.url}
                       className="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors font-medium"
                       target="_blank"
                     >
                       Open
-                    </Link>
+                    </Link> */}
                   </div>
                 </div>
               ))}
@@ -328,11 +360,13 @@ function AIAssessmentCard({ applicationId, childName }: {
 }
 
 // Stage 7 Dropdown Component
-function Stage7Dropdown({ applicationId, isCompleted, stageTitle, childAge }: { 
+// function Stage7Dropdown({ applicationId, isCompleted, stageTitle, childAge }: { 
+function Stage7Dropdown({ applicationId, isCompleted, stageTitle, childAge, isArchived = false }: {
   applicationId: string; 
   isCompleted: boolean; 
   stageTitle: string;
   childAge?: number | null;
+    isArchived?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
@@ -369,6 +403,7 @@ function Stage7Dropdown({ applicationId, isCompleted, stageTitle, childAge }: {
   });
 
   const copyToClipboard = async (url: string, formName: string) => {
+     if (isArchived) return;
     try {
       await navigator.clipboard.writeText(url);
       setCopied(formName);
@@ -381,11 +416,18 @@ function Stage7Dropdown({ applicationId, isCompleted, stageTitle, childAge }: {
     <div className="relative h-full">
       <div 
         className={`p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 h-full min-h-[180px] flex flex-col ${
-          isCompleted 
-            ? 'bg-green-50 border-green-200 hover:border-green-300' 
-            : 'bg-gray-50 border-gray-200 hover:border-gray-300'
+        //   isCompleted 
+        //     ? 'bg-green-50 border-green-200 hover:border-green-300' 
+        //     : 'bg-gray-50 border-gray-200 hover:border-gray-300'
+        // }`}
+        // onClick={() => setIsOpen(!isOpen)}
+        isArchived
+            ? 'bg-gray-100 border-gray-300 opacity-75 cursor-not-allowed'
+            : isCompleted 
+            ? 'bg-green-50 border-green-200 hover:border-green-300 cursor-pointer' 
+            : 'bg-gray-50 border-gray-200 hover:border-gray-300 cursor-pointer'
         }`}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => !isArchived && setIsOpen(!isOpen)}
       >
         <div className="flex items-start justify-between mb-3">
           <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
@@ -410,7 +452,8 @@ function Stage7Dropdown({ applicationId, isCompleted, stageTitle, childAge }: {
         </div>
       </div>
       
-      {isOpen && (
+      {/* {isOpen && ( */}
+            {isOpen && !isArchived && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl z-20">
           <div className="p-4">
             <div className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
@@ -425,19 +468,35 @@ function Stage7Dropdown({ applicationId, isCompleted, stageTitle, childAge }: {
                     <span className="text-sm font-medium text-gray-700">{form.name}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button
+                                        <button
+                      onClick={() => copyToClipboard(form.url, form.name)}
+                      disabled={isArchived}
+                      className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {copied === form.name ? 'Copied!' : 'Copy'}
+                    </button>
+                    {!isArchived && (
+                      <Link
+                        href={form.url}
+                        className="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors font-medium"
+                        target="_blank"
+                      >
+                        Open
+                      </Link>
+                    )}
+                    {/* <button
                       onClick={() => copyToClipboard(form.url, form.name)}
                       className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors font-medium"
                     >
                       {copied === form.name ? 'Copied!' : 'Copy'}
-                    </button>
-                    <Link
+                    </button> */}
+                    {/* <Link
                       href={form.url}
                       className="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors font-medium"
                       target="_blank"
                     >
                       Open
-                    </Link>
+                    </Link> */}
                   </div>
                 </div>
               ))}
@@ -852,6 +911,17 @@ export default function AdminApplicationDetailPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+           {/* Archive Banner - Show if application is rejected */}
+        {/* {data?.status === 'rejected' && (
+          <div className="mb-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <p className="text-yellow-800 font-medium">This application is rejected.</p>
+            </div>
+          </div>
+        )} */}
         {/* Header Section */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -914,7 +984,7 @@ export default function AdminApplicationDetailPage() {
               </div>
               
               {/* Odoo Approve/Logout/Sync Buttons */}
-              {allFormsCompleted && data.status === 'completed' && (
+              {allFormsCompleted && data.status === 'completed'  && (
                 <div className="space-y-2">
                   {isOdooLoggedIn ? (
                     <>
@@ -1065,6 +1135,7 @@ export default function AdminApplicationDetailPage() {
             {Array.from({ length: 9 }, (_, i) => i).map((idx) => {
               const stageNumber = idx + 1;
               const isCompleted = completionFields[idx] || false;
+              const isArchived = data.status === 'rejected';
                const hrefMap: Record<number, string> = {
                  1: `/admin/applications/${data.id}/initial-form`,
                  2: `/admin/applications/${data.id}/screening-call`,
@@ -1084,6 +1155,7 @@ export default function AdminApplicationDetailPage() {
                     applicationId={data.id} 
                     isCompleted={isCompleted}
                     stageTitle={stageTitles[idx]}
+                     isArchived={isArchived}
                   />
                 );
               }
@@ -1097,13 +1169,21 @@ export default function AdminApplicationDetailPage() {
                      isCompleted={isCompleted}
                      stageTitle={stageTitles[idx]}
                      childAge={data.childAge}
+                      isArchived={isArchived}
                    />
                  );
                }
               
               const inner = (
-                <div className={`p-4 rounded-lg border-2 transition-all duration-200 h-full min-h-[180px] flex flex-col ${
-                  isCompleted 
+                // <div className={`p-4 rounded-lg border-2 transition-all duration-200 h-full min-h-[180px] flex flex-col ${
+                //   isCompleted 
+                //     ? 'bg-green-50 border-green-200 hover:border-green-300' 
+                //     : 'bg-gray-50 border-gray-200 hover:border-gray-300'
+                // }`}>
+                 <div className={`p-4 rounded-lg border-2 transition-all duration-200 h-full min-h-[180px] flex flex-col ${
+                  isArchived
+                    ? 'bg-gray-100 border-gray-300 opacity-75 cursor-not-allowed'
+                    : isCompleted 
                     ? 'bg-green-50 border-green-200 hover:border-green-300' 
                     : 'bg-gray-50 border-gray-200 hover:border-gray-300'
                 }`}>
@@ -1129,8 +1209,7 @@ export default function AdminApplicationDetailPage() {
                   </div>
                 </div>
               );
-              
-              return href ? (
+                            return href && !isArchived ? (
                 <Link 
                   key={idx} 
                   href={href} 
@@ -1139,12 +1218,25 @@ export default function AdminApplicationDetailPage() {
                   {inner}
                 </Link>
               ) : (
-                <div key={idx}>{inner}</div>
+                <div key={idx} className={isArchived ? "cursor-not-allowed" : ""}>{inner}</div>
               );
+              
+              // return href ? (
+              //   <Link 
+              //     key={idx} 
+              //     href={href} 
+              //     className="block h-full hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg transition-transform duration-200"
+              //   >
+              //     {inner}
+              //   </Link>
+              // ) : (
+              //   <div key={idx}>{inner}</div>
+              // );
             })}
             
             {/* AI Assessment Card - Only show when all 9 forms are completed */}
-            {allFormsCompleted && (
+            {/* {allFormsCompleted && ( */}
+               {allFormsCompleted && data.status !== 'rejected' && (
               <AIAssessmentCard 
                 applicationId={data.id}
                 childName={data.childFullName}
