@@ -657,7 +657,7 @@ export default function ComprehensiveProfileSheetPage() {
             <FormField label="Age" htmlFor="childAge" error={errors.childAge as any}>
               <Input id="childAge" {...register("childAge")} />
             </FormField>
-            <FormField label="Date" htmlFor="assessmentDate" error={errors.assessmentDate as any}>
+            <FormField label="Assessment Date" htmlFor="assessmentDate" error={errors.assessmentDate as any}>
               <Input id="assessmentDate" {...register("assessmentDate")} />
             </FormField>
             <FormField label="Recommended Placement" htmlFor="recommendedPlacement" error={errors.recommendedPlacement as any}>
@@ -1057,7 +1057,8 @@ export default function ComprehensiveProfileSheetPage() {
         {/* Learning Style Preference */}
         <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
-            title="Learning Style Preference"
+           // title="Learning Style Preference"
+           title="Learning Identity Profile"
             bgClassName="bg-teal-700"
           />
           <div className="mt-3 text-slate-700 mb-4">
