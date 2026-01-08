@@ -97,7 +97,7 @@ const schema = z.object({
   existentialNotes: z.string().optional(),
   
   // Meta-Learning Pillars & Soft Skills Profile
-  summaryInsightLearnerType: z.string().optional(),
+  summaryInsightLearnerType: z.string().optional(), // repurposed as Dominant Intelligence summary
   summaryInsightLearningEnvironments: z.string().optional(),
   selfRegulationEmerging: z.boolean().default(false),
   selfRegulationDeveloping: z.boolean().default(false),
@@ -657,7 +657,7 @@ export default function ComprehensiveProfileSheetPage() {
             <FormField label="Age" htmlFor="childAge" error={errors.childAge as any}>
               <Input id="childAge" {...register("childAge")} />
             </FormField>
-            <FormField label="Date" htmlFor="assessmentDate" error={errors.assessmentDate as any}>
+            <FormField label="Assessment Date" htmlFor="assessmentDate" error={errors.assessmentDate as any}>
               <Input id="assessmentDate" {...register("assessmentDate")} />
             </FormField>
             <FormField label="Recommended Placement" htmlFor="recommendedPlacement" error={errors.recommendedPlacement as any}>
@@ -1057,7 +1057,8 @@ export default function ComprehensiveProfileSheetPage() {
         {/* Learning Style Preference */}
         <section className="bg-white rounded-xl shadow-sm ring-1 mb-6 ring-black/5 p-6">
           <FormSectionHeader
-            title="Learning Style Preference"
+           // title="Learning Style Preference"
+           title="Learning Identity Profile"
             bgClassName="bg-teal-700"
           />
           <div className="mt-3 text-slate-700 mb-4">
@@ -1169,7 +1170,7 @@ export default function ComprehensiveProfileSheetPage() {
               </FormField>
             </div>
 
-            {/* Verbal/Linguistic */}
+            {/* Verbal (Linguistic) */}
             <div className="border border-slate-200 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Controller
@@ -1184,7 +1185,7 @@ export default function ComprehensiveProfileSheetPage() {
                     />
                   )}
                 />
-                <span className="font-medium text-slate-900">Verbal/Linguistic</span>
+                <span className="font-medium text-slate-900">Verbal (Linguistic)</span>
               </div>
               <FormField label="Evidence:" htmlFor="verbalLinguisticObservedEvidence">
                 <Textarea
@@ -1221,7 +1222,7 @@ export default function ComprehensiveProfileSheetPage() {
               </FormField>
             </div>
 
-            {/* Social/Interpersonal */}
+            {/* Social (Interpersonal) */}
             <div className="border border-slate-200 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Controller
@@ -1236,7 +1237,7 @@ export default function ComprehensiveProfileSheetPage() {
                     />
                   )}
                 />
-                <span className="font-medium text-slate-900">Social/Interpersonal</span>
+                <span className="font-medium text-slate-900">Social (Interpersonal)</span>
               </div>
               <FormField label="Evidence:" htmlFor="socialInterpersonalObservedEvidence">
                 <Textarea
@@ -1247,7 +1248,7 @@ export default function ComprehensiveProfileSheetPage() {
               </FormField>
             </div>
 
-            {/* Solitary/Intrapersonal */}
+            {/* Solitary (Intrapersonal) */}
             <div className="border border-slate-200 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Controller
@@ -1262,7 +1263,7 @@ export default function ComprehensiveProfileSheetPage() {
                     />
                   )}
                 />
-                <span className="font-medium text-slate-900">Solitary/Intrapersonal</span>
+                <span className="font-medium text-slate-900">Solitary (Intrapersonal)</span>
               </div>
               <FormField label="Evidence:" htmlFor="solitaryIntrapersonalObservedEvidence">
                 <Textarea
@@ -1311,393 +1312,482 @@ export default function ComprehensiveProfileSheetPage() {
             <p>Multiple intelligence assessment based on observations.</p>
           </div>
 
-          <div className="space-y-4">
-            {/* Linguistic Intelligence */}
-            <div className="border border-slate-200 rounded-lg p-4">
-              <div className="flex items-center gap-4 mb-2">
-                <Controller
-                  name="linguisticObserved"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-sm border border-slate-200">
+              <thead className="bg-slate-50">
+                <tr>
+                  <th className="px-4 py-2 text-left font-medium text-slate-700 border-b border-slate-200">
+                    Description
+                  </th>
+                  <th className="px-4 py-2 text-left font-medium text-slate-700 border-b border-slate-200">
+                    Level (✓ / +)
+                  </th>
+                  <th className="px-4 py-2 text-left font-medium text-slate-700 border-b border-slate-200">
+                    Notes
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                {/* Linguistic (Word-Smart) */}
+                <tr>
+                  <td className="px-4 py-3 align-top">
+                    <div className="font-medium text-slate-900">Linguistic (Word-Smart)</div>
+                    <div className="text-xs text-slate-600">Language, stories, expression</div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <div className="flex flex-col gap-1">
+                      <Controller
+                        name="linguisticObserved"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">✓ Observed</span>
+                          </label>
+                        )}
                       />
-                      <span className="font-medium text-slate-900">Linguistic Intelligence</span>
-                    </label>
-                  )}
-                />
-                <Controller
-                  name="linguisticStronglyEvident"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      <Controller
+                        name="linguisticStronglyEvident"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">+ Strongly Evident</span>
+                          </label>
+                        )}
                       />
-                      <span className="text-slate-700">Strongly Evident</span>
-                    </label>
-                  )}
-                />
-              </div>
-              <FormField label="Notes:" htmlFor="linguisticNotes">
-                <Textarea
-                  rows={2}
-                  id="linguisticNotes"
-                  {...register("linguisticNotes")}
-                />
-              </FormField>
-            </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <Textarea
+                      rows={3}
+                      id="linguisticNotes"
+                      {...register("linguisticNotes")}
+                    />
+                  </td>
+                </tr>
 
-            {/* Logical-Mathematical Intelligence */}
-            <div className="border border-slate-200 rounded-lg p-4">
-              <div className="flex items-center gap-4 mb-2">
-                <Controller
-                  name="logicalMathematicalObservedInt"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                {/* Logical–Mathematical */}
+                <tr>
+                  <td className="px-4 py-3 align-top">
+                    <div className="font-medium text-slate-900">Logical–Mathematical</div>
+                    <div className="text-xs text-slate-600">Numbers, puzzles, reasoning</div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <div className="flex flex-col gap-1">
+                      <Controller
+                        name="logicalMathematicalObservedInt"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">✓ Observed</span>
+                          </label>
+                        )}
                       />
-                      <span className="font-medium text-slate-900">Logical-Mathematical Intelligence</span>
-                    </label>
-                  )}
-                />
-                <Controller
-                  name="logicalMathematicalStronglyEvidentInt"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      <Controller
+                        name="logicalMathematicalStronglyEvidentInt"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">+ Strongly Evident</span>
+                          </label>
+                        )}
                       />
-                      <span className="text-slate-700">Strongly Evident</span>
-                    </label>
-                  )}
-                />
-              </div>
-              <FormField label="Notes:" htmlFor="logicalMathematicalNotesInt">
-                <Textarea
-                  rows={2}
-                  id="logicalMathematicalNotesInt"
-                  {...register("logicalMathematicalNotesInt")}
-                />
-              </FormField>
-            </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <Textarea
+                      rows={3}
+                      id="logicalMathematicalNotesInt"
+                      {...register("logicalMathematicalNotesInt")}
+                    />
+                  </td>
+                </tr>
 
-            {/* Spatial Intelligence */}
-            <div className="border border-slate-200 rounded-lg p-4">
-              <div className="flex items-center gap-4 mb-2">
-                <Controller
-                  name="spatialObserved"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                {/* Spatial (Picture-Smart) */}
+                <tr>
+                  <td className="px-4 py-3 align-top">
+                    <div className="font-medium text-slate-900">Spatial (Picture-Smart)</div>
+                    <div className="text-xs text-slate-600">Visualizing, building, design</div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <div className="flex flex-col gap-1">
+                      <Controller
+                        name="spatialObserved"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">✓ Observed</span>
+                          </label>
+                        )}
                       />
-                      <span className="font-medium text-slate-900">Spatial Intelligence</span>
-                    </label>
-                  )}
-                />
-                <Controller
-                  name="spatialStronglyEvident"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      <Controller
+                        name="spatialStronglyEvident"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">+ Strongly Evident</span>
+                          </label>
+                        )}
                       />
-                      <span className="text-slate-700">Strongly Evident</span>
-                    </label>
-                  )}
-                />
-              </div>
-              <FormField label="Notes:" htmlFor="spatialNotes">
-                <Textarea
-                  rows={2}
-                  id="spatialNotes"
-                  {...register("spatialNotes")}
-                />
-              </FormField>
-            </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <Textarea
+                      rows={3}
+                      id="spatialNotes"
+                      {...register("spatialNotes")}
+                    />
+                  </td>
+                </tr>
 
-            {/* Bodily-Kinesthetic Intelligence */}
-            <div className="border border-slate-200 rounded-lg p-4">
-              <div className="flex items-center gap-4 mb-2">
-                <Controller
-                  name="bodilyKinestheticObserved"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                {/* Bodily–Kinesthetic */}
+                <tr>
+                  <td className="px-4 py-3 align-top">
+                    <div className="font-medium text-slate-900">Bodily–Kinesthetic</div>
+                    <div className="text-xs text-slate-600">Movement, hands-on work</div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <div className="flex flex-col gap-1">
+                      <Controller
+                        name="bodilyKinestheticObserved"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">✓ Observed</span>
+                          </label>
+                        )}
                       />
-                      <span className="font-medium text-slate-900">Bodily-Kinesthetic Intelligence</span>
-                    </label>
-                  )}
-                />
-                <Controller
-                  name="bodilyKinestheticStronglyEvident"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      <Controller
+                        name="bodilyKinestheticStronglyEvident"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">+ Strongly Evident</span>
+                          </label>
+                        )}
                       />
-                      <span className="text-slate-700">Strongly Evident</span>
-                    </label>
-                  )}
-                />
-              </div>
-              <FormField label="Notes:" htmlFor="bodilyKinestheticNotes">
-                <Textarea
-                  rows={2}
-                  id="bodilyKinestheticNotes"
-                  {...register("bodilyKinestheticNotes")}
-                />
-              </FormField>
-            </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <Textarea
+                      rows={3}
+                      id="bodilyKinestheticNotes"
+                      {...register("bodilyKinestheticNotes")}
+                    />
+                  </td>
+                </tr>
 
-            {/* Musical Intelligence */}
-            <div className="border border-slate-200 rounded-lg p-4">
-              <div className="flex items-center gap-4 mb-2">
-                <Controller
-                  name="musicalObserved"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                {/* Musical (Sound-Smart) */}
+                <tr>
+                  <td className="px-4 py-3 align-top">
+                    <div className="font-medium text-slate-900">Musical (Sound-Smart)</div>
+                    <div className="text-xs text-slate-600">Rhythm, sound, memory</div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <div className="flex flex-col gap-1">
+                      <Controller
+                        name="musicalObserved"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">✓ Observed</span>
+                          </label>
+                        )}
                       />
-                      <span className="font-medium text-slate-900">Musical Intelligence</span>
-                    </label>
-                  )}
-                />
-                <Controller
-                  name="musicalStronglyEvident"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      <Controller
+                        name="musicalStronglyEvident"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">+ Strongly Evident</span>
+                          </label>
+                        )}
                       />
-                      <span className="text-slate-700">Strongly Evident</span>
-                    </label>
-                  )}
-                />
-              </div>
-              <FormField label="Notes:" htmlFor="musicalNotes">
-                <Textarea
-                  rows={2}
-                  id="musicalNotes"
-                  {...register("musicalNotes")}
-                />
-              </FormField>
-            </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <Textarea
+                      rows={3}
+                      id="musicalNotes"
+                      {...register("musicalNotes")}
+                    />
+                  </td>
+                </tr>
 
-            {/* Interpersonal Intelligence */}
-            <div className="border border-slate-200 rounded-lg p-4">
-              <div className="flex items-center gap-4 mb-2">
-                <Controller
-                  name="interpersonalObserved"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                {/* Interpersonal (People-Smart) */}
+                <tr>
+                  <td className="px-4 py-3 align-top">
+                    <div className="font-medium text-slate-900">Interpersonal (People-Smart)</div>
+                    <div className="text-xs text-slate-600">Social cues, empathy</div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <div className="flex flex-col gap-1">
+                      <Controller
+                        name="interpersonalObserved"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">✓ Observed</span>
+                          </label>
+                        )}
                       />
-                      <span className="font-medium text-slate-900">Interpersonal Intelligence</span>
-                    </label>
-                  )}
-                />
-                <Controller
-                  name="interpersonalStronglyEvident"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      <Controller
+                        name="interpersonalStronglyEvident"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">+ Strongly Evident</span>
+                          </label>
+                        )}
                       />
-                      <span className="text-slate-700">Strongly Evident</span>
-                    </label>
-                  )}
-                />
-              </div>
-              <FormField label="Notes:" htmlFor="interpersonalNotes">
-                <Textarea
-                  rows={2}
-                  id="interpersonalNotes"
-                  {...register("interpersonalNotes")}
-                />
-              </FormField>
-            </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <Textarea
+                      rows={3}
+                      id="interpersonalNotes"
+                      {...register("interpersonalNotes")}
+                    />
+                  </td>
+                </tr>
 
-            {/* Intrapersonal Intelligence */}
-            <div className="border border-slate-200 rounded-lg p-4">
-              <div className="flex items-center gap-4 mb-2">
-                <Controller
-                  name="intrapersonalObserved"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                {/* Intrapersonal (Self-Smart) */}
+                <tr>
+                  <td className="px-4 py-3 align-top">
+                    <div className="font-medium text-slate-900">Intrapersonal (Self-Smart)</div>
+                    <div className="text-xs text-slate-600">Self-awareness, independence</div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <div className="flex flex-col gap-1">
+                      <Controller
+                        name="intrapersonalObserved"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">✓ Observed</span>
+                          </label>
+                        )}
                       />
-                      <span className="font-medium text-slate-900">Intrapersonal Intelligence</span>
-                    </label>
-                  )}
-                />
-                <Controller
-                  name="intrapersonalStronglyEvident"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      <Controller
+                        name="intrapersonalStronglyEvident"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">+ Strongly Evident</span>
+                          </label>
+                        )}
                       />
-                      <span className="text-slate-700">Strongly Evident</span>
-                    </label>
-                  )}
-                />
-              </div>
-              <FormField label="Notes:" htmlFor="intrapersonalNotes">
-                <Textarea
-                  rows={2}
-                  id="intrapersonalNotes"
-                  {...register("intrapersonalNotes")}
-                />
-              </FormField>
-            </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <Textarea
+                      rows={3}
+                      id="intrapersonalNotes"
+                      {...register("intrapersonalNotes")}
+                    />
+                  </td>
+                </tr>
 
-            {/* Naturalistic Intelligence */}
-            <div className="border border-slate-200 rounded-lg p-4">
-              <div className="flex items-center gap-4 mb-2">
-                <Controller
-                  name="naturalisticObserved"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                {/* Naturalistic */}
+                <tr>
+                  <td className="px-4 py-3 align-top">
+                    <div className="font-medium text-slate-900">Naturalistic</div>
+                    <div className="text-xs text-slate-600">Patterns in nature</div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <div className="flex flex-col gap-1">
+                      <Controller
+                        name="naturalisticObserved"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">✓ Observed</span>
+                          </label>
+                        )}
                       />
-                      <span className="font-medium text-slate-900">Naturalistic Intelligence</span>
-                    </label>
-                  )}
-                />
-                <Controller
-                  name="naturalisticStronglyEvident"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      <Controller
+                        name="naturalisticStronglyEvident"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">+ Strongly Evident</span>
+                          </label>
+                        )}
                       />
-                      <span className="text-slate-700">Strongly Evident</span>
-                    </label>
-                  )}
-                />
-              </div>
-              <FormField label="Notes:" htmlFor="naturalisticNotes">
-                <Textarea
-                  rows={2}
-                  id="naturalisticNotes"
-                  {...register("naturalisticNotes")}
-                />
-              </FormField>
-            </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <Textarea
+                      rows={3}
+                      id="naturalisticNotes"
+                      {...register("naturalisticNotes")}
+                    />
+                  </td>
+                </tr>
 
-            {/* Existential Intelligence */}
-            <div className="border border-slate-200 rounded-lg p-4">
-              <div className="flex items-center gap-4 mb-2">
-                <Controller
-                  name="existentialObserved"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                {/* Existential */}
+                <tr>
+                  <td className="px-4 py-3 align-top">
+                    <div className="font-medium text-slate-900">Existential</div>
+                    <div className="text-xs text-slate-600">Big-picture thinking</div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <div className="flex flex-col gap-1">
+                      <Controller
+                        name="existentialObserved"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">✓ Observed</span>
+                          </label>
+                        )}
                       />
-                      <span className="font-medium text-slate-900">Existential Intelligence</span>
-                    </label>
-                  )}
-                />
-                <Controller
-                  name="existentialStronglyEvident"
-                  control={control}
-                  render={({ field }) => (
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      <Controller
+                        name="existentialStronglyEvident"
+                        control={control}
+                        render={({ field }) => (
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                            />
+                            <span className="text-slate-700">+ Strongly Evident</span>
+                          </label>
+                        )}
                       />
-                      <span className="text-slate-700">Strongly Evident</span>
-                    </label>
-                  )}
-                />
-              </div>
-              <FormField label="Notes:" htmlFor="existentialNotes">
-                <Textarea
-                  rows={2}
-                  id="existentialNotes"
-                  {...register("existentialNotes")}
-                />
-              </FormField>
-            </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <Textarea
+                      rows={3}
+                      id="existentialNotes"
+                      {...register("existentialNotes")}
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-4 space-y-2">
+            <label
+              htmlFor="summaryInsightLearnerType"
+              className="block text-sm font-medium text-slate-900"
+            >
+              📝 Summary Insight:
+            </label>
+            <p className="text-xs text-slate-600">
+              This child shows traits of a “___________________” type learner, who benefits most from __________________ learning environments.
+            </p>
+            <Textarea
+              rows={3}
+              id="summaryInsightLearnerType"
+              {...register("summaryInsightLearnerType")}
+              placeholder='E.g., “Highly visual, social collaborator who thrives in project-based, discussion-rich environments.”'
+            />
           </div>
         </section>
 
@@ -1708,28 +1798,10 @@ export default function ComprehensiveProfileSheetPage() {
             bgClassName="bg-teal-700"
           />
           <div className="mt-3 text-slate-700 mb-4">
-            <p>Essential skills for learning and development.</p>
+            <p>Meta-learning pillars and soft skills profile.</p>
           </div>
-
+          
           <div className="space-y-6">
-            {/* Summary Insights */}
-            <div className="space-y-4">
-              <FormField label="Summary Insight - Learner Type:" htmlFor="summaryInsightLearnerType">
-                <Textarea
-                  rows={3}
-                  id="summaryInsightLearnerType"
-                  {...register("summaryInsightLearnerType")}
-                />
-              </FormField>
-              <FormField label="Summary Insight - Learning Environments:" htmlFor="summaryInsightLearningEnvironments">
-                <Textarea
-                  rows={3}
-                  id="summaryInsightLearningEnvironments"
-                  {...register("summaryInsightLearningEnvironments")}
-                />
-              </FormField>
-            </div>
-
             {/* Self-Regulation */}
             <div className="border border-slate-200 rounded-lg p-4">
               <div className="font-medium text-slate-900 mb-2">Self-Regulation</div>
@@ -1966,9 +2038,9 @@ export default function ComprehensiveProfileSheetPage() {
               </FormField>
             </div>
 
-            {/* Resilience & Confidence */}
+            {/* Resilience / Confidence */}
             <div className="border border-slate-200 rounded-lg p-4">
-              <div className="font-medium text-slate-900 mb-2">Resilience & Confidence</div>
+              <div className="font-medium text-slate-900 mb-2">Resilience / Confidence</div>
               <div className="flex flex-wrap gap-4 mb-3">
                 <Controller
                   name="resilienceConfidenceEmerging"

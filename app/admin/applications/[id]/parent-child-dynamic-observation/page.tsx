@@ -21,6 +21,7 @@ const schema = z.object({
   childAge: z.string().min(1, "Required"),
   date: z.string().optional(),
   examiner: z.string().optional(),
+  parentPresence: z.string().optional(),
   
   // Joint Story Creation (10 minutes)
   sharedIdeaExchangeRating: z.string().min(1, "Required"),
@@ -154,6 +155,7 @@ export default function ParentChildDynamicObservationPage() {
       childAge: "",
       date: "",
       examiner: "",
+      parentPresence: "",
       sharedIdeaExchangeRating: "",
       sharedIdeaExchangeNotes: "",
       emotionalWarmthRating: "",
@@ -279,6 +281,7 @@ export default function ParentChildDynamicObservationPage() {
           childAge: appData.childAge ? appData.childAge.toString() : "",
           date: "",
           examiner: "",
+          parentPresence: "",
           
           // Joint Story Creation (10 minutes)
           sharedIdeaExchangeRating: "",
@@ -492,6 +495,13 @@ export default function ParentChildDynamicObservationPage() {
             </FormField>
             <FormField label="Examiner" htmlFor="examiner">
               <Input id="examiner" {...register("examiner" as any)} />
+            </FormField>
+            <FormField label="Parent(s) Present" htmlFor="parentPresence">
+              <Input
+                id="parentPresence"
+                {...register("parentPresence")}
+                placeholder="e.g., Mother present in room, father in lobby"
+              />
             </FormField>
           </div>
         </section>

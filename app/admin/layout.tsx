@@ -32,6 +32,11 @@ export default function AdminRootLayout({ children }: { children: React.ReactNod
               <span className="w-8 text-center">🗂️</span>
               <span className="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity">Applications</span>
             </Link>
+              <Link href="/admin/archive" className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-100 text-slate-700">
+              <span className="w-8 text-center">📦</span>
+              {/* <span className="w-8 text-center">📜</span> */}
+              <span className="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity">Archive</span>
+            </Link>
             {/* <a href="/admin/users" className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-slate-100 text-slate-700">
               <span className="w-8 text-center">👥</span>
               <span className="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity">Users</span>

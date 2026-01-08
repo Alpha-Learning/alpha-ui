@@ -860,6 +860,7 @@ model ParentChildDynamicObservation {
   childAge          String?
   date              String?
   examiner          String?
+  parentPresence    String?
   
   // Joint Story Creation (10 minutes)
   sharedIdeaExchangeRating     Int?

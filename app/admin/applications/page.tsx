@@ -288,9 +288,12 @@ export default function AdminApplicationsPage() {
           />
           <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="border border-slate-300 rounded-lg px-3 py-2 text-slate-900">
             <option value="">All Status</option>
-            {['submitted','completed','rejected'].map(s => (
+            <option value="submitted">Submitted</option>
+            <option value="processing">Processing</option>
+            <option value="completed">Completed</option>
+            {/* {['submitted','completed','rejected'].map(s => (
               <option key={s} value={s}>{s}</option>
-            ))}
+            ))} */}
           </select>
           <select value={paymentFilter} onChange={(e) => setPaymentFilter(e.target.value)} className="border border-slate-300 rounded-lg px-3 py-2 text-slate-900">
             <option value="">All Payments</option>
