@@ -4,7 +4,7 @@ import { verifyToken } from "@/app/lib/auth";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authHeader = request.headers.get("authorization");
@@ -17,7 +17,7 @@ export async function POST(
       return NextResponse.json({ success: false, message: "Forbidden" }, { status: 403 });
     }
 
-    const applicationId = params.id;
+    const { id: applicationId } = await params;
     const body = await request.json();
     const { isPaid, paymentAmount, paidAt } = body;
 
