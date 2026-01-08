@@ -1173,6 +1173,9 @@ export default function AdminApplicationDetailPage() {
                    />
                  );
                }
+
+                const isFirstForm = stageNumber === 1;
+              const shouldDisableLink = isArchived && !isFirstForm;
               
               const inner = (
                 // <div className={`p-4 rounded-lg border-2 transition-all duration-200 h-full min-h-[180px] flex flex-col ${
@@ -1181,7 +1184,8 @@ export default function AdminApplicationDetailPage() {
                 //     : 'bg-gray-50 border-gray-200 hover:border-gray-300'
                 // }`}>
                  <div className={`p-4 rounded-lg border-2 transition-all duration-200 h-full min-h-[180px] flex flex-col ${
-                  isArchived
+                  // isArchived
+                   isArchived && !isFirstForm
                     ? 'bg-gray-100 border-gray-300 opacity-75 cursor-not-allowed'
                     : isCompleted 
                     ? 'bg-green-50 border-green-200 hover:border-green-300' 
@@ -1209,7 +1213,10 @@ export default function AdminApplicationDetailPage() {
                   </div>
                 </div>
               );
-                            return href && !isArchived ? (
+
+             
+               return href && !shouldDisableLink ? (
+                            // return href && !isArchived ? (
                 <Link 
                   key={idx} 
                   href={href} 
