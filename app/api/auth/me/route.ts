@@ -65,6 +65,9 @@ export async function GET(req: Request) {
         isSeventhFormCompleted: true,
         isEighthFormCompleted: true,
         isNinthFormCompleted: true,
+        isPaid: true,
+        paymentAmount: true,
+        paidAt: true,
       }
     });
 
@@ -89,6 +92,9 @@ export async function GET(req: Request) {
         submittedAt: latestApplication?.createdAt || null,
         applicationId: latestApplication?.id || null,
         allFormsCompleted: allFormsCompleted,
+        isPaid: latestApplication?.isPaid || false,
+        paymentAmount: latestApplication?.paymentAmount || null,
+        paidAt: latestApplication?.paidAt || null,
       },
     });
 

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, Input, Textarea, FormSectionHeader } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
@@ -23,6 +23,7 @@ export default function GuidedObservationsProcedurePage() {
     setValue,
     watch,
     reset,
+    control,
   } = useForm<GuidedObservationFormData>({
     resolver: zodResolver(guidedObservationSchema),
     defaultValues: {
@@ -78,7 +79,8 @@ export default function GuidedObservationsProcedurePage() {
       initialLearningStyleImpressions: "",
       earlyFlagsNeedsFollowUp: "",
       selfDirectedVsSeekingGuidance: "",
-      flagIndicators: "",
+     // flagIndicators: "",
+      flagIndicators: [],
       additionalNotes: "",
       preferredZone: "",
       initialBehaviour: "",
@@ -174,8 +176,8 @@ export default function GuidedObservationsProcedurePage() {
           initialLearningStyleImpressions: data.initialLearningStyleImpressions || "",
           earlyFlagsNeedsFollowUp: data.earlyFlagsNeedsFollowUp || "",
           selfDirectedVsSeekingGuidance: data.selfDirectedVsSeekingGuidance || "",
-          flagIndicators: data.flagIndicators || "",
-          additionalNotes: data.additionalNotes || "",
+         // flagIndicators: data.flagIndicators || "",
+       flagIndicators: data.flagIndicators ? (typeof data.flagIndicators === 'string' ? data.flagIndicators.split(',').filter(Boolean) : data.flagIndicators) : [],
           preferredZone: data.preferredZone || "",
           initialBehaviour: data.initialBehaviour || "",
           opennessToAdultGuidance: data.opennessToAdultGuidance || "",
@@ -242,6 +244,7 @@ export default function GuidedObservationsProcedurePage() {
         metaConfidenceScore: parseInt(formData.metaConfidenceScore),
         metaCollaborationScore: parseInt(formData.metaCollaborationScore),
         metaEmotionalAwarenessScore: parseInt(formData.metaEmotionalAwarenessScore),
+        flagIndicators: formData.flagIndicators && formData.flagIndicators.length > 0 ? formData.flagIndicators.join(',') : '',
       };
       
       const res = await apiService.post("/api/admin/guided-observations-procedure", payload);
@@ -1211,8 +1214,49 @@ export default function GuidedObservationsProcedurePage() {
                     className="w-full"
                   />
             </FormField>
+            <FormField label="Flag Indicators" htmlFor="flagIndicators">
+  <Controller
+    name="flagIndicators"
+    control={control}
+    render={({ field }) => {
+      const flagOptions = [
+        { value: "P", label: "P – Excessive parental interference" },
+        { value: "T", label: "T – Technology discomfort" },
+        { value: "C", label: "C – Confidence / independence concerns" },
+        { value: "E", label: "E – Exceptional performance in specific area" },
+      ];
+      
+      return (
+        <div className="space-y-2">
+          {flagOptions.map((option) => (
+            <label key={option.value} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                value={option.value}
+                checked={field.value?.includes(option.value) || false}
+                onChange={(e) => {
+                  const currentValue = field.value || [];
+                  if (e.target.checked) {
+                    field.onChange([...currentValue, option.value]);
+                  } else {
+                    field.onChange(currentValue.filter((v: string) => v !== option.value));
+                  }
+                }}
+                className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+              />
+              <span className="text-sm text-slate-700">{option.label}</span>
+            </label>
+          ))}
+        </div>
+      );
+    }}
+  />
+  {errors.flagIndicators && (
+    <p className="text-red-500 text-sm mt-2">{errors.flagIndicators.message}</p>
+  )}
+</FormField>
                 
-                <FormField label="Flag Indicators" htmlFor="flagIndicators">
+                {/* <FormField label="Flag Indicators" htmlFor="flagIndicators">
                   <div className="text-sm text-slate-600 mb-2">
                     <strong>P</strong> - Excessive parental interference<br/>
                     <strong>T</strong> - Technology discomfort<br/>
@@ -1225,7 +1269,7 @@ export default function GuidedObservationsProcedurePage() {
                     {...register("flagIndicators")}
                     className="w-full"
                   />
-                </FormField>
+                </FormField> */}
           </div>
             </div>
             

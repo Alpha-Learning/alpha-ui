@@ -14,6 +14,9 @@ interface UserData {
   submittedAt: string | null;
   applicationId?: string | null;
   allFormsCompleted?: boolean;
+  isPaid?: boolean;
+  paymentAmount?: number | null;
+  paidAt?: string | null;
 }
 
 export default function UserDashboard() {
@@ -370,6 +373,59 @@ export default function UserDashboard() {
           )}
         </div>
       </div>
+
+      {/* Payment Status */}
+      {userData?.applicationId && (
+        <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+          <h3 className="text-lg font-semibold text-slate-900 mb-4">Payment Status</h3>
+          
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm text-slate-500">Payment Status</p>
+              <div className="mt-1">
+                {userData?.isPaid ? (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Paid
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Unpaid
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {userData?.isPaid && (
+              <>
+                <div>
+                  <p className="text-sm text-slate-500">Payment Amount</p>
+                  <p className="font-medium text-slate-900">
+                    ${userData?.paymentAmount || 150}
+                  </p>
+                </div>
+                {userData?.paidAt && (
+                  <div>
+                    <p className="text-sm text-slate-500">Paid On</p>
+                    <p className="font-medium text-slate-900">
+                      {new Date(userData.paidAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </p>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* User Details */}
       <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
