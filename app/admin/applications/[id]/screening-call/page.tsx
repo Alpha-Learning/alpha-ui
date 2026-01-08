@@ -43,10 +43,10 @@ export default function ScreeningCallFormPage() {
       fitClarificationNotes: "",
       generalNotes: "",
       parentReactionsNotes: "",
-      comprehensiveQuestionnaires: false,
-      guidebookInfo: false,
+      comprehensiveQuestionnaires: "",
+      guidebookInfo: undefined,
       walkthroughDate: "",
-      assessmentInvite: "",
+      assessmentInvite: false,
       additionalNotes: "",
       loggedToSystemDate: "",
       loggedBy: "",
@@ -96,11 +96,17 @@ export default function ScreeningCallFormPage() {
           fitClarificationNotes: data.fitClarificationNotes || "",
           generalNotes: data.generalNotes || "",
           parentReactionsNotes: data.parentReactionsNotes || "",
-          comprehensiveQuestionnaires: data.comprehensiveQuestionnaires || false,
+          comprehensiveQuestionnaires: data.comprehensiveQuestionnaires || "",
           guidebookInfo: data.guidebookInfo || false,
           walkthroughDate: data.walkthroughDate || "",
-          assessmentInvite: data.assessmentInvite || "",
-          additionalNotes: data.additionalNotes || "",
+          // assessmentInvite: data.assessmentInvite || "",
+          assessmentInvite: !!data.assessmentInvite,
+
+          // additionalNotes: data.additionalNotes || "",
+          additionalNotes: data.additionalNotes
+  ? new Date(data.additionalNotes).toISOString().slice(0, 16)
+  : "",
+
           loggedToSystemDate: data.loggedToSystemDate || "",
           loggedBy: data.loggedBy || "",
         });
@@ -125,10 +131,10 @@ export default function ScreeningCallFormPage() {
           fitClarificationNotes: "",
           generalNotes: "",
           parentReactionsNotes: "",
-          comprehensiveQuestionnaires: false,
-          guidebookInfo: false,
+          comprehensiveQuestionnaires: "",
+          guidebookInfo: undefined,
           walkthroughDate: "",
-          assessmentInvite: "",
+          assessmentInvite: false,
           additionalNotes: "",
           loggedToSystemDate: "",
           loggedBy: "",
@@ -449,51 +455,108 @@ console.log("errors========",errors);
             <section>
               <FormSectionHeader title="Next Steps (3 min)" bgClassName="bg-teal-700" />
               <div className="mt-3 grid grid-cols-1 gap-3 text-sm text-slate-700">
-                <label className="flex items-center gap-2">
-                  <input 
-                    type="checkbox" 
-                    {...register("comprehensiveQuestionnaires")}
-                  /> Comprehensive Questionnaires x3
-                </label>
-                <label className="flex items-center gap-2">
-                  <input 
-                    type="checkbox" 
-                    {...register("guidebookInfo")}
-                  /> Guidebook / Additional Info
-                </label>
-                <FormField label="Schedule Facility Walk-Through (Date)" htmlFor="walkthroughDate">
-                  <Input 
-                    id="walkthroughDate" 
-                    placeholder="e.g., 2025-09-30 10:00" 
-                    {...register("walkthroughDate")}
-                    className={errors.walkthroughDate ? "border-red-500" : ""}
-                  />
-                  {errors.walkthroughDate && (
-                    <p className="text-red-500 text-sm mt-1">{errors.walkthroughDate.message}</p>
-                  )}
-                </FormField>
-                <FormField label="Confirm Invite to Assessment Day" htmlFor="assessmentInvite">
-                  <Input 
-                    id="assessmentInvite" 
-                    placeholder="Add note or date" 
-                    {...register("assessmentInvite")}
-                    className={errors.assessmentInvite ? "border-red-500" : ""}
-                  />
-                  {errors.assessmentInvite && (
-                    <p className="text-red-500 text-sm mt-1">{errors.assessmentInvite.message}</p>
-                  )}
-                </FormField>
+                <FormField
+  label="Confirm Assessment Day Invite"
+  htmlFor="comprehensiveQuestionnaires"
+>
+  <Input
+    id="comprehensiveQuestionnaires"
+    placeholder="Enter details (e.g. Sent / Pending / Date)"
+    {...register("comprehensiveQuestionnaires")}
+    className={errors.comprehensiveQuestionnaires ? "border-red-500" : ""}
+  />
+  {errors.comprehensiveQuestionnaires && (
+    <p className="text-red-500 text-sm mt-1">
+      {errors.comprehensiveQuestionnaires.message}
+    </p>
+  )}
+</FormField>
+
+              <div className="flex items-center gap-6 text-sm text-slate-700">
+  <span>Mention interview is recorded for placement (with permission):</span>
+
+  <label className="flex items-center gap-2">
+    <input
+      type="radio"
+      value="Yes"
+      {...register("guidebookInfo")}
+    />
+    Yes
+  </label>
+
+  <label className="flex items-center gap-2">
+    <input
+      type="radio"
+      value="No"
+      {...register("guidebookInfo")}
+    />
+    No
+  </label>
+</div>
+
+       <FormField label="" htmlFor="walkthroughDate">
+  <div className="flex items-center gap-2 text-sm text-slate-700">
+    <input
+      type="checkbox"
+      id="walkthroughDate"
+      checked={!!watch("walkthroughDate")}
+      onChange={(e) =>
+        setValue("walkthroughDate", e.target.checked ? "Yes" : "")
+      }
+      className="h-4 w-4 rounded border-slate-300"
+    />
+
+    <span>Confirm Sending Parent Comprehensive Questionnaire</span>
+  </div>
+
+  {errors.walkthroughDate && (
+    <p className="text-red-500 text-sm mt-1">
+      {errors.walkthroughDate.message}
+    </p>
+  )}
+</FormField>
+
+<FormField label="" htmlFor="assessmentInvite">
+  <div className="flex items-center gap-2 text-sm text-slate-700">
+    <input
+      type="checkbox"
+      id="assessmentInvite"
+      checked={!!watch("assessmentInvite")}
+      onChange={(e) =>
+        setValue("assessmentInvite", e.target.checked)
+      }
+      className="h-4 w-4 rounded border-slate-300"
+    />
+    <span>Confirm Sending Guidebook / Additional Info</span>
+  </div>
+
+  {errors.assessmentInvite && (
+    <p className="text-red-500 text-sm mt-1">
+      {errors.assessmentInvite.message}
+    </p>
+  )}
+</FormField>
+
               </div>
               
-              <Textarea 
-                className="mt-3" 
-                rows={6} 
-                placeholder="Additional Notes / Observations"
-                {...register("additionalNotes")}
-              />
-              {errors.additionalNotes && (
-                <p className="text-red-500 text-sm mt-1">{errors.additionalNotes.message}</p>
-              )}
+              <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+  <FormField label="Schedule Facility Walk" htmlFor="additionalNotes">
+    <Input
+      id="additionalNotes"
+      type="datetime-local"
+      {...register("additionalNotes")}
+      className={errors.additionalNotes ? "border-red-500" : ""}
+    />
+    {errors.additionalNotes && (
+      <p className="text-red-500 text-sm mt-1">
+        {errors.additionalNotes.message}
+      </p>
+    )}
+  </FormField>
+</div>
+
+
+            
             </section>
 
             {message && (

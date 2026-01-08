@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "public"."users" (
+CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE "public"."users" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."applications" (
+CREATE TABLE "applications" (
     "id" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'submitted',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -23,8 +23,9 @@ CREATE TABLE "public"."applications" (
     "isPaid" BOOLEAN NOT NULL DEFAULT false,
     "paymentAmount" INTEGER,
     "paidAt" TIMESTAMP(3),
+    "syncedAt" TIMESTAMP(3),
     "currentStage" INTEGER NOT NULL DEFAULT 1,
-    "totalStages" INTEGER NOT NULL DEFAULT 10,
+    "totalStages" INTEGER NOT NULL DEFAULT 9,
     "isFirstFormCompleted" BOOLEAN NOT NULL DEFAULT false,
     "isSecondFormCompleted" BOOLEAN NOT NULL DEFAULT false,
     "isThirdFormCompleted" BOOLEAN NOT NULL DEFAULT false,
@@ -34,13 +35,13 @@ CREATE TABLE "public"."applications" (
     "isSeventhFormCompleted" BOOLEAN NOT NULL DEFAULT false,
     "isEighthFormCompleted" BOOLEAN NOT NULL DEFAULT false,
     "isNinthFormCompleted" BOOLEAN NOT NULL DEFAULT false,
-    "isTenthFormCompleted" BOOLEAN NOT NULL DEFAULT false,
     "isParentGuardianFormCompleted" BOOLEAN NOT NULL DEFAULT false,
     "isCaregiverFormCompleted" BOOLEAN NOT NULL DEFAULT false,
     "isOutsiderFormCompleted" BOOLEAN NOT NULL DEFAULT false,
     "parentFullName" TEXT NOT NULL,
     "parentEmail" TEXT NOT NULL,
     "parentPhone" TEXT,
+    "parentOccupation" TEXT,
     "relationToChild" TEXT,
     "parentCity" TEXT,
     "parentEthnicity" TEXT,
@@ -70,7 +71,7 @@ CREATE TABLE "public"."applications" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."user_requests" (
+CREATE TABLE "user_requests" (
     "id" TEXT NOT NULL,
     "type" TEXT NOT NULL,
     "description" TEXT NOT NULL,
@@ -83,7 +84,7 @@ CREATE TABLE "public"."user_requests" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."screening_calls" (
+CREATE TABLE "screening_calls" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -118,13 +119,14 @@ CREATE TABLE "public"."screening_calls" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."parent_guardian_questionnaires" (
+CREATE TABLE "parent_guardian_questionnaires" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "fullName" TEXT NOT NULL,
     "childName" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
+    "parentOccupation" TEXT,
     "typicalWeekday" TEXT NOT NULL,
     "screenTimeHours" TEXT NOT NULL,
     "homeActivities" TEXT NOT NULL,
@@ -154,7 +156,7 @@ CREATE TABLE "public"."parent_guardian_questionnaires" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."caregiver_questionnaires" (
+CREATE TABLE "caregiver_questionnaires" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -182,7 +184,7 @@ CREATE TABLE "public"."caregiver_questionnaires" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."outsider_questionnaires" (
+CREATE TABLE "outsider_questionnaires" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -207,7 +209,7 @@ CREATE TABLE "public"."outsider_questionnaires" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."facility_walkthrough_checklists" (
+CREATE TABLE "facility_walkthrough_checklists" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -234,7 +236,7 @@ CREATE TABLE "public"."facility_walkthrough_checklists" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."initial_observation_forms" (
+CREATE TABLE "initial_observation_forms" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -242,6 +244,7 @@ CREATE TABLE "public"."initial_observation_forms" (
     "age" TEXT NOT NULL,
     "date" TEXT NOT NULL DEFAULT '',
     "examiner" TEXT NOT NULL DEFAULT '',
+    "childImage" TEXT,
     "zoneATimeSpent" TEXT NOT NULL,
     "zoneASelfDirected" TEXT NOT NULL,
     "zoneAObservations" TEXT NOT NULL,
@@ -313,72 +316,55 @@ CREATE TABLE "public"."initial_observation_forms" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."guided_observations_procedures" (
+CREATE TABLE "guided_observations_procedures" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "fullName" TEXT NOT NULL,
+    "childName" TEXT NOT NULL,
     "age" TEXT NOT NULL,
-    "zoneAScore" TEXT NOT NULL,
-    "zoneANotes" TEXT NOT NULL,
-    "zoneBScore" TEXT NOT NULL,
-    "zoneBNotes" TEXT NOT NULL,
-    "zoneCScore" TEXT NOT NULL,
-    "zoneCNotes" TEXT NOT NULL,
-    "zoneDScore" TEXT NOT NULL,
-    "zoneDNotes" TEXT NOT NULL,
-    "guidingQ1" TEXT,
-    "guidingQ2" TEXT,
-    "guidingQ3" TEXT,
-    "guidingQ4" TEXT,
-    "guidingQ5" TEXT,
-    "areaLikeBest" TEXT,
-    "whatMakesInteresting" TEXT,
-    "hardButFun" TEXT,
-    "feelWhenTryingNew" TEXT,
-    "teachGame" TEXT,
-    "metaSelfReg" TEXT NOT NULL,
-    "metaNotesSelfReg" TEXT,
-    "metaCuriosity" TEXT NOT NULL,
-    "metaNotesCuriosity" TEXT,
-    "metaSocial" TEXT NOT NULL,
-    "metaNotesSocial" TEXT,
-    "metaEmotional" TEXT NOT NULL,
-    "metaNotesEmotional" TEXT,
-    "metaConfidence" TEXT NOT NULL,
-    "metaNotesConfidence" TEXT,
-    "intelLinguistic" TEXT,
-    "intelLogical" TEXT,
-    "intelSpatial" TEXT,
-    "intelBodily" TEXT,
-    "intelMusical" TEXT,
-    "intelInterpersonal" TEXT,
-    "intelIntrapersonal" TEXT,
-    "intelNaturalistic" TEXT,
-    "intelExistential" TEXT,
-    "intelLinguisticEvidenceModerate" BOOLEAN DEFAULT false,
-    "intelLinguisticEvidenceStrong" BOOLEAN DEFAULT false,
-    "intelLogicalEvidenceModerate" BOOLEAN DEFAULT false,
-    "intelLogicalEvidenceStrong" BOOLEAN DEFAULT false,
-    "intelSpatialEvidenceModerate" BOOLEAN DEFAULT false,
-    "intelSpatialEvidenceStrong" BOOLEAN DEFAULT false,
-    "intelBodilyEvidenceModerate" BOOLEAN DEFAULT false,
-    "intelBodilyEvidenceStrong" BOOLEAN DEFAULT false,
-    "intelMusicalEvidenceModerate" BOOLEAN DEFAULT false,
-    "intelMusicalEvidenceStrong" BOOLEAN DEFAULT false,
-    "intelInterpersonalEvidenceModerate" BOOLEAN DEFAULT false,
-    "intelInterpersonalEvidenceStrong" BOOLEAN DEFAULT false,
-    "intelIntrapersonalEvidenceModerate" BOOLEAN DEFAULT false,
-    "intelIntrapersonalEvidenceStrong" BOOLEAN DEFAULT false,
-    "intelNaturalisticEvidenceModerate" BOOLEAN DEFAULT false,
-    "intelNaturalisticEvidenceStrong" BOOLEAN DEFAULT false,
-    "intelExistentialEvidenceModerate" BOOLEAN DEFAULT false,
-    "intelExistentialEvidenceStrong" BOOLEAN DEFAULT false,
+    "date" TIMESTAMP(3) NOT NULL,
+    "examiner" TEXT NOT NULL,
+    "zoneAScore" INTEGER NOT NULL,
+    "zoneANotes" TEXT,
+    "zoneBScore" INTEGER NOT NULL,
+    "zoneBNotes" TEXT,
+    "zoneCScore" INTEGER NOT NULL,
+    "zoneCNotes" TEXT,
+    "zoneDScore" INTEGER NOT NULL,
+    "zoneDNotes" TEXT,
+    "metaCuriosityScore" INTEGER NOT NULL,
+    "metaCuriosityNotes" TEXT,
+    "metaSelfRegulationScore" INTEGER NOT NULL,
+    "metaSelfRegulationNotes" TEXT,
+    "metaConfidenceScore" INTEGER NOT NULL,
+    "metaConfidenceNotes" TEXT,
+    "metaCollaborationScore" INTEGER NOT NULL,
+    "metaCollaborationNotes" TEXT,
+    "metaEmotionalAwarenessScore" INTEGER NOT NULL,
+    "metaEmotionalAwarenessNotes" TEXT,
+    "intelLinguisticEvidence" TEXT,
+    "intelLinguisticObservation" TEXT,
+    "intelLogicalEvidence" TEXT,
+    "intelLogicalObservation" TEXT,
+    "intelSpatialEvidence" TEXT,
+    "intelSpatialObservation" TEXT,
+    "intelBodilyEvidence" TEXT,
+    "intelBodilyObservation" TEXT,
+    "intelMusicalEvidence" TEXT,
+    "intelMusicalObservation" TEXT,
+    "intelInterpersonalEvidence" TEXT,
+    "intelInterpersonalObservation" TEXT,
+    "intelIntrapersonalEvidence" TEXT,
+    "intelIntrapersonalObservation" TEXT,
+    "intelNaturalisticEvidence" TEXT,
+    "intelNaturalisticObservation" TEXT,
+    "intelExistentialEvidence" TEXT,
+    "intelExistentialObservation" TEXT,
     "parentProximity" TEXT,
     "parentInterventionLevel" TEXT,
     "parentInterventionStyle" TEXT,
     "childIndependenceLevel" TEXT,
-    "childEmotionalWithParent" TEXT,
+    "childEmotionalPresentation" TEXT,
     "childIndependenceWhenParentEngaged" TEXT,
     "emotionalRegulationWithParentPresent" TEXT,
     "mostEngagedZone" TEXT,
@@ -386,36 +372,33 @@ CREATE TABLE "public"."guided_observations_procedures" (
     "initialLearningStyleImpressions" TEXT,
     "earlyFlagsNeedsFollowUp" TEXT,
     "selfDirectedVsSeekingGuidance" TEXT,
-    "finalAdditionalNotes" TEXT,
-    "interactionPreferredZone" TEXT,
-    "interactionInitialBehaviour" TEXT,
-    "interactionOpennessToAdultGuidance" TEXT,
-    "interactionMostRevealingActivity" TEXT,
-    "interactionCrossRefStep5" TEXT,
-    "interactionCuriosityExploration" TEXT,
-    "interactionFocusAttention" TEXT,
-    "interactionEngagementWithAdult" TEXT,
-    "interactionResilienceInChallenge" TEXT,
-    "interactionEmotionRegulationSignals" TEXT,
-    "interactionCaregiverInteractionStyle" TEXT,
-    "interactionRecommendations" TEXT,
-    "applicationNumber" TEXT,
-    "observerName" TEXT,
-    "assessmentDate" TEXT,
-    "loggedToSystemDate" TEXT,
-    "loggedBy" TEXT,
+    "flagIndicators" TEXT,
+    "additionalNotes" TEXT,
+    "preferredZone" TEXT,
+    "initialBehaviour" TEXT,
+    "opennessToAdultGuidance" TEXT,
+    "mostRevealingActivity" TEXT,
+    "crossReferenceStep5" TEXT,
+    "curiosityAndExploration" TEXT,
+    "focusAndAttentionSpan" TEXT,
+    "engagementWithAdultDirection" TEXT,
+    "resilienceInChallenge" TEXT,
+    "emotionRegulationSignals" TEXT,
+    "caregiverInteractionStyle" TEXT,
+    "recommendationsForSupport" TEXT,
     "applicationId" TEXT NOT NULL,
 
     CONSTRAINT "guided_observations_procedures_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "public"."ks1_interview_questions" (
+CREATE TABLE "ks1_interview_questions" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "fullName" TEXT NOT NULL,
     "age" TEXT NOT NULL,
+    "date" TEXT,
     "whatDoYouDoSomethingHard" INTEGER,
     "whatDoYouDoSomethingHardNotes" TEXT,
     "howDoYouFeelWhenTryNew" INTEGER,
@@ -457,11 +440,12 @@ CREATE TABLE "public"."ks1_interview_questions" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."ks2_interview_questions" (
+CREATE TABLE "ks2_interview_questions" (
     "id" TEXT NOT NULL,
     "applicationId" TEXT NOT NULL,
     "fullName" TEXT,
     "age" TEXT,
+    "date" TEXT,
     "somethingAlwaysWantedToLearn" INTEGER,
     "somethingAlwaysWantedToLearnNotes" TEXT,
     "fiveThingsWithPaperclip" INTEGER,
@@ -516,9 +500,10 @@ CREATE TABLE "public"."ks2_interview_questions" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."peer_dynamic_observation" (
+CREATE TABLE "peer_dynamic_observation" (
     "id" TEXT NOT NULL,
     "applicationId" TEXT NOT NULL,
+    "groupID" TEXT,
     "childName" TEXT,
     "date" TEXT,
     "examiner" TEXT,
@@ -619,11 +604,14 @@ CREATE TABLE "public"."peer_dynamic_observation" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."parent_child_dynamic_observation" (
+CREATE TABLE "parent_child_dynamic_observation" (
     "id" TEXT NOT NULL,
     "applicationId" TEXT NOT NULL,
     "childFullName" TEXT,
     "childAge" TEXT,
+    "date" TEXT,
+    "examiner" TEXT,
+    "parentPresence" TEXT,
     "sharedIdeaExchangeRating" INTEGER,
     "sharedIdeaExchangeNotes" TEXT,
     "emotionalWarmthRating" INTEGER,
@@ -723,7 +711,7 @@ CREATE TABLE "public"."parent_child_dynamic_observation" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."comprehensive_profile_sheet" (
+CREATE TABLE "comprehensive_profile_sheet" (
     "id" TEXT NOT NULL,
     "applicationId" TEXT NOT NULL,
     "childName" TEXT,
@@ -886,83 +874,106 @@ CREATE TABLE "public"."comprehensive_profile_sheet" (
     CONSTRAINT "comprehensive_profile_sheet_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
-CREATE UNIQUE INDEX "users_email_key" ON "public"."users"("email");
+-- CreateTable
+CREATE TABLE "understanding_parent" (
+    "id" TEXT NOT NULL,
+    "applicationId" TEXT NOT NULL,
+    "childName" TEXT,
+    "age" TEXT,
+    "date" TEXT,
+    "examiner" TEXT,
+    "occupation" TEXT,
+    "grid" JSONB,
+    "additionalNotes" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "understanding_parent_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateIndex
-CREATE UNIQUE INDEX "screening_calls_applicationId_key" ON "public"."screening_calls"("applicationId");
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "parent_guardian_questionnaires_applicationId_key" ON "public"."parent_guardian_questionnaires"("applicationId");
+CREATE UNIQUE INDEX "screening_calls_applicationId_key" ON "screening_calls"("applicationId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "caregiver_questionnaires_applicationId_key" ON "public"."caregiver_questionnaires"("applicationId");
+CREATE UNIQUE INDEX "parent_guardian_questionnaires_applicationId_key" ON "parent_guardian_questionnaires"("applicationId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "outsider_questionnaires_applicationId_key" ON "public"."outsider_questionnaires"("applicationId");
+CREATE UNIQUE INDEX "caregiver_questionnaires_applicationId_key" ON "caregiver_questionnaires"("applicationId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "facility_walkthrough_checklists_applicationId_key" ON "public"."facility_walkthrough_checklists"("applicationId");
+CREATE UNIQUE INDEX "outsider_questionnaires_applicationId_key" ON "outsider_questionnaires"("applicationId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "initial_observation_forms_applicationId_key" ON "public"."initial_observation_forms"("applicationId");
+CREATE UNIQUE INDEX "facility_walkthrough_checklists_applicationId_key" ON "facility_walkthrough_checklists"("applicationId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "guided_observations_procedures_applicationId_key" ON "public"."guided_observations_procedures"("applicationId");
+CREATE UNIQUE INDEX "initial_observation_forms_applicationId_key" ON "initial_observation_forms"("applicationId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ks1_interview_questions_applicationId_key" ON "public"."ks1_interview_questions"("applicationId");
+CREATE UNIQUE INDEX "guided_observations_procedures_applicationId_key" ON "guided_observations_procedures"("applicationId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ks2_interview_questions_applicationId_key" ON "public"."ks2_interview_questions"("applicationId");
+CREATE UNIQUE INDEX "ks1_interview_questions_applicationId_key" ON "ks1_interview_questions"("applicationId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "peer_dynamic_observation_applicationId_key" ON "public"."peer_dynamic_observation"("applicationId");
+CREATE UNIQUE INDEX "ks2_interview_questions_applicationId_key" ON "ks2_interview_questions"("applicationId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "parent_child_dynamic_observation_applicationId_key" ON "public"."parent_child_dynamic_observation"("applicationId");
+CREATE UNIQUE INDEX "peer_dynamic_observation_applicationId_key" ON "peer_dynamic_observation"("applicationId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "comprehensive_profile_sheet_applicationId_key" ON "public"."comprehensive_profile_sheet"("applicationId");
+CREATE UNIQUE INDEX "parent_child_dynamic_observation_applicationId_key" ON "parent_child_dynamic_observation"("applicationId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "comprehensive_profile_sheet_applicationId_key" ON "comprehensive_profile_sheet"("applicationId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "understanding_parent_applicationId_key" ON "understanding_parent"("applicationId");
 
 -- AddForeignKey
-ALTER TABLE "public"."applications" ADD CONSTRAINT "applications_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "applications" ADD CONSTRAINT "applications_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."user_requests" ADD CONSTRAINT "user_requests_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "user_requests" ADD CONSTRAINT "user_requests_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."screening_calls" ADD CONSTRAINT "screening_calls_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "public"."applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "screening_calls" ADD CONSTRAINT "screening_calls_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."parent_guardian_questionnaires" ADD CONSTRAINT "parent_guardian_questionnaires_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "public"."applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "parent_guardian_questionnaires" ADD CONSTRAINT "parent_guardian_questionnaires_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."caregiver_questionnaires" ADD CONSTRAINT "caregiver_questionnaires_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "public"."applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "caregiver_questionnaires" ADD CONSTRAINT "caregiver_questionnaires_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."outsider_questionnaires" ADD CONSTRAINT "outsider_questionnaires_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "public"."applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "outsider_questionnaires" ADD CONSTRAINT "outsider_questionnaires_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."facility_walkthrough_checklists" ADD CONSTRAINT "facility_walkthrough_checklists_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "public"."applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "facility_walkthrough_checklists" ADD CONSTRAINT "facility_walkthrough_checklists_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."initial_observation_forms" ADD CONSTRAINT "initial_observation_forms_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "public"."applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "initial_observation_forms" ADD CONSTRAINT "initial_observation_forms_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."guided_observations_procedures" ADD CONSTRAINT "guided_observations_procedures_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "public"."applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "guided_observations_procedures" ADD CONSTRAINT "guided_observations_procedures_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."ks1_interview_questions" ADD CONSTRAINT "ks1_interview_questions_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "public"."applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ks1_interview_questions" ADD CONSTRAINT "ks1_interview_questions_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."ks2_interview_questions" ADD CONSTRAINT "ks2_interview_questions_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "public"."applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ks2_interview_questions" ADD CONSTRAINT "ks2_interview_questions_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."peer_dynamic_observation" ADD CONSTRAINT "peer_dynamic_observation_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "public"."applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "peer_dynamic_observation" ADD CONSTRAINT "peer_dynamic_observation_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."parent_child_dynamic_observation" ADD CONSTRAINT "parent_child_dynamic_observation_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "public"."applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "parent_child_dynamic_observation" ADD CONSTRAINT "parent_child_dynamic_observation_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."comprehensive_profile_sheet" ADD CONSTRAINT "comprehensive_profile_sheet_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "public"."applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "comprehensive_profile_sheet" ADD CONSTRAINT "comprehensive_profile_sheet_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "understanding_parent" ADD CONSTRAINT "understanding_parent_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "applications"("id") ON DELETE CASCADE ON UPDATE CASCADE;

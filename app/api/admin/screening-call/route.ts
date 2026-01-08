@@ -94,7 +94,12 @@ export async function POST(request: NextRequest) {
           guidebookInfo: guidebookInfo || false,
           walkthroughDate,
           assessmentInvite,
-          additionalNotes,
+        additionalNotes: additionalNotes
+  ? new Date(additionalNotes)
+  : null,
+
+
+
           loggedToSystemDate,
           loggedBy,
         },
@@ -126,7 +131,11 @@ export async function POST(request: NextRequest) {
           guidebookInfo: guidebookInfo || false,
           walkthroughDate,
           assessmentInvite,
-          additionalNotes,
+        additionalNotes: additionalNotes
+  ? new Date(additionalNotes)
+  : null,
+
+
           loggedToSystemDate,
           loggedBy,
         },

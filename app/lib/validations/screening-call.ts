@@ -31,11 +31,22 @@ export const screeningCallSchema = z.object({
   parentReactionsNotes: z.string().optional(),
 
   // Next Steps
-  comprehensiveQuestionnaires: z.boolean().default(false),
-  guidebookInfo: z.boolean().default(false),
+comprehensiveQuestionnaires: z.string().optional(),
+  guidebookInfo: z.enum(["Yes", "No"], {
+  required_error: "Please confirm if the interview recording was mentioned",
+}),
+
   walkthroughDate: z.string().optional(),
-  assessmentInvite: z.string().optional(),
-  additionalNotes: z.string().optional(),
+assessmentInvite: z.boolean().optional(),
+  // additionalNotes: z.string().optional(),
+  additionalNotes: z
+  .string()
+  .optional()
+  .refine(
+    (val) => !val || !isNaN(Date.parse(val)),
+    { message: "Invalid date & time" }
+  ),
+
   
   // System logging
   loggedToSystemDate: z.string().optional(),
