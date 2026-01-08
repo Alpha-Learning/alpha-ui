@@ -129,7 +129,6 @@ export async function POST(request: NextRequest) {
       date,
       examiner,
       parentPresence,
-      parentPresence,
       // Joint Story Creation (10 minutes) - convert string ratings to integers
       sharedIdeaExchangeRating: sharedIdeaExchangeRating ? parseInt(sharedIdeaExchangeRating) : null,
       sharedIdeaExchangeNotes,
