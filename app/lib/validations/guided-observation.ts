@@ -72,7 +72,8 @@ export const guidedObservationSchema = z.object({
   initialLearningStyleImpressions: z.string().optional(),
   earlyFlagsNeedsFollowUp: z.string().optional(),
   selfDirectedVsSeekingGuidance: z.string().optional(),
-  flagIndicators: z.string().optional(),
+  // flagIndicators: z.string().optional(),
+  flagIndicators: z.array(z.string()).optional(),
   additionalNotes: z.string().optional(),
   
   // Interaction Summary
