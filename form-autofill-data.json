@@ -600,11 +600,11 @@
     "fitClarificationNotes": "Parent seems like a good fit for Alphera Academy. Values personalized learning and flexibility. Understands the importance of balance between structure and freedom. Shows commitment to their child's education and is willing to be actively involved. Child's interests align well with the program's approach.",
     "generalNotes": "Overall, the screening call went very well. Parent is enthusiastic and well-informed. Child appears to be a good candidate for the program based on described learning style and interests. Parent's values align with Alphera Academy's philosophy. Strong potential for successful enrollment.",
     "parentReactionsNotes": "Parent showed positive reactions throughout the call. Expressed excitement about the possibility of enrollment. Asked practical questions about logistics, scheduling, and costs. Showed genuine interest in the assessment process. Appeared comfortable with the non-traditional approach and expressed readiness to move forward.",
-    "comprehensiveQuestionnaires": true,
-    "guidebookInfo": true,
-    "walkthroughDate": "2025-01-20 14:00",
-    "assessmentInvite": "Invited to Assessment Day on 2025-01-25. Parent confirmed availability and expressed enthusiasm. Will send formal invitation via email with details about the assessment process.",
-    "additionalNotes": "Parent requested additional information about the curriculum structure and how progress is tracked. Mentioned they would like to speak with current parents if possible. Expressed interest in the arts and entrepreneurship components. Overall very positive interaction with strong potential for enrollment.",
+    "comprehensiveQuestionnaires": "Confirm that the Assessment Day invite has been shared with the parent and all required details have been communicated clearly.",
+    "guidebookInfo": "Yes",
+    "walkthroughDate": "yes",
+    "assessmentInvite": true,
+    "additionalNotes": "2025-01-25T13:00",
     "loggedToSystemDate": "2024-01-15",
     "loggedBy": "Admin User"
   }

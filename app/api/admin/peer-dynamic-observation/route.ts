@@ -8,6 +8,7 @@ export async function POST(request: NextRequest) {
     const {
       applicationId,
       // Observation Details
+      groupID,  
       childName,
       date,
       examiner,
@@ -117,6 +118,7 @@ export async function POST(request: NextRequest) {
 
     const payload = {
       // Observation Details
+      groupID,
       childName,
       date,
       examiner,

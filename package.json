@@ -30,7 +30,6 @@
     "next": "15.5.9",
     "nodemailer": "^7.0.9",
     "pg": "^8.16.3",
-    "prisma": "^6.16.2",
     "react": "19.1.2",
     "react-data-table-component": "^7.6.2",
     "react-dom": "19.1.2",
@@ -44,6 +43,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "prisma": "^6.16.2",
     "tailwindcss": "^4",
     "tsx": "^4.20.5",
     "typescript": "^5"

@@ -176,11 +176,11 @@ model ScreeningCall {
   parentReactionsNotes String?
 
   // Next Steps
-  comprehensiveQuestionnaires Boolean @default(false)
-  guidebookInfo               Boolean @default(false)
+  comprehensiveQuestionnaires String?
+  guidebookInfo               String?
   walkthroughDate             String?
-  assessmentInvite            String?
-  additionalNotes             String?
+  assessmentInvite            Boolean @default(false)
+  additionalNotes             DateTime?
 
   // Relations
   applicationId String  @unique
@@ -737,6 +737,7 @@ model PeerDynamicObservation {
   application       Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   
   // Observation Details
+  groupID        String?
   childName         String?
   date              String?
   examiner          String?
