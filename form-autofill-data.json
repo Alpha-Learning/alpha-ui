@@ -181,7 +181,7 @@
     "initialLearningStyleImpressions": "Child appears to be a multimodal learner with strengths in verbal-linguistic and logical-mathematical learning. Shows preference for hands-on, experiential learning. Benefits from visual and auditory input. Learns well through discussion and collaboration.",
     "earlyFlagsNeedsFollowUp": "No significant flags identified. Child presents as well-adjusted with strong learning potential. Minor observation: slight perfectionism tendencies, which are currently well-managed but worth monitoring.",
     "selfDirectedVsSeekingGuidance": "Child shows good balance between self-direction and seeking guidance. Comfortable exploring independently but knows when to ask for help. Shows good judgment about when to persist versus when to seek assistance.",
-    "flagIndicators": "E - Exceptional performance in linguistic and logical-mathematical areas. Strong overall performance across all zones.",
+   "flagIndicators": ["E"],
     "additionalNotes": "Overall, this child demonstrates exceptional learning potential and strong alignment with academy's learning model. Shows curiosity, creativity, collaboration, and emotional intelligence. Would be an excellent fit for the program. Strong family support evident.",
     "preferredZone": "Zone B (Design a Planet) - Child showed highest engagement and creativity in this zone, spending extended time and creating detailed, imaginative work.",
     "initialBehaviour": "Child entered the space with curiosity and confidence. Looked around to understand the environment, then immediately began exploring available materials. Showed appropriate caution mixed with eagerness.",
@@ -504,7 +504,7 @@
     "initialLearningStyleImpressions": "Multimodal learner with strengths in verbal-linguistic and logical-mathematical learning. Shows preference for hands-on, experiential learning.",
     "earlyFlagsNeedsFollowUp": "No significant flags identified. Child presents as well-adjusted with strong learning potential.",
     "selfDirectedVsSeekingGuidance": "Good balance between self-direction and seeking guidance. Comfortable exploring independently but knows when to ask for help.",
-    "flagIndicators": "E - Exceptional performance in linguistic and logical-mathematical areas.",
+    "flagIndicators": ["E"],
     "additionalNotesObservations": "Overall, child demonstrates exceptional learning potential and strong alignment with academy's learning model. Shows curiosity, creativity, collaboration, and emotional intelligence. Would be an excellent fit for the program."
   },
   "parentChildDynamicObservation": {
