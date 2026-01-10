@@ -6,6 +6,7 @@ export async function POST(request: NextRequest) {
   try {
     const {
       applicationId,
+      isDraft = false,
       fullName,
       childName,
       date,
@@ -91,7 +92,7 @@ export async function POST(request: NextRequest) {
         },
       });
     }
-
+  if (!isDraft) {
     // Check if all three questionnaires are completed before advancing to stage 3
     const parentQuestionnaire = await prisma.parentGuardianQuestionnaire.findUnique({
       where: { applicationId },
@@ -124,7 +125,7 @@ export async function POST(request: NextRequest) {
 
     // Update application status based on all form completions
     await updateApplicationStatus(applicationId, prisma);
-
+  }
     return NextResponse.json({
       success: true,
       data: questionnaire,

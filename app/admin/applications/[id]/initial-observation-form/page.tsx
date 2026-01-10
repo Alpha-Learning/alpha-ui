@@ -9,6 +9,7 @@ import { apiService } from "@/app/utils";
 import { getAutofillData } from "@/app/utils/autofillData";
 import { z } from "zod";
 import { useFormPersistence } from "@/app/hooks/useFormPersistence";
+import { useAutoSave } from "@/app/hooks/useAutoSave";
 
 // Validation schema for initial observation form
 const initialObservationFormSchema = z.object({
@@ -207,6 +208,36 @@ export default function InitialObservationFormPage() {
     'admin-initial-observation',
     params.id as string
   );
+  useAutoSave(watch, {
+    saveEndpoint: '/api/admin/initial-observation-form',
+    applicationId: params.id as string,
+    debounceMs: 2000,
+    intervalMs: 30000,
+    transformData: (data: InitialObservationFormData) => ({
+      ...data,
+      // Convert checkbox arrays to comma-separated strings for API
+      zoneAObservations: Array.isArray(data.zoneAObservations) ? data.zoneAObservations.join(',') : data.zoneAObservations || '',
+      zoneBObservations: Array.isArray(data.zoneBObservations) ? data.zoneBObservations.join(',') : data.zoneBObservations || '',
+      zoneCObservations: Array.isArray(data.zoneCObservations) ? data.zoneCObservations.join(',') : data.zoneCObservations || '',
+      zoneDObservations: Array.isArray(data.zoneDObservations) ? data.zoneDObservations.join(',') : data.zoneDObservations || '',
+      // Convert evidence arrays to comma-separated strings
+      linguisticEvidence: Array.isArray(data.linguisticEvidence) ? data.linguisticEvidence.join(',') : data.linguisticEvidence || '',
+      logicalMathematicalEvidence: Array.isArray(data.logicalMathematicalEvidence) ? data.logicalMathematicalEvidence.join(',') : data.logicalMathematicalEvidence || '',
+      spatialEvidence: Array.isArray(data.spatialEvidence) ? data.spatialEvidence.join(',') : data.spatialEvidence || '',
+      bodilyKinestheticEvidence: Array.isArray(data.bodilyKinestheticEvidence) ? data.bodilyKinestheticEvidence.join(',') : data.bodilyKinestheticEvidence || '',
+      musicalEvidence: Array.isArray(data.musicalEvidence) ? data.musicalEvidence.join(',') : data.musicalEvidence || '',
+      existentialEvidence: Array.isArray(data.existentialEvidence) ? data.existentialEvidence.join(',') : data.existentialEvidence || '',
+      interpersonalEvidence: Array.isArray(data.interpersonalEvidence) ? data.interpersonalEvidence.join(',') : data.interpersonalEvidence || '',
+      intrapersonalEvidence: Array.isArray(data.intrapersonalEvidence) ? data.intrapersonalEvidence.join(',') : data.intrapersonalEvidence || '',
+      naturalisticEvidence: Array.isArray(data.naturalisticEvidence) ? data.naturalisticEvidence.join(',') : data.naturalisticEvidence || '',
+      // Convert parent dynamic arrays to comma-separated strings
+      parentProximity: Array.isArray(data.parentProximity) ? data.parentProximity.join(',') : data.parentProximity || '',
+      parentInterventionLevel: Array.isArray(data.parentInterventionLevel) ? data.parentInterventionLevel.join(',') : data.parentInterventionLevel || '',
+      parentInterventionStyle: Array.isArray(data.parentInterventionStyle) ? data.parentInterventionStyle.join(',') : data.parentInterventionStyle || '',
+      // Convert flag indicators array to comma-separated string
+      flagIndicators: Array.isArray(data.flagIndicators) ? data.flagIndicators.join(',') : (data.flagIndicators || ''),
+    }),
+  });
 
   // Load existing data
   useEffect(() => {
@@ -405,6 +436,7 @@ export default function InitialObservationFormPage() {
       
       const res = await apiService.post("/api/admin/initial-observation-form", {
         applicationId: params.id,
+        isDraft: false,
         ...data,
         // Convert checkbox arrays to comma-separated strings for API
         zoneAObservations: data.zoneAObservations.join(','),

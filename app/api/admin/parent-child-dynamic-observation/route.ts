@@ -2,11 +2,42 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
 import { updateApplicationStatus } from "@/app/utils/applicationStatus";
 
+// Helper function to safely convert rating to integer (handles both string and number)
+const toInt = (value: string | number | null | undefined): number | null => {
+  if (value === null || value === undefined || value === '' || value === '0') return null;
+  if (typeof value === 'number') return isNaN(value) ? null : value;
+  const parsed = parseInt(String(value), 10);
+  return isNaN(parsed) ? null : parsed;
+};
+
+// Helper function to convert integer to string for form compatibility
+const toString = (value: number | null | undefined): string => {
+  return value !== null && value !== undefined ? String(value) : '';
+};
+
+// List of all rating fields that need type conversion
+const RATING_FIELDS = [
+  'sharedIdeaExchangeRating',
+  'emotionalWarmthRating',
+  'balanceOfLeadershipRating',
+  'communicationStyleRating',
+  'mutualCreativityRating',
+  'independenceRating',
+  'confidenceHesitationRating',
+  'taskEngagementRating',
+  'creativeExpansionRating',
+  'teachingStyleRating',
+  'patienceEncouragementRating',
+  'parentClarityRating',
+  'childEngagementRating',
+] as const;
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const {
       applicationId,
+      isDraft = false, 
       // Child Information
       childFullName,
       childAge,
@@ -122,109 +153,120 @@ export async function POST(request: NextRequest) {
 
     const existing = await prisma.parentChildDynamicObservation.findUnique({ where: { applicationId } });
 
+    // Build payload with proper type conversions
+    // According to Prisma schema: ratings are Int?, strings are String?, booleans are Boolean
     const payload = {
-      // Child Information
+      // Child Information (String? in Prisma)
       childFullName,
       childAge,
       date,
       examiner,
       parentPresence,
-      // Joint Story Creation (10 minutes) - convert string ratings to integers
-      sharedIdeaExchangeRating: sharedIdeaExchangeRating ? parseInt(sharedIdeaExchangeRating) : null,
+      
+      // Joint Story Creation (10 minutes) - Convert to Int? for Prisma
+      sharedIdeaExchangeRating: toInt(sharedIdeaExchangeRating),
       sharedIdeaExchangeNotes,
-      emotionalWarmthRating: emotionalWarmthRating ? parseInt(emotionalWarmthRating) : null,
+      emotionalWarmthRating: toInt(emotionalWarmthRating),
       emotionalWarmthNotes,
-      balanceOfLeadershipRating: balanceOfLeadershipRating ? parseInt(balanceOfLeadershipRating) : null,
+      balanceOfLeadershipRating: toInt(balanceOfLeadershipRating),
       balanceOfLeadershipNotes,
-      communicationStyleRating: communicationStyleRating ? parseInt(communicationStyleRating) : null,
+      communicationStyleRating: toInt(communicationStyleRating),
       communicationStyleNotes,
-      mutualCreativityRating: mutualCreativityRating ? parseInt(mutualCreativityRating) : null,
+      mutualCreativityRating: toInt(mutualCreativityRating),
       mutualCreativityNotes,
-      // Separation - Child Continues Solo (10 minutes)
-      independenceRating: independenceRating ? parseInt(independenceRating) : null,
+      
+      // Separation - Child Continues Solo (10 minutes) - Convert to Int? for Prisma
+      independenceRating: toInt(independenceRating),
       independenceNotes,
-      confidenceHesitationRating: confidenceHesitationRating ? parseInt(confidenceHesitationRating) : null,
+      confidenceHesitationRating: toInt(confidenceHesitationRating),
       confidenceHesitationNotes,
-      taskEngagementRating: taskEngagementRating ? parseInt(taskEngagementRating) : null,
+      taskEngagementRating: toInt(taskEngagementRating),
       taskEngagementNotes,
-      creativeExpansionRating: creativeExpansionRating ? parseInt(creativeExpansionRating) : null,
+      creativeExpansionRating: toInt(creativeExpansionRating),
       creativeExpansionNotes,
-      // Teaching Moment - Comic Strip (10 minutes)
-      teachingStyleRating: teachingStyleRating ? parseInt(teachingStyleRating) : null,
+      
+      // Teaching Moment - Comic Strip (10 minutes) - Convert to Int? for Prisma
+      teachingStyleRating: toInt(teachingStyleRating),
       teachingStyleNotes,
-      patienceEncouragementRating: patienceEncouragementRating ? parseInt(patienceEncouragementRating) : null,
+      patienceEncouragementRating: toInt(patienceEncouragementRating),
       patienceEncouragementNotes,
-      parentClarityRating: parentClarityRating ? parseInt(parentClarityRating) : null,
+      parentClarityRating: toInt(parentClarityRating),
       parentClarityNotes,
-      childEngagementRating: childEngagementRating ? parseInt(childEngagementRating) : null,
+      childEngagementRating: toInt(childEngagementRating),
       childEngagementNotes,
-      // Parenting Style & Dynamic Insights
-      parentDominantStyleDirective: parentDominantStyleDirective || false,
-      parentDominantStyleSupportive: parentDominantStyleSupportive || false,
-      parentDominantStyleDetached: parentDominantStyleDetached || false,
-      parentDominantStyleFacilitative: parentDominantStyleFacilitative || false,
-      emotionalAttunementHigh: emotionalAttunementHigh || false,
-      emotionalAttunementModerate: emotionalAttunementModerate || false,
-      emotionalAttunementLow: emotionalAttunementLow || false,
-      encouragementStylePraiseFocused: encouragementStylePraiseFocused || false,
-      encouragementStyleProcessFocused: encouragementStyleProcessFocused || false,
-      encouragementStyleCorrectionFocused: encouragementStyleCorrectionFocused || false,
-      attachmentSignalSecure: attachmentSignalSecure || false,
-      attachmentSignalAnxious: attachmentSignalAnxious || false,
-      attachmentSignalAvoidant: attachmentSignalAvoidant || false,
-      attachmentSignalDisengaged: attachmentSignalDisengaged || false,
-      // Child Meta-Skills During Assessment
-      confidenceAutonomyObserved: confidenceAutonomyObserved || false,
+      
+      // Parenting Style & Dynamic Insights (Boolean @default(false) in Prisma)
+      parentDominantStyleDirective: Boolean(parentDominantStyleDirective) || false,
+      parentDominantStyleSupportive: Boolean(parentDominantStyleSupportive) || false,
+      parentDominantStyleDetached: Boolean(parentDominantStyleDetached) || false,
+      parentDominantStyleFacilitative: Boolean(parentDominantStyleFacilitative) || false,
+      emotionalAttunementHigh: Boolean(emotionalAttunementHigh) || false,
+      emotionalAttunementModerate: Boolean(emotionalAttunementModerate) || false,
+      emotionalAttunementLow: Boolean(emotionalAttunementLow) || false,
+      encouragementStylePraiseFocused: Boolean(encouragementStylePraiseFocused) || false,
+      encouragementStyleProcessFocused: Boolean(encouragementStyleProcessFocused) || false,
+      encouragementStyleCorrectionFocused: Boolean(encouragementStyleCorrectionFocused) || false,
+      attachmentSignalSecure: Boolean(attachmentSignalSecure) || false,
+      attachmentSignalAnxious: Boolean(attachmentSignalAnxious) || false,
+      attachmentSignalAvoidant: Boolean(attachmentSignalAvoidant) || false,
+      attachmentSignalDisengaged: Boolean(attachmentSignalDisengaged) || false,
+      
+      // Child Meta-Skills During Assessment (Boolean @default(false) in Prisma)
+      confidenceAutonomyObserved: Boolean(confidenceAutonomyObserved) || false,
       confidenceAutonomyNotes,
-      emotionalRegulationObserved: emotionalRegulationObserved || false,
+      emotionalRegulationObserved: Boolean(emotionalRegulationObserved) || false,
       emotionalRegulationNotes,
-      curiosityObserved: curiosityObserved || false,
+      curiosityObserved: Boolean(curiosityObserved) || false,
       curiosityNotes,
-      creativityExpressionObserved: creativityExpressionObserved || false,
+      creativityExpressionObserved: Boolean(creativityExpressionObserved) || false,
       creativityExpressionNotes,
-      selfDirectedLearningObserved: selfDirectedLearningObserved || false,
+      selfDirectedLearningObserved: Boolean(selfDirectedLearningObserved) || false,
       selfDirectedLearningNotes,
-      communicationObserved: communicationObserved || false,
+      communicationObserved: Boolean(communicationObserved) || false,
       communicationNotes,
-      // Learning Type & Intelligence Clues
-      linguisticObserved: linguisticObserved || false,
-      linguisticStronglyEvident: linguisticStronglyEvident || false,
+      
+      // Learning Type & Intelligence Clues (Boolean @default(false) in Prisma)
+      linguisticObserved: Boolean(linguisticObserved) || false,
+      linguisticStronglyEvident: Boolean(linguisticStronglyEvident) || false,
       linguisticNotes,
-      logicalMathematicalObserved: logicalMathematicalObserved || false,
-      logicalMathematicalStronglyEvident: logicalMathematicalStronglyEvident || false,
+      logicalMathematicalObserved: Boolean(logicalMathematicalObserved) || false,
+      logicalMathematicalStronglyEvident: Boolean(logicalMathematicalStronglyEvident) || false,
       logicalMathematicalNotes,
-      spatialObserved: spatialObserved || false,
-      spatialStronglyEvident: spatialStronglyEvident || false,
+      spatialObserved: Boolean(spatialObserved) || false,
+      spatialStronglyEvident: Boolean(spatialStronglyEvident) || false,
       spatialNotes,
-      bodilyKinestheticObserved: bodilyKinestheticObserved || false,
-      bodilyKinestheticStronglyEvident: bodilyKinestheticStronglyEvident || false,
+      bodilyKinestheticObserved: Boolean(bodilyKinestheticObserved) || false,
+      bodilyKinestheticStronglyEvident: Boolean(bodilyKinestheticStronglyEvident) || false,
       bodilyKinestheticNotes,
-      musicalObserved: musicalObserved || false,
-      musicalStronglyEvident: musicalStronglyEvident || false,
+      musicalObserved: Boolean(musicalObserved) || false,
+      musicalStronglyEvident: Boolean(musicalStronglyEvident) || false,
       musicalNotes,
-      interpersonalObserved: interpersonalObserved || false,
-      interpersonalStronglyEvident: interpersonalStronglyEvident || false,
+      interpersonalObserved: Boolean(interpersonalObserved) || false,
+      interpersonalStronglyEvident: Boolean(interpersonalStronglyEvident) || false,
       interpersonalNotes,
-      intrapersonalObserved: intrapersonalObserved || false,
-      intrapersonalStronglyEvident: intrapersonalStronglyEvident || false,
+      intrapersonalObserved: Boolean(intrapersonalObserved) || false,
+      intrapersonalStronglyEvident: Boolean(intrapersonalStronglyEvident) || false,
       intrapersonalNotes,
-      naturalisticObserved: naturalisticObserved || false,
-      naturalisticStronglyEvident: naturalisticStronglyEvident || false,
+      naturalisticObserved: Boolean(naturalisticObserved) || false,
+      naturalisticStronglyEvident: Boolean(naturalisticStronglyEvident) || false,
       naturalisticNotes,
-      existentialObserved: existentialObserved || false,
-      existentialStronglyEvident: existentialStronglyEvident || false,
+      existentialObserved: Boolean(existentialObserved) || false,
+      existentialStronglyEvident: Boolean(existentialStronglyEvident) || false,
       existentialNotes,
-      // Dynamic Summary & Reflection
+      
+      // Dynamic Summary & Reflection (String? in Prisma)
       parentChildDynamicStandout,
       childExpressiveWithWithoutParent,
       parentGuidanceHindrance,
-      // Red Flags or Follow-up Needs
-      emotionalDistressFlag: emotionalDistressFlag || false,
-      parentOverDirectionFlag: parentOverDirectionFlag || false,
-      confidenceIssueFlag: confidenceIssueFlag || false,
-      noFlagsFlag: noFlagsFlag || false,
+      
+      // Red Flags or Follow-up Needs (Boolean @default(false) in Prisma)
+      emotionalDistressFlag: Boolean(emotionalDistressFlag) || false,
+      parentOverDirectionFlag: Boolean(parentOverDirectionFlag) || false,
+      confidenceIssueFlag: Boolean(confidenceIssueFlag) || false,
+      noFlagsFlag: Boolean(noFlagsFlag) || false,
       redFlagsNotes,
-      // Office Use Only
+      
+      // Office Use Only (String? in Prisma)
       applicationNumber,
       observerName,
       assessmentDate,
@@ -234,23 +276,30 @@ export async function POST(request: NextRequest) {
 
     let record;
     if (existing) {
-      record = await prisma.parentChildDynamicObservation.update({ where: { applicationId }, data: payload });
+      record = await prisma.parentChildDynamicObservation.update({ 
+        where: { applicationId }, 
+        data: payload 
+      });
     } else {
-      record = await prisma.parentChildDynamicObservation.create({ data: { applicationId, ...payload } });
+      record = await prisma.parentChildDynamicObservation.create({ 
+        data: { applicationId, ...payload } 
+      });
     }
 
-    // Mark Parent-Child Dynamic Observation as completed and advance stage to 6
-    await prisma.application.update({ 
-      where: { id: applicationId }, 
-      data: { 
-        currentStage: 6,
-        isSixthFormCompleted: true
-      } 
-    });
+    if (!isDraft) {
+      // Mark Parent-Child Dynamic Observation as completed and advance stage to 6
+      await prisma.application.update({ 
+        where: { id: applicationId }, 
+        data: { 
+          currentStage: 6,
+          isSixthFormCompleted: true
+        } 
+      });
 
-    // Update application status based on all form completions
-    await updateApplicationStatus(applicationId, prisma);
-
+      // Update application status based on all form completions
+      await updateApplicationStatus(applicationId, prisma);
+    }
+    
     return NextResponse.json({ success: true, data: record });
   } catch (error) {
     console.error("Error saving parent-child dynamic observation:", error);
@@ -266,8 +315,36 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, error: "Application ID is required" }, { status: 400 });
     }
   
-    const record = await prisma.parentChildDynamicObservation.findUnique({ where: { applicationId } });
-    return NextResponse.json({ success: true, data: record });
+    const record = await prisma.parentChildDynamicObservation.findUnique({ 
+      where: { applicationId } 
+    });
+    
+    // Convert integer ratings to strings for form compatibility
+    // Prisma returns Int? but form expects strings
+    if (record) {
+      // Create a new object with proper typing - convert number fields to strings
+      const formattedRecord = {
+        ...record,
+        // Convert all rating fields from Int? to string for Zod validation
+        sharedIdeaExchangeRating: toString(record.sharedIdeaExchangeRating),
+        emotionalWarmthRating: toString(record.emotionalWarmthRating),
+        balanceOfLeadershipRating: toString(record.balanceOfLeadershipRating),
+        communicationStyleRating: toString(record.communicationStyleRating),
+        mutualCreativityRating: toString(record.mutualCreativityRating),
+        independenceRating: toString(record.independenceRating),
+        confidenceHesitationRating: toString(record.confidenceHesitationRating),
+        taskEngagementRating: toString(record.taskEngagementRating),
+        creativeExpansionRating: toString(record.creativeExpansionRating),
+        teachingStyleRating: toString(record.teachingStyleRating),
+        patienceEncouragementRating: toString(record.patienceEncouragementRating),
+        parentClarityRating: toString(record.parentClarityRating),
+        childEngagementRating: toString(record.childEngagementRating),
+      } as any; // Type assertion to allow string values for number fields
+      
+      return NextResponse.json({ success: true, data: formattedRecord });
+    }
+    
+    return NextResponse.json({ success: true, data: null });
   } catch (error) {
     console.error("Error fetching parent-child dynamic observation:", error);
     return NextResponse.json({ success: false, error: "Failed to fetch form" }, { status: 500 });

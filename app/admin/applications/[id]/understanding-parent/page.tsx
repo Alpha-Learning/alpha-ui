@@ -8,6 +8,7 @@ import { FormField, Input, Textarea, FormSectionHeader } from "@/app/components/
 import { apiService } from "@/app/utils";
 import { getAutofillData } from "@/app/utils/autofillData";
 import { useFormPersistence } from "@/app/hooks/useFormPersistence";
+import { useAutoSave } from "@/app/hooks/useAutoSave";
 
 const schema = z.object({
   childName: z.string().optional(),
@@ -75,11 +76,19 @@ export default function UnderstandingParentPage() {
     params.id as string
   );
 
+  useAutoSave(watch, {
+  saveEndpoint: '/api/admin/understanding-parent',
+  applicationId: params.id as string,
+  debounceMs: 2000,
+  intervalMs: 30000,
+});
+
   const onSubmit = async (values: FormValues) => {
     setSaving(true);
     try {
       const response = await apiService.post("/api/admin/understanding-parent", {
         applicationId: params.id,
+         isDraft: false,
         ...values,
       });
       if (response.success) {

@@ -7,6 +7,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       applicationId,
+       isDraft = false,
       // Child Information
       childName,
       childAge,
@@ -367,6 +368,7 @@ export async function POST(request: NextRequest) {
       record = await prisma.comprehensiveProfileSheet.create({ data: { applicationId, ...payload } });
     }
 
+     if (!isDraft) {
     // Mark Comprehensive Profile Sheet as completed and advance stage to 9
     await prisma.application.update({ 
       where: { id: applicationId }, 
@@ -378,7 +380,7 @@ export async function POST(request: NextRequest) {
 
     // Update application status based on all form completions
     await updateApplicationStatus(applicationId, prisma);
-
+  }
     return NextResponse.json({ success: true, data: record });
   } catch (error) {
     console.error("Error saving comprehensive profile sheet:", error);

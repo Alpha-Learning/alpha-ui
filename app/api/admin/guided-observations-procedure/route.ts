@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       applicationId,
+      isDraft = false,
       // Basic Information
       childName,
       age,
@@ -310,6 +311,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    if (!isDraft) {
     // Check if the appropriate interview form (KS1 or KS2 based on age) and Guided Observation Procedure are both completed
     // Age 5-7 → KS1, Age 8-11 → KS2
     const childAge = application.childAge;
@@ -339,7 +341,7 @@ export async function POST(request: NextRequest) {
 
     // Update application status based on all form completions
     await updateApplicationStatus(applicationId, prisma);
-
+  }
     return NextResponse.json({
       success: true,
       data: observation,

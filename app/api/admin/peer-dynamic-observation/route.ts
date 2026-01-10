@@ -2,11 +2,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
 import { updateApplicationStatus } from "@/app/utils/applicationStatus";
 
+// Helper function to safely convert rating to integer (handles both string and number)
+const toInt = (value: string | number | null | undefined): number | null => {
+  if (value === null || value === undefined || value === '' || value === '0') return null;
+  if (typeof value === 'number') return isNaN(value) ? null : value;
+  const parsed = parseInt(String(value), 10);
+  return isNaN(parsed) ? null : parsed;
+};
+
+// Helper function to convert integer to string for form compatibility
+const toString = (value: number | null | undefined): string => {
+  return value !== null && value !== undefined ? String(value) : '';
+};
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const {
       applicationId,
+      isDraft = false,
       // Observation Details
       groupID,  
       childName,
@@ -116,8 +130,10 @@ export async function POST(request: NextRequest) {
 
     const existing = await prisma.peerDynamicObservation.findUnique({ where: { applicationId } });
 
+    // Build payload with proper type conversions
+    // According to Prisma schema: ratings are Int?, strings are String?, booleans are Boolean
     const payload = {
-      // Observation Details
+      // Observation Details (String? in Prisma)
       groupID,
       childName,
       date,
@@ -125,93 +141,99 @@ export async function POST(request: NextRequest) {
       age,
       sessionStartTime,
       sessionEndTime,
-      // Behavioural Skill Assessment - convert string ratings to integers
-      leadershipRating: leadershipRating ? parseInt(leadershipRating) : null,
+      
+      // Behavioural Skill Assessment - Convert to Int? for Prisma
+      leadershipRating: toInt(leadershipRating),
       leadershipNotes,
-      collaborationRating: collaborationRating ? parseInt(collaborationRating) : null,
+      collaborationRating: toInt(collaborationRating),
       collaborationNotes,
-      conflictResolutionRating: conflictResolutionRating ? parseInt(conflictResolutionRating) : null,
+      conflictResolutionRating: toInt(conflictResolutionRating),
       conflictResolutionNotes,
-      communicationRating: communicationRating ? parseInt(communicationRating) : null,
+      communicationRating: toInt(communicationRating),
       communicationNotes,
-      emotionalRegulationRating: emotionalRegulationRating ? parseInt(emotionalRegulationRating) : null,
+      emotionalRegulationRating: toInt(emotionalRegulationRating),
       emotionalRegulationNotes,
-      empathyRating: empathyRating ? parseInt(empathyRating) : null,
+      empathyRating: toInt(empathyRating),
       empathyNotes,
-      adaptabilityRating: adaptabilityRating ? parseInt(adaptabilityRating) : null,
+      adaptabilityRating: toInt(adaptabilityRating),
       adaptabilityNotes,
-      initiativeRating: initiativeRating ? parseInt(initiativeRating) : null,
+      initiativeRating: toInt(initiativeRating),
       initiativeNotes,
-      // Meta Learning Skill Alignment
-      curiosityObserved: curiosityObserved || false,
+      
+      // Meta Learning Skill Alignment (Boolean @default(false) in Prisma)
+      curiosityObserved: Boolean(curiosityObserved) || false,
       curiosityNotes,
-      confidenceObserved: confidenceObserved || false,
+      confidenceObserved: Boolean(confidenceObserved) || false,
       confidenceNotes,
-      selfRegulationObserved: selfRegulationObserved || false,
+      selfRegulationObserved: Boolean(selfRegulationObserved) || false,
       selfRegulationNotes,
-      collaborationObserved: collaborationObserved || false,
+      collaborationObserved: Boolean(collaborationObserved) || false,
       collaborationObservedNotes,
-      emotionalAwarenessObserved: emotionalAwarenessObserved || false,
+      emotionalAwarenessObserved: Boolean(emotionalAwarenessObserved) || false,
       emotionalAwarenessNotes,
-      leadershipObserved: leadershipObserved || false,
+      leadershipObserved: Boolean(leadershipObserved) || false,
       leadershipObservedNotes,
-      problemSolvingObserved: problemSolvingObserved || false,
+      problemSolvingObserved: Boolean(problemSolvingObserved) || false,
       problemSolvingNotes,
-      perspectiveTakingObserved: perspectiveTakingObserved || false,
+      perspectiveTakingObserved: Boolean(perspectiveTakingObserved) || false,
       perspectiveTakingNotes,
-      // Learning Preference & Intelligence Inference
-      linguisticObserved: linguisticObserved || false,
-      linguisticStronglyEvident: linguisticStronglyEvident || false,
+      
+      // Learning Preference & Intelligence Inference (Boolean @default(false) in Prisma)
+      linguisticObserved: Boolean(linguisticObserved) || false,
+      linguisticStronglyEvident: Boolean(linguisticStronglyEvident) || false,
       linguisticNotes,
-      logicalMathematicalObserved: logicalMathematicalObserved || false,
-      logicalMathematicalStronglyEvident: logicalMathematicalStronglyEvident || false,
+      logicalMathematicalObserved: Boolean(logicalMathematicalObserved) || false,
+      logicalMathematicalStronglyEvident: Boolean(logicalMathematicalStronglyEvident) || false,
       logicalMathematicalNotes,
-      spatialObserved: spatialObserved || false,
-      spatialStronglyEvident: spatialStronglyEvident || false,
+      spatialObserved: Boolean(spatialObserved) || false,
+      spatialStronglyEvident: Boolean(spatialStronglyEvident) || false,
       spatialNotes,
-      bodilyKinestheticObserved: bodilyKinestheticObserved || false,
-      bodilyKinestheticStronglyEvident: bodilyKinestheticStronglyEvident || false,
+      bodilyKinestheticObserved: Boolean(bodilyKinestheticObserved) || false,
+      bodilyKinestheticStronglyEvident: Boolean(bodilyKinestheticStronglyEvident) || false,
       bodilyKinestheticNotes,
-      musicalObserved: musicalObserved || false,
-      musicalStronglyEvident: musicalStronglyEvident || false,
+      musicalObserved: Boolean(musicalObserved) || false,
+      musicalStronglyEvident: Boolean(musicalStronglyEvident) || false,
       musicalNotes,
-      interpersonalObserved: interpersonalObserved || false,
-      interpersonalStronglyEvident: interpersonalStronglyEvident || false,
+      interpersonalObserved: Boolean(interpersonalObserved) || false,
+      interpersonalStronglyEvident: Boolean(interpersonalStronglyEvident) || false,
       interpersonalNotes,
-      intrapersonalObserved: intrapersonalObserved || false,
-      intrapersonalStronglyEvident: intrapersonalStronglyEvident || false,
+      intrapersonalObserved: Boolean(intrapersonalObserved) || false,
+      intrapersonalStronglyEvident: Boolean(intrapersonalStronglyEvident) || false,
       intrapersonalNotes,
-      naturalisticObserved: naturalisticObserved || false,
-      naturalisticStronglyEvident: naturalisticStronglyEvident || false,
+      naturalisticObserved: Boolean(naturalisticObserved) || false,
+      naturalisticStronglyEvident: Boolean(naturalisticStronglyEvident) || false,
       naturalisticNotes,
-      existentialObserved: existentialObserved || false,
-      existentialStronglyEvident: existentialStronglyEvident || false,
+      existentialObserved: Boolean(existentialObserved) || false,
+      existentialStronglyEvident: Boolean(existentialStronglyEvident) || false,
       existentialNotes,
-      // Learning Style Clues
-      visualObserved: visualObserved || false,
+      
+      // Learning Style Clues (Boolean @default(false) in Prisma)
+      visualObserved: Boolean(visualObserved) || false,
       visualNotes,
-      auditoryObserved: auditoryObserved || false,
+      auditoryObserved: Boolean(auditoryObserved) || false,
       auditoryNotes,
-      kinestheticObserved: kinestheticObserved || false,
+      kinestheticObserved: Boolean(kinestheticObserved) || false,
       kinestheticNotes,
-      verbalObserved: verbalObserved || false,
+      verbalObserved: Boolean(verbalObserved) || false,
       verbalNotes,
-      socialObserved: socialObserved || false,
+      socialObserved: Boolean(socialObserved) || false,
       socialNotes,
-      solitaryObserved: solitaryObserved || false,
+      solitaryObserved: Boolean(solitaryObserved) || false,
       solitaryNotes,
-      // Social Role Tendency
-      leaderRole: leaderRole || false,
-      withdrawnRole: withdrawnRole || false,
-      problemSolverRole: problemSolverRole || false,
-      followerRole: followerRole || false,
-      initiatorRole: initiatorRole || false,
-      bridgerRole: bridgerRole || false,
-      observerRole: observerRole || false,
-      supporterRole: supporterRole || false,
-      challengerRole: challengerRole || false,
-      mediatorRole: mediatorRole || false,
-      // Summary Reflections
+      
+      // Social Role Tendency (Boolean @default(false) in Prisma)
+      leaderRole: Boolean(leaderRole) || false,
+      withdrawnRole: Boolean(withdrawnRole) || false,
+      problemSolverRole: Boolean(problemSolverRole) || false,
+      followerRole: Boolean(followerRole) || false,
+      initiatorRole: Boolean(initiatorRole) || false,
+      bridgerRole: Boolean(bridgerRole) || false,
+      observerRole: Boolean(observerRole) || false,
+      supporterRole: Boolean(supporterRole) || false,
+      challengerRole: Boolean(challengerRole) || false,
+      mediatorRole: Boolean(mediatorRole) || false,
+      
+      // Summary Reflections (String? in Prisma)
       notableStrengths,
       areasOfConcern,
       situationsChildThrived,
@@ -227,18 +249,20 @@ export async function POST(request: NextRequest) {
       record = await prisma.peerDynamicObservation.create({ data: { applicationId, ...payload } });
     }
 
-    // Mark Peer Dynamic Observation as completed and advance stage to 7
-    await prisma.application.update({ 
-      where: { id: applicationId }, 
-      data: { 
-        currentStage: 7,
-        isSeventhFormCompleted: true
-      } 
-    });
+    if (!isDraft) {
+      // Mark Peer Dynamic Observation as completed and advance stage to 7
+      await prisma.application.update({ 
+        where: { id: applicationId }, 
+        data: { 
+          currentStage: 7,
+          isSeventhFormCompleted: true
+        } 
+      });
 
-    // Update application status based on all form completions
-    await updateApplicationStatus(applicationId, prisma);
-
+      // Update application status based on all form completions
+      await updateApplicationStatus(applicationId, prisma);
+    }
+    
     return NextResponse.json({ success: true, data: record });
   } catch (error) {
     console.error("Error saving peer dynamic observation:", error);
@@ -255,7 +279,28 @@ export async function GET(request: NextRequest) {
     }
   
     const record = await prisma.peerDynamicObservation.findUnique({ where: { applicationId } });
-    return NextResponse.json({ success: true, data: record });
+    
+    // Convert integer ratings to strings for form compatibility
+    // Prisma returns Int? but form expects strings
+    if (record) {
+      // Create a properly typed object for the form
+      const formattedRecord: Record<string, any> = {
+        ...record,
+        // Convert all rating fields from Int? to string for Zod validation
+        leadershipRating: toString(record.leadershipRating),
+        collaborationRating: toString(record.collaborationRating),
+        conflictResolutionRating: toString(record.conflictResolutionRating),
+        communicationRating: toString(record.communicationRating),
+        emotionalRegulationRating: toString(record.emotionalRegulationRating),
+        empathyRating: toString(record.empathyRating),
+        adaptabilityRating: toString(record.adaptabilityRating),
+        initiativeRating: toString(record.initiativeRating),
+      };
+      
+      return NextResponse.json({ success: true, data: formattedRecord });
+    }
+    
+    return NextResponse.json({ success: true, data: null });
   } catch (error) {
     console.error("Error fetching peer dynamic observation:", error);
     return NextResponse.json({ success: false, error: "Failed to fetch form" }, { status: 500 });

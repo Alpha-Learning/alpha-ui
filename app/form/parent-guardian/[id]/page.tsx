@@ -17,6 +17,8 @@ import {
   parentGuardianQuestionnaireSchema,
   ParentGuardianQuestionnaireFormData,
 } from "@/app/lib/validations/parent-guardian-questionnaire";
+import { useAutoSave } from '@/app/hooks/useAutoSave';
+
 
 export default function ParentGuardianPublicFormPage() {
   const params = useParams<{ id: string }>();
@@ -74,6 +76,13 @@ export default function ParentGuardianPublicFormPage() {
     'parent-guardian',
     params.id as string
   );
+
+useAutoSave(watch, {
+  saveEndpoint: '/api/admin/parent-guardian-form',
+  applicationId: params.id as string,
+  debounceMs: 2000,
+  intervalMs: 30000,
+});
 
   useEffect(() => {
     loadFormData();
@@ -189,7 +198,7 @@ export default function ParentGuardianPublicFormPage() {
     setMessage({ type: "success", text: "Form autofilled successfully (personal information preserved)" });
   };
 
-console.log("errors",errors);
+
   const onSubmit = async (data: ParentGuardianQuestionnaireFormData) => {
     try {
       console.log("data",data);
@@ -197,6 +206,7 @@ console.log("errors",errors);
       setMessage(null);
       const res = await apiService.post("/api/admin/parent-guardian-form", {
         applicationId: params.id,
+         isDraft: false,
         ...data,
       });
       if (res.success) {

@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       applicationId,
+      isDraft = false, 
       // Child Information
       fullName,
       age,
@@ -113,7 +114,7 @@ export async function POST(request: NextRequest) {
     } else {
       record = await prisma.kS1InterviewQuestions.create({ data: { applicationId, ...payload } });
     }
-
+ if (!isDraft) {
     // Check if KS1 (just completed) and Guided Observation Procedure are both completed to mark stage 5 as complete
     const guidedObservationForm = await prisma.guidedObservationsProcedure.findUnique({ where: { applicationId } });
     const isStage5Complete = !!guidedObservationForm; // KS1 (just completed) and Guided Observation must both exist
@@ -128,6 +129,7 @@ export async function POST(request: NextRequest) {
 
     // Update application status based on all form completions
     await updateApplicationStatus(applicationId, prisma);
+  }
 
     return NextResponse.json({ success: true, data: record });
   } catch (error) {

@@ -6,6 +6,7 @@ export async function POST(request: NextRequest) {
   try {
     const {
       applicationId,
+       isDraft = false,
       examinerName,
       date,
       welcomeOverviewCompleted,
@@ -89,6 +90,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
+     if (!isDraft) {
     // Update application current stage to 4 and mark facility walkthrough as completed
     await prisma.application.update({
       where: { id: applicationId },
@@ -100,7 +102,7 @@ export async function POST(request: NextRequest) {
 
     // Update application status based on all form completions
     await updateApplicationStatus(applicationId, prisma);
-
+  }
     return NextResponse.json({
       success: true,
       data: checklist,
