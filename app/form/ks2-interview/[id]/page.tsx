@@ -24,44 +24,25 @@ const schema = z.object({
   
   // Interview Questions (1-20) - all required except learningPreference
   somethingAlwaysWantedToLearn: z.string().min(1, "Required"),
-  somethingAlwaysWantedToLearnNotes: z.string().optional(),
   fiveThingsWithPaperclip: z.string().min(1, "Required"),
-  fiveThingsWithPaperclipNotes: z.string().optional(),
   finishSchoolworkEarly: z.string().min(1, "Required"),
-  finishSchoolworkEarlyNotes: z.string().optional(),
   logicChallenge: z.string().min(1, "Required"),
-  logicChallengeNotes: z.string().optional(),
   somethingHard: z.string().min(1, "Required"),
-  somethingHardNotes: z.string().optional(),
   answerIsWrong: z.string().min(1, "Required"),
-  answerIsWrongNotes: z.string().optional(),
   favouriteThingOnComputer: z.string().min(1, "Required"),
-  favouriteThingOnComputerNotes: z.string().optional(),
   likeWorkingWithOthers: z.string().min(1, "Required"),
-  likeWorkingWithOthersNotes: z.string().optional(),
   drawMachineInvention: z.string().min(1, "Required"),
-  drawMachineInventionNotes: z.string().optional(),
   confidenceTryingNewThings: z.string().min(1, "Required"),
-  confidenceTryingNewThingsNotes: z.string().optional(),
   helpedSomeoneLearn: z.string().min(1, "Required"),
-  helpedSomeoneLearnNotes: z.string().optional(),
   magicWandMakesSmarter: z.string().min(1, "Required"),
-  magicWandMakesSmarterNotes: z.string().optional(),
   explainInternetToPast: z.string().min(1, "Required"),
-  explainInternetToPastNotes: z.string().optional(),
   inChargeOfWorld: z.string().min(1, "Required"),
-  inChargeOfWorldNotes: z.string().optional(),
   threeThingsGoodAt: z.string().min(1, "Required"),
-  threeThingsGoodAtNotes: z.string().optional(),
   somethingGetBetterAt: z.string().min(1, "Required"),
-  somethingGetBetterAtNotes: z.string().optional(),
   inventJobDoesntExist: z.string().min(1, "Required"),
-  inventJobDoesntExistNotes: z.string().optional(),
   learningPreference: z.string().optional(), // Not scored
   digitalTasks: z.string().min(1, "Required"),
-  digitalTasksNotes: z.string().optional(),
   playingWithFriends: z.string().min(1, "Required"),
-  playingWithFriendsNotes: z.string().optional(),
   
   // Total Score
   totalScore: z.string().optional(),
@@ -99,44 +80,25 @@ export default function KS2InterviewQuestionsPage() {
       age: "",
       date: "",
       somethingAlwaysWantedToLearn: "",
-      somethingAlwaysWantedToLearnNotes: "",
       fiveThingsWithPaperclip: "",
-      fiveThingsWithPaperclipNotes: "",
       finishSchoolworkEarly: "",
-      finishSchoolworkEarlyNotes: "",
       logicChallenge: "",
-      logicChallengeNotes: "",
       somethingHard: "",
-      somethingHardNotes: "",
       answerIsWrong: "",
-      answerIsWrongNotes: "",
       favouriteThingOnComputer: "",
-      favouriteThingOnComputerNotes: "",
       likeWorkingWithOthers: "",
-      likeWorkingWithOthersNotes: "",
       drawMachineInvention: "",
-      drawMachineInventionNotes: "",
       confidenceTryingNewThings: "",
-      confidenceTryingNewThingsNotes: "",
       helpedSomeoneLearn: "",
-      helpedSomeoneLearnNotes: "",
       magicWandMakesSmarter: "",
-      magicWandMakesSmarterNotes: "",
       explainInternetToPast: "",
-      explainInternetToPastNotes: "",
       inChargeOfWorld: "",
-      inChargeOfWorldNotes: "",
       threeThingsGoodAt: "",
-      threeThingsGoodAtNotes: "",
       somethingGetBetterAt: "",
-      somethingGetBetterAtNotes: "",
       inventJobDoesntExist: "",
-      inventJobDoesntExistNotes: "",
       learningPreference: "",
       digitalTasks: "",
-      digitalTasksNotes: "",
       playingWithFriends: "",
-      playingWithFriendsNotes: "",
       totalScore: "",
       applicationNumber: "",
       observerName: "",
@@ -166,44 +128,25 @@ useAutoSave(watch, {
       age: data.age || '',
       date: data.date || '',
       somethingAlwaysWantedToLearn: data.somethingAlwaysWantedToLearn ? parseInt(data.somethingAlwaysWantedToLearn) : null,
-      somethingAlwaysWantedToLearnNotes: data.somethingAlwaysWantedToLearnNotes || '',
       fiveThingsWithPaperclip: data.fiveThingsWithPaperclip ? parseInt(data.fiveThingsWithPaperclip) : null,
-      fiveThingsWithPaperclipNotes: data.fiveThingsWithPaperclipNotes || '',
       finishSchoolworkEarly: data.finishSchoolworkEarly ? parseInt(data.finishSchoolworkEarly) : null,
-      finishSchoolworkEarlyNotes: data.finishSchoolworkEarlyNotes || '',
       logicChallenge: data.logicChallenge ? parseInt(data.logicChallenge) : null,
-      logicChallengeNotes: data.logicChallengeNotes || '',
       somethingHard: data.somethingHard ? parseInt(data.somethingHard) : null,
-      somethingHardNotes: data.somethingHardNotes || '',
       answerIsWrong: data.answerIsWrong ? parseInt(data.answerIsWrong) : null,
-      answerIsWrongNotes: data.answerIsWrongNotes || '',
       favouriteThingOnComputer: data.favouriteThingOnComputer ? parseInt(data.favouriteThingOnComputer) : null,
-      favouriteThingOnComputerNotes: data.favouriteThingOnComputerNotes || '',
       likeWorkingWithOthers: data.likeWorkingWithOthers ? parseInt(data.likeWorkingWithOthers) : null,
-      likeWorkingWithOthersNotes: data.likeWorkingWithOthersNotes || '',
       drawMachineInvention: data.drawMachineInvention ? parseInt(data.drawMachineInvention) : null,
-      drawMachineInventionNotes: data.drawMachineInventionNotes || '',
       confidenceTryingNewThings: data.confidenceTryingNewThings ? parseInt(data.confidenceTryingNewThings) : null,
-      confidenceTryingNewThingsNotes: data.confidenceTryingNewThingsNotes || '',
       helpedSomeoneLearn: data.helpedSomeoneLearn ? parseInt(data.helpedSomeoneLearn) : null,
-      helpedSomeoneLearnNotes: data.helpedSomeoneLearnNotes || '',
       magicWandMakesSmarter: data.magicWandMakesSmarter ? parseInt(data.magicWandMakesSmarter) : null,
-      magicWandMakesSmarterNotes: data.magicWandMakesSmarterNotes || '',
       explainInternetToPast: data.explainInternetToPast ? parseInt(data.explainInternetToPast) : null,
-      explainInternetToPastNotes: data.explainInternetToPastNotes || '',
       inChargeOfWorld: data.inChargeOfWorld ? parseInt(data.inChargeOfWorld) : null,
-      inChargeOfWorldNotes: data.inChargeOfWorldNotes || '',
       threeThingsGoodAt: data.threeThingsGoodAt ? parseInt(data.threeThingsGoodAt) : null,
-      threeThingsGoodAtNotes: data.threeThingsGoodAtNotes || '',
       somethingGetBetterAt: data.somethingGetBetterAt ? parseInt(data.somethingGetBetterAt) : null,
-      somethingGetBetterAtNotes: data.somethingGetBetterAtNotes || '',
       inventJobDoesntExist: data.inventJobDoesntExist ? parseInt(data.inventJobDoesntExist) : null,
-      inventJobDoesntExistNotes: data.inventJobDoesntExistNotes || '',
       learningPreference: data.learningPreference || '',
       digitalTasks: data.digitalTasks ? parseInt(data.digitalTasks) : null,
-      digitalTasksNotes: data.digitalTasksNotes || '',
       playingWithFriends: data.playingWithFriends ? parseInt(data.playingWithFriends) : null,
-      playingWithFriendsNotes: data.playingWithFriendsNotes || '',
       totalScore: data.totalScore ? parseInt(data.totalScore) : null,
       applicationNumber: data.applicationNumber || '',
       observerName: data.observerName || '',
@@ -237,44 +180,25 @@ useAutoSave(watch, {
           age: res.data.age || "",
           date: res.data.date || "",
           somethingAlwaysWantedToLearn: res.data.somethingAlwaysWantedToLearn || "",
-          somethingAlwaysWantedToLearnNotes: res.data.somethingAlwaysWantedToLearnNotes || "",
           fiveThingsWithPaperclip: res.data.fiveThingsWithPaperclip || "",
-          fiveThingsWithPaperclipNotes: res.data.fiveThingsWithPaperclipNotes || "",
           finishSchoolworkEarly: res.data.finishSchoolworkEarly || "",
-          finishSchoolworkEarlyNotes: res.data.finishSchoolworkEarlyNotes || "",
           logicChallenge: res.data.logicChallenge || "",
-          logicChallengeNotes: res.data.logicChallengeNotes || "",
           somethingHard: res.data.somethingHard || "",
-          somethingHardNotes: res.data.somethingHardNotes || "",
           answerIsWrong: res.data.answerIsWrong || "",
-          answerIsWrongNotes: res.data.answerIsWrongNotes || "",
           favouriteThingOnComputer: res.data.favouriteThingOnComputer || "",
-          favouriteThingOnComputerNotes: res.data.favouriteThingOnComputerNotes || "",
           likeWorkingWithOthers: res.data.likeWorkingWithOthers || "",
-          likeWorkingWithOthersNotes: res.data.likeWorkingWithOthersNotes || "",
           drawMachineInvention: res.data.drawMachineInvention || "",
-          drawMachineInventionNotes: res.data.drawMachineInventionNotes || "",
           confidenceTryingNewThings: res.data.confidenceTryingNewThings || "",
-          confidenceTryingNewThingsNotes: res.data.confidenceTryingNewThingsNotes || "",
           helpedSomeoneLearn: res.data.helpedSomeoneLearn || "",
-          helpedSomeoneLearnNotes: res.data.helpedSomeoneLearnNotes || "",
           magicWandMakesSmarter: res.data.magicWandMakesSmarter || "",
-          magicWandMakesSmarterNotes: res.data.magicWandMakesSmarterNotes || "",
           explainInternetToPast: res.data.explainInternetToPast || "",
-          explainInternetToPastNotes: res.data.explainInternetToPastNotes || "",
           inChargeOfWorld: res.data.inChargeOfWorld || "",
-          inChargeOfWorldNotes: res.data.inChargeOfWorldNotes || "",
           threeThingsGoodAt: res.data.threeThingsGoodAt || "",
-          threeThingsGoodAtNotes: res.data.threeThingsGoodAtNotes || "",
           somethingGetBetterAt: res.data.somethingGetBetterAt || "",
-          somethingGetBetterAtNotes: res.data.somethingGetBetterAtNotes || "",
           inventJobDoesntExist: res.data.inventJobDoesntExist || "",
-          inventJobDoesntExistNotes: res.data.inventJobDoesntExistNotes || "",
           learningPreference: res.data.learningPreference || "",
           digitalTasks: res.data.digitalTasks || "",
-          digitalTasksNotes: res.data.digitalTasksNotes || "",
           playingWithFriends: res.data.playingWithFriends || "",
-          playingWithFriendsNotes: res.data.playingWithFriendsNotes || "",
           totalScore: res.data.totalScore || "",
           applicationNumber: res.data.applicationNumber || "",
           observerName: res.data.observerName || "",
@@ -290,44 +214,25 @@ useAutoSave(watch, {
           age: appData.childAge ? appData.childAge.toString() : "",
           date: "",
           somethingAlwaysWantedToLearn: "",
-          somethingAlwaysWantedToLearnNotes: "",
           fiveThingsWithPaperclip: "",
-          fiveThingsWithPaperclipNotes: "",
           finishSchoolworkEarly: "",
-          finishSchoolworkEarlyNotes: "",
           logicChallenge: "",
-          logicChallengeNotes: "",
           somethingHard: "",
-          somethingHardNotes: "",
           answerIsWrong: "",
-          answerIsWrongNotes: "",
           favouriteThingOnComputer: "",
-          favouriteThingOnComputerNotes: "",
           likeWorkingWithOthers: "",
-          likeWorkingWithOthersNotes: "",
           drawMachineInvention: "",
-          drawMachineInventionNotes: "",
           confidenceTryingNewThings: "",
-          confidenceTryingNewThingsNotes: "",
           helpedSomeoneLearn: "",
-          helpedSomeoneLearnNotes: "",
           magicWandMakesSmarter: "",
-          magicWandMakesSmarterNotes: "",
           explainInternetToPast: "",
-          explainInternetToPastNotes: "",
           inChargeOfWorld: "",
-          inChargeOfWorldNotes: "",
           threeThingsGoodAt: "",
-          threeThingsGoodAtNotes: "",
           somethingGetBetterAt: "",
-          somethingGetBetterAtNotes: "",
           inventJobDoesntExist: "",
-          inventJobDoesntExistNotes: "",
           learningPreference: "",
           digitalTasks: "",
-          digitalTasksNotes: "",
           playingWithFriends: "",
-          playingWithFriendsNotes: "",
           totalScore: "",
           applicationNumber: params.id,
           observerName: "",
@@ -472,7 +377,7 @@ useAutoSave(watch, {
             </p>
           </div>
 
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Question 1 */}
             <div className="border border-slate-200 rounded-lg p-4">
               <div className="font-medium text-slate-900 mb-2">
@@ -481,8 +386,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Curiosity & intrinsic motivation
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="somethingAlwaysWantedToLearn"
                   error={errors.somethingAlwaysWantedToLearn as any}
@@ -504,17 +408,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Passionate + asks own questions</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="somethingAlwaysWantedToLearnNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="somethingAlwaysWantedToLearnNotes"
-                    {...register("somethingAlwaysWantedToLearnNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 2 */}
@@ -525,8 +418,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Cognitive flexibility & creativity
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="fiveThingsWithPaperclip"
                   error={errors.fiveThingsWithPaperclip as any}
@@ -548,17 +440,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Highly original/creative answers</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="fiveThingsWithPaperclipNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="fiveThingsWithPaperclipNotes"
-                    {...register("fiveThingsWithPaperclipNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 3 */}
@@ -569,8 +450,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Intrinsic motivation
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="finishSchoolworkEarly"
                   error={errors.finishSchoolworkEarly as any}
@@ -592,17 +472,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Seeks more challenge or helps others</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="finishSchoolworkEarlyNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="finishSchoolworkEarlyNotes"
-                    {...register("finishSchoolworkEarlyNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 4 */}
@@ -613,8 +482,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Attention control
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="logicChallenge"
                   error={errors.logicChallenge as any}
@@ -636,17 +504,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Fully engaged and eager for more</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="logicChallengeNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="logicChallengeNotes"
-                    {...register("logicChallengeNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 5 */}
@@ -657,8 +514,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Growth mindset & perseverance
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="somethingHard"
                   error={errors.somethingHard as any}
@@ -680,17 +536,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Says they like challenges or keep trying</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="somethingHardNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="somethingHardNotes"
-                    {...register("somethingHardNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 6 */}
@@ -701,8 +546,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Emotional regulation
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="answerIsWrong"
                   error={errors.answerIsWrong as any}
@@ -724,17 +568,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Says it's part of learning</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="answerIsWrongNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="answerIsWrongNotes"
-                    {...register("answerIsWrongNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 7 */}
@@ -745,8 +578,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Tech comfort & digital fluency
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="favouriteThingOnComputer"
                   error={errors.favouriteThingOnComputer as any}
@@ -768,17 +600,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Builds things, codes, or explores creatively</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="favouriteThingOnComputerNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="favouriteThingOnComputerNotes"
-                    {...register("favouriteThingOnComputerNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 8 */}
@@ -789,8 +610,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Social openness & collaboration
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="likeWorkingWithOthers"
                   error={errors.likeWorkingWithOthers as any}
@@ -812,17 +632,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Enthusiastic about teamwork, sharing, or learning from others</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="likeWorkingWithOthersNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="likeWorkingWithOthersNotes"
-                    {...register("likeWorkingWithOthersNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 9 */}
@@ -833,8 +642,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Imagination & non-verbal expression
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="drawMachineInvention"
                   error={errors.drawMachineInvention as any}
@@ -856,17 +664,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Inventive + labelled or explained</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="drawMachineInventionNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="drawMachineInventionNotes"
-                    {...register("drawMachineInventionNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 10 */}
@@ -877,8 +674,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Confidence check
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="confidenceTryingNewThings"
                   error={errors.confidenceTryingNewThings as any}
@@ -900,17 +696,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Excited to try new things</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="confidenceTryingNewThingsNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="confidenceTryingNewThingsNotes"
-                    {...register("confidenceTryingNewThingsNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 11 */}
@@ -921,8 +706,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Communication & teaching ability
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="helpedSomeoneLearn"
                   error={errors.helpedSomeoneLearn as any}
@@ -944,17 +728,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Explains clearly with reflection</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="helpedSomeoneLearnNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="helpedSomeoneLearnNotes"
-                    {...register("helpedSomeoneLearnNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 12 */}
@@ -965,8 +738,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Abstract thinking & values
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="magicWandMakesSmarter"
                   error={errors.magicWandMakesSmarter as any}
@@ -988,17 +760,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Thoughtful, creative and ethical purpose</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="magicWandMakesSmarterNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="magicWandMakesSmarterNotes"
-                    {...register("magicWandMakesSmarterNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 13 */}
@@ -1009,8 +770,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Critical thinking & communication
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="explainInternetToPast"
                   error={errors.explainInternetToPast as any}
@@ -1032,17 +792,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Uses detailed analogy or multiple features</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="explainInternetToPastNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="explainInternetToPastNotes"
-                    {...register("explainInternetToPastNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 14 */}
@@ -1053,8 +802,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Critical thinking & social values
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="inChargeOfWorld"
                   error={errors.inChargeOfWorld as any}
@@ -1076,17 +824,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Thoughtful and values-driven change</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="inChargeOfWorldNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="inChargeOfWorldNotes"
-                    {...register("inChargeOfWorldNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 15 */}
@@ -1097,8 +834,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Self-awareness
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="threeThingsGoodAt"
                   error={errors.threeThingsGoodAt as any}
@@ -1120,17 +856,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Gives clear self-insight and confidence</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="threeThingsGoodAtNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="threeThingsGoodAtNotes"
-                    {...register("threeThingsGoodAtNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 16 */}
@@ -1141,8 +866,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Growth orientation
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="somethingGetBetterAt"
                   error={errors.somethingGetBetterAt as any}
@@ -1164,17 +888,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Names challenge and motivation behind it</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="somethingGetBetterAtNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="somethingGetBetterAtNotes"
-                    {...register("somethingGetBetterAtNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 17 */}
@@ -1185,8 +898,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Innovation & future-thinking
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="inventJobDoesntExist"
                   error={errors.inventJobDoesntExist as any}
@@ -1208,29 +920,17 @@ useAutoSave(watch, {
                     <option value="5">5 = Original and solves a real problem</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="inventJobDoesntExistNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="inventJobDoesntExistNotes"
-                    {...register("inventJobDoesntExistNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 18 - Not scored */}
-            <div className="border border-slate-200 rounded-lg p-4">
+            <div className="border border-slate-200 rounded-lg p-4 md:col-span-2">
               <div className="font-medium text-slate-900 mb-2">
                 18. Do you prefer learning by watching, listening, or doing? (Not scored - record answer)
               </div>
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Learning preference awareness
               </div>
-              <div className="grid grid-cols-1 gap-4">
-                <FormField
+              <FormField
                   label="Answer (Not scored - Record answer)"
                   htmlFor="learningPreference"
                   error={errors.learningPreference as any}
@@ -1241,7 +941,6 @@ useAutoSave(watch, {
                     {...register("learningPreference")}
                   />
                 </FormField>
-              </div>
             </div>
 
             {/* Question 19 */}
@@ -1252,8 +951,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Digital readiness
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="digitalTasks"
                   error={errors.digitalTasks as any}
@@ -1275,17 +973,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Fast, confident, curious</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="digitalTasksNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="digitalTasksNotes"
-                    {...register("digitalTasksNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
 
             {/* Question 20 */}
@@ -1296,8 +983,7 @@ useAutoSave(watch, {
               <div className="text-sm text-slate-600 mb-3">
                 Purpose: Social openness
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                   label="Score (1-5)"
                   htmlFor="playingWithFriends"
                   error={errors.playingWithFriends as any}
@@ -1319,17 +1005,6 @@ useAutoSave(watch, {
                     <option value="5">5 = Clear value on connection or collaboration</option>
                   </select>
                 </FormField>
-                <FormField
-                  label="Notes"
-                  htmlFor="playingWithFriendsNotes"
-                >
-                  <Textarea
-                    rows={3}
-                    id="playingWithFriendsNotes"
-                    {...register("playingWithFriendsNotes")}
-                  />
-                </FormField>
-              </div>
             </div>
           </div>
         </section>
