@@ -322,7 +322,9 @@ useEffect(() => {
 
       {/* Application Status */}
       <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
-        <h3 className="text-lg font-semibold text-slate-900 mb-4">Application Status</h3>
+        {/* <h3 className="text-lg font-semibold text-slate-900 mb-4">Application Status</h3> */}
+
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">Waiting List Application Status</h3>
         
         <div className="space-y-4">
           <div>
@@ -531,6 +533,85 @@ useEffect(() => {
           </div>
         </div>
       )}
+
+            {/* Parent–School Agreement Section - Only visible when approved */}
+      {userData?.applicationStatus === 'approved' && userData?.applicationId && (
+        <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+          <h3 className="text-lg font-semibold text-slate-900 mb-4">Parent–School Agreement</h3>
+          
+          <div className="space-y-4">
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <svg className="w-6 h-6 text-green-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <h4 className="text-sm font-semibold text-green-900 mb-2">
+                    Application Approved!
+                  </h4>
+                  <p className="text-sm text-green-800 mb-3">
+                    Your application has been approved. Please review the Parent–School Agreement and prepare the required documents for enrollment.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+              <h4 className="text-sm font-semibold text-slate-900 mb-3">📋 Required Documents Checklist</h4>
+              <ul className="space-y-2 text-sm text-slate-700">
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Student CPR / ID</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Student Passport</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Birth Certificate</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Previous School Reports</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Vaccination / Immunization Record</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Passport Size Photographs (4)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Parent CPR / ID Copies</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Parent Passport Copies</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="pt-4 border-t border-gray-200">
+              <p className="text-sm text-slate-600 mb-3">
+                Please review the Parent–School Agreement which outlines the terms and conditions of enrollment, school policies, and expectations.
+              </p>
+              <button
+                onClick={() => router.push(`/dashboard/user/agreement`)}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl text-sm w-full sm:w-auto"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                View Parent–School Agreement
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
 
 
       {/* User Details */}
