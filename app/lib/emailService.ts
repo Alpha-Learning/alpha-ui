@@ -1260,3 +1260,187 @@ export async function sendPaymentReminderEmail(data: PaymentReminderEmailData): 
     return false;
   }
 }
+
+export interface LearnerReportEmailData {
+  parentName: string;
+  parentEmail: string;
+  childName: string;
+  applicationId: string;
+}
+
+export async function sendLearnerReportNotificationEmail(data: LearnerReportEmailData): Promise<boolean> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!baseUrl) {
+      console.error('NEXT_PUBLIC_BASE_URL is not set. Email links will not work correctly.');
+      throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required');
+    }
+    const reportUrl = `${baseUrl}/dashboard/user/learner-report/${data.applicationId}`;
+    
+    const mailOptions = {
+      from: `"Alphera Academy" <${emailConfig.auth.user}>`,
+      to: data.parentEmail,
+      subject: `📊 AI-Generated Learner Report Ready - ${data.childName}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>AI-Generated Learner Report Ready - Alphera Academy</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8EC0C2, #142954); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .success-box { background: #e3f2fd; border: 2px solid #2196F3; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center; }
+            .success-box h2 { color: #1565C0; margin: 0 0 10px 0; }
+            .info-box { background: white; border: 2px solid #8EC0C2; border-radius: 8px; padding: 20px; margin: 20px 0; }
+            .details-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            .details-table td { padding: 10px; border-bottom: 1px solid #eee; }
+            .details-table td:first-child { font-weight: bold; width: 40%; color: #142954; }
+            .button { 
+              display: inline-block; 
+              background: linear-gradient(135deg, #8EC0C2, #142954); 
+              color: white !important; 
+              padding: 15px 30px; 
+              text-decoration: none; 
+              border-radius: 5px; 
+              font-weight: bold; 
+              margin: 10px 0;
+            }
+            .button-container { text-align: center; margin: 30px 0; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            .report-icon { font-size: 48px; margin: 20px 0; }
+            .highlight-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 4px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🎓 Alphera Academy</h1>
+              <h2>AI-Generated Learner Report Ready</h2>
+            </div>
+            
+            <div class="content">
+              <div class="success-box">
+                <div class="report-icon">📊</div>
+                <h2>Your Learner Report is Ready!</h2>
+                <p style="color: #1565C0; font-size: 16px; margin: 10px 0;">The comprehensive AI-generated assessment report for ${data.childName} has been completed.</p>
+              </div>
+              
+              <p>Dear ${data.parentName},</p>
+              
+              <p>We are pleased to inform you that the AI-generated learner assessment report for <strong>${data.childName}</strong> has been successfully generated and is now available for your review.</p>
+              
+              <div class="info-box">
+                <h3>📋 Report Details</h3>
+                <table class="details-table">
+                  <tr>
+                    <td>Child's Name:</td>
+                    <td><strong>${data.childName}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Application ID:</td>
+                    <td>${data.applicationId}</td>
+                  </tr>
+                  <tr>
+                    <td>Report Status:</td>
+                    <td><strong style="color: #28a745;">✅ Available</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Generated On:</td>
+                    <td>${new Date().toLocaleDateString('en-US', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}</td>
+                  </tr>
+                </table>
+              </div>
+              
+              <div class="highlight-box">
+                <p style="margin: 0; color: #856404;"><strong>📖 What's in the Report?</strong></p>
+                <p style="margin: 10px 0 0 0; color: #856404;">The comprehensive learner report includes:</p>
+                <ul style="margin: 10px 0 0 20px; color: #856404;">
+                  <li>Executive Summary & Overall Readiness Assessment</li>
+                  <li>Learning Style Analysis</li>
+                  <li>Dominant Intelligences Profile</li>
+                  <li>Cognitive Profile (Attention, Memory, Processing, Executive Function)</li>
+                  <li>Meta-Learning Pillars Assessment</li>
+                  <li>Academic Readiness Evaluation</li>
+                  <li>Emotional & Social Profiles</li>
+                  <li>Strengths, Challenges & Recommendations</li>
+                  <li>Key Stage Level Placement</li>
+                </ul>
+              </div>
+              
+              <div class="button-container">
+                <a href="${reportUrl}" class="button" style="color: white !important;">📊 View Learner Report</a>
+              </div>
+              
+              <p style="margin-top: 20px;"><strong>Note:</strong> The report is available in read-only mode in your parent dashboard. You can access it anytime by logging into your account.</p>
+              
+              <p>If you have any questions about the report or need assistance understanding the findings, please don't hesitate to contact our assessment team.</p>
+              
+              <p>Best regards,<br>
+              <strong>The Alphera Academy Assessment Team</strong></p>
+            </div>
+            
+            <div class="footer">
+              <p>This email was sent regarding your application for Alphera Academy.</p>
+              <p>If you have any questions, please contact us at info@alpheraacademy.edu.bh</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `
+        AI-Generated Learner Report Ready - Alphera Academy
+        
+        Dear ${data.parentName},
+        
+        We are pleased to inform you that the AI-generated learner assessment report for ${data.childName} has been successfully generated and is now available for your review.
+        
+        REPORT DETAILS:
+        Child's Name: ${data.childName}
+        Application ID: ${data.applicationId}
+        Report Status: ✅ Available
+        Generated On: ${new Date().toLocaleDateString()}
+        
+        WHAT'S IN THE REPORT?
+        The comprehensive learner report includes:
+        - Executive Summary & Overall Readiness Assessment
+        - Learning Style Analysis
+        - Dominant Intelligences Profile
+        - Cognitive Profile (Attention, Memory, Processing, Executive Function)
+        - Meta-Learning Pillars Assessment
+        - Academic Readiness Evaluation
+        - Emotional & Social Profiles
+        - Strengths, Challenges & Recommendations
+        - Key Stage Level Placement
+        
+        View Learner Report: ${reportUrl}
+        
+        Note: The report is available in read-only mode in your parent dashboard. You can access it anytime by logging into your account.
+        
+        If you have any questions about the report or need assistance understanding the findings, please don't hesitate to contact our assessment team.
+        
+        Best regards,
+        The Alphera Academy Assessment Team
+        
+        ---
+        This email was sent regarding your application for Alphera Academy.
+        If you have any questions, please contact us at info@alpheraacademy.edu.bh
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Learner report notification email sent successfully to:', data.parentEmail);
+    return true;
+  } catch (error) {
+    console.error('Error sending learner report notification email:', error);
+    return false;
+  }
+}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
 import { verifyToken } from "@/app/lib/auth";
+import { sendLearnerReportNotificationEmail } from "@/app/lib/emailService";
 
 const FRANK_API_BASE_URL = process.env.FRANK_API_BASE_URL;
 const FRANK_API_KEY = process.env.FRANK_API_KEY;
@@ -322,6 +323,7 @@ export async function POST(
         childFullName: true,
         childAge: true,
         parentFullName: true,
+         parentEmail: true,
       }
     });
 
@@ -592,13 +594,36 @@ export async function POST(
       }
       
       // Handle response format from POST /reports/utl (returns rawReport, analysisReport, and analysis)
-      const reportId = reportData.analysisReport?.id || reportData.report_id || 'N/A';
+      // const reportId = reportData.analysisReport?.id || reportData.report_id || 'N/A';
+      // const generatedAt = reportData.analysisReport?.createdAt || reportData.generated_at || new Date().toISOString();
+      // const analysisData = reportData.analysis || reportData;
+
+      // Note: Report is stored in Frank API, we don't need to store it locally
+      // The report can be retrieved anytime using the student_id
+      // The session is active and can be used for future queries/reports
+
+        const reportId = reportData.analysisReport?.id || reportData.report_id || 'N/A';
       const generatedAt = reportData.analysisReport?.createdAt || reportData.generated_at || new Date().toISOString();
       const analysisData = reportData.analysis || reportData;
 
       // Note: Report is stored in Frank API, we don't need to store it locally
       // The report can be retrieved anytime using the student_id
       // The session is active and can be used for future queries/reports
+      
+      // Send email notification to parent about report availability
+      try {
+        await sendLearnerReportNotificationEmail({
+          parentName: application.parentFullName,
+          parentEmail: application.parentEmail,
+          childName: application.childFullName,
+          applicationId: applicationId,
+        });
+        console.log('✅ Learner report notification email sent successfully');
+      } catch (emailError: any) {
+        // Log email error but don't fail the request - report generation was successful
+        console.error('⚠️ Failed to send learner report notification email:', emailError);
+        // Continue with successful response even if email fails
+      }
       
       return NextResponse.json({
         success: true,
