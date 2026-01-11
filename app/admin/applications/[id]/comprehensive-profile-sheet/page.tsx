@@ -100,6 +100,9 @@ const schema = z.object({
   // Meta-Learning Pillars & Soft Skills Profile
   summaryInsightLearnerType: z.string().optional(), // repurposed as Dominant Intelligence summary
   summaryInsightLearningEnvironments: z.string().optional(),
+  // Temporary fields for inline inputs (combined into summaryInsightLearnerType)
+  learnerTypeInput: z.string().optional(),
+  learningEnvironmentsInput: z.string().optional(),
   selfRegulationEmerging: z.boolean().default(false),
   selfRegulationDeveloping: z.boolean().default(false),
   selfRegulationStrong: z.boolean().default(false),
@@ -128,11 +131,8 @@ const schema = z.object({
   
   // Academic & Digital Readiness
   englishCurrentLevel: z.string().optional(),
-  englishNotes: z.string().optional(),
   mathsCurrentLevel: z.string().optional(),
-  mathsNotes: z.string().optional(),
   scienceCurrentLevel: z.string().optional(),
-  scienceNotes: z.string().optional(),
   technologyUseLow: z.boolean().default(false),
   technologyUseModerate: z.boolean().default(false),
   technologyUseHigh: z.boolean().default(false),
@@ -307,11 +307,8 @@ export default function ComprehensiveProfileSheetPage() {
       creativityExpressionNotesEvidence: "",
       softSkillSummaryNotes: "",
       englishCurrentLevel: "",
-      englishNotes: "",
       mathsCurrentLevel: "",
-      mathsNotes: "",
       scienceCurrentLevel: "",
-      scienceNotes: "",
       technologyUseLow: false,
       technologyUseModerate: false,
       technologyUseHigh: false,
@@ -379,6 +376,18 @@ export default function ComprehensiveProfileSheetPage() {
   intervalMs: 30000,
 });
 
+  // Combine learnerTypeInput and learningEnvironmentsInput into summaryInsightLearnerType
+  const learnerTypeInput = watch("learnerTypeInput");
+  const learningEnvironmentsInput = watch("learningEnvironmentsInput");
+  
+  useEffect(() => {
+    // Only update if at least one field has a value (to avoid overwriting on initial load)
+    if (learnerTypeInput || learningEnvironmentsInput) {
+      const combined = `This child shows traits of a "${learnerTypeInput || ""}" type learner, who benefits most from ${learningEnvironmentsInput || ""} learning environments.`;
+      setValue("summaryInsightLearnerType", combined, { shouldDirty: false });
+    }
+  }, [learnerTypeInput, learningEnvironmentsInput, setValue]);
+
   useEffect(() => {
     (async () => {
       // Load existing form data
@@ -391,7 +400,32 @@ export default function ComprehensiveProfileSheetPage() {
       
       if (res.success && res.data) {
         // Use existing form data
-        reset(res.data);
+        const data = res.data;
+        
+        // Parse summaryInsightLearnerType to extract the two input values
+        if (data.summaryInsightLearnerType) {
+          const text = data.summaryInsightLearnerType;
+          // Extract learner type: "This child shows traits of a "TYPE" type learner"
+          const learnerTypeMatch = text.match(/shows traits of a "([^"]+)"/);
+          // Extract learning environments: "who benefits most from ENVIRONMENTS learning environments"
+          const environmentsMatch = text.match(/benefits most from ([^.]+) learning environments\.?/);
+          
+          if (learnerTypeMatch && learnerTypeMatch[1]) {
+            data.learnerTypeInput = learnerTypeMatch[1];
+          } else {
+            data.learnerTypeInput = "";
+          }
+          if (environmentsMatch && environmentsMatch[1]) {
+            data.learningEnvironmentsInput = environmentsMatch[1].trim();
+          } else {
+            data.learningEnvironmentsInput = "";
+          }
+        } else {
+          data.learnerTypeInput = "";
+          data.learningEnvironmentsInput = "";
+        }
+        
+        reset(data);
       } else if (appRes.success && appRes.data) {
         // Auto-fill with application data if no existing form data
         const appData = appRes.data;
@@ -479,6 +513,8 @@ export default function ComprehensiveProfileSheetPage() {
           // Meta-Learning Pillars & Soft Skills Profile
           summaryInsightLearnerType: "",
           summaryInsightLearningEnvironments: "",
+          learnerTypeInput: "",
+          learningEnvironmentsInput: "",
           selfRegulationEmerging: false,
           selfRegulationDeveloping: false,
           selfRegulationStrong: false,
@@ -507,11 +543,8 @@ export default function ComprehensiveProfileSheetPage() {
           
           // Academic & Digital Readiness
           englishCurrentLevel: "",
-          englishNotes: "",
           mathsCurrentLevel: "",
-          mathsNotes: "",
           scienceCurrentLevel: "",
-          scienceNotes: "",
           technologyUseLow: false,
           technologyUseModerate: false,
           technologyUseHigh: false,
@@ -1092,7 +1125,7 @@ export default function ComprehensiveProfileSheetPage() {
                 />
                 <span className="font-medium text-slate-900">Visual</span>
               </div>
-              <FormField label="Evidence:" htmlFor="visualObservedEvidence">
+              <FormField label="Observed Evidence:" htmlFor="visualObservedEvidence">
                 <Textarea
                   rows={2}
                   id="visualObservedEvidence"
@@ -1118,7 +1151,7 @@ export default function ComprehensiveProfileSheetPage() {
                 />
                 <span className="font-medium text-slate-900">Auditory</span>
               </div>
-              <FormField label="Evidence:" htmlFor="auditoryObservedEvidence">
+              <FormField label="Observed Evidence:" htmlFor="auditoryObservedEvidence">
                 <Textarea
                   rows={2}
                   id="auditoryObservedEvidence"
@@ -1144,7 +1177,7 @@ export default function ComprehensiveProfileSheetPage() {
                 />
                 <span className="font-medium text-slate-900">Kinesthetic/Tactile</span>
               </div>
-              <FormField label="Evidence:" htmlFor="kinestheticTactileObservedEvidence">
+              <FormField label="Observed Evidence:" htmlFor="kinestheticTactileObservedEvidence">
                 <Textarea
                   rows={2}
                   id="kinestheticTactileObservedEvidence"
@@ -1170,7 +1203,7 @@ export default function ComprehensiveProfileSheetPage() {
                 />
                 <span className="font-medium text-slate-900">Reading/Writing</span>
               </div>
-              <FormField label="Evidence:" htmlFor="readingWritingObservedEvidence">
+              <FormField label="Observed Evidence:" htmlFor="readingWritingObservedEvidence">
                 <Textarea
                   rows={2}
                   id="readingWritingObservedEvidence"
@@ -1196,7 +1229,7 @@ export default function ComprehensiveProfileSheetPage() {
                 />
                 <span className="font-medium text-slate-900">Verbal (Linguistic)</span>
               </div>
-              <FormField label="Evidence:" htmlFor="verbalLinguisticObservedEvidence">
+              <FormField label="Observed Evidence:" htmlFor="verbalLinguisticObservedEvidence">
                 <Textarea
                   rows={2}
                   id="verbalLinguisticObservedEvidence"
@@ -1222,7 +1255,7 @@ export default function ComprehensiveProfileSheetPage() {
                 />
                 <span className="font-medium text-slate-900">Logical/Mathematical</span>
               </div>
-              <FormField label="Evidence:" htmlFor="logicalMathematicalObservedEvidence">
+              <FormField label="Observed Evidence:" htmlFor="logicalMathematicalObservedEvidence">
                 <Textarea
                   rows={2}
                   id="logicalMathematicalObservedEvidence"
@@ -1248,7 +1281,7 @@ export default function ComprehensiveProfileSheetPage() {
                 />
                 <span className="font-medium text-slate-900">Social (Interpersonal)</span>
               </div>
-              <FormField label="Evidence:" htmlFor="socialInterpersonalObservedEvidence">
+              <FormField label="Observed Evidence:" htmlFor="socialInterpersonalObservedEvidence">
                 <Textarea
                   rows={2}
                   id="socialInterpersonalObservedEvidence"
@@ -1274,7 +1307,7 @@ export default function ComprehensiveProfileSheetPage() {
                 />
                 <span className="font-medium text-slate-900">Solitary (Intrapersonal)</span>
               </div>
-              <FormField label="Evidence:" htmlFor="solitaryIntrapersonalObservedEvidence">
+              <FormField label="Observed Evidence:" htmlFor="solitaryIntrapersonalObservedEvidence">
                 <Textarea
                   rows={2}
                   id="solitaryIntrapersonalObservedEvidence"
@@ -1300,7 +1333,7 @@ export default function ComprehensiveProfileSheetPage() {
                 />
                 <span className="font-medium text-slate-900">Multimodal</span>
               </div>
-              <FormField label="Evidence:" htmlFor="multimodalObservedEvidence">
+              <FormField label="Observed Evidence:" htmlFor="multimodalObservedEvidence">
                 <Textarea
                   rows={2}
                   id="multimodalObservedEvidence"
@@ -1788,15 +1821,25 @@ export default function ComprehensiveProfileSheetPage() {
             >
               📝 Summary Insight:
             </label>
-            <p className="text-xs text-slate-600">
-              This child shows traits of a “___________________” type learner, who benefits most from __________________ learning environments.
+            <p className="text-xs text-slate-600 flex items-center flex-wrap gap-1">
+              This child shows traits of a "
+              <input
+                type="text"
+                id="learnerTypeInput"
+                {...register("learnerTypeInput")}
+                className="inline-block min-w-[120px] px-1 py-0 text-xs bg-transparent border-0 border-b-2 border-dashed border-slate-400 focus:border-slate-600 focus:outline-none text-slate-600"
+                placeholder=""
+              />
+              " type learner, who benefits most from{" "}
+              <input
+                type="text"
+                id="learningEnvironmentsInput"
+                {...register("learningEnvironmentsInput")}
+                className="inline-block min-w-[120px] px-1 py-0 text-xs bg-transparent border-0 border-b-2 border-dashed border-slate-400 focus:border-slate-600 focus:outline-none text-slate-600"
+                placeholder=""
+              />{" "}
+              learning environments.
             </p>
-            <Textarea
-              rows={3}
-              id="summaryInsightLearnerType"
-              {...register("summaryInsightLearnerType")}
-              placeholder='E.g., “Highly visual, social collaborator who thrives in project-based, discussion-rich environments.”'
-            />
           </div>
         </section>
 
@@ -2198,17 +2241,6 @@ export default function ComprehensiveProfileSheetPage() {
               </FormField>
             </div>
 
-            <div className="space-y-3">
-              <FormField label="English Notes:" htmlFor="englishNotes">
-                <Textarea rows={2} id="englishNotes" {...register("englishNotes")} />
-              </FormField>
-              <FormField label="Maths Notes:" htmlFor="mathsNotes">
-                <Textarea rows={2} id="mathsNotes" {...register("mathsNotes")} />
-              </FormField>
-              <FormField label="Science Notes:" htmlFor="scienceNotes">
-                <Textarea rows={2} id="scienceNotes" {...register("scienceNotes")} />
-              </FormField>
-            </div>
 
             <div className="border border-slate-200 rounded-lg p-4">
               <div className="font-medium text-slate-900 mb-2">Technology Use</div>
