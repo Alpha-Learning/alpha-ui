@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, Input, Textarea, FormSectionHeader } from "@/app/components/forms/FormField";
 import { apiService } from "@/app/utils";
 import { z } from "zod";
+import { useAutoSave } from "@/app/hooks/useAutoSave";
 
 // Validation schema for facility walkthrough checklist
 const facilityWalkthroughChecklistSchema = z.object({
@@ -71,6 +72,13 @@ export default function FacilityWalkthroughChecklistPage() {
       loggedToSystemDate: "",
       loggedBy: "",
     },
+  });
+
+   useAutoSave(watch, {
+    saveEndpoint: '/api/admin/facility-walkthrough-checklist',
+    applicationId: params.id as string,
+    debounceMs: 2000,
+    intervalMs: 30000,
   });
 
   // Load existing data
@@ -147,6 +155,7 @@ export default function FacilityWalkthroughChecklistPage() {
       
       const res = await apiService.post("/api/admin/facility-walkthrough-checklist", {
         applicationId: params.id,
+         isDraft: false,
         ...data,
       });
 

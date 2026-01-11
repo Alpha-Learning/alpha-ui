@@ -7,6 +7,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       applicationId,
+      isDraft = false,
       childName,
       age,
       date,
@@ -35,6 +36,7 @@ export async function POST(request: NextRequest) {
       ? await prisma.understandingParent.update({ where: { applicationId }, data: payload })
       : await prisma.understandingParent.create({ data: { applicationId, ...payload } });
 
+       if (!isDraft) {
     // Mark Understanding Parent as completed and advance stage to 8
     await prisma.application.update({ 
       where: { id: applicationId }, 
@@ -46,7 +48,7 @@ export async function POST(request: NextRequest) {
 
     // Update application status based on all form completions
     await updateApplicationStatus(applicationId, prisma);
-
+  }
     return NextResponse.json({ success: true, data: record });
   } catch (error) {
     console.error("Error saving Understanding Parent:", error);

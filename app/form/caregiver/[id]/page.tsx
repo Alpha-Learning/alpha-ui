@@ -15,6 +15,7 @@ import {
 import { apiService } from "@/app/utils";
 import { getAutofillData } from "@/app/utils/autofillData";
 import { useFormPersistence } from "@/app/hooks/useFormPersistence";
+import { useAutoSave } from '@/app/hooks/useAutoSave';
 
 const caregiverFormSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -86,6 +87,13 @@ export default function CaregiverPublicFormPage() {
     'caregiver',
     params.id as string
   );
+
+  useAutoSave(watch, {
+  saveEndpoint: '/api/admin/caregiver-form',
+  applicationId: params.id as string,
+  debounceMs: 2000,
+  intervalMs: 30000,
+});
 
   useEffect(() => {
     loadFormData();
@@ -186,6 +194,7 @@ export default function CaregiverPublicFormPage() {
       setMessage(null);
       const res = await apiService.post("/api/admin/caregiver-form", {
         applicationId: params.id,
+         isDraft: false,
         ...data,
       });
       if (res.success) {

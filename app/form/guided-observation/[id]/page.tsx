@@ -9,6 +9,7 @@ import { apiService } from "@/app/utils";
 import { getAutofillData } from "@/app/utils/autofillData";
 import { guidedObservationSchema, type GuidedObservationFormData } from "@/app/lib/validations/guided-observation";
 import { useFormPersistence } from "@/app/hooks/useFormPersistence";
+import { useAutoSave } from '@/app/hooks/useAutoSave';
 
 export default function GuidedObservationsProcedurePage() {
   const params = useParams<{ id: string }>();
@@ -106,6 +107,28 @@ export default function GuidedObservationsProcedurePage() {
     'guided-observation',
     params.id as string
   );
+
+useAutoSave(watch, {
+  saveEndpoint: '/api/admin/guided-observations-procedure',
+  applicationId: params.id as string,
+  debounceMs: 2000,
+  intervalMs: 30000,
+  transformData: (data) => {
+    return {
+      ...data,
+      zoneAScore: data.zoneAScore ? parseInt(data.zoneAScore) : null,
+      zoneBScore: data.zoneBScore ? parseInt(data.zoneBScore) : null,
+      zoneCScore: data.zoneCScore ? parseInt(data.zoneCScore) : null,
+      zoneDScore: data.zoneDScore ? parseInt(data.zoneDScore) : null,
+      metaCuriosityScore: data.metaCuriosityScore ? parseInt(data.metaCuriosityScore) : null,
+      metaSelfRegulationScore: data.metaSelfRegulationScore ? parseInt(data.metaSelfRegulationScore) : null,
+      metaConfidenceScore: data.metaConfidenceScore ? parseInt(data.metaConfidenceScore) : null,
+      metaCollaborationScore: data.metaCollaborationScore ? parseInt(data.metaCollaborationScore) : null,
+      metaEmotionalAwarenessScore: data.metaEmotionalAwarenessScore ? parseInt(data.metaEmotionalAwarenessScore) : null,
+      flagIndicators: data.flagIndicators && Array.isArray(data.flagIndicators) && data.flagIndicators.length > 0 ? data.flagIndicators.join(',') : '',
+    };
+  },
+});
 
   useEffect(() => { 
     loadGuidedObservationData();
@@ -265,6 +288,7 @@ export default function GuidedObservationsProcedurePage() {
       // Convert string scores to numbers for the API
       const payload = {
         applicationId: params.id,
+         isDraft: false,
         ...formData,
         zoneAScore: parseInt(formData.zoneAScore),
         zoneBScore: parseInt(formData.zoneBScore),

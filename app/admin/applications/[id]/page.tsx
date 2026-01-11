@@ -8,11 +8,12 @@ import toast from "react-hot-toast";
 
 // Stage 3 Dropdown Component
 // function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: { 
-function Stage3Dropdown({ applicationId, isCompleted, stageTitle, isArchived = false }: {
+function Stage3Dropdown({ applicationId, isCompleted, stageTitle, isArchived = false,isPaid = false }: {
   applicationId: string; 
   isCompleted: boolean; 
   stageTitle: string; 
     isArchived?: boolean;
+      isPaid?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
@@ -99,47 +100,68 @@ function Stage3Dropdown({ applicationId, isCompleted, stageTitle, isArchived = f
               <div className="w-2 h-2  rounded-full"></div>
               Share Forms
             </div>
-            <div className="space-y-2">
-              {forms.map((form, index) => (
-                <div key={index} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg border border-gray-100">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-2 h-2 rounded-full `}></div>
-                    <span className="text-sm font-medium text-gray-700">{form.name}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                                        <button
-                      onClick={() => copyToClipboard(form.url, form.name)}
-                      disabled={isArchived}
-                      className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {copied === form.name ? 'Copied!' : 'Copy'}
-                    </button>
-                    {!isArchived && (
-                      <Link
-                        href={form.url}
-                        className="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors font-medium"
-                        target="_blank"
-                      >
-                        Open
-                      </Link>
-                    )}
-                    {/* <button
-                      onClick={() => copyToClipboard(form.url, form.name)}
-                      className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors font-medium"
-                    >
-                      {copied === form.name ? 'Copied!' : 'Copy'}
-                    </button> */}
-                    {/* <Link
-                      href={form.url}
-                      className="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors font-medium"
-                      target="_blank"
-                    >
-                      Open
-                    </Link> */}
+<div className="space-y-2">
+  {forms.map((form, index) => {
+    const isDisabled = !isPaid;
+    return (
+      <div key={index} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg border border-gray-100">
+        <div className="flex items-center gap-3">
+          <div className={`w-2 h-2 rounded-full `}></div>
+          <span className={`text-sm font-medium ${isDisabled ? 'text-gray-400' : 'text-gray-700'}`}>
+            {form.name}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="relative group">
+            <button
+              onClick={() => copyToClipboard(form.url, form.name)}
+              disabled={isArchived || isDisabled}
+              className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {copied === form.name ? 'Copied!' : 'Copy'}
+            </button>
+            {isDisabled && !isArchived && (
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                Questionnaire will be available once payment is confirmed.
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
+                  <div className="border-4 border-transparent border-t-gray-900"></div>
+                </div>
+              </div>
+            )}
+          </div>
+          {!isArchived && (
+            <div className="relative group">
+              {isDisabled ? (
+                <button
+                  disabled
+                  className="text-xs px-3 py-1 bg-gray-100 text-gray-400 rounded-md cursor-not-allowed font-medium"
+                >
+                  Open
+                </button>
+              ) : (
+                <Link
+                  href={form.url}
+                  className="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors font-medium"
+                  target="_blank"
+                >
+                  Open
+                </Link>
+              )}
+              {isDisabled && (
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                  Questionnaire will be available once payment is confirmed.
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
+                    <div className="border-4 border-transparent border-t-gray-900"></div>
                   </div>
                 </div>
-              ))}
+              )}
             </div>
+          )}
+        </div>
+      </div>
+    );
+  })}
+</div>
           </div>
         </div>
       )}
@@ -1156,6 +1178,7 @@ export default function AdminApplicationDetailPage() {
                     isCompleted={isCompleted}
                     stageTitle={stageTitles[idx]}
                      isArchived={isArchived}
+                      isPaid={data.isPaid}
                   />
                 );
               }
@@ -1173,6 +1196,9 @@ export default function AdminApplicationDetailPage() {
                    />
                  );
                }
+
+                const isFirstForm = stageNumber === 1;
+              const shouldDisableLink = isArchived && !isFirstForm;
               
               const inner = (
                 // <div className={`p-4 rounded-lg border-2 transition-all duration-200 h-full min-h-[180px] flex flex-col ${
@@ -1181,7 +1207,8 @@ export default function AdminApplicationDetailPage() {
                 //     : 'bg-gray-50 border-gray-200 hover:border-gray-300'
                 // }`}>
                  <div className={`p-4 rounded-lg border-2 transition-all duration-200 h-full min-h-[180px] flex flex-col ${
-                  isArchived
+                  // isArchived
+                   isArchived && !isFirstForm
                     ? 'bg-gray-100 border-gray-300 opacity-75 cursor-not-allowed'
                     : isCompleted 
                     ? 'bg-green-50 border-green-200 hover:border-green-300' 
@@ -1209,7 +1236,10 @@ export default function AdminApplicationDetailPage() {
                   </div>
                 </div>
               );
-                            return href && !isArchived ? (
+
+             
+               return href && !shouldDisableLink ? (
+                            // return href && !isArchived ? (
                 <Link 
                   key={idx} 
                   href={href} 

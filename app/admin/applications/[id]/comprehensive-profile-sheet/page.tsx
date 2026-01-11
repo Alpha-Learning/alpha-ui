@@ -14,6 +14,7 @@ import {
 import { apiService } from "@/app/utils";
 import { getAutofillData } from "@/app/utils/autofillData";
 import { useFormPersistence } from "@/app/hooks/useFormPersistence";
+import { useAutoSave } from "@/app/hooks/useAutoSave";
 
 const schema = z.object({
   // Child Information
@@ -371,6 +372,13 @@ export default function ComprehensiveProfileSheetPage() {
     params.id as string
   );
 
+  useAutoSave(watch, {
+  saveEndpoint: '/api/admin/comprehensive-profile-sheet',
+  applicationId: params.id as string,
+  debounceMs: 2000,
+  intervalMs: 30000,
+});
+
   useEffect(() => {
     (async () => {
       // Load existing form data
@@ -569,6 +577,7 @@ export default function ComprehensiveProfileSheetPage() {
     try {
       const response = await apiService.post("/api/admin/comprehensive-profile-sheet", {
         applicationId: params.id,
+        isDraft: false,
         ...values,
       });
       

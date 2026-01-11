@@ -14,6 +14,7 @@ import {
 import { apiService } from "@/app/utils";
 import { getAutofillData } from "@/app/utils/autofillData";
 import { useFormPersistence } from "@/app/hooks/useFormPersistence";
+import { useAutoSave } from "@/app/hooks/useAutoSave";
 
 const schema = z.object({
   // Child Information
@@ -259,6 +260,37 @@ export default function ParentChildDynamicObservationPage() {
     params.id as string
   );
 
+
+
+  // Auto-save to database
+  useAutoSave(watch, {
+    saveEndpoint: '/api/admin/parent-child-dynamic-observation',
+    applicationId: params.id as string,
+    debounceMs: 2000,
+    intervalMs: 30000,
+    transformData: (data: any) => {
+      // Send all fields as-is (including empty strings and false booleans)
+      // The API route will check for undefined to decide what to update
+      const transformed: any = {};
+      
+      Object.keys(data).forEach((key) => {
+        const value = data[key];
+        
+        // For string ratings, convert to number if it's a valid non-empty string
+        if (key.includes('Rating') && typeof value === 'string' && value.trim() !== '') {
+          const num = parseInt(value);
+          transformed[key] = isNaN(num) ? null : num;
+        } else {
+          // Include all values as-is (including empty strings '', false, null, etc.)
+          // This allows the API to update fields even when they're cleared
+          transformed[key] = value;
+        }
+      });
+      
+      return transformed;
+    },
+  });
+
   useEffect(() => {
     (async () => {
       // Load existing form data
@@ -402,6 +434,7 @@ export default function ParentChildDynamicObservationPage() {
     try {
       const response = await apiService.post("/api/admin/parent-child-dynamic-observation", {
         applicationId: params.id,
+         isDraft: false,
         ...values,
       });
       

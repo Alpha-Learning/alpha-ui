@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
 import { verifyToken } from "@/app/lib/auth";
 import { z } from "zod";
-import { sendApplicationRejectionEmail } from "@/app/lib/emailService";
+import { sendApplicationRejectionEmail,sendApplicationApprovalEmail } from "@/app/lib/emailService";
 
 const schema = z.object({
   id: z.string().min(1),
-  status: z.enum(["submitted", "completed", "rejected"]),
+ // status: z.enum(["submitted", "completed", "rejected"]),
+  status: z.enum(["submitted", "completed", "rejected", "approved"]),
   adminComment: z.string().optional(),
 });
 
@@ -51,7 +52,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, message: "Application not found" }, { status: 404 });
     }
 
-    const updated = await prisma.application.update({
+    // const updated = await prisma.application.update({
+    //   where: { id },
+    //   data: { 
+    //     status, 
+    //     adminComment: adminComment || (status === "rejected" ? "Rejected" : null)
+    //   },
+    //   select: { id: true, status: true, adminComment: true, updatedAt: true },
+    // });
+
+        const updated = await prisma.application.update({
       where: { id },
       data: { 
         status, 
@@ -59,6 +69,27 @@ export async function POST(req: Request) {
       },
       select: { id: true, status: true, adminComment: true, updatedAt: true },
     });
+
+     // Send approval email if status is approved
+    if (status === "approved" && application.user?.email && application.user?.name) {
+      try {
+        const emailSent = await sendApplicationApprovalEmail({
+          parentName: application.user.name,
+          parentEmail: application.user.email,
+          childName: application.childFullName || "Your child",
+          applicationId: id,
+        });
+
+        if (emailSent) {
+          console.log(`Approval email sent successfully to ${application.user.email}`);
+        } else {
+          console.error(`Failed to send approval email to ${application.user.email}`);
+        }
+      } catch (emailError) {
+        console.error("Error sending approval email:", emailError);
+       
+      }
+    }
 
     // Send rejection email if status is rejected
     if (status === "rejected" && application.user?.email && application.user?.name) {

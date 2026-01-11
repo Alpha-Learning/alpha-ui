@@ -14,6 +14,7 @@ import {
 import { apiService } from "@/app/utils";
 import { getAutofillData } from "@/app/utils/autofillData";
 import { useFormPersistence } from "@/app/hooks/useFormPersistence";
+import { useAutoSave } from '@/app/hooks/useAutoSave';
 
 const schema = z.object({
   // Child Information (required)
@@ -153,6 +154,66 @@ export default function KS2InterviewQuestionsPage() {
     params.id as string
   );
 
+
+useAutoSave(watch, {
+  saveEndpoint: '/api/admin/ks2-interview-questions',
+  applicationId: params.id as string,
+  debounceMs: 2000,
+  intervalMs: 30000,
+  transformData: (data) => {
+    return {
+      fullName: data.fullName || '',
+      age: data.age || '',
+      date: data.date || '',
+      somethingAlwaysWantedToLearn: data.somethingAlwaysWantedToLearn ? parseInt(data.somethingAlwaysWantedToLearn) : null,
+      somethingAlwaysWantedToLearnNotes: data.somethingAlwaysWantedToLearnNotes || '',
+      fiveThingsWithPaperclip: data.fiveThingsWithPaperclip ? parseInt(data.fiveThingsWithPaperclip) : null,
+      fiveThingsWithPaperclipNotes: data.fiveThingsWithPaperclipNotes || '',
+      finishSchoolworkEarly: data.finishSchoolworkEarly ? parseInt(data.finishSchoolworkEarly) : null,
+      finishSchoolworkEarlyNotes: data.finishSchoolworkEarlyNotes || '',
+      logicChallenge: data.logicChallenge ? parseInt(data.logicChallenge) : null,
+      logicChallengeNotes: data.logicChallengeNotes || '',
+      somethingHard: data.somethingHard ? parseInt(data.somethingHard) : null,
+      somethingHardNotes: data.somethingHardNotes || '',
+      answerIsWrong: data.answerIsWrong ? parseInt(data.answerIsWrong) : null,
+      answerIsWrongNotes: data.answerIsWrongNotes || '',
+      favouriteThingOnComputer: data.favouriteThingOnComputer ? parseInt(data.favouriteThingOnComputer) : null,
+      favouriteThingOnComputerNotes: data.favouriteThingOnComputerNotes || '',
+      likeWorkingWithOthers: data.likeWorkingWithOthers ? parseInt(data.likeWorkingWithOthers) : null,
+      likeWorkingWithOthersNotes: data.likeWorkingWithOthersNotes || '',
+      drawMachineInvention: data.drawMachineInvention ? parseInt(data.drawMachineInvention) : null,
+      drawMachineInventionNotes: data.drawMachineInventionNotes || '',
+      confidenceTryingNewThings: data.confidenceTryingNewThings ? parseInt(data.confidenceTryingNewThings) : null,
+      confidenceTryingNewThingsNotes: data.confidenceTryingNewThingsNotes || '',
+      helpedSomeoneLearn: data.helpedSomeoneLearn ? parseInt(data.helpedSomeoneLearn) : null,
+      helpedSomeoneLearnNotes: data.helpedSomeoneLearnNotes || '',
+      magicWandMakesSmarter: data.magicWandMakesSmarter ? parseInt(data.magicWandMakesSmarter) : null,
+      magicWandMakesSmarterNotes: data.magicWandMakesSmarterNotes || '',
+      explainInternetToPast: data.explainInternetToPast ? parseInt(data.explainInternetToPast) : null,
+      explainInternetToPastNotes: data.explainInternetToPastNotes || '',
+      inChargeOfWorld: data.inChargeOfWorld ? parseInt(data.inChargeOfWorld) : null,
+      inChargeOfWorldNotes: data.inChargeOfWorldNotes || '',
+      threeThingsGoodAt: data.threeThingsGoodAt ? parseInt(data.threeThingsGoodAt) : null,
+      threeThingsGoodAtNotes: data.threeThingsGoodAtNotes || '',
+      somethingGetBetterAt: data.somethingGetBetterAt ? parseInt(data.somethingGetBetterAt) : null,
+      somethingGetBetterAtNotes: data.somethingGetBetterAtNotes || '',
+      inventJobDoesntExist: data.inventJobDoesntExist ? parseInt(data.inventJobDoesntExist) : null,
+      inventJobDoesntExistNotes: data.inventJobDoesntExistNotes || '',
+      learningPreference: data.learningPreference || '',
+      digitalTasks: data.digitalTasks ? parseInt(data.digitalTasks) : null,
+      digitalTasksNotes: data.digitalTasksNotes || '',
+      playingWithFriends: data.playingWithFriends ? parseInt(data.playingWithFriends) : null,
+      playingWithFriendsNotes: data.playingWithFriendsNotes || '',
+      totalScore: data.totalScore ? parseInt(data.totalScore) : null,
+      applicationNumber: data.applicationNumber || '',
+      observerName: data.observerName || '',
+      assessmentDate: data.assessmentDate || '',
+      loggedToSystemDate: data.loggedToSystemDate || '',
+      loggedBy: data.loggedBy || '',
+    };
+  },
+});
+
   useEffect(() => {
     loadFormData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -288,6 +349,7 @@ export default function KS2InterviewQuestionsPage() {
       setMessage(null);
       const response = await apiService.post("/api/admin/ks2-interview-questions", {
         applicationId: params.id,
+           isDraft: false,
         ...values,
       });
       

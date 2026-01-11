@@ -8,6 +8,7 @@ import { apiService } from "@/app/utils";
 import { screeningCallSchema, type ScreeningCallFormData } from "@/app/lib/validations/screening-call";
 import { getAutofillData, AutofillDataKey } from "@/app/utils/autofillData";
 import { useFormPersistence } from "@/app/hooks/useFormPersistence";
+import { useAutoSave } from "@/app/hooks/useAutoSave";
 
 export default function ScreeningCallFormPage() {
   const params = useParams<{ id: string }>();
@@ -60,6 +61,13 @@ export default function ScreeningCallFormPage() {
     'screening-call',
     params.id as string
   );
+
+  useAutoSave(watch, {
+  saveEndpoint: '/api/admin/screening-call',
+  applicationId: params.id as string,
+  debounceMs: 2000,
+  intervalMs: 30000,
+});
 
   // Load existing data
   useEffect(() => {
@@ -183,6 +191,7 @@ const router = useRouter();
       
       const res = await apiService.post("/api/admin/screening-call", {
         applicationId: params.id,
+        isDraft: false,
         ...data,
       });
 

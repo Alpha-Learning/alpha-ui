@@ -4,6 +4,7 @@ import { apiService } from "@/app/utils";
 import DataTable, { TableColumn } from "react-data-table-component";
 import Link from "next/link";
 import Modal from "@/app/components/Modal";
+import toast from "react-hot-toast";
 
 type PaymentItem = {
   id: string;
@@ -35,6 +36,7 @@ export default function PaymentsPage() {
   });
   const [saving, setSaving] = useState(false);
   const limit = 10;
+  const [sendingReminder, setSendingReminder] = useState<string | null>(null);
 
   const getPaymentStatusBadge = (isPaid: boolean) => {
     if (isPaid) {
@@ -104,19 +106,43 @@ export default function PaymentsPage() {
       ),
       sortable: true,
     },
+    // {
+    //   name: "Actions",
+    //   cell: (row) => (
+    //     <button
+    //       onClick={() => openModal(row)}
+    //       className="px-3 py-1 my-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+    //     >
+    //       Update Payment
+    //     </button>
+    //   ),
+    //   ignoreRowClick: true,
+    //   width: "150px",
+    // },
     {
-      name: "Actions",
-      cell: (row) => (
+  name: "Actions",
+  cell: (row) => (
+    <div className="flex items-center gap-2">
+      <button
+        onClick={() => openModal(row)}
+        className="px-3 py-1.5 rounded-md text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors whitespace-nowrap"
+      >
+        Update
+      </button>
+      {!row.isPaid && (
         <button
-          onClick={() => openModal(row)}
-          className="px-3 py-1 my-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+          onClick={() => handleSendReminder(row.id)}
+          disabled={sendingReminder === row.id}
+          className="px-3 py-1.5 rounded-md text-xs font-medium bg-orange-600 text-white hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
         >
-          Update Payment
+          {sendingReminder === row.id ? "Sending..." : "Remind"}
         </button>
-      ),
-      ignoreRowClick: true,
-      width: "150px",
-    },
+      )}
+    </div>
+  ),
+  ignoreRowClick: true,
+  width: "180px",
+},
     {
       name: "View Applicatoin",
       cell: (row) => (
@@ -130,7 +156,9 @@ export default function PaymentsPage() {
       ignoreRowClick: true,
       width: "80px",
     },
-  ], []);
+    ], [sendingReminder]);
+  // ], []);
+
 
   const load = async () => {
     try {
@@ -223,6 +251,27 @@ export default function PaymentsPage() {
       setSaving(false);
     }
   };
+
+const handleSendReminder = async (applicationId: string) => {
+  try {
+    setSendingReminder(applicationId);
+    setError(null);
+    const res = await apiService.post(`/api/admin/payments/${applicationId}/reminder`, {});
+    if (res.success) {
+      toast.success('Payment reminder email sent successfully!');
+    } else {
+      const errorMsg = res.message || 'Failed to send reminder email';
+      setError(errorMsg);
+      toast.error(errorMsg);
+    }
+  } catch (e: any) {
+    const errorMsg = e?.message || 'Failed to send reminder email';
+    setError(errorMsg);
+    toast.error(errorMsg);
+  } finally {
+    setSendingReminder(null);
+  }
+};
 
   return (
     <div className="space-y-6">

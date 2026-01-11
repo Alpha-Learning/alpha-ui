@@ -1113,3 +1113,561 @@ export async function testEmailConnection(): Promise<boolean> {
     return false;
   }
 }
+
+
+// Add this new interface after line 24
+export interface PaymentReminderEmailData {
+  parentName: string;
+  parentEmail: string;
+  childName: string;
+  applicationId: string;
+  paymentAmount: number;
+}
+
+
+export async function sendPaymentReminderEmail(data: PaymentReminderEmailData): Promise<boolean> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!baseUrl) {
+      console.error('NEXT_PUBLIC_BASE_URL is not set. Email links will not work correctly.');
+      throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required');
+    }
+    const paymentLink = `${baseUrl}/dashboard/user/requests?payment=true&applicationId=${data.applicationId}`;
+    
+    const mailOptions = {
+      from: `"Alphera Academy" <${emailConfig.auth.user}>`,
+      to: data.parentEmail,
+      subject: `Payment Reminder - Alphera Academy Application for ${data.childName}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Payment Reminder - Alphera Academy</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8EC0C2, #142954); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .reminder-box { background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 20px; margin: 20px 0; }
+            .payment-box { background: white; border: 2px solid #8EC0C2; border-radius: 8px; padding: 20px; margin: 20px 0; }
+            .payment-button { 
+              display: inline-block; 
+              background: linear-gradient(135deg, #8EC0C2, #142954); 
+              color: white; 
+              padding: 15px 30px; 
+              text-decoration: none; 
+              border-radius: 5px; 
+              font-weight: bold; 
+              margin: 10px 0;
+            }
+            .details-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            .details-table td { padding: 10px; border-bottom: 1px solid #eee; }
+            .details-table td:first-child { font-weight: bold; width: 40%; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🎓 Alphera Academy</h1>
+              <h2>Payment Reminder</h2>
+            </div>
+            
+            <div class="content">
+              <p>Dear ${data.parentName},</p>
+              
+              <div class="reminder-box">
+                <p style="margin: 0; color: #856404;"><strong>⏰ Friendly Reminder:</strong> Your payment for the assessment is still pending.</p>
+              </div>
+              
+              <p>This is a reminder that payment is required to proceed with the comprehensive questionnaires for your child <strong>${data.childName}</strong>.</p>
+              
+              <div class="payment-box">
+                <h3>💰 Payment Details</h3>
+                <table class="details-table">
+                  <tr>
+                    <td>Amount Due:</td>
+                    <td><strong>$${data.paymentAmount}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Application ID:</td>
+                    <td>${data.applicationId}</td>
+                  </tr>
+                </table>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                  <a href="${paymentLink}" class="payment-button" style="color: white !important;">💳 Make Payment Now</a>
+                </div>
+              </div>
+              
+              <h3>📋 Important Note</h3>
+              <p>Once payment is confirmed, you will be able to access the Parent/Guardian, Caregiver, and Outsider questionnaires to complete the assessment process.</p>
+              
+              <p>If you have already made the payment, please allow some time for it to be processed and confirmed by our team.</p>
+              
+              <p>If you have any questions or need assistance, please don't hesitate to contact us.</p>
+              
+              <p>Best regards,<br>
+              The Alphera Academy Team</p>
+            </div>
+            
+            <div class="footer">
+              <p>This email was sent regarding your application for Alphera Academy.</p>
+              <p>If you have any questions, please contact us at info@alpheraacademy.edu.bh</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `
+        Payment Reminder - Alphera Academy
+        
+        Dear ${data.parentName},
+        
+        ⏰ Friendly Reminder: Your payment for the assessment is still pending.
+        
+        This is a reminder that payment is required to proceed with the comprehensive questionnaires for your child ${data.childName}.
+        
+        PAYMENT DETAILS:
+        Amount Due: $${data.paymentAmount}
+        Application ID: ${data.applicationId}
+        
+        Payment Link: ${paymentLink}
+        
+        IMPORTANT NOTE:
+        Once payment is confirmed, you will be able to access the Parent/Guardian, Caregiver, and Outsider questionnaires to complete the assessment process.
+        
+        If you have already made the payment, please allow some time for it to be processed and confirmed by our team.
+        
+        If you have any questions or need assistance, please don't hesitate to contact us.
+        
+        Best regards,
+        The Alphera Academy Team
+        
+        ---
+        This email was sent regarding your application for Alphera Academy.
+        If you have any questions, please contact us at info@alpheraacademy.edu.bh
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Payment reminder email sent successfully to:', data.parentEmail);
+    return true;
+  } catch (error) {
+    console.error('Error sending payment reminder email:', error);
+    return false;
+  }
+}
+
+export interface LearnerReportEmailData {
+  parentName: string;
+  parentEmail: string;
+  childName: string;
+  applicationId: string;
+}
+
+export async function sendLearnerReportNotificationEmail(data: LearnerReportEmailData): Promise<boolean> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!baseUrl) {
+      console.error('NEXT_PUBLIC_BASE_URL is not set. Email links will not work correctly.');
+      throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required');
+    }
+    const reportUrl = `${baseUrl}/dashboard/user/learner-report/${data.applicationId}`;
+    
+    const mailOptions = {
+      from: `"Alphera Academy" <${emailConfig.auth.user}>`,
+      to: data.parentEmail,
+      subject: `📊 AI-Generated Learner Report Ready - ${data.childName}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>AI-Generated Learner Report Ready - Alphera Academy</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8EC0C2, #142954); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .success-box { background: #e3f2fd; border: 2px solid #2196F3; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center; }
+            .success-box h2 { color: #1565C0; margin: 0 0 10px 0; }
+            .info-box { background: white; border: 2px solid #8EC0C2; border-radius: 8px; padding: 20px; margin: 20px 0; }
+            .details-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            .details-table td { padding: 10px; border-bottom: 1px solid #eee; }
+            .details-table td:first-child { font-weight: bold; width: 40%; color: #142954; }
+            .button { 
+              display: inline-block; 
+              background: linear-gradient(135deg, #8EC0C2, #142954); 
+              color: white !important; 
+              padding: 15px 30px; 
+              text-decoration: none; 
+              border-radius: 5px; 
+              font-weight: bold; 
+              margin: 10px 0;
+            }
+            .button-container { text-align: center; margin: 30px 0; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            .report-icon { font-size: 48px; margin: 20px 0; }
+            .highlight-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 4px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🎓 Alphera Academy</h1>
+              <h2>AI-Generated Learner Report Ready</h2>
+            </div>
+            
+            <div class="content">
+              <div class="success-box">
+                <div class="report-icon">📊</div>
+                <h2>Your Learner Report is Ready!</h2>
+                <p style="color: #1565C0; font-size: 16px; margin: 10px 0;">The comprehensive AI-generated assessment report for ${data.childName} has been completed.</p>
+              </div>
+              
+              <p>Dear ${data.parentName},</p>
+              
+              <p>We are pleased to inform you that the AI-generated learner assessment report for <strong>${data.childName}</strong> has been successfully generated and is now available for your review.</p>
+              
+              <div class="info-box">
+                <h3>📋 Report Details</h3>
+                <table class="details-table">
+                  <tr>
+                    <td>Child's Name:</td>
+                    <td><strong>${data.childName}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Application ID:</td>
+                    <td>${data.applicationId}</td>
+                  </tr>
+                  <tr>
+                    <td>Report Status:</td>
+                    <td><strong style="color: #28a745;">✅ Available</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Generated On:</td>
+                    <td>${new Date().toLocaleDateString('en-US', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}</td>
+                  </tr>
+                </table>
+              </div>
+              
+              <div class="highlight-box">
+                <p style="margin: 0; color: #856404;"><strong>📖 What's in the Report?</strong></p>
+                <p style="margin: 10px 0 0 0; color: #856404;">The comprehensive learner report includes:</p>
+                <ul style="margin: 10px 0 0 20px; color: #856404;">
+                  <li>Executive Summary & Overall Readiness Assessment</li>
+                  <li>Learning Style Analysis</li>
+                  <li>Dominant Intelligences Profile</li>
+                  <li>Cognitive Profile (Attention, Memory, Processing, Executive Function)</li>
+                  <li>Meta-Learning Pillars Assessment</li>
+                  <li>Academic Readiness Evaluation</li>
+                  <li>Emotional & Social Profiles</li>
+                  <li>Strengths, Challenges & Recommendations</li>
+                  <li>Key Stage Level Placement</li>
+                </ul>
+              </div>
+              
+              <div class="button-container">
+                <a href="${reportUrl}" class="button" style="color: white !important;">📊 View Learner Report</a>
+              </div>
+              
+              <p style="margin-top: 20px;"><strong>Note:</strong> The report is available in read-only mode in your parent dashboard. You can access it anytime by logging into your account.</p>
+              
+              <p>If you have any questions about the report or need assistance understanding the findings, please don't hesitate to contact our assessment team.</p>
+              
+              <p>Best regards,<br>
+              <strong>The Alphera Academy Assessment Team</strong></p>
+            </div>
+            
+            <div class="footer">
+              <p>This email was sent regarding your application for Alphera Academy.</p>
+              <p>If you have any questions, please contact us at info@alpheraacademy.edu.bh</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `
+        AI-Generated Learner Report Ready - Alphera Academy
+        
+        Dear ${data.parentName},
+        
+        We are pleased to inform you that the AI-generated learner assessment report for ${data.childName} has been successfully generated and is now available for your review.
+        
+        REPORT DETAILS:
+        Child's Name: ${data.childName}
+        Application ID: ${data.applicationId}
+        Report Status: ✅ Available
+        Generated On: ${new Date().toLocaleDateString()}
+        
+        WHAT'S IN THE REPORT?
+        The comprehensive learner report includes:
+        - Executive Summary & Overall Readiness Assessment
+        - Learning Style Analysis
+        - Dominant Intelligences Profile
+        - Cognitive Profile (Attention, Memory, Processing, Executive Function)
+        - Meta-Learning Pillars Assessment
+        - Academic Readiness Evaluation
+        - Emotional & Social Profiles
+        - Strengths, Challenges & Recommendations
+        - Key Stage Level Placement
+        
+        View Learner Report: ${reportUrl}
+        
+        Note: The report is available in read-only mode in your parent dashboard. You can access it anytime by logging into your account.
+        
+        If you have any questions about the report or need assistance understanding the findings, please don't hesitate to contact our assessment team.
+        
+        Best regards,
+        The Alphera Academy Assessment Team
+        
+        ---
+        This email was sent regarding your application for Alphera Academy.
+        If you have any questions, please contact us at info@alpheraacademy.edu.bh
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Learner report notification email sent successfully to:', data.parentEmail);
+    return true;
+  } catch (error) {
+    console.error('Error sending learner report notification email:', error);
+    return false;
+  }
+}
+
+export interface ApplicationApprovalEmailData {
+  parentName: string;
+  parentEmail: string;
+  childName: string;
+  applicationId: string;
+}
+
+export async function sendApplicationApprovalEmail(data: ApplicationApprovalEmailData): Promise<boolean> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!baseUrl) {
+      console.error('NEXT_PUBLIC_BASE_URL is not set. Email links will not work correctly.');
+      throw new Error('NEXT_PUBLIC_BASE_URL environment variable is required');
+    }
+    const dashboardUrl = `${baseUrl}/dashboard/user`;
+    const agreementUrl = `${baseUrl}/dashboard/user/agreement`;
+    
+    const mailOptions = {
+      from: `"Alphera Academy" <${emailConfig.auth.user}>`,
+      to: data.parentEmail,
+      subject: `🎉 Application Approved - Document Checklist Required - ${data.childName}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Application Approved - Alphera Academy</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8EC0C2, #142954); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .success-box { background: #d4edda; border: 2px solid #28a745; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center; }
+            .success-box h2 { color: #155724; margin: 0 0 10px 0; }
+            .info-box { background: white; border: 2px solid #8EC0C2; border-radius: 8px; padding: 20px; margin: 20px 0; }
+            .checklist-box { background: #e3f2fd; border-left: 4px solid #2196F3; padding: 20px; margin: 20px 0; border-radius: 4px; }
+            .checklist-item { padding: 10px 0; border-bottom: 1px solid #ddd; }
+            .checklist-item:last-child { border-bottom: none; }
+            .checklist-item::before { content: "📄 "; margin-right: 8px; }
+            .details-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            .details-table td { padding: 10px; border-bottom: 1px solid #eee; }
+            .details-table td:first-child { font-weight: bold; width: 40%; color: #142954; }
+            .button { 
+              display: inline-block; 
+              background: linear-gradient(135deg, #8EC0C2, #142954); 
+              color: white !important; 
+              padding: 15px 30px; 
+              text-decoration: none; 
+              border-radius: 5px; 
+              font-weight: bold; 
+              margin: 10px 0;
+            }
+            .button-container { text-align: center; margin: 30px 0; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            .celebration { font-size: 48px; margin: 20px 0; }
+            .highlight-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 4px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🎓 Alphera Academy</h1>
+              <h2>Application Approved!</h2>
+            </div>
+            
+            <div class="content">
+              <div class="success-box">
+                <div class="celebration">🎉</div>
+                <h2>Congratulations!</h2>
+                <p style="color: #155724; font-size: 18px; margin: 10px 0;">Your application has been approved!</p>
+              </div>
+              
+              <p>Dear ${data.parentName},</p>
+              
+              <p>We are thrilled to inform you that your application for <strong>${data.childName}</strong> has been reviewed and <strong>approved</strong>! We are excited to welcome your child to Alphera Academy.</p>
+              
+              <div class="info-box">
+                <h3>📋 Application Details</h3>
+                <table class="details-table">
+                  <tr>
+                    <td>Child's Name:</td>
+                    <td><strong>${data.childName}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Application ID:</td>
+                    <td>${data.applicationId}</td>
+                  </tr>
+                  <tr>
+                    <td>Status:</td>
+                    <td><strong style="color: #28a745;">✅ Approved</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Date Approved:</td>
+                    <td>${new Date().toLocaleDateString('en-US', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}</td>
+                  </tr>
+                </table>
+              </div>
+              
+              <div class="highlight-box">
+                <p style="margin: 0; color: #856404;"><strong>📝 Next Steps:</strong></p>
+                <p style="margin: 10px 0 0 0; color: #856404;">To complete the enrollment process, please review the Parent–School Agreement and prepare the required documents listed below.</p>
+              </div>
+              
+              <div class="checklist-box">
+                <h3 style="color: #1565C0; margin-top: 0;">📋 Required Documents Checklist</h3>
+                <p style="color: #666; margin-bottom: 15px;">Please prepare the following documents for submission:</p>
+                
+                <div class="checklist-item">
+                  <strong>Student CPR / ID</strong> - Copy of student's Civil Personal Registration or ID card
+                </div>
+                <div class="checklist-item">
+                  <strong>Student Passport</strong> - Copy of student's passport (bio page)
+                </div>
+                <div class="checklist-item">
+                  <strong>Birth Certificate</strong> - Copy of student's birth certificate
+                </div>
+                <div class="checklist-item">
+                  <strong>Previous School Reports</strong> - Academic reports from previous school (if applicable)
+                </div>
+                <div class="checklist-item">
+                  <strong>Vaccination / Immunization Record</strong> - Complete vaccination record
+                </div>
+                <div class="checklist-item">
+                  <strong>Passport Size Photographs</strong> - 4 recent passport-size photographs
+                </div>
+                <div class="checklist-item">
+                  <strong>Parent CPR / ID Copies</strong> - Copies of both parents' CPR/ID cards
+                </div>
+                <div class="checklist-item">
+                  <strong>Parent Passport Copies</strong> - Copies of both parents' passports (bio pages)
+                </div>
+              </div>
+              
+              <h3>📄 Parent–School Agreement</h3>
+              <p>Please review and acknowledge the Parent–School Agreement, which outlines the terms and conditions of enrollment, school policies, and expectations for both parents and the school.</p>
+              
+              <div class="button-container">
+                <a href="${agreementUrl}" class="button" style="color: white !important; margin-right: 10px;">📄 View Parent–School Agreement</a>
+                <a href="${dashboardUrl}" class="button" style="color: white !important;">View Your Dashboard</a>
+              </div>
+              
+              <h3>🎯 What's Next?</h3>
+              <ul style="line-height: 2;">
+                <li>Review the Parent–School Agreement in your dashboard</li>
+                <li>Prepare all required documents from the checklist above</li>
+                <li>Submit the documents to the school office or as instructed</li>
+                <li>Our team will contact you regarding the next steps in the enrollment process</li>
+              </ul>
+              
+              <p>If you have any questions about the required documents or the enrollment process, please don't hesitate to contact us.</p>
+              
+              <p>Best regards,<br>
+              <strong>The Alphera Academy Admissions Team</strong></p>
+            </div>
+            
+            <div class="footer">
+              <p>This email was sent regarding your application for Alphera Academy.</p>
+              <p>If you have any questions, please contact us at info@alpheraacademy.edu.bh</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `
+        Application Approved - Alphera Academy
+        
+        Dear ${data.parentName},
+        
+        Congratulations! We are thrilled to inform you that your application for ${data.childName} has been reviewed and APPROVED!
+        
+        APPLICATION DETAILS:
+        Child's Name: ${data.childName}
+        Application ID: ${data.applicationId}
+        Status: ✅ Approved
+        Date Approved: ${new Date().toLocaleDateString()}
+        
+        NEXT STEPS:
+        To complete the enrollment process, please review the Parent–School Agreement and prepare the required documents listed below.
+        
+        REQUIRED DOCUMENTS CHECKLIST:
+        📄 Student CPR / ID - Copy of student's Civil Personal Registration or ID card
+        📄 Student Passport - Copy of student's passport (bio page)
+        📄 Birth Certificate - Copy of student's birth certificate
+        📄 Previous School Reports - Academic reports from previous school (if applicable)
+        📄 Vaccination / Immunization Record - Complete vaccination record
+        📄 Passport Size Photographs - 4 recent passport-size photographs
+        📄 Parent CPR / ID Copies - Copies of both parents' CPR/ID cards
+        📄 Parent Passport Copies - Copies of both parents' passports (bio pages)
+        
+        PARENT–SCHOOL AGREEMENT:
+        Please review and acknowledge the Parent–School Agreement, which outlines the terms and conditions of enrollment, school policies, and expectations for both parents and the school.
+        
+        View Parent–School Agreement: ${agreementUrl}
+        View Your Dashboard: ${dashboardUrl}
+        
+        WHAT'S NEXT?
+        - Review the Parent–School Agreement in your dashboard
+        - Prepare all required documents from the checklist above
+        - Submit the documents to the school office or as instructed
+        - Our team will contact you regarding the next steps in the enrollment process
+        
+        If you have any questions about the required documents or the enrollment process, please don't hesitate to contact us.
+        
+        Best regards,
+        The Alphera Academy Admissions Team
+        
+        ---
+        This email was sent regarding your application for Alphera Academy.
+        If you have any questions, please contact us at info@alpheraacademy.edu.bh
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Application approval email sent successfully to:', data.parentEmail);
+    return true;
+  } catch (error) {
+    console.error('Error sending application approval email:', error);
+    return false;
+  }
+}

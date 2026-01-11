@@ -7,6 +7,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       applicationId,
+        isDraft = false,
       // Child Information
       fullName,
       age,
@@ -135,6 +136,7 @@ export async function POST(request: NextRequest) {
       record = await prisma.kS2InterviewQuestions.create({ data: { applicationId, ...payload } });
     }
 
+     if (!isDraft) {
     // Check if KS2 (just completed) and Guided Observation Procedure are both completed to mark stage 5 as complete
     const guidedObservationForm = await prisma.guidedObservationsProcedure.findUnique({ where: { applicationId } });
     const isStage5Complete = !!guidedObservationForm; // KS2 (just completed) and Guided Observation must both exist
@@ -149,7 +151,7 @@ export async function POST(request: NextRequest) {
 
     // Update application status based on all form completions
     await updateApplicationStatus(applicationId, prisma);
-
+ }
     return NextResponse.json({ success: true, data: record });
   } catch (error) {
     console.error("Error saving KS2 interview questions:", error);

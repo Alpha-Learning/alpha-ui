@@ -14,6 +14,8 @@ import {
 import { apiService } from "@/app/utils";
 import { getAutofillData } from "@/app/utils/autofillData";
 import { useFormPersistence } from "@/app/hooks/useFormPersistence";
+import { useAutoSave } from '@/app/hooks/useAutoSave';
+
 
 const schema = z.object({
   // Child Information (required)
@@ -135,6 +137,56 @@ export default function KS1InterviewQuestionsPage() {
     params.id as string
   );
 
+
+useAutoSave(watch, {
+  saveEndpoint: '/api/admin/ks1-interview-questions',
+  applicationId: params.id as string,
+  debounceMs: 2000,
+  intervalMs: 30000,
+  transformData: (data) => {
+    return {
+      fullName: data.fullName || '',
+      age: data.age || '',
+      date: data.date || '',
+      whatDoYouDoSomethingHard: data.whatDoYouDoSomethingHard ? parseInt(data.whatDoYouDoSomethingHard) : null,
+      whatDoYouDoSomethingHardNotes: data.whatDoYouDoSomethingHardNotes || '',
+      howDoYouFeelWhenTryNew: data.howDoYouFeelWhenTryNew ? parseInt(data.howDoYouFeelWhenTryNew) : null,
+      howDoYouFeelWhenTryNewNotes: data.howDoYouFeelWhenTryNewNotes || '',
+      whatWouldYouDoIfFriendSad: data.whatWouldYouDoIfFriendSad ? parseInt(data.whatWouldYouDoIfFriendSad) : null,
+      whatWouldYouDoIfFriendSadNotes: data.whatWouldYouDoIfFriendSadNotes || '',
+      tellMeAboutFavouriteStory: data.tellMeAboutFavouriteStory ? parseInt(data.tellMeAboutFavouriteStory) : null,
+      tellMeAboutFavouriteStoryNotes: data.tellMeAboutFavouriteStoryNotes || '',
+      favouriteThingToLearn: data.favouriteThingToLearn ? parseInt(data.favouriteThingToLearn) : null,
+      favouriteThingToLearnNotes: data.favouriteThingToLearnNotes || '',
+      whatElseUcanDoWithASpoonOtherThanEat: data.whatElseUcanDoWithASpoonOtherThanEat ? parseInt(data.whatElseUcanDoWithASpoonOtherThanEat) : null,
+      whatElseUcanDoWithASpoonOtherThanEatNotes: data.whatElseUcanDoWithASpoonOtherThanEatNotes || '',
+      howShareCookiesBetweenFriends: data.howShareCookiesBetweenFriends ? parseInt(data.howShareCookiesBetweenFriends) : null,
+      howShareCookiesBetweenFriendsNotes: data.howShareCookiesBetweenFriendsNotes || '',
+      puzzleActivity: data.puzzleActivity ? parseInt(data.puzzleActivity) : null,
+      puzzleActivityNotes: data.puzzleActivityNotes || '',
+      tableInteraction: data.tableInteraction ? parseInt(data.tableInteraction) : null,
+      tableInteractionNotes: data.tableInteractionNotes || '',
+      drawSomethingYouInvent: data.drawSomethingYouInvent ? parseInt(data.drawSomethingYouInvent) : null,
+      drawSomethingYouInventNotes: data.drawSomethingYouInventNotes || '',
+      doYouLikeLearnByListening: data.doYouLikeLearnByListening || '',
+      canYouSortShapesByColor: data.canYouSortShapesByColor ? parseInt(data.canYouSortShapesByColor) : null,
+      canYouSortShapesByColorNotes: data.canYouSortShapesByColorNotes || '',
+      canYouTeachMeDrawMummy: data.canYouTeachMeDrawMummy ? parseInt(data.canYouTeachMeDrawMummy) : null,
+      canYouTeachMeDrawMummyNotes: data.canYouTeachMeDrawMummyNotes || '',
+      doYouLikePlayingWithFriends: data.doYouLikePlayingWithFriends ? parseInt(data.doYouLikePlayingWithFriends) : null,
+      doYouLikePlayingWithFriendsNotes: data.doYouLikePlayingWithFriendsNotes || '',
+      parentalInterferenceFlagged: data.parentalInterferenceFlagged || false,
+      parentalInterferenceNotes: data.parentalInterferenceNotes || '',
+      totalScore: data.totalScore ? parseInt(data.totalScore) : null,
+      applicationNumber: data.applicationNumber || '',
+      observerName: data.observerName || '',
+      assessmentDate: data.assessmentDate || '',
+      loggedToSystemDate: data.loggedToSystemDate || '',
+      loggedBy: data.loggedBy || '',
+    };
+  },
+});
+
   useEffect(() => {
     loadFormData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -246,6 +298,7 @@ export default function KS1InterviewQuestionsPage() {
       setMessage(null);
       const response = await apiService.post("/api/admin/ks1-interview-questions", {
         applicationId: params.id,
+         isDraft: false,
         ...values,
       });
 
@@ -311,6 +364,7 @@ export default function KS1InterviewQuestionsPage() {
   return (
     <div className="min-h-screen bg-slate-50 py-6 px-4">
       <div className="max-w-6xl mx-auto space-y-6">
+        
         <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
           <div className="mb-4">
             <div className="flex justify-between items-start">

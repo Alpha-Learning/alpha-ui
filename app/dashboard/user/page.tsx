@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { apiService } from "@/app/utils";
 import OdooLoginModal from "@/app/components/OdooLoginModal";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface UserData {
   id: string;
@@ -27,6 +28,9 @@ export default function UserDashboard() {
   const [isOdooLoggedIn, setIsOdooLoggedIn] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [applicationData, setApplicationData] = useState<any>(null);
+  const [reportStatus, setReportStatus] = useState<'loading' | 'available' | 'not_generated' | 'error'>('loading');
+const [reportApplicationId, setReportApplicationId] = useState<string | null>(null);
+const router = useRouter();
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -82,6 +86,35 @@ export default function UserDashboard() {
     window.addEventListener("storage", checkOdooLoginStatus);
     return () => window.removeEventListener("storage", checkOdooLoginStatus);
   }, []);
+
+  // Check report status
+useEffect(() => {
+  const checkReportStatus = async () => {
+    if (!userData?.applicationId) {
+      setReportStatus('not_generated');
+      return;
+    }
+
+    try {
+      setReportStatus('loading');
+      const response = await apiService.get(`/api/applications/${userData.applicationId}/learner-report`);
+      
+      if (response.success && response.data) {
+        setReportStatus('available');
+        setReportApplicationId(userData.applicationId);
+      } else {
+        setReportStatus('not_generated');
+      }
+    } catch (err) {
+      console.error("Error checking report status:", err);
+      setReportStatus('error');
+    }
+  };
+
+  if (userData?.applicationId) {
+    checkReportStatus();
+  }
+}, [userData?.applicationId]);
 
   // Helper function to map relation to child ID
   const mapRelationToChildId = (relation: string | null): number => {
@@ -289,7 +322,9 @@ export default function UserDashboard() {
 
       {/* Application Status */}
       <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
-        <h3 className="text-lg font-semibold text-slate-900 mb-4">Application Status</h3>
+        {/* <h3 className="text-lg font-semibold text-slate-900 mb-4">Application Status</h3> */}
+
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">Waiting List Application Status</h3>
         
         <div className="space-y-4">
           <div>
@@ -422,10 +457,162 @@ export default function UserDashboard() {
                   </div>
                 )}
               </>
+            )}    
+          </div>
+        </div>
+      )}
+
+        {/* Learner Report Section - Separate Card */}
+      {userData?.applicationId && (
+        <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+          <h3 className="text-lg font-semibold text-slate-900 mb-4">AI-Generated Learner Report</h3>
+          
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm text-slate-500">Report Status</p>
+              <div className="mt-1">
+                {reportStatus === 'loading' && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold bg-gray-100 text-gray-800">
+                    <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Checking...
+                  </span>
+                )}
+                {reportStatus === 'available' && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Available
+                  </span>
+                )}
+                 {reportStatus === 'not_generated' && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Not Generated Yet
+                  </span>
+                )}
+                {reportStatus === 'error' && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                    Error
+                  </span>
+                )}
+              </div>
+            </div>
+             {reportStatus === 'available' && reportApplicationId && (
+              <div className="pt-4 border-t border-gray-200">
+                <p className="text-sm text-slate-600 mb-3">
+                  Your comprehensive AI-generated learner assessment report is ready for review.
+                </p>
+                <button
+                  onClick={() => router.push(`/dashboard/user/learner-report/${reportApplicationId}`)}
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl text-sm w-full sm:w-auto"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  View Learner Report
+                </button>
+              </div>
+            )}
+
+            {reportStatus === 'not_generated' && (
+              <div className="pt-4 border-t border-gray-200">
+                <p className="text-sm text-slate-600">
+                  The AI-generated learner report will be available here once it has been generated by the assessment team.
+                </p>
+              </div>
             )}
           </div>
         </div>
       )}
+
+            {/* Parent–School Agreement Section - Only visible when approved */}
+      {userData?.applicationStatus === 'approved' && userData?.applicationId && (
+        <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
+          <h3 className="text-lg font-semibold text-slate-900 mb-4">Parent–School Agreement</h3>
+          
+          <div className="space-y-4">
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <svg className="w-6 h-6 text-green-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <h4 className="text-sm font-semibold text-green-900 mb-2">
+                    Application Approved!
+                  </h4>
+                  <p className="text-sm text-green-800 mb-3">
+                    Your application has been approved. Please review the Parent–School Agreement and prepare the required documents for enrollment.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+              <h4 className="text-sm font-semibold text-slate-900 mb-3">📋 Required Documents Checklist</h4>
+              <ul className="space-y-2 text-sm text-slate-700">
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Student CPR / ID</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Student Passport</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Birth Certificate</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Previous School Reports</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Vaccination / Immunization Record</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Passport Size Photographs (4)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Parent CPR / ID Copies</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-500 mt-1">📄</span>
+                  <span>Parent Passport Copies</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="pt-4 border-t border-gray-200">
+              <p className="text-sm text-slate-600 mb-3">
+                Please review the Parent–School Agreement which outlines the terms and conditions of enrollment, school policies, and expectations.
+              </p>
+              <button
+                onClick={() => router.push(`/dashboard/user/agreement`)}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl text-sm w-full sm:w-auto"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                View Parent–School Agreement
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
 
       {/* User Details */}
       <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
