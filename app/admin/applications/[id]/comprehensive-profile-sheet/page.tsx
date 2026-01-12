@@ -1378,44 +1378,44 @@ export default function ComprehensiveProfileSheetPage() {
                   </td>
                   <td className="px-4 py-3 align-top">
                     <div className="flex flex-col gap-1">
-                      <Controller
-                        name="linguisticObserved"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
+                <Controller
+                  name="linguisticObserved"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      />
                             <span className="text-slate-700">✓ Observed</span>
-                          </label>
-                        )}
+                    </label>
+                  )}
+                />
+                <Controller
+                  name="linguisticStronglyEvident"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
                       />
-                      <Controller
-                        name="linguisticStronglyEvident"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
                             <span className="text-slate-700">+ Strongly Evident</span>
-                          </label>
-                        )}
-                      />
-                    </div>
+                    </label>
+                  )}
+                />
+              </div>
                   </td>
                   <td className="px-4 py-3 align-top">
-                    <Textarea
+                <Textarea
                       rows={3}
-                      id="linguisticNotes"
-                      {...register("linguisticNotes")}
-                    />
+                  id="linguisticNotes"
+                  {...register("linguisticNotes")}
+                />
                   </td>
                 </tr>
 
@@ -1427,44 +1427,44 @@ export default function ComprehensiveProfileSheetPage() {
                   </td>
                   <td className="px-4 py-3 align-top">
                     <div className="flex flex-col gap-1">
-                      <Controller
-                        name="logicalMathematicalObservedInt"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
+                <Controller
+                  name="logicalMathematicalObservedInt"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      />
                             <span className="text-slate-700">✓ Observed</span>
-                          </label>
-                        )}
+                    </label>
+                  )}
+                />
+                <Controller
+                  name="logicalMathematicalStronglyEvidentInt"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
                       />
-                      <Controller
-                        name="logicalMathematicalStronglyEvidentInt"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
                             <span className="text-slate-700">+ Strongly Evident</span>
-                          </label>
-                        )}
-                      />
-                    </div>
+                    </label>
+                  )}
+                />
+              </div>
                   </td>
                   <td className="px-4 py-3 align-top">
-                    <Textarea
+                <Textarea
                       rows={3}
-                      id="logicalMathematicalNotesInt"
-                      {...register("logicalMathematicalNotesInt")}
-                    />
+                  id="logicalMathematicalNotesInt"
+                  {...register("logicalMathematicalNotesInt")}
+                />
                   </td>
                 </tr>
 
@@ -1476,44 +1476,44 @@ export default function ComprehensiveProfileSheetPage() {
                   </td>
                   <td className="px-4 py-3 align-top">
                     <div className="flex flex-col gap-1">
-                      <Controller
-                        name="spatialObserved"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
+                <Controller
+                  name="spatialObserved"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      />
                             <span className="text-slate-700">✓ Observed</span>
-                          </label>
-                        )}
+                    </label>
+                  )}
+                />
+                <Controller
+                  name="spatialStronglyEvident"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
                       />
-                      <Controller
-                        name="spatialStronglyEvident"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
                             <span className="text-slate-700">+ Strongly Evident</span>
-                          </label>
-                        )}
-                      />
-                    </div>
+                    </label>
+                  )}
+                />
+              </div>
                   </td>
                   <td className="px-4 py-3 align-top">
-                    <Textarea
+                <Textarea
                       rows={3}
-                      id="spatialNotes"
-                      {...register("spatialNotes")}
-                    />
+                  id="spatialNotes"
+                  {...register("spatialNotes")}
+                />
                   </td>
                 </tr>
 
@@ -1525,44 +1525,44 @@ export default function ComprehensiveProfileSheetPage() {
                   </td>
                   <td className="px-4 py-3 align-top">
                     <div className="flex flex-col gap-1">
-                      <Controller
-                        name="bodilyKinestheticObserved"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
+                <Controller
+                  name="bodilyKinestheticObserved"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      />
                             <span className="text-slate-700">✓ Observed</span>
-                          </label>
-                        )}
+                    </label>
+                  )}
+                />
+                <Controller
+                  name="bodilyKinestheticStronglyEvident"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
                       />
-                      <Controller
-                        name="bodilyKinestheticStronglyEvident"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
                             <span className="text-slate-700">+ Strongly Evident</span>
-                          </label>
-                        )}
-                      />
-                    </div>
+                    </label>
+                  )}
+                />
+              </div>
                   </td>
                   <td className="px-4 py-3 align-top">
-                    <Textarea
+                <Textarea
                       rows={3}
-                      id="bodilyKinestheticNotes"
-                      {...register("bodilyKinestheticNotes")}
-                    />
+                  id="bodilyKinestheticNotes"
+                  {...register("bodilyKinestheticNotes")}
+                />
                   </td>
                 </tr>
 
@@ -1574,44 +1574,44 @@ export default function ComprehensiveProfileSheetPage() {
                   </td>
                   <td className="px-4 py-3 align-top">
                     <div className="flex flex-col gap-1">
-                      <Controller
-                        name="musicalObserved"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
+                <Controller
+                  name="musicalObserved"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      />
                             <span className="text-slate-700">✓ Observed</span>
-                          </label>
-                        )}
+                    </label>
+                  )}
+                />
+                <Controller
+                  name="musicalStronglyEvident"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
                       />
-                      <Controller
-                        name="musicalStronglyEvident"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
                             <span className="text-slate-700">+ Strongly Evident</span>
-                          </label>
-                        )}
-                      />
-                    </div>
+                    </label>
+                  )}
+                />
+              </div>
                   </td>
                   <td className="px-4 py-3 align-top">
-                    <Textarea
+                <Textarea
                       rows={3}
-                      id="musicalNotes"
-                      {...register("musicalNotes")}
-                    />
+                  id="musicalNotes"
+                  {...register("musicalNotes")}
+                />
                   </td>
                 </tr>
 
@@ -1623,44 +1623,44 @@ export default function ComprehensiveProfileSheetPage() {
                   </td>
                   <td className="px-4 py-3 align-top">
                     <div className="flex flex-col gap-1">
-                      <Controller
-                        name="interpersonalObserved"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
+                <Controller
+                  name="interpersonalObserved"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      />
                             <span className="text-slate-700">✓ Observed</span>
-                          </label>
-                        )}
+                    </label>
+                  )}
+                />
+                <Controller
+                  name="interpersonalStronglyEvident"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
                       />
-                      <Controller
-                        name="interpersonalStronglyEvident"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
                             <span className="text-slate-700">+ Strongly Evident</span>
-                          </label>
-                        )}
-                      />
-                    </div>
+                    </label>
+                  )}
+                />
+              </div>
                   </td>
                   <td className="px-4 py-3 align-top">
-                    <Textarea
+                <Textarea
                       rows={3}
-                      id="interpersonalNotes"
-                      {...register("interpersonalNotes")}
-                    />
+                  id="interpersonalNotes"
+                  {...register("interpersonalNotes")}
+                />
                   </td>
                 </tr>
 
@@ -1672,44 +1672,44 @@ export default function ComprehensiveProfileSheetPage() {
                   </td>
                   <td className="px-4 py-3 align-top">
                     <div className="flex flex-col gap-1">
-                      <Controller
-                        name="intrapersonalObserved"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
+                <Controller
+                  name="intrapersonalObserved"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      />
                             <span className="text-slate-700">✓ Observed</span>
-                          </label>
-                        )}
+                    </label>
+                  )}
+                />
+                <Controller
+                  name="intrapersonalStronglyEvident"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
                       />
-                      <Controller
-                        name="intrapersonalStronglyEvident"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
                             <span className="text-slate-700">+ Strongly Evident</span>
-                          </label>
-                        )}
-                      />
-                    </div>
+                    </label>
+                  )}
+                />
+              </div>
                   </td>
                   <td className="px-4 py-3 align-top">
-                    <Textarea
+                <Textarea
                       rows={3}
-                      id="intrapersonalNotes"
-                      {...register("intrapersonalNotes")}
-                    />
+                  id="intrapersonalNotes"
+                  {...register("intrapersonalNotes")}
+                />
                   </td>
                 </tr>
 
@@ -1721,44 +1721,44 @@ export default function ComprehensiveProfileSheetPage() {
                   </td>
                   <td className="px-4 py-3 align-top">
                     <div className="flex flex-col gap-1">
-                      <Controller
-                        name="naturalisticObserved"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
+                <Controller
+                  name="naturalisticObserved"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      />
                             <span className="text-slate-700">✓ Observed</span>
-                          </label>
-                        )}
+                    </label>
+                  )}
+                />
+                <Controller
+                  name="naturalisticStronglyEvident"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
                       />
-                      <Controller
-                        name="naturalisticStronglyEvident"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
                             <span className="text-slate-700">+ Strongly Evident</span>
-                          </label>
-                        )}
-                      />
-                    </div>
+                    </label>
+                  )}
+                />
+              </div>
                   </td>
                   <td className="px-4 py-3 align-top">
-                    <Textarea
+                <Textarea
                       rows={3}
-                      id="naturalisticNotes"
-                      {...register("naturalisticNotes")}
-                    />
+                  id="naturalisticNotes"
+                  {...register("naturalisticNotes")}
+                />
                   </td>
                 </tr>
 
@@ -1770,49 +1770,49 @@ export default function ComprehensiveProfileSheetPage() {
                   </td>
                   <td className="px-4 py-3 align-top">
                     <div className="flex flex-col gap-1">
-                      <Controller
-                        name="existentialObserved"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
+                <Controller
+                  name="existentialObserved"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                      />
                             <span className="text-slate-700">✓ Observed</span>
-                          </label>
-                        )}
+                    </label>
+                  )}
+                />
+                <Controller
+                  name="existentialStronglyEvident"
+                  control={control}
+                  render={({ field }) => (
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                        className="h-4 w-4 text-teal-600 border-gray-300 rounded"
                       />
-                      <Controller
-                        name="existentialStronglyEvident"
-                        control={control}
-                        render={({ field }) => (
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={(e) => field.onChange(e.target.checked)}
-                              className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                            />
                             <span className="text-slate-700">+ Strongly Evident</span>
-                          </label>
-                        )}
-                      />
-                    </div>
+                    </label>
+                  )}
+                />
+              </div>
                   </td>
                   <td className="px-4 py-3 align-top">
-                    <Textarea
+                <Textarea
                       rows={3}
-                      id="existentialNotes"
-                      {...register("existentialNotes")}
-                    />
+                  id="existentialNotes"
+                  {...register("existentialNotes")}
+                />
                   </td>
                 </tr>
               </tbody>
             </table>
-          </div>
+            </div>
 
           <div className="mt-4 space-y-2">
             <label
@@ -1852,7 +1852,7 @@ export default function ComprehensiveProfileSheetPage() {
           <div className="mt-3 text-slate-700 mb-4">
             <p>Meta-learning pillars and soft skills profile.</p>
           </div>
-          
+
           <div className="space-y-6">
             {/* Self-Regulation */}
             <div className="border border-slate-200 rounded-lg p-4">
