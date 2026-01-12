@@ -25,36 +25,22 @@ const schema = z.object({
 
   // Interview Questions (1-14) - all required
   whatDoYouDoSomethingHard: z.string().min(1, "Required"),
-  whatDoYouDoSomethingHardNotes: z.string().optional(),
   howDoYouFeelWhenTryNew: z.string().min(1, "Required"),
-  howDoYouFeelWhenTryNewNotes: z.string().optional(),
   whatWouldYouDoIfFriendSad: z.string().min(1, "Required"),
-  whatWouldYouDoIfFriendSadNotes: z.string().optional(),
   tellMeAboutFavouriteStory: z.string().min(1, "Required"),
-  tellMeAboutFavouriteStoryNotes: z.string().optional(),
   favouriteThingToLearn: z.string().min(1, "Required"),
-  favouriteThingToLearnNotes: z.string().optional(),
   whatElseUcanDoWithASpoonOtherThanEat: z.string().min(1, "Required"),
-  whatElseUcanDoWithASpoonOtherThanEatNotes: z.string().optional(),
   howShareCookiesBetweenFriends: z.string().min(1, "Required"),
-  howShareCookiesBetweenFriendsNotes: z.string().optional(),
   puzzleActivity: z.string().min(1, "Required"),
-  puzzleActivityNotes: z.string().optional(),
   tableInteraction: z.string().min(1, "Required"),
-  tableInteractionNotes: z.string().optional(),
   drawSomethingYouInvent: z.string().min(1, "Required"),
-  drawSomethingYouInventNotes: z.string().optional(),
   doYouLikeLearnByListening: z.string().min(1, "Required"),
   canYouSortShapesByColor: z.string().min(1, "Required"),
-  canYouSortShapesByColorNotes: z.string().optional(),
   canYouTeachMeDrawMummy: z.string().min(1, "Required"),
-  canYouTeachMeDrawMummyNotes: z.string().optional(),
   doYouLikePlayingWithFriends: z.string().min(1, "Required"),
-  doYouLikePlayingWithFriendsNotes: z.string().optional(),
 
   // Parental Interference
   parentalInterferenceFlagged: z.boolean().default(false),
-  parentalInterferenceNotes: z.string().optional(),
 
   // Total Score
   totalScore: z.string().optional(),
@@ -91,34 +77,20 @@ export default function KS1InterviewQuestionsPage() {
       fullName: "",
       age: "",
       whatDoYouDoSomethingHard: "",
-      whatDoYouDoSomethingHardNotes: "",
       howDoYouFeelWhenTryNew: "",
-      howDoYouFeelWhenTryNewNotes: "",
       whatWouldYouDoIfFriendSad: "",
-      whatWouldYouDoIfFriendSadNotes: "",
       tellMeAboutFavouriteStory: "",
-      tellMeAboutFavouriteStoryNotes: "",
       favouriteThingToLearn: "",
-      favouriteThingToLearnNotes: "",
       whatElseUcanDoWithASpoonOtherThanEat: "",
-      whatElseUcanDoWithASpoonOtherThanEatNotes: "",
       howShareCookiesBetweenFriends: "",
-      howShareCookiesBetweenFriendsNotes: "",
       puzzleActivity: "",
-      puzzleActivityNotes: "",
       tableInteraction: "",
-      tableInteractionNotes: "",
       drawSomethingYouInvent: "",
-      drawSomethingYouInventNotes: "",
       doYouLikeLearnByListening: "",
       canYouSortShapesByColor: "",
-      canYouSortShapesByColorNotes: "",
       canYouTeachMeDrawMummy: "",
-      canYouTeachMeDrawMummyNotes: "",
       doYouLikePlayingWithFriends: "",
-      doYouLikePlayingWithFriendsNotes: "",
       parentalInterferenceFlagged: false,
-      parentalInterferenceNotes: "",
       totalScore: "",
       applicationNumber: "",
       observerName: "",
@@ -149,34 +121,20 @@ useAutoSave(watch, {
       age: data.age || '',
       date: data.date || '',
       whatDoYouDoSomethingHard: data.whatDoYouDoSomethingHard ? parseInt(data.whatDoYouDoSomethingHard) : null,
-      whatDoYouDoSomethingHardNotes: data.whatDoYouDoSomethingHardNotes || '',
       howDoYouFeelWhenTryNew: data.howDoYouFeelWhenTryNew ? parseInt(data.howDoYouFeelWhenTryNew) : null,
-      howDoYouFeelWhenTryNewNotes: data.howDoYouFeelWhenTryNewNotes || '',
       whatWouldYouDoIfFriendSad: data.whatWouldYouDoIfFriendSad ? parseInt(data.whatWouldYouDoIfFriendSad) : null,
-      whatWouldYouDoIfFriendSadNotes: data.whatWouldYouDoIfFriendSadNotes || '',
       tellMeAboutFavouriteStory: data.tellMeAboutFavouriteStory ? parseInt(data.tellMeAboutFavouriteStory) : null,
-      tellMeAboutFavouriteStoryNotes: data.tellMeAboutFavouriteStoryNotes || '',
       favouriteThingToLearn: data.favouriteThingToLearn ? parseInt(data.favouriteThingToLearn) : null,
-      favouriteThingToLearnNotes: data.favouriteThingToLearnNotes || '',
       whatElseUcanDoWithASpoonOtherThanEat: data.whatElseUcanDoWithASpoonOtherThanEat ? parseInt(data.whatElseUcanDoWithASpoonOtherThanEat) : null,
-      whatElseUcanDoWithASpoonOtherThanEatNotes: data.whatElseUcanDoWithASpoonOtherThanEatNotes || '',
       howShareCookiesBetweenFriends: data.howShareCookiesBetweenFriends ? parseInt(data.howShareCookiesBetweenFriends) : null,
-      howShareCookiesBetweenFriendsNotes: data.howShareCookiesBetweenFriendsNotes || '',
       puzzleActivity: data.puzzleActivity ? parseInt(data.puzzleActivity) : null,
-      puzzleActivityNotes: data.puzzleActivityNotes || '',
       tableInteraction: data.tableInteraction ? parseInt(data.tableInteraction) : null,
-      tableInteractionNotes: data.tableInteractionNotes || '',
       drawSomethingYouInvent: data.drawSomethingYouInvent ? parseInt(data.drawSomethingYouInvent) : null,
-      drawSomethingYouInventNotes: data.drawSomethingYouInventNotes || '',
       doYouLikeLearnByListening: data.doYouLikeLearnByListening || '',
       canYouSortShapesByColor: data.canYouSortShapesByColor ? parseInt(data.canYouSortShapesByColor) : null,
-      canYouSortShapesByColorNotes: data.canYouSortShapesByColorNotes || '',
       canYouTeachMeDrawMummy: data.canYouTeachMeDrawMummy ? parseInt(data.canYouTeachMeDrawMummy) : null,
-      canYouTeachMeDrawMummyNotes: data.canYouTeachMeDrawMummyNotes || '',
       doYouLikePlayingWithFriends: data.doYouLikePlayingWithFriends ? parseInt(data.doYouLikePlayingWithFriends) : null,
-      doYouLikePlayingWithFriendsNotes: data.doYouLikePlayingWithFriendsNotes || '',
       parentalInterferenceFlagged: data.parentalInterferenceFlagged || false,
-      parentalInterferenceNotes: data.parentalInterferenceNotes || '',
       totalScore: data.totalScore ? parseInt(data.totalScore) : null,
       applicationNumber: data.applicationNumber || '',
       observerName: data.observerName || '',
@@ -206,34 +164,20 @@ useAutoSave(watch, {
           fullName: data.fullName || "",
           age: data.age || "",
           whatDoYouDoSomethingHard: data.whatDoYouDoSomethingHard?.toString() || "",
-          whatDoYouDoSomethingHardNotes: data.whatDoYouDoSomethingHardNotes || "",
           howDoYouFeelWhenTryNew: data.howDoYouFeelWhenTryNew?.toString() || "",
-          howDoYouFeelWhenTryNewNotes: data.howDoYouFeelWhenTryNewNotes || "",
           whatWouldYouDoIfFriendSad: data.whatWouldYouDoIfFriendSad?.toString() || "",
-          whatWouldYouDoIfFriendSadNotes: data.whatWouldYouDoIfFriendSadNotes || "",
           tellMeAboutFavouriteStory: data.tellMeAboutFavouriteStory?.toString() || "",
-          tellMeAboutFavouriteStoryNotes: data.tellMeAboutFavouriteStoryNotes || "",
           favouriteThingToLearn: data.favouriteThingToLearn?.toString() || "",
-          favouriteThingToLearnNotes: data.favouriteThingToLearnNotes || "",
           whatElseUcanDoWithASpoonOtherThanEat: data.whatElseUcanDoWithASpoonOtherThanEat?.toString() || "",
-          whatElseUcanDoWithASpoonOtherThanEatNotes: data.whatElseUcanDoWithASpoonOtherThanEatNotes || "",
           howShareCookiesBetweenFriends: data.howShareCookiesBetweenFriends?.toString() || "",
-          howShareCookiesBetweenFriendsNotes: data.howShareCookiesBetweenFriendsNotes || "",
           puzzleActivity: data.puzzleActivity?.toString() || "",
-          puzzleActivityNotes: data.puzzleActivityNotes || "",
           tableInteraction: data.tableInteraction?.toString() || "",
-          tableInteractionNotes: data.tableInteractionNotes || "",
           drawSomethingYouInvent: data.drawSomethingYouInvent?.toString() || "",
-          drawSomethingYouInventNotes: data.drawSomethingYouInventNotes || "",
           doYouLikeLearnByListening: data.doYouLikeLearnByListening || "",
           canYouSortShapesByColor: data.canYouSortShapesByColor?.toString() || "",
-          canYouSortShapesByColorNotes: data.canYouSortShapesByColorNotes || "",
           canYouTeachMeDrawMummy: data.canYouTeachMeDrawMummy?.toString() || "",
-          canYouTeachMeDrawMummyNotes: data.canYouTeachMeDrawMummyNotes || "",
           doYouLikePlayingWithFriends: data.doYouLikePlayingWithFriends?.toString() || "",
-          doYouLikePlayingWithFriendsNotes: data.doYouLikePlayingWithFriendsNotes || "",
           parentalInterferenceFlagged: data.parentalInterferenceFlagged || false,
-          parentalInterferenceNotes: data.parentalInterferenceNotes || "",
           totalScore: data.totalScore?.toString() || "",
           applicationNumber: data.applicationNumber || "",
           observerName: data.observerName || "",
@@ -249,34 +193,20 @@ useAutoSave(watch, {
           age: appData.childAge ? appData.childAge.toString() : "",
           date: "",
           whatDoYouDoSomethingHard: "",
-          whatDoYouDoSomethingHardNotes: "",
           howDoYouFeelWhenTryNew: "",
-          howDoYouFeelWhenTryNewNotes: "",
           whatWouldYouDoIfFriendSad: "",
-          whatWouldYouDoIfFriendSadNotes: "",
           tellMeAboutFavouriteStory: "",
-          tellMeAboutFavouriteStoryNotes: "",
           favouriteThingToLearn: "",
-          favouriteThingToLearnNotes: "",
           whatElseUcanDoWithASpoonOtherThanEat: "",
-          whatElseUcanDoWithASpoonOtherThanEatNotes: "",
           howShareCookiesBetweenFriends: "",
-          howShareCookiesBetweenFriendsNotes: "",
           puzzleActivity: "",
-          puzzleActivityNotes: "",
           tableInteraction: "",
-          tableInteractionNotes: "",
           drawSomethingYouInvent: "",
-          drawSomethingYouInventNotes: "",
           doYouLikeLearnByListening: "",
           canYouSortShapesByColor: "",
-          canYouSortShapesByColorNotes: "",
           canYouTeachMeDrawMummy: "",
-          canYouTeachMeDrawMummyNotes: "",
           doYouLikePlayingWithFriends: "",
-          doYouLikePlayingWithFriendsNotes: "",
           parentalInterferenceFlagged: false,
-          parentalInterferenceNotes: "",
           totalScore: "",
           applicationNumber: params.id,
           observerName: "",
@@ -426,7 +356,7 @@ useAutoSave(watch, {
                 </p>
               </div>
 
-              <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Question 1 */}
                 <div className="border border-slate-200 rounded-lg p-4">
                   <div className="font-medium text-slate-900 mb-2">
@@ -435,42 +365,30 @@ useAutoSave(watch, {
                   <div className="text-sm text-slate-600 mb-3">
                     Purpose: Growth mindset & perseverance
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      label="Score (1-5)"
-                      htmlFor="whatDoYouDoSomethingHard"
-                      error={errors.whatDoYouDoSomethingHard as any}
+                  <FormField
+                    label="Score (1-5)"
+                    htmlFor="whatDoYouDoSomethingHard"
+                    error={errors.whatDoYouDoSomethingHard as any}
+                  >
+                    <select
+                      id="whatDoYouDoSomethingHard"
+                      {...register("whatDoYouDoSomethingHard")}
+                      className={`w-full px-3 py-2 border rounded-md text-black bg-white ${
+                        errors.whatDoYouDoSomethingHard
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
                     >
-                      <select
-                        id="whatDoYouDoSomethingHard"
-                        {...register("whatDoYouDoSomethingHard")}
-                        className={`w-full px-3 py-2 border rounded-md text-black bg-white ${
-                          errors.whatDoYouDoSomethingHard
-                            ? "border-red-500"
-                            : "border-gray-300"
-                        }`}
-                      >
-                        <option value="">Select...</option>
-                        <option value="1">1 = Says "I can't"</option>
-                        <option value="2">2 = Tries briefly then stops</option>
-                        <option value="3">3 = Makes some effort</option>
-                        <option value="4">4 = Tries and asks for help</option>
-                        <option value="5">
-                          5 = Says "I try again" or "I like hard things"
-                        </option>
-                      </select>
-                    </FormField>
-                    <FormField
-                      label="Notes"
-                      htmlFor="whatDoYouDoSomethingHardNotes"
-                    >
-                      <Textarea
-                        rows={3}
-                        id="whatDoYouDoSomethingHardNotes"
-                        {...register("whatDoYouDoSomethingHardNotes")}
-                      />
-                    </FormField>
-                  </div>
+                      <option value="">Select...</option>
+                      <option value="1">1 = Says "I can't"</option>
+                      <option value="2">2 = Tries briefly then stops</option>
+                      <option value="3">3 = Makes some effort</option>
+                      <option value="4">4 = Tries and asks for help</option>
+                      <option value="5">
+                        5 = Says "I try again" or "I like hard things"
+                      </option>
+                    </select>
+                  </FormField>
                 </div>
 
                 {/* Question 2 */}
@@ -482,39 +400,30 @@ useAutoSave(watch, {
                   <div className="text-sm text-slate-600 mb-3">
                     Purpose: Emotional awareness & regulation
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      label="Score (1-5)"
-                      htmlFor="howDoYouFeelWhenTryNew"
-                      error={errors.howDoYouFeelWhenTryNew as any}
+                  <FormField
+                    label="Score (1-5)"
+                    htmlFor="howDoYouFeelWhenTryNew"
+                    error={errors.howDoYouFeelWhenTryNew as any}
+                  >
+                    <select
+                      id="howDoYouFeelWhenTryNew"
+                      {...register("howDoYouFeelWhenTryNew")}
+                      className={`w-full px-3 py-2 border rounded-md text-black bg-white ${
+                        errors.howDoYouFeelWhenTryNew
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
                     >
-                      <select
-                        id="howDoYouFeelWhenTryNew"
-                        {...register("howDoYouFeelWhenTryNew")}
-                        className={`w-full px-3 py-2 border rounded-md text-black bg-white ${
-                          errors.howDoYouFeelWhenTryNew
-                            ? "border-red-500"
-                            : "border-gray-300"
-                        }`}
-                      >
-                        <option value="">Select...</option>
-                        <option value="1">1 = Says "I don't know"</option>
-                        <option value="2">2 = Simple feeling word</option>
-                        <option value="3">3 = Describes feeling briefly</option>
-                        <option value="4">4 = Describes with example</option>
-                        <option value="5">
-                          5 = Reflects calmly and thoughtfully
-                        </option>
-                      </select>
-                    </FormField>
-                    <FormField label="Notes" htmlFor="howDoYouFeelWhenTryNewNotes">
-                      <Textarea
-                        rows={3}
-                        id="howDoYouFeelWhenTryNewNotes"
-                        {...register("howDoYouFeelWhenTryNewNotes")}
-                      />
-                    </FormField>
-                  </div>
+                      <option value="">Select...</option>
+                      <option value="1">1 = Says "I don't know"</option>
+                      <option value="2">2 = Simple feeling word</option>
+                      <option value="3">3 = Describes feeling briefly</option>
+                      <option value="4">4 = Describes with example</option>
+                      <option value="5">
+                        5 = Reflects calmly and thoughtfully
+                      </option>
+                    </select>
+                  </FormField>
                 </div>
 
                 {/* Question 3 */}
@@ -525,12 +434,11 @@ useAutoSave(watch, {
                   <div className="text-sm text-slate-600 mb-3">
                     Purpose: Empathy & social reasoning
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      label="Score (1-5)"
-                      htmlFor="whatWouldYouDoIfFriendSad"
-                      error={errors.whatWouldYouDoIfFriendSad as any}
-                    >
+                  <FormField
+                    label="Score (1-5)"
+                    htmlFor="whatWouldYouDoIfFriendSad"
+                    error={errors.whatWouldYouDoIfFriendSad as any}
+                  >
                       <select
                         id="whatWouldYouDoIfFriendSad"
                         {...register("whatWouldYouDoIfFriendSad")}
@@ -549,18 +457,7 @@ useAutoSave(watch, {
                           5 = Comforts with empathy and reason
                         </option>
                       </select>
-                    </FormField>
-                    <FormField
-                      label="Notes"
-                      htmlFor="whatWouldYouDoIfFriendSadNotes"
-                    >
-                      <Textarea
-                        rows={3}
-                        id="whatWouldYouDoIfFriendSadNotes"
-                        {...register("whatWouldYouDoIfFriendSadNotes")}
-                      />
-                    </FormField>
-                  </div>
+                  </FormField>
                 </div>
 
                 {/* Question 4 */}
@@ -571,12 +468,11 @@ useAutoSave(watch, {
                   <div className="text-sm text-slate-600 mb-3">
                     Purpose: Narrative & communication skills
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      label="Score (1-5)"
-                      htmlFor="tellMeAboutFavouriteStory"
-                      error={errors.tellMeAboutFavouriteStory as any}
-                    >
+                  <FormField
+                    label="Score (1-5)"
+                    htmlFor="tellMeAboutFavouriteStory"
+                    error={errors.tellMeAboutFavouriteStory as any}
+                  >
                       <select
                         id="tellMeAboutFavouriteStory"
                         {...register("tellMeAboutFavouriteStory")}
@@ -597,18 +493,7 @@ useAutoSave(watch, {
                         <option value="4">4 = Provides clear structure</option>
                         <option value="5">5 = Uses emotion and detail</option>
                       </select>
-                    </FormField>
-                    <FormField
-                      label="Notes"
-                      htmlFor="tellMeAboutFavouriteStoryNotes"
-                    >
-                      <Textarea
-                        rows={3}
-                        id="tellMeAboutFavouriteStoryNotes"
-                        {...register("tellMeAboutFavouriteStoryNotes")}
-                      />
-                    </FormField>
-                  </div>
+                  </FormField>
                 </div>
 
                 {/* Question 5 */}
@@ -619,12 +504,11 @@ useAutoSave(watch, {
                   <div className="text-sm text-slate-600 mb-3">
                     Purpose: Curiosity
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      label="Score (1-5)"
-                      htmlFor="favouriteThingToLearn"
-                      error={errors.favouriteThingToLearn as any}
-                    >
+                  <FormField
+                    label="Score (1-5)"
+                    htmlFor="favouriteThingToLearn"
+                    error={errors.favouriteThingToLearn as any}
+                  >
                       <select
                         id="favouriteThingToLearn"
                         {...register("favouriteThingToLearn")}
@@ -643,15 +527,7 @@ useAutoSave(watch, {
                           5 = Explains with passion and curiosity
                         </option>
                       </select>
-                    </FormField>
-                    <FormField label="Notes" htmlFor="favouriteThingToLearnNotes">
-                      <Textarea
-                        rows={3}
-                        id="favouriteThingToLearnNotes"
-                        {...register("favouriteThingToLearnNotes")}
-                      />
-                    </FormField>
-                  </div>
+                  </FormField>
                 </div>
 
                 {/* Question 6 */}
@@ -662,12 +538,11 @@ useAutoSave(watch, {
                   <div className="text-sm text-slate-600 mb-3">
                     Purpose: Cognitive flexibility & creativity
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      label="Score (1-5)"
-                      htmlFor="whatElseUcanDoWithASpoonOtherThanEat"
-                      error={errors.whatElseUcanDoWithASpoonOtherThanEat as any}
-                    >
+                  <FormField
+                    label="Score (1-5)"
+                    htmlFor="whatElseUcanDoWithASpoonOtherThanEat"
+                    error={errors.whatElseUcanDoWithASpoonOtherThanEat as any}
+                  >
                       <select
                         id="whatElseUcanDoWithASpoonOtherThanEat"
                         {...register("whatElseUcanDoWithASpoonOtherThanEat")}
@@ -688,18 +563,7 @@ useAutoSave(watch, {
                           5 = Inventive/abstract use (e.g., catapult)
                         </option>
                       </select>
-                    </FormField>
-                    <FormField
-                      label="Notes"
-                      htmlFor="whatElseUcanDoWithASpoonOtherThanEatNotes"
-                    >
-                      <Textarea
-                        rows={3}
-                        id="whatElseUcanDoWithASpoonOtherThanEatNotes"
-                        {...register("whatElseUcanDoWithASpoonOtherThanEatNotes")}
-                      />
-                    </FormField>
-                  </div>
+                  </FormField>
                 </div>
 
                 {/* Question 7 */}
@@ -711,12 +575,11 @@ useAutoSave(watch, {
                   <div className="text-sm text-slate-600 mb-3">
                     Purpose: Problem-solving & fairness
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      label="Score (1-5)"
-                      htmlFor="howShareCookiesBetweenFriends"
-                      error={errors.howShareCookiesBetweenFriends as any}
-                    >
+                  <FormField
+                    label="Score (1-5)"
+                    htmlFor="howShareCookiesBetweenFriends"
+                    error={errors.howShareCookiesBetweenFriends as any}
+                  >
                       <select
                         id="howShareCookiesBetweenFriends"
                         {...register("howShareCookiesBetweenFriends")}
@@ -737,18 +600,7 @@ useAutoSave(watch, {
                           5 = Equal, thoughtful sharing with reason
                         </option>
                       </select>
-                    </FormField>
-                    <FormField
-                      label="Notes"
-                      htmlFor="howShareCookiesBetweenFriendsNotes"
-                    >
-                      <Textarea
-                        rows={3}
-                        id="howShareCookiesBetweenFriendsNotes"
-                        {...register("howShareCookiesBetweenFriendsNotes")}
-                      />
-                    </FormField>
-                  </div>
+                  </FormField>
                 </div>
 
                 {/* Question 8 */}
@@ -759,12 +611,11 @@ useAutoSave(watch, {
                   <div className="text-sm text-slate-600 mb-3">
                     Purpose: Problem-solving & spatial reasoning
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      label="Score (1-5)"
-                      htmlFor="puzzleActivity"
-                      error={errors.puzzleActivity as any}
-                    >
+                  <FormField
+                    label="Score (1-5)"
+                    htmlFor="puzzleActivity"
+                    error={errors.puzzleActivity as any}
+                  >
                       <select
                         id="puzzleActivity"
                         {...register("puzzleActivity")}
@@ -781,18 +632,7 @@ useAutoSave(watch, {
                         <option value="4">4 = Mostly correct with minimal help</option>
                         <option value="5">5 = Completes independently</option>
                       </select>
-                    </FormField>
-                    <FormField
-                      label="Notes"
-                      htmlFor="puzzleActivityNotes"
-                    >
-                      <Textarea
-                        rows={3}
-                        id="puzzleActivityNotes"
-                        {...register("puzzleActivityNotes")}
-                      />
-                    </FormField>
-                  </div>
+                  </FormField>
                 </div>
 
                 {/* Question 9 */}
@@ -803,12 +643,11 @@ useAutoSave(watch, {
                   <div className="text-sm text-slate-600 mb-3">
                     Purpose: Social interaction & communication
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      label="Score (1-5)"
-                      htmlFor="tableInteraction"
-                      error={errors.tableInteraction as any}
-                    >
+                  <FormField
+                    label="Score (1-5)"
+                    htmlFor="tableInteraction"
+                    error={errors.tableInteraction as any}
+                  >
                       <select
                         id="tableInteraction"
                         {...register("tableInteraction")}
@@ -825,18 +664,7 @@ useAutoSave(watch, {
                         <option value="4">4 = Engages well with others</option>
                         <option value="5">5 = Initiates and leads interaction</option>
                       </select>
-                    </FormField>
-                    <FormField
-                      label="Notes"
-                      htmlFor="tableInteractionNotes"
-                    >
-                      <Textarea
-                        rows={3}
-                        id="tableInteractionNotes"
-                        {...register("tableInteractionNotes")}
-                      />
-                    </FormField>
-                  </div>
+                  </FormField>
                 </div>
 
                 {/* Question 10 */}
@@ -847,12 +675,11 @@ useAutoSave(watch, {
                   <div className="text-sm text-slate-600 mb-3">
                     Purpose: Imagination & expression
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      label="Score (1-5)"
-                      htmlFor="drawSomethingYouInvent"
-                      error={errors.drawSomethingYouInvent as any}
-                    >
+                  <FormField
+                    label="Score (1-5)"
+                    htmlFor="drawSomethingYouInvent"
+                    error={errors.drawSomethingYouInvent as any}
+                  >
                       <select
                         id="drawSomethingYouInvent"
                         {...register("drawSomethingYouInvent")}
@@ -871,19 +698,11 @@ useAutoSave(watch, {
                           5 = Inventive with purpose or detail
                         </option>
                       </select>
-                    </FormField>
-                    <FormField label="Notes" htmlFor="drawSomethingYouInventNotes">
-                      <Textarea
-                        rows={3}
-                        id="drawSomethingYouInventNotes"
-                        {...register("drawSomethingYouInventNotes")}
-                      />
-                    </FormField>
-                  </div>
+                  </FormField>
                 </div>
 
                 {/* Question 11 - Not scored */}
-                <div className="border border-slate-200 rounded-lg p-4">
+                <div className="border border-slate-200 rounded-lg p-4 md:col-span-2">
                   <div className="font-medium text-slate-900 mb-2">
                     11. Do you like to learn by listening, by watching or by doing?
                     (use images)
@@ -891,19 +710,17 @@ useAutoSave(watch, {
                   <div className="text-sm text-slate-600 mb-3">
                     Purpose: Learning preference awareness
                   </div>
-                  <div className="grid grid-cols-1 gap-4">
-                    <FormField
-                      label="Answer (Not scored - Record answer)"
-                      htmlFor="doYouLikeLearnByListening"
-                      error={errors.doYouLikeLearnByListening as any}
-                    >
-                      <Textarea
-                        rows={3}
-                        id="doYouLikeLearnByListening"
-                        {...register("doYouLikeLearnByListening")}
-                      />
-                    </FormField>
-                  </div>
+                  <FormField
+                    label="Answer (Not scored - Record answer)"
+                    htmlFor="doYouLearnByListening"
+                    error={errors.doYouLikeLearnByListening as any}
+                  >
+                    <Textarea
+                      rows={3}
+                      id="doYouLikeLearnByListening"
+                      {...register("doYouLikeLearnByListening")}
+                    />
+                  </FormField>
                 </div>
 
                 {/* Question 12 */}
@@ -914,12 +731,11 @@ useAutoSave(watch, {
                   <div className="text-sm text-slate-600 mb-3">
                     Purpose: Motor coordination & logic
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      label="Score (1-5)"
-                      htmlFor="canYouSortShapesByColor"
-                      error={errors.canYouSortShapesByColor as any}
-                    >
+                  <FormField
+                    label="Score (1-5)"
+                    htmlFor="canYouSortShapesByColor"
+                    error={errors.canYouSortShapesByColor as any}
+                  >
                       <select
                         id="canYouSortShapesByColor"
                         {...register("canYouSortShapesByColor")}
@@ -938,15 +754,7 @@ useAutoSave(watch, {
                           5 = Fully correct by both colour and size
                         </option>
                       </select>
-                    </FormField>
-                    <FormField label="Notes" htmlFor="canYouSortShapesByColorNotes">
-                      <Textarea
-                        rows={3}
-                        id="canYouSortShapesByColorNotes"
-                        {...register("canYouSortShapesByColorNotes")}
-                      />
-                    </FormField>
-                  </div>
+                  </FormField>
                 </div>
 
                 {/* Question 13 */}
@@ -957,12 +765,11 @@ useAutoSave(watch, {
                   <div className="text-sm text-slate-600 mb-3">
                     Purpose: Communication clarity & social confidence
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      label="Score (1-5)"
-                      htmlFor="canYouTeachMeDrawMummy"
-                      error={errors.canYouTeachMeDrawMummy as any}
-                    >
+                  <FormField
+                    label="Score (1-5)"
+                    htmlFor="canYouTeachMeDrawMummy"
+                    error={errors.canYouTeachMeDrawMummy as any}
+                  >
                       <select
                         id="canYouTeachMeDrawMummy"
                         {...register("canYouTeachMeDrawMummy")}
@@ -987,15 +794,7 @@ useAutoSave(watch, {
                           5 = Full explanation with enthusiasm and detail
                         </option>
                       </select>
-                    </FormField>
-                    <FormField label="Notes" htmlFor="canYouTeachMeDrawMummyNotes">
-                      <Textarea
-                        rows={3}
-                        id="canYouTeachMeDrawMummyNotes"
-                        {...register("canYouTeachMeDrawMummyNotes")}
-                      />
-                    </FormField>
-                  </div>
+                  </FormField>
                 </div>
 
                 {/* Question 14 */}
@@ -1006,12 +805,11 @@ useAutoSave(watch, {
                   <div className="text-sm text-slate-600 mb-3">
                     Purpose: Social openness & preference
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      label="Score (1-5)"
-                      htmlFor="doYouLikePlayingWithFriends"
-                      error={errors.doYouLikePlayingWithFriends as any}
-                    >
+                  <FormField
+                    label="Score (1-5)"
+                    htmlFor="doYouLikePlayingWithFriends"
+                    error={errors.doYouLikePlayingWithFriends as any}
+                  >
                       <select
                         id="doYouLikePlayingWithFriends"
                         {...register("doYouLikePlayingWithFriends")}
@@ -1032,18 +830,7 @@ useAutoSave(watch, {
                           5 = Describes teamwork/sharing as enjoyable
                         </option>
                       </select>
-                    </FormField>
-                    <FormField
-                      label="Notes"
-                      htmlFor="doYouLikePlayingWithFriendsNotes"
-                    >
-                      <Textarea
-                        rows={3}
-                        id="doYouLikePlayingWithFriendsNotes"
-                        {...register("doYouLikePlayingWithFriendsNotes")}
-                      />
-                    </FormField>
-                  </div>
+                  </FormField>
                 </div>
               </div>
             </section>
@@ -1071,16 +858,6 @@ useAutoSave(watch, {
                       <span className="text-slate-700">Flag 'P': Yes</span>
                     </label>
                   </div>
-                </FormField>
-                <FormField
-                  label="Additional Notes (if flagged):"
-                  htmlFor="parentalInterferenceNotes"
-                >
-                  <Textarea
-                    rows={4}
-                    id="parentalInterferenceNotes"
-                    {...register("parentalInterferenceNotes")}
-                  />
                 </FormField>
               </div>
             </section>
