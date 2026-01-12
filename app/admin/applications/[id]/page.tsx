@@ -736,6 +736,23 @@ export default function AdminApplicationDetailPage() {
       });
 
       if (response.success && response.data) {
+        // Update application status to "approved" after successful sync
+        try {
+          const statusResponse = await apiService.post("/api/admin/applications/status", {
+            id: data.id,
+            status: "approved",
+            adminComment: "Application synced to ALS successfully",
+          });
+          
+          if (statusResponse.success) {
+            // Update local state
+            setData({ ...data, status: "approved" });
+          }
+        } catch (statusError: any) {
+          console.error("Failed to update application status:", statusError);
+          // Don't fail the sync if status update fails, just log it
+        }
+        
         if (!suppressToast) {
           // toast.success("Application synced to ALS successfully!", {
           //   style: {

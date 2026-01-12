@@ -278,32 +278,32 @@ export default function AdminApplicationsPage() {
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
         <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
-          <h1 className="text-2xl font-bold text-slate-900">Applications</h1>
+        <h1 className="text-2xl font-bold text-slate-900">Applications</h1>
           <div className="flex items-center gap-3 flex-wrap">
-            <input
-              type="text"
-              value={search}
+          <input
+            type="text"
+            value={search}
               onChange={(e) => { setPageIndex(0); setSearch(e.target.value); }}
-              placeholder="Search by parent, email, child..."
-              className="w-56 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 placeholder:text-slate-400"
-            />
+            placeholder="Search by parent, email, child..."
+            className="w-56 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 placeholder:text-slate-400"
+          />
             <select value={statusFilter} onChange={(e) => { setPageIndex(0); setStatusFilter(e.target.value); }} className="border border-slate-300 rounded-lg px-3 py-2 text-slate-900 bg-white">
-              <option value="">All Status</option>
-              <option value="submitted">Submitted</option>
-              <option value="processing">Processing</option>
-              <option value="completed">Completed</option>
-            </select>
+            <option value="">All Status</option>
+            <option value="submitted">Submitted</option>
+            <option value="processing">Processing</option>
+            <option value="completed">Completed</option>
+          </select>
             <select value={paymentFilter} onChange={(e) => { setPageIndex(0); setPaymentFilter(e.target.value); }} className="border border-slate-300 rounded-lg px-3 py-2 text-slate-900 bg-white">
-              <option value="">All Payments</option>
-              <option value="paid">Paid</option>
-              <option value="unpaid">Unpaid</option>
-            </select>
-          </div>
+            <option value="">All Payments</option>
+            <option value="paid">Paid</option>
+            <option value="unpaid">Unpaid</option>
+          </select>
         </div>
+      </div>
 
-        {error && (
+      {error && (
           <div className="mb-4 text-red-600 bg-red-50 p-3 rounded-lg">{error}</div>
-        )}
+      )}
 
         <div className="mt-4">
         <DataTable

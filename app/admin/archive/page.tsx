@@ -113,24 +113,24 @@ export default function AdminArchivePage() {
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
         <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Archive</h1>
-            <p className="text-sm text-slate-500 mt-1">Rejected applications archive</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => { setPageIndex(0); setSearch(e.target.value); }}
-              placeholder="Search by parent, email, child..."
-              className="w-56 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 placeholder:text-slate-400"
-            />
-          </div>
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Archive</h1>
+          <p className="text-sm text-slate-500 mt-1">Rejected applications archive</p>
         </div>
+          <div className="flex items-center gap-2">
+          <input
+            type="text"
+            value={search}
+              onChange={(e) => { setPageIndex(0); setSearch(e.target.value); }}
+            placeholder="Search by parent, email, child..."
+            className="w-56 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 placeholder:text-slate-400"
+          />
+        </div>
+      </div>
 
-        {error && (
+      {error && (
           <div className="mb-4 text-red-600 bg-red-50 p-3 rounded-lg">{error}</div>
-        )}
+      )}
 
         <div className="mt-4">
         <DataTable
