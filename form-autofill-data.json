@@ -1,34 +1,20 @@
 {
   "ks1Interview": {
     "whatDoYouDoSomethingHard": "4",
-    "whatDoYouDoSomethingHardNotes": "Child demonstrates good problem-solving approach, asks for help when needed and shows persistence.",
     "howDoYouFeelWhenTryNew": "4",
-    "howDoYouFeelWhenTryNewNotes": "Shows excitement and curiosity when encountering new activities, with minimal hesitation.",
     "whatWouldYouDoIfFriendSad": "5",
-    "whatWouldYouDoIfFriendSadNotes": "Demonstrates strong empathy, suggests thoughtful actions like asking what's wrong and offering comfort.",
     "tellMeAboutFavouriteStory": "4",
-    "tellMeAboutFavouriteStoryNotes": "Able to provide clear structure and details about favorite story, showing good narrative skills.",
     "favouriteThingToLearn": "5",
-    "favouriteThingToLearnNotes": "Expresses passion about learning new things, particularly interested in science and nature.",
     "whatElseUcanDoWithASpoonOtherThanEat": "4",
-    "whatElseUcanDoWithASpoonOtherThanEatNotes": "Came up with creative uses including pretend microphone, stirring tool, and digging implement.",
     "howShareCookiesBetweenFriends": "5",
-    "howShareCookiesBetweenFriendsNotes": "Suggests fair sharing method, breaking cookies in half to ensure everyone gets equal portions.",
     "puzzleActivity": "4",
-    "puzzleActivityNotes": "Completes puzzle with minimal assistance, shows good spatial reasoning and patience.",
     "tableInteraction": "4",
-    "tableInteractionNotes": "Engages well with others, participates in group activities and shows good communication skills.",
     "drawSomethingYouInvent": "4",
-    "drawSomethingYouInventNotes": "Creates imaginative drawing with labels and explains purpose clearly.",
     "doYouLikeLearnByListening": "I like learning by doing things with my hands, but also listening to stories helps me understand better.",
     "canYouSortShapesByColor": "5",
-    "canYouSortShapesByColorNotes": "Successfully sorts by both color and size, demonstrating strong logical categorization skills.",
     "canYouTeachMeDrawMummy": "4",
-    "canYouTeachMeDrawMummyNotes": "Provides several clear steps with enthusiasm, explaining how to draw different parts.",
     "doYouLikePlayingWithFriends": "5",
-    "doYouLikePlayingWithFriendsNotes": "Expresses strong preference for collaborative play and describes enjoyment of teamwork.",
     "parentalInterferenceFlagged": false,
-    "parentalInterferenceNotes": "",
     "totalScore": "58",
     "observerName": "Sample Observer",
     "assessmentDate": "2024-01-15",
@@ -37,46 +23,26 @@
   },
   "ks2Interview": {
     "somethingAlwaysWantedToLearn": "4",
-    "somethingAlwaysWantedToLearnNotes": "Expresses interest in learning coding and robotics, with clear reasons for curiosity.",
     "fiveThingsWithPaperclip": "5",
-    "fiveThingsWithPaperclipNotes": "Provides highly creative answers including bookmark, hook, wire, spring, and art tool.",
     "finishSchoolworkEarly": "5",
-    "finishSchoolworkEarlyNotes": "Actively seeks additional challenges and offers to help classmates when finished early.",
     "logicChallenge": "4",
-    "logicChallengeNotes": "Shows strong focus and engagement with pattern matching tasks, completes with minimal guidance.",
     "somethingHard": "5",
-    "somethingHardNotes": "Expresses positive attitude toward challenges, says 'I like hard things because they make me smarter'.",
     "answerIsWrong": "5",
-    "answerIsWrongNotes": "Responds calmly to corrections, views mistakes as learning opportunities.",
     "favouriteThingOnComputer": "4",
-    "favouriteThingOnComputerNotes": "Enjoys creating digital art and learning through educational games.",
     "likeWorkingWithOthers": "5",
-    "likeWorkingWithOthersNotes": "Enthusiastic about collaboration, explains how teamwork helps solve problems faster.",
     "drawMachineInvention": "5",
-    "drawMachineInventionNotes": "Creates detailed invention drawing with labels and explains how it would help people.",
     "confidenceTryingNewThings": "5",
-    "confidenceTryingNewThingsNotes": "Shows high confidence and excitement when encountering new activities.",
     "helpedSomeoneLearn": "4",
-    "helpedSomeoneLearnNotes": "Describes clear example of helping a classmate understand math concepts.",
     "magicWandMakesSmarter": "5",
-    "magicWandMakesSmarterNotes": "Suggests using magic wand to help everyone learn, showing thoughtful and ethical thinking.",
     "explainInternetToPast": "4",
-    "explainInternetToPastNotes": "Uses clear analogies comparing internet to library and mail system.",
     "inChargeOfWorld": "5",
-    "inChargeOfWorldNotes": "Proposes thoughtful changes focused on helping others and protecting environment.",
     "threeThingsGoodAt": "5",
-    "threeThingsGoodAtNotes": "Lists three strengths with clear examples and demonstrates good self-awareness.",
     "somethingGetBetterAt": "5",
-    "somethingGetBetterAtNotes": "Identifies area for improvement with clear motivation and plan.",
     "inventJobDoesntExist": "5",
-    "inventJobDoesntExistNotes": "Creates original job idea that solves real-world problem with clear purpose.",
     "learningPreference": "I prefer learning by doing hands-on activities, but I also like watching videos to understand concepts better.",
     "digitalTasks": "5",
-    "digitalTasksNotes": "Completes digital tasks quickly and confidently, shows curiosity about advanced features.",
     "playingWithFriends": "5",
-    "playingWithFriendsNotes": "Values collaboration and describes how playing with friends enhances learning.",
     "parentalInterferenceFlagged": false,
-    "parentalInterferenceNotes": "",
     "totalScore": "88",
     "observerName": "Sample Observer",
     "assessmentDate": "2024-01-15",
@@ -181,7 +147,9 @@
     "initialLearningStyleImpressions": "Child appears to be a multimodal learner with strengths in verbal-linguistic and logical-mathematical learning. Shows preference for hands-on, experiential learning. Benefits from visual and auditory input. Learns well through discussion and collaboration.",
     "earlyFlagsNeedsFollowUp": "No significant flags identified. Child presents as well-adjusted with strong learning potential. Minor observation: slight perfectionism tendencies, which are currently well-managed but worth monitoring.",
     "selfDirectedVsSeekingGuidance": "Child shows good balance between self-direction and seeking guidance. Comfortable exploring independently but knows when to ask for help. Shows good judgment about when to persist versus when to seek assistance.",
-   "flagIndicators": ["E"],
+    "flagIndicators": [
+      "E"
+    ],
     "additionalNotes": "Overall, this child demonstrates exceptional learning potential and strong alignment with academy's learning model. Shows curiosity, creativity, collaboration, and emotional intelligence. Would be an excellent fit for the program. Strong family support evident.",
     "preferredZone": "Zone B (Design a Planet) - Child showed highest engagement and creativity in this zone, spending extended time and creating detailed, imaginative work.",
     "initialBehaviour": "Child entered the space with curiosity and confidence. Looked around to understand the environment, then immediately began exploring available materials. Showed appropriate caution mixed with eagerness.",
@@ -446,22 +414,38 @@
     "examiner": "Dr. Sarah Johnson",
     "zoneATimeSpent": "15 minutes",
     "zoneASelfDirected": "Yes",
-    "zoneAObservations": ["High engagement", "Creative problem-solving", "Good spatial reasoning"],
+    "zoneAObservations": [
+      "High engagement",
+      "Creative problem-solving",
+      "Good spatial reasoning"
+    ],
     "zoneAEngagementLevel": "High",
     "zoneAKeyBehavioursNotes": "Child showed strong interest in building activities, demonstrated good problem-solving skills and spatial reasoning. Engaged independently with materials.",
     "zoneBTimeSpent": "20 minutes",
     "zoneBSelfDirected": "Yes",
-    "zoneBObservations": ["Exceptional creativity", "Rich storytelling", "Strong language skills"],
+    "zoneBObservations": [
+      "Exceptional creativity",
+      "Rich storytelling",
+      "Strong language skills"
+    ],
     "zoneBEngagementLevel": "Very High",
     "zoneBKeyBehavioursNotes": "Child showed exceptional creativity in planet design activity. Created detailed narrative with rich vocabulary. Strong storytelling and language skills evident.",
     "zoneCTimeSpent": "10 minutes",
     "zoneCSelfDirected": "Somewhat",
-    "zoneCObservations": ["Initial hesitation", "Good sensory awareness", "Appropriate regulation"],
+    "zoneCObservations": [
+      "Initial hesitation",
+      "Good sensory awareness",
+      "Appropriate regulation"
+    ],
     "zoneCEngagementLevel": "Moderate",
     "zoneCKeyBehavioursNotes": "Child showed some initial hesitation with sensory materials but engaged appropriately once comfortable. Demonstrated good sensory awareness and emotional regulation.",
     "zoneDTimeSpent": "12 minutes",
     "zoneDSelfDirected": "Yes",
-    "zoneDObservations": ["Strong logic skills", "Good persistence", "Strategic thinking"],
+    "zoneDObservations": [
+      "Strong logic skills",
+      "Good persistence",
+      "Strategic thinking"
+    ],
     "zoneDEngagementLevel": "High",
     "zoneDKeyBehavioursNotes": "Child demonstrated strong logical thinking and strategic problem-solving. Showed persistence when challenged and managed frustration well.",
     "selfRegulationObserved": "Strong",
@@ -474,27 +458,61 @@
     "emotionalRegulationBehaviourNotes": "Child showed good emotional regulation throughout. Expressed emotions appropriately and used coping strategies when needed.",
     "confidenceAutonomyObserved": "Strong",
     "confidenceAutonomyBehaviourNotes": "Child demonstrated strong confidence and autonomy. Comfortable making choices and trying new activities independently.",
-    "linguisticEvidence": ["Strong", "Rich vocabulary", "Excellent storytelling"],
+    "linguisticEvidence": [
+      "Strong",
+      "Rich vocabulary",
+      "Excellent storytelling"
+    ],
     "linguisticSupportingObservation": "Child demonstrated exceptional linguistic intelligence through rich vocabulary, clear articulation, and strong storytelling abilities.",
-    "logicalMathematicalEvidence": ["Strong", "Pattern recognition", "Strategic thinking"],
+    "logicalMathematicalEvidence": [
+      "Strong",
+      "Pattern recognition",
+      "Strategic thinking"
+    ],
     "logicalMathematicalSupportingObservation": "Strong logical-mathematical intelligence evident through excellent problem-solving, pattern recognition, and strategic thinking.",
-    "spatialEvidence": ["Moderate", "Good visualization"],
+    "spatialEvidence": [
+      "Moderate",
+      "Good visualization"
+    ],
     "spatialSupportingObservation": "Good spatial reasoning demonstrated in building activities. Able to visualize and manipulate objects mentally.",
-    "bodilyKinestheticEvidence": ["Moderate", "Hands-on engagement"],
+    "bodilyKinestheticEvidence": [
+      "Moderate",
+      "Hands-on engagement"
+    ],
     "bodilyKinestheticSupportingObservation": "Shows good coordination and enjoys hands-on activities. Engages well with building and construction tasks.",
-    "musicalEvidence": ["Not observed"],
+    "musicalEvidence": [
+      "Not observed"
+    ],
     "musicalSupportingObservation": "",
-    "existentialEvidence": ["Not observed"],
+    "existentialEvidence": [
+      "Not observed"
+    ],
     "existentialSupportingObservation": "",
-    "interpersonalEvidence": ["Strong", "High empathy", "Collaborative"],
+    "interpersonalEvidence": [
+      "Strong",
+      "High empathy",
+      "Collaborative"
+    ],
     "interpersonalSupportingObservation": "Strong interpersonal intelligence - excellent social skills, high empathy, and ability to work collaboratively.",
-    "intrapersonalEvidence": ["Moderate", "Self-awareness"],
+    "intrapersonalEvidence": [
+      "Moderate",
+      "Self-awareness"
+    ],
     "intrapersonalSupportingObservation": "Shows good self-awareness and reflection. Comfortable with some independent work but also enjoys social interaction.",
-    "naturalisticEvidence": ["Moderate", "Nature interest"],
+    "naturalisticEvidence": [
+      "Moderate",
+      "Nature interest"
+    ],
     "naturalisticSupportingObservation": "Shows interest in nature and natural patterns. Engaged with planet design activity which incorporated natural elements.",
-    "parentProximity": ["Distant"],
-    "parentInterventionLevel": ["Low"],
-    "parentInterventionStyle": ["Supportive"],
+    "parentProximity": [
+      "Distant"
+    ],
+    "parentInterventionLevel": [
+      "Low"
+    ],
+    "parentInterventionStyle": [
+      "Supportive"
+    ],
     "childIndependenceLevel": "Child demonstrated high level of independence. Comfortably explored activities without seeking constant parental reassurance.",
     "childEmotionalPresentationWithParent": "Child appeared calm, engaged, and positive throughout observation. Showed appropriate emotional responses to activities.",
     "childIndependenceWhenParentEngaged": "Child maintained independence even when parent was engaged in conversation. Did not seek to interrupt or draw attention.",
@@ -504,7 +522,9 @@
     "initialLearningStyleImpressions": "Multimodal learner with strengths in verbal-linguistic and logical-mathematical learning. Shows preference for hands-on, experiential learning.",
     "earlyFlagsNeedsFollowUp": "No significant flags identified. Child presents as well-adjusted with strong learning potential.",
     "selfDirectedVsSeekingGuidance": "Good balance between self-direction and seeking guidance. Comfortable exploring independently but knows when to ask for help.",
-    "flagIndicators": ["E"],
+    "flagIndicators": [
+      "E"
+    ],
     "additionalNotesObservations": "Overall, child demonstrates exceptional learning potential and strong alignment with academy's learning model. Shows curiosity, creativity, collaboration, and emotional intelligence. Would be an excellent fit for the program."
   },
   "parentChildDynamicObservation": {
@@ -609,4 +629,3 @@
     "loggedBy": "Admin User"
   }
 }
-

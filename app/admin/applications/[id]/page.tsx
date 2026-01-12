@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { apiService } from "@/app/utils";
-import OdooLoginModal from "@/app/components/OdooLoginModal";
+import AlsLoginModal from "@/app/components/AlsLoginModal";
 import toast from "react-hot-toast";
 
 // Stage 3 Dropdown Component
@@ -570,11 +570,11 @@ export default function AdminApplicationDetailPage() {
   const [data, setData] = useState<AppDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showOdooModal, setShowOdooModal] = useState(false);
+  const [showAlsModal, setShowAlsModal] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [rejecting, setRejecting] = useState(false);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
-  const [isOdooLoggedIn, setIsOdooLoggedIn] = useState(false);
+  const [isAlsLoggedIn, setIsAlsLoggedIn] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -592,18 +592,18 @@ export default function AdminApplicationDetailPage() {
     })();
   }, [params.id]);
 
-  // Check Odoo login status
+  // Check ALS login status
   useEffect(() => {
-    const checkOdooLoginStatus = () => {
-      const odooToken = typeof window !== 'undefined' ? localStorage.getItem("odooToken") : null;
-      setIsOdooLoggedIn(!!odooToken);
+    const checkAlsLoginStatus = () => {
+      const alsToken = typeof window !== 'undefined' ? localStorage.getItem("alsToken") : null;
+      setIsAlsLoggedIn(!!alsToken);
     };
 
-    checkOdooLoginStatus();
+    checkAlsLoginStatus();
     // Also check when storage changes (e.g., after login)
     if (typeof window !== 'undefined') {
-      window.addEventListener("storage", checkOdooLoginStatus);
-      return () => window.removeEventListener("storage", checkOdooLoginStatus);
+      window.addEventListener("storage", checkAlsLoginStatus);
+      return () => window.removeEventListener("storage", checkAlsLoginStatus);
     }
   }, []);
 
@@ -640,52 +640,6 @@ export default function AdminApplicationDetailPage() {
     "9. Understanding The Parent", 
     "10. UTL Comprehensive Profile Sheet",  
   ];
-
-  // Handle Odoo logout
-  const handleOdooLogout = async (suppressToast: boolean = false) => {
-    try {
-      const odooToken = typeof window !== 'undefined' ? localStorage.getItem("odooToken") : null;
-      
-      if (odooToken) {
-        await apiService.post("/api/odoo/logout", {
-          sessionToken: odooToken,
-        });
-      }
-
-      // Clear local storage
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem("odooToken");
-        localStorage.removeItem("odooSession");
-      }
-      setIsOdooLoggedIn(false);
-      
-      if (!suppressToast) {
-        toast.success("Successfully logged out from Odoo!", {
-          style: {
-            background: "#3b82f6",
-            color: "#fff",
-          },
-        });
-      }
-    } catch (error: any) {
-      console.error("Odoo logout error:", error);
-      // Still clear local storage even if API call fails
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem("odooToken");
-        localStorage.removeItem("odooSession");
-      }
-      setIsOdooLoggedIn(false);
-      
-      if (!suppressToast) {
-        toast.success("Logged out from Odoo", {
-          style: {
-            background: "#3b82f6",
-            color: "#fff",
-          },
-        });
-      }
-    }
-  };
 
   // Helper function to map relation to child ID
   const mapRelationToChildId = (relation: string | null): number => {
@@ -735,26 +689,26 @@ export default function AdminApplicationDetailPage() {
       return String(parsedDate.getFullYear()); // Return just the year as string
     }
     
-    // If it's not a valid year/date, return null to avoid Odoo errors
+    // If it's not a valid year/date, return null
     return null;
   };
 
-  // Handle syncing application to Odoo - calls API directly
-  const handleSyncToOdoo = async (suppressToast: boolean = false): Promise<boolean> => {
+  // Handle syncing application to ALS - calls API directly
+  const handleSyncToAls = async (suppressToast: boolean = false): Promise<boolean> => {
     if (!data) return false;
 
     // Get the login-generated token from localStorage
-    const sessionSid = typeof window !== 'undefined' ? localStorage.getItem('odooToken') : null;
-    if (!sessionSid) {
-      toast.error("Please login to Odoo first");
-      setShowOdooModal(true);
+    const token = typeof window !== 'undefined' ? localStorage.getItem('alsToken') : null;
+    if (!token) {
+      toast.error("Please login to ALS first");
+      setShowAlsModal(true);
       return false;
     }
 
     try {
       setSyncing(true);
       
-      // Format data for Odoo
+      // Format data for ALS
       const parent = {
         full_name: data.parentFullName || "",
         email: data.parentEmail || "",
@@ -776,27 +730,27 @@ export default function AdminApplicationDetailPage() {
       };
 
       // Use apiService to call the backend proxy endpoint
-      const response = await apiService.post("/api/odoo/admission/create", {
-        sessionSid,
+      const response = await apiService.post("/api/als/admission/create", {
+        token,
         parent,
         student,
-        // Pass the Alpha application ID so Odoo can store it as temp_student
+        // Pass the Alpha application ID
         applicationId: data.id,
       });
 
       if (response.success && response.data) {
         if (!suppressToast) {
-          toast.success("Application synced to Odoo successfully!", {
-            style: {
-              background: "#10b981",
-              color: "#fff",
-            },
-          });
+          // toast.success("Application synced to ALS successfully!", {
+          //   style: {
+          //     background: "#10b981",
+          //     color: "#fff",
+          //   },
+          // });
         }
         return true;
       } else {
-        const errorMsg = response.message || "Failed to create admission in Odoo";
-        console.error("Odoo sync failed:", response);
+        const errorMsg = response.message || "Failed to create admission in ALS";
+        console.error("ALS sync failed:", response);
         toast.error(errorMsg, {
           style: {
             background: "#ef4444",
@@ -807,8 +761,8 @@ export default function AdminApplicationDetailPage() {
       }
     } catch (error: any) {
       // apiService throws errors with message property
-      const errorMsg = error.message || "Failed to sync to Odoo";
-      console.error("Odoo sync error:", error);
+      const errorMsg = error.message || "Failed to sync to ALS";
+      console.error("ALS sync error:", error);
       toast.error(errorMsg, {
         style: {
           background: "#ef4444",
@@ -821,27 +775,27 @@ export default function AdminApplicationDetailPage() {
     }
   };
 
-  // Handle Odoo login success - automatically sync after login, then logout
-  const handleOdooLoginSuccess = async () => {
+  // Handle ALS login success - automatically sync after login
+  const handleAlsLoginSuccess = async () => {
     // Update login status after successful login
-    setIsOdooLoggedIn(true);
+    setIsAlsLoggedIn(true);
     
     // Step 1: Show login success (blue/info)
-    toast("✅ Successfully logged in to Odoo!", {
-      icon: "🔵",
-      style: {
-        background: "#3b82f6",
-        color: "#fff",
-      },
-      duration: 2000,
-    });
+    // toast("✅ Successfully logged in to ALS!", {
+    //   icon: "🔵",
+    //   style: {
+    //     background: "#3b82f6",
+    //     color: "#fff",
+    //   },
+    //   duration: 2000,
+    // });
     
     if (data) {
       // Wait 1.5 seconds before starting sync
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Step 2: Show syncing message (yellow/loading)
-      toast.loading("⏳ Syncing application to Odoo...", { 
+      toast.loading("⏳ Syncing application to ALS...", { 
         id: "syncing",
         style: {
           background: "#f59e0b",
@@ -852,7 +806,7 @@ export default function AdminApplicationDetailPage() {
       // Wait 1 second before actually syncing (for visual effect)
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      const syncSuccess = await handleSyncToOdoo(true); // suppressToast = true
+      const syncSuccess = await handleSyncToAls(true); // suppressToast = true
       
       if (syncSuccess) {
         // Dismiss loading toast
@@ -869,39 +823,47 @@ export default function AdminApplicationDetailPage() {
           },
           duration: 2000,
         });
-        
-        // Wait 2 seconds before showing logout message
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // Step 4: Show logout message (blue/info)
-        toast("🔄 Logging out from Odoo...", {
-          icon: "🔵",
+      } else {
+        toast.dismiss("syncing");
+        // Let user try again if sync failed
+      }
+    }
+  };
+
+  // Handle ALS logout
+  const handleAlsLogout = async (suppressToast: boolean = false) => {
+    try {
+      // Clear local storage
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem("alsToken");
+        localStorage.removeItem("alsSession");
+      }
+      setIsAlsLoggedIn(false);
+      
+      if (!suppressToast) {
+        // toast.success("Successfully logged out from ALS!", {
+        //   style: {
+        //     background: "#3b82f6",
+        //     color: "#fff",
+        //   },
+        // });
+      }
+    } catch (error: any) {
+      console.error("ALS logout error:", error);
+      // Still clear local storage even if there's an error
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem("alsToken");
+        localStorage.removeItem("alsSession");
+      }
+      setIsAlsLoggedIn(false);
+      
+      if (!suppressToast) {
+        toast.success("Logged out from ALS", {
           style: {
             background: "#3b82f6",
             color: "#fff",
           },
-          duration: 2000,
         });
-        
-              // Wait 1.5 seconds before actually logging out
-              await new Promise(resolve => setTimeout(resolve, 1500));
-              
-              await handleOdooLogout(true); // suppressToast = true
-        
-        // Wait 0.5 seconds
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // Step 5: Show final success (green)
-        toast.success("🎉 Process completed successfully!", {
-          style: {
-            background: "#10b981",
-            color: "#fff",
-          },
-          duration: 3000,
-        });
-      } else {
-        toast.dismiss("syncing");
-        // Don't logout if sync failed - let user try again
       }
     }
   };
@@ -1008,13 +970,13 @@ export default function AdminApplicationDetailPage() {
                 )}
               </div>
               
-              {/* Odoo Approve/Logout/Sync Buttons */}
+              {/* ALS Approve/Logout/Sync Buttons */}
               {allFormsCompleted && data.status === 'completed'  && (
                 <div className="space-y-2">
-                  {isOdooLoggedIn ? (
+                  {isAlsLoggedIn ? (
                     <>
                       <button
-                        onClick={() => handleSyncToOdoo(false)}
+                        onClick={() => handleSyncToAls(false)}
                         disabled={syncing}
                         className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center justify-center gap-2 text-sm disabled:opacity-50"
                       >
@@ -1031,10 +993,10 @@ export default function AdminApplicationDetailPage() {
                             d="M13 10V3L4 14h7v7l9-11h-7z"
                           />
                         </svg>
-                        {syncing ? "Syncing..." : "Sync to Odoo"}
+                        {syncing ? "Syncing..." : "Sync to ALS"}
                       </button>
                       <button
-                        onClick={() => handleOdooLogout(false)}
+                        onClick={() => handleAlsLogout(false)}
                         className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium flex items-center justify-center gap-2 text-sm"
                       >
                         <svg
@@ -1050,12 +1012,12 @@ export default function AdminApplicationDetailPage() {
                             d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                           />
                         </svg>
-                        Logout Odoo
+                        Logout ALS
                       </button>
                     </>
                   ) : (
                     <button
-                      onClick={() => setShowOdooModal(true)}
+                      onClick={() => setShowAlsModal(true)}
                       className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2 text-sm"
                     >
                       <svg
@@ -1289,16 +1251,16 @@ export default function AdminApplicationDetailPage() {
           </div>
         </div>
 
-        {/* Odoo Login Modal */}
-        <OdooLoginModal
-          isOpen={showOdooModal}
+        {/* ALS Login Modal */}
+        <AlsLoginModal
+          isOpen={showAlsModal}
           onClose={() => {
-            setShowOdooModal(false);
+            setShowAlsModal(false);
             // Check login status after modal closes
-            const odooToken = typeof window !== 'undefined' ? localStorage.getItem("odooToken") : null;
-            setIsOdooLoggedIn(!!odooToken);
+            const alsToken = typeof window !== 'undefined' ? localStorage.getItem("alsToken") : null;
+            setIsAlsLoggedIn(!!alsToken);
           }}
-          onSuccess={handleOdooLoginSuccess}
+          onSuccess={handleAlsLoginSuccess}
         />
 
         {/* Reject Confirmation Modal */}

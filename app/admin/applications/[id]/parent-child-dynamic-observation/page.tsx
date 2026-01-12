@@ -22,7 +22,7 @@ const schema = z.object({
   childAge: z.string().min(1, "Required"),
   date: z.string().optional(),
   examiner: z.string().optional(),
-  parentPresence: z.string().optional(),
+  parentPresence: z.string().min(1, "Required"),
   
   // Joint Story Creation (10 minutes)
   sharedIdeaExchangeRating: z.string().min(1, "Required"),
@@ -529,7 +529,7 @@ export default function ParentChildDynamicObservationPage() {
             <FormField label="Examiner" htmlFor="examiner">
               <Input id="examiner" {...register("examiner" as any)} />
             </FormField>
-            <FormField label="Parent(s) Present" htmlFor="parentPresence">
+            <FormField label="Parent(s) Present" htmlFor="parentPresence" error={errors.parentPresence as any}>
               <Input
                 id="parentPresence"
                 {...register("parentPresence")}
