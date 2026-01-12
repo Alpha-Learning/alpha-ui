@@ -217,7 +217,9 @@ export default function AdminApplicationsPage() {
       setError(null);
       const params = new URLSearchParams();
       if (statusFilter) params.set('status', statusFilter);
-      if (paymentFilter) params.set('payment', paymentFilter);
+      // if (paymentFilter) params.set('payment', paymentFilter);
+      if (paymentFilter === 'paid') params.set('paid', 'true');
+if (paymentFilter === 'unpaid') params.set('paid', 'false');
       if (search.trim()) params.set('q', search.trim());
       params.set('page', String(pageIndex + 1));
       params.set('limit', String(limit));

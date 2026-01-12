@@ -97,15 +97,33 @@ export default function PaymentsPage() {
       ),
       sortable: true,
     },
-    {
-      name: "Paid At",
-      cell: (row) => (
-        <span className="text-sm text-slate-600">
-          {row.paidAt ? new Date(row.paidAt).toLocaleString() : "-"}
-        </span>
-      ),
-      sortable: true,
-    },
+{
+  name: "Paid At",
+  cell: (row) => {
+    if (!row.paidAt) return <span className="text-sm text-slate-600">-</span>;
+    
+    const date = new Date(row.paidAt);
+    
+    // Validate the date
+    if (isNaN(date.getTime())) {
+      return <span className="text-sm text-slate-600">-</span>;
+    }
+    
+    // Use LOCAL time methods (not UTC) to display in user's timezone
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    
+    return (
+      <span className="text-sm text-slate-600">
+        {`${day}/${month}/${year} ${hours}:${minutes}`}
+      </span>
+    );
+  },
+  sortable: true,
+},
     // {
     //   name: "Actions",
     //   cell: (row) => (
@@ -228,15 +246,33 @@ export default function PaymentsPage() {
         paymentAmount: paymentData.paymentAmount,
       };
       
-      if (paymentData.isPaid) {
-        if (paymentData.paidAt) {
-          payload.paidAt = new Date(paymentData.paidAt).toISOString();
-        } else {
-          payload.paidAt = new Date().toISOString();
-        }
-      } else {
-        payload.paidAt = null;
-      }
+      // if (paymentData.isPaid) {
+      //   if (paymentData.paidAt) {
+      //     payload.paidAt = new Date(paymentData.paidAt).toISOString();
+      //   } else {
+      //     payload.paidAt = new Date().toISOString();
+      //   }
+      // } 
+      
+      // else {
+      //   payload.paidAt = null;
+      // }
+
+if (paymentData.isPaid) {
+  if (paymentData.paidAt) {
+    // Create date string with time in local timezone
+    // paymentData.paidAt is in format "YYYY-MM-DD" from date input
+    const now = new Date();
+    const localDateString = `${paymentData.paidAt}T${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+    // Create date object in local timezone, then convert to ISO
+    const localDate = new Date(localDateString);
+    payload.paidAt = localDate.toISOString();
+  } else {
+    payload.paidAt = new Date().toISOString();
+  }
+} else {
+  payload.paidAt = null;
+}
 
       const res = await apiService.post(`/api/admin/payments/${modal.id}`, payload);
       if (res.success) {
