@@ -9,6 +9,7 @@ export type ApplicationWithCompletion = {
   isSeventhFormCompleted?: boolean;
   isEighthFormCompleted?: boolean;
   isNinthFormCompleted?: boolean;
+  isTenthFormCompleted?: boolean;
   isParentGuardianFormCompleted?: boolean;
   isCaregiverFormCompleted?: boolean;
   isOutsiderFormCompleted?: boolean;
@@ -23,18 +24,32 @@ export function determineApplicationStatus(application: ApplicationWithCompletio
   completedForms: string[];
   remainingForms: string[];
 } {
-  const formStatuses = [
+    const formStatuses = [
     { name: 'Screening Call', completed: application.isFirstFormCompleted },
     { name: 'Parent/Guardian Questionnaire', completed: application.isParentGuardianFormCompleted },
     { name: 'Caregiver Questionnaire', completed: application.isCaregiverFormCompleted },
     { name: 'Outsider Questionnaire', completed: application.isOutsiderFormCompleted },
     { name: 'Stage 3 Complete', completed: application.isThirdFormCompleted },
-    { name: 'Facility Walkthrough Checklist', completed: application.isFifthFormCompleted },
-    { name: 'Initial Observation Form', completed: application.isSixthFormCompleted },
-    { name: 'Guided Observations Procedure', completed: application.isSeventhFormCompleted },
-    { name: 'Initial Form', completed: application.isEighthFormCompleted },
-    { name: 'Parent-Child Dynamic Observation', completed: application.isNinthFormCompleted },
+    { name: 'Initial Observation Form', completed: application.isFourthFormCompleted },  // Form 4
+    { name: 'Guided Observations Procedure', completed: application.isFifthFormCompleted },  // Form 5 - UPDATED
+    { name: 'KS1/KS2 Interview', completed: application.isSixthFormCompleted },  // Form 6 - UPDATED
+    { name: 'Parent-Child Dynamic Observation', completed: application.isSeventhFormCompleted },  // Form 7 - UPDATED
+    { name: 'Peer Dynamic Observation', completed: application.isEighthFormCompleted },  // Form 8 - UPDATED
+    { name: 'Understanding The Parent', completed: application.isNinthFormCompleted },  // Form 9 - UPDATED
+    { name: 'UTL Comprehensive Profile Sheet', completed: application.isTenthFormCompleted },  // Form 10 - NEW
   ];
+  // const formStatuses = [
+  //   { name: 'Screening Call', completed: application.isFirstFormCompleted },
+  //   { name: 'Parent/Guardian Questionnaire', completed: application.isParentGuardianFormCompleted },
+  //   { name: 'Caregiver Questionnaire', completed: application.isCaregiverFormCompleted },
+  //   { name: 'Outsider Questionnaire', completed: application.isOutsiderFormCompleted },
+  //   { name: 'Stage 3 Complete', completed: application.isThirdFormCompleted },
+  //   { name: 'Facility Walkthrough Checklist', completed: application.isFifthFormCompleted },
+  //   { name: 'Initial Observation Form', completed: application.isSixthFormCompleted },
+  //   { name: 'Guided Observations Procedure', completed: application.isSeventhFormCompleted },
+  //   { name: 'Initial Form', completed: application.isEighthFormCompleted },
+  //   { name: 'Parent-Child Dynamic Observation', completed: application.isNinthFormCompleted },
+  // ];
 
   const completedForms = formStatuses.filter(f => f.completed).map(f => f.name);
   const remainingForms = formStatuses.filter(f => !f.completed).map(f => f.name);
@@ -76,6 +91,7 @@ export async function updateApplicationStatus(applicationId: string, prisma: any
       isSeventhFormCompleted: true,
       isEighthFormCompleted: true,
       isNinthFormCompleted: true,
+      isTenthFormCompleted: true,
       isParentGuardianFormCompleted: true,
       isCaregiverFormCompleted: true,
       isOutsiderFormCompleted: true,

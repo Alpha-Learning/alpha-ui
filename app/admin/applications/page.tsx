@@ -28,6 +28,7 @@ type AdminApp = {
   isSeventhFormCompleted?: boolean;
   isEighthFormCompleted?: boolean;
   isNinthFormCompleted?: boolean;
+    isTenthFormCompleted?: boolean; 
   // Individual questionnaire completion flags
   isParentGuardianFormCompleted?: boolean;
   isCaregiverFormCompleted?: boolean;

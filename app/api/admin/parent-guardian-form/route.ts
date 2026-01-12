@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: questionnaire,
-      message: "Parent/Guardian questionnaire saved successfully",
+     // message: "Parent/Guardian questionnaire saved successfully",
     });
   } catch (error: any) {
     console.error("Error saving parent/guardian questionnaire:", error);

@@ -373,8 +373,10 @@ export async function POST(request: NextRequest) {
     await prisma.application.update({ 
       where: { id: applicationId }, 
       data: { 
-        currentStage: 9,
-        isNinthFormCompleted: true
+        // currentStage: 9,
+        // isNinthFormCompleted: true
+         currentStage: 10,
+         isTenthFormCompleted: true 
       } 
     });
 

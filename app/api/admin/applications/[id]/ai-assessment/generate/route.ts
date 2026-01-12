@@ -244,7 +244,7 @@ async function collectAllFormData(applicationId: string) {
       content += `\n`;
     }
 
-    // Parent-Child Dynamic Observation (Form 6)
+    // Parent-Child Dynamic Observation (Form 7)
     if (application.parentChildDynamicObservation) {
       const pcd = application.parentChildDynamicObservation;
       content += `--- PARENT-CHILD DYNAMIC OBSERVATION ---\n`;
@@ -256,7 +256,7 @@ async function collectAllFormData(applicationId: string) {
       content += `\n`;
     }
 
-    // Peer Dynamic Observation (Form 7/8)
+    // Peer Dynamic Observation (Form 8)
     if (application.peerDynamicObservation) {
       const pdo = application.peerDynamicObservation;
       content += `--- PEER DYNAMIC OBSERVATION ---\n`;
@@ -315,11 +315,17 @@ export async function POST(
         isSecondFormCompleted: true,
         isThirdFormCompleted: true,
         isFourthFormCompleted: true,
-        isFifthFormCompleted: true,
-        isSixthFormCompleted: true,
-        isSeventhFormCompleted: true,
-        isEighthFormCompleted: true,
-        isNinthFormCompleted: true,
+         isFifthFormCompleted: true,  // NEW - Form 5
+        isSixthFormCompleted: true,  // UPDATED - Form 6
+        isSeventhFormCompleted: true,  // UPDATED - Form 7
+        isEighthFormCompleted: true,  // UPDATED - Form 8
+        isNinthFormCompleted: true,  // UPDATED - Form 9
+        isTenthFormCompleted: true,  // NEW - Form 10
+        // isFifthFormCompleted: true,
+        // isSixthFormCompleted: true,
+        // isSeventhFormCompleted: true,
+        // isEighthFormCompleted: true,
+        // isNinthFormCompleted: true,
         childFullName: true,
         childAge: true,
         parentFullName: true,
@@ -336,17 +342,23 @@ export async function POST(
       application.isSecondFormCompleted,
       application.isThirdFormCompleted,
       application.isFourthFormCompleted,
-      application.isFifthFormCompleted,
-      application.isSixthFormCompleted,
-      application.isSeventhFormCompleted,
-      application.isEighthFormCompleted,
-      application.isNinthFormCompleted,
+      // application.isFifthFormCompleted,
+      // application.isSixthFormCompleted,
+      // application.isSeventhFormCompleted,
+      // application.isEighthFormCompleted,
+      // application.isNinthFormCompleted,
+        application.isFifthFormCompleted,  // NEW
+      application.isSixthFormCompleted,  // UPDATED
+      application.isSeventhFormCompleted,  // UPDATED
+      application.isEighthFormCompleted,  // UPDATED
+      application.isNinthFormCompleted,  // UPDATED
+      application.isTenthFormCompleted,  // NEW
     ].every(Boolean);
 
     if (!allCompleted) {
       return NextResponse.json({ 
         success: false, 
-        message: 'All 9 forms must be completed before generating AI Assessment' 
+        message: 'All 10 forms must be completed before generating AI Assessment' 
       }, { status: 400 });
     }
 

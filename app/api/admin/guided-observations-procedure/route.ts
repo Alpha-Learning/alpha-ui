@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/db";
 import { updateApplicationStatus } from "@/app/utils/applicationStatus";
 
+
 export async function POST(request: NextRequest) {
   try {
     // Guard: if Prisma model not generated yet (migration not run)
@@ -103,7 +104,8 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!applicationId || !childName || !age || !date || !examiner) {
+    // if (!applicationId || !childName || !age || !date || !examiner) {
+     if (!isDraft && (!applicationId || !childName || !age || !date || !examiner)) {
       return NextResponse.json(
         { success: false, message: "Missing required fields" },
         { status: 400 }
@@ -334,8 +336,9 @@ export async function POST(request: NextRequest) {
     await prisma.application.update({
       where: { id: applicationId },
       data: { 
+        isFifthFormCompleted: true
         // currentStage: 5,
-        isFifthFormCompleted: isStage5Complete
+        // isFifthFormCompleted: isStage5Complete
       }
     });
 
@@ -345,7 +348,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: observation,
-      message: "Guided observation data saved successfully and application stage updated",
+      //message: "Guided observation data saved successfully and application stage updated",
     });
   } catch (error: any) {
     console.error("Error saving guided observation:", error);

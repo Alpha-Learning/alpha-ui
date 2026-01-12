@@ -199,7 +199,7 @@ export async function POST(request: NextRequest) {
       success: true,
       data: screeningCall,
       message: isDraft 
-        ? "Draft saved successfully" 
+        ? "" 
         : "Screening call data saved successfully, application stage updated, and payment email sent",
     });
   } catch (error: any) {
