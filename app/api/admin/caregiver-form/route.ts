@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: questionnaire,
-      message: "Caregiver questionnaire saved successfully",
+      //message: "Caregiver questionnaire saved successfully",
     });
   } catch (error: any) {
     console.error("Error saving caregiver questionnaire:", error);

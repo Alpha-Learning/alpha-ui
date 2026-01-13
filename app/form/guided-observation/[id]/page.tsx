@@ -108,27 +108,34 @@ export default function GuidedObservationsProcedurePage() {
     params.id as string
   );
 
-useAutoSave(watch, {
-  saveEndpoint: '/api/admin/guided-observations-procedure',
-  applicationId: params.id as string,
-  debounceMs: 2000,
-  intervalMs: 30000,
-  transformData: (data) => {
-    return {
-      ...data,
-      zoneAScore: data.zoneAScore ? parseInt(data.zoneAScore) : null,
-      zoneBScore: data.zoneBScore ? parseInt(data.zoneBScore) : null,
-      zoneCScore: data.zoneCScore ? parseInt(data.zoneCScore) : null,
-      zoneDScore: data.zoneDScore ? parseInt(data.zoneDScore) : null,
-      metaCuriosityScore: data.metaCuriosityScore ? parseInt(data.metaCuriosityScore) : null,
-      metaSelfRegulationScore: data.metaSelfRegulationScore ? parseInt(data.metaSelfRegulationScore) : null,
-      metaConfidenceScore: data.metaConfidenceScore ? parseInt(data.metaConfidenceScore) : null,
-      metaCollaborationScore: data.metaCollaborationScore ? parseInt(data.metaCollaborationScore) : null,
-      metaEmotionalAwarenessScore: data.metaEmotionalAwarenessScore ? parseInt(data.metaEmotionalAwarenessScore) : null,
-      flagIndicators: data.flagIndicators && Array.isArray(data.flagIndicators) && data.flagIndicators.length > 0 ? data.flagIndicators.join(',') : '',
-    };
-  },
-});
+  useAutoSave(watch, {
+    saveEndpoint: '/api/admin/guided-observations-procedure',
+    applicationId: params.id as string,
+    debounceMs: 2000,
+    intervalMs: 30000,
+    enabled: true,  // ADD: Explicit enabled flag
+    transformData: (data: GuidedObservationFormData) => {
+      // Check if required fields are present before transforming
+      // If required fields are missing, return null to skip save
+      if (!data.childName || !data.age || !data.date || !data.examiner) {
+        return null;  // Skip save if required fields are missing
+      }
+      
+      return {
+        ...data,
+        zoneAScore: data.zoneAScore ? parseInt(data.zoneAScore) : null,
+        zoneBScore: data.zoneBScore ? parseInt(data.zoneBScore) : null,
+        zoneCScore: data.zoneCScore ? parseInt(data.zoneCScore) : null,
+        zoneDScore: data.zoneDScore ? parseInt(data.zoneDScore) : null,
+        metaCuriosityScore: data.metaCuriosityScore ? parseInt(data.metaCuriosityScore) : null,
+        metaSelfRegulationScore: data.metaSelfRegulationScore ? parseInt(data.metaSelfRegulationScore) : null,
+        metaConfidenceScore: data.metaConfidenceScore ? parseInt(data.metaConfidenceScore) : null,
+        metaCollaborationScore: data.metaCollaborationScore ? parseInt(data.metaCollaborationScore) : null,
+        metaEmotionalAwarenessScore: data.metaEmotionalAwarenessScore ? parseInt(data.metaEmotionalAwarenessScore) : null,
+        flagIndicators: data.flagIndicators && Array.isArray(data.flagIndicators) && data.flagIndicators.length > 0 ? data.flagIndicators.join(',') : '',
+      };
+    },
+  });
 
   useEffect(() => { 
     loadGuidedObservationData();

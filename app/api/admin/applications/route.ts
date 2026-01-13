@@ -26,7 +26,9 @@ export async function GET(req: Request) {
       where.status = { not: "rejected" };
     }
     if (status) where.status = status;
+    // if (paid === 'true') where.isPaid = true;
     if (paid === 'true') where.isPaid = true;
+if (paid === 'false') where.isPaid = false;
     if (q) {
       const query = q.toLowerCase();
       where.OR = [
@@ -46,7 +48,8 @@ export async function GET(req: Request) {
       }),
       prisma.application.count({ where }),
     ]);
-    const total = await prisma.application.count();
+    //const total = await prisma.application.count();
+    const total = totalCount;
 
     return NextResponse.json({
       success: true,

@@ -65,6 +65,7 @@ export async function GET(req: Request) {
         isSeventhFormCompleted: true,
         isEighthFormCompleted: true,
         isNinthFormCompleted: true,
+         isTenthFormCompleted: true,
         isPaid: true,
         paymentAmount: true,
         paidAt: true,
@@ -82,6 +83,7 @@ export async function GET(req: Request) {
       latestApplication.isSeventhFormCompleted,
       latestApplication.isEighthFormCompleted,
       latestApplication.isNinthFormCompleted,
+       latestApplication.isTenthFormCompleted,
     ].every(Boolean) : false;
 
     return NextResponse.json({

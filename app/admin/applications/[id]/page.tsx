@@ -418,11 +418,11 @@ function Stage7Dropdown({ applicationId, isCompleted, stageTitle, childAge, isAr
   }
   
   // Always include Guided Observation Procedure
-  forms.push({
-    name: "Guided Observation Procedure",
-    url: `${baseUrl}/form/guided-observation/${applicationId}`,
-    color: "purple"
-  });
+  // forms.push({
+  //   name: "Guided Observation Procedure",
+  //   url: `${baseUrl}/form/guided-observation/${applicationId}`,
+  //   color: "purple"
+  // });
 
   const copyToClipboard = async (url: string, formName: string) => {
      if (isArchived) return;
@@ -558,6 +558,7 @@ type AppDetail = {
   isSeventhFormCompleted?: boolean;
   isEighthFormCompleted?: boolean;
   isNinthFormCompleted?: boolean;
+   isTenthFormCompleted?: boolean; 
   // Individual questionnaire completion flags
   isParentGuardianFormCompleted?: boolean;
   isCaregiverFormCompleted?: boolean;
@@ -611,31 +612,33 @@ export default function AdminApplicationDetailPage() {
   if (!data) return null;
 
   // Calculate completion based on individual form completion fields
-  const completionFields = [
-    data.isFirstFormCompleted,
-    data.isSecondFormCompleted,
-    data.isThirdFormCompleted,
-    data.isFourthFormCompleted,
-    data.isFifthFormCompleted,
-    data.isSixthFormCompleted,
-    data.isSeventhFormCompleted,
-    data.isEighthFormCompleted,
-    data.isNinthFormCompleted,
+ const completionFields = [
+    data.isFirstFormCompleted,      // Form 1
+    data.isSecondFormCompleted,      // Form 2
+    data.isThirdFormCompleted,       // Form 3
+    data.isFourthFormCompleted,      // Form 4: Initial Observation
+    data.isFifthFormCompleted,       // Form 5: Guided Observation Procedure - NEW
+    data.isSixthFormCompleted,       // Form 6: KS1/KS2 Interview - UPDATED
+    data.isSeventhFormCompleted,     // Form 7: Parent-Child Dynamic Observation - UPDATED
+    data.isEighthFormCompleted,      // Form 8: Peer Dynamic Observation - UPDATED
+    data.isNinthFormCompleted,       // Form 9: Understanding The Parent - UPDATED
+    data.isTenthFormCompleted,      // Form 10: UTL Comprehensive Profile Sheet - NEW
   ];
   const completedCount = completionFields.filter(Boolean).length;
-  const pct = Math.round((completedCount / 9) * 100);
-  const allFormsCompleted = completedCount === 9;
+  const pct = Math.round((completedCount / 10) * 100);  // CHANGED from 9 to 10
+  const allFormsCompleted = completedCount === 10;  // CHANGED from 9 to 10
   
   const stageTitles = [
     "1. Application form",
     "2. Screening call and flow script",
     "3. Parent/Guardian/Outsider question",
     "4. Initial observation form",
-    "5. KS1 interview / KS2 interview / Guided Observation Procedure",
-    "6. Parent-Child Dynamic Observation",
-    "7. Examiner Form: Peer Dynamic Observation",
-    "8. Understanding The Parent",
-    "9. UTL Comprehensive Profile Sheet",
+   "5. Guided Observation Procedure",  
+    "6. KS1 interview / KS2 interview",  
+    "7. Parent-Child Dynamic Observation", 
+    "8. Examiner Form: Peer Dynamic Observation",  
+    "9. Understanding The Parent", 
+    "10. UTL Comprehensive Profile Sheet",  
   ];
 
   // Helper function to map relation to child ID
@@ -1087,7 +1090,7 @@ export default function AdminApplicationDetailPage() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-900">Application Progress</h2>
             <div className="text-sm text-gray-600">
-              {completedCount} of 9 stages completed
+              {completedCount} of 10 stages completed
             </div>
           </div>
           
@@ -1119,7 +1122,7 @@ export default function AdminApplicationDetailPage() {
               <div className="text-sm text-green-700">Completed</div>
             </div>
             <div className="text-center p-4 bg-yellow-50 rounded-lg">
-              <div className="text-2xl font-bold text-yellow-600">{9 - completedCount}</div>
+              <div className="text-2xl font-bold text-yellow-600">{10 - completedCount}</div>
               <div className="text-sm text-yellow-700">Remaining</div>
             </div>
             <div className="text-center p-4 bg-blue-50 rounded-lg">
@@ -1133,19 +1136,30 @@ export default function AdminApplicationDetailPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-6">Application Forms</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
-            {Array.from({ length: 9 }, (_, i) => i).map((idx) => {
+            {Array.from({ length: 10 }, (_, i) => i).map((idx) => {
               const stageNumber = idx + 1;
               const isCompleted = completionFields[idx] || false;
               const isArchived = data.status === 'rejected';
-               const hrefMap: Record<number, string> = {
-                 1: `/admin/applications/${data.id}/initial-form`,
-                 2: `/admin/applications/${data.id}/screening-call`,
-                 4: `/admin/applications/${data.id}/initial-observation-form`,
-                 6: `/admin/applications/${data.id}/parent-child-dynamic-observation`,
-                 7: `/admin/applications/${data.id}/peer-dynamic-observation`,
-                 8: `/admin/applications/${data.id}/understanding-parent`,
-                 9: `/admin/applications/${data.id}/comprehensive-profile-sheet`,
-               };
+              //  const hrefMap: Record<number, string> = {
+              //    1: `/admin/applications/${data.id}/initial-form`,
+              //    2: `/admin/applications/${data.id}/screening-call`,
+              //    4: `/admin/applications/${data.id}/initial-observation-form`,
+              //    6: `/admin/applications/${data.id}/parent-child-dynamic-observation`,
+              //    7: `/admin/applications/${data.id}/peer-dynamic-observation`,
+              //    8: `/admin/applications/${data.id}/understanding-parent`,
+              //    9: `/admin/applications/${data.id}/comprehensive-profile-sheet`,
+              //  };
+              const hrefMap: Record<number, string> = {
+    1: `/admin/applications/${data.id}/initial-form`,
+    2: `/admin/applications/${data.id}/screening-call`,
+    4: `/admin/applications/${data.id}/initial-observation-form`,
+    5: `/admin/applications/${data.id}/guided-observations-procedure`,  
+    7: `/admin/applications/${data.id}/parent-child-dynamic-observation`,  
+    8: `/admin/applications/${data.id}/peer-dynamic-observation`, 
+    9: `/admin/applications/${data.id}/understanding-parent`,  
+    10: `/admin/applications/${data.id}/comprehensive-profile-sheet`,  
+  }; 
+  
               const href = hrefMap[stageNumber];
               
               // Special handling for stage 3 with dropdown
@@ -1163,7 +1177,7 @@ export default function AdminApplicationDetailPage() {
               }
               
                // Special handling for stage 5 with dropdown (KS1/KS2 Interview)
-               if (stageNumber === 5) {
+               if (stageNumber === 6) {
                  return (
                    <Stage7Dropdown 
                      key={idx} 
@@ -1243,7 +1257,7 @@ export default function AdminApplicationDetailPage() {
               // );
             })}
             
-            {/* AI Assessment Card - Only show when all 9 forms are completed */}
+            {/* AI Assessment Card - Only show when all 10 forms are completed */}
             {/* {allFormsCompleted && ( */}
                {allFormsCompleted && data.status !== 'rejected' && (
               <AIAssessmentCard 

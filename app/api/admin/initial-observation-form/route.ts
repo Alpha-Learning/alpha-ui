@@ -298,7 +298,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: form,
-      message: "Initial observation form saved successfully",
+      //message: "Initial observation form saved successfully",
     });
   } catch (error: any) {
     console.error("Error saving initial observation form:", error);

@@ -106,8 +106,23 @@ export async function POST(request: NextRequest) {
       if (guidebookInfo !== undefined) updateData.guidebookInfo = guidebookInfo;
       if (walkthroughDate !== undefined) updateData.walkthroughDate = walkthroughDate;
       if (assessmentInvite !== undefined) updateData.assessmentInvite = assessmentInvite;
-      if (additionalNotes !== undefined) {
-        updateData.additionalNotes = additionalNotes ? new Date(additionalNotes) : null;
+      // if (additionalNotes !== undefined) {
+      //   updateData.additionalNotes = additionalNotes ? new Date(additionalNotes) : null;
+      // }
+            if (additionalNotes !== undefined) {
+        // datetime-local format is "YYYY-MM-DDTHH:mm" (local time, no timezone)
+        // Parse it as local time and store it correctly
+        if (additionalNotes && additionalNotes.trim() !== "") {
+          const localDate = new Date(additionalNotes);
+          // Check if date is valid
+          if (!isNaN(localDate.getTime())) {
+            updateData.additionalNotes = localDate;
+          } else {
+            updateData.additionalNotes = null;
+          }
+        } else {
+          updateData.additionalNotes = null;
+        }
       }
       if (loggedToSystemDate !== undefined) updateData.loggedToSystemDate = loggedToSystemDate;
       if (loggedBy !== undefined) updateData.loggedBy = loggedBy;
@@ -143,20 +158,60 @@ export async function POST(request: NextRequest) {
           guidebookInfo: guidebookInfo || false,
           walkthroughDate: walkthroughDate || "",
           assessmentInvite: assessmentInvite || false,
-          additionalNotes: additionalNotes ? new Date(additionalNotes) : null,
+         // additionalNotes: additionalNotes ? new Date(additionalNotes) : null,
+                   additionalNotes: additionalNotes && additionalNotes.trim() !== "" 
+            ? (() => {
+                // Parse datetime-local string as local time
+                const localDate = new Date(additionalNotes);
+                if (!isNaN(localDate.getTime())) {
+                  return localDate;
+                }
+                return null;
+              })()
+            : null,
           loggedToSystemDate: loggedToSystemDate || "",
           loggedBy: loggedBy || "",
         },
       });
     }
+ 
 
-    // Only update application status and send email for final submission (not for drafts)
+
+      // Only update application status and send email for final submission (not for drafts)
+    let shouldSendEmail = false;
     if (!isDraft) {
+      // Check if facility walkthrough date (additionalNotes) has changed
+      // Get the old value from database BEFORE we update it
+      const oldWalkthroughDate = existingScreeningCall?.additionalNotes 
+        ? existingScreeningCall.additionalNotes.getTime() 
+        : null;
+      
+      // Get the new value from request
+      let newWalkthroughDate: number | null = null;
+      if (additionalNotes !== undefined && additionalNotes !== null && additionalNotes.trim() !== "") {
+        const newDate = new Date(additionalNotes);
+        if (!isNaN(newDate.getTime())) {
+          newWalkthroughDate = newDate.getTime();
+        }
+      }
+      
+      // Email should be sent ONLY if:
+      // 1. The walkthrough date field was changed (additionalNotes was provided in request), AND
+      // 2. The new value is different from the old value, AND
+      // 3. The new value is not empty
+      const fieldWasChanged = additionalNotes !== undefined;
+      const valueIsDifferent = oldWalkthroughDate !== newWalkthroughDate;
+      const hasNewValue = newWalkthroughDate !== null;
+      
+      shouldSendEmail = fieldWasChanged && valueIsDifferent && hasNewValue;
+      
+      console.log(`[Email Check] Field changed: ${fieldWasChanged}, Value different: ${valueIsDifferent}, Has new value: ${hasNewValue}, Send email: ${shouldSendEmail}`);
+      console.log(`[Email Check] Old: ${oldWalkthroughDate ? new Date(oldWalkthroughDate).toISOString() : 'null'}, New: ${newWalkthroughDate ? new Date(newWalkthroughDate).toISOString() : 'null'}`);
+
       // Update application current stage to 2 and mark screening call as completed
       await prisma.application.update({
         where: { id: applicationId },
         data: { 
-          // currentStage: 2,
           isSecondFormCompleted: true
         }
       });
@@ -164,34 +219,35 @@ export async function POST(request: NextRequest) {
       // Update application status based on all form completions
       await updateApplicationStatus(applicationId, prisma);
 
-      // Send payment email to parent
-      try {
-        // Set default payment amount and due date (7 days from now)
-        const defaultPaymentAmount = 150;
-        const paymentDueDate = new Date();
-        paymentDueDate.setDate(paymentDueDate.getDate() + 7);
+      // Send completion email to parent only if facility walkthrough date changed
+      if (shouldSendEmail) {
+        try {
+          const walkthroughDateForEmail = new Date(newWalkthroughDate!).toISOString();
+          
+          const emailSent = await sendPaymentEmail({
+            parentName: application?.user?.name || "",
+            parentEmail: application?.user?.email || "",
+            childName: derivedChildName,
+            paymentAmount: 0,
+            paymentDate: new Date().toISOString().split('T')[0],
+            applicationId: applicationId,
+            walkthroughDate: walkthroughDateForEmail,
+            assessmentDate: assessmentInvite,
+            callerName: callerName,
+            screeningDate: date,
+          });
 
-        const emailSent = await sendPaymentEmail({
-          parentName: application?.user?.name || "",
-          parentEmail: application?.user?.email || "",
-          childName: derivedChildName,
-          paymentAmount: defaultPaymentAmount,
-          paymentDate: paymentDueDate.toISOString().split('T')[0],
-          applicationId: applicationId,
-          walkthroughDate: walkthroughDate,
-          assessmentDate: assessmentInvite,
-          callerName: callerName,
-          screeningDate: date,
-        });
-
-        if (emailSent) {
-          console.log(`Payment email sent successfully to ${application?.user?.email || ""}`);
-        } else {
-          console.error(`Failed to send payment email to ${application?.user?.email || ""}`);
+          if (emailSent) {
+            console.log(`✅ Email sent successfully to ${application?.user?.email || ""}`);
+          } else {
+            console.error(`❌ Failed to send email to ${application?.user?.email || ""}`);
+          }
+        } catch (emailError) {
+          console.error("❌ Error sending email:", emailError);
+          // Don't fail the entire request if email fails
         }
-      } catch (emailError) {
-        console.error("Error sending payment email:", emailError);
-        // Don't fail the entire request if email fails
+      } else {
+        console.log(`⏭️ Email not sent - Facility walkthrough date unchanged for application ${applicationId}`);
       }
     }
 
@@ -199,9 +255,66 @@ export async function POST(request: NextRequest) {
       success: true,
       data: screeningCall,
       message: isDraft 
-        ? "Draft saved successfully" 
-        : "Screening call data saved successfully, application stage updated, and payment email sent",
+        ? "" 
+        : "Screening call data saved successfully, application stage updated" + (shouldSendEmail ? ", and completion email sent" : ""),
     });
+
+    // Only update application status and send email for final submission (not for drafts)
+//     if (!isDraft) {
+//       // Update application current stage to 2 and mark screening call as completed
+//       await prisma.application.update({
+//         where: { id: applicationId },
+//         data: { 
+//           // currentStage: 2,
+//           isSecondFormCompleted: true
+//         }
+//       });
+
+//       // Update application status based on all form completions
+//       await updateApplicationStatus(applicationId, prisma);
+
+//       // Send payment email to parent
+//       try {
+//         // Set default payment amount and due date (7 days from now)
+//         const defaultPaymentAmount = 150;
+//         const paymentDueDate = new Date();
+//         paymentDueDate.setDate(paymentDueDate.getDate() + 7);
+// let walkthroughDateForEmail = null;
+//         if (additionalNotes) {
+//           walkthroughDateForEmail = new Date(additionalNotes).toISOString();
+//         }
+//         const emailSent = await sendPaymentEmail({
+//           parentName: application?.user?.name || "",
+//           parentEmail: application?.user?.email || "",
+//           childName: derivedChildName,
+//           paymentAmount: defaultPaymentAmount,
+//           paymentDate: paymentDueDate.toISOString().split('T')[0],
+//           applicationId: applicationId,
+//           // walkthroughDate: walkthroughDate,
+//            walkthroughDate: walkthroughDateForEmail || undefined,
+//           assessmentDate: assessmentInvite,
+//           callerName: callerName,
+//           screeningDate: date,
+//         });
+
+//         if (emailSent) {
+//           console.log(`Email sent successfully to ${application?.user?.email || ""}`);
+//         } else {
+//           console.error(`Failed to send  email to ${application?.user?.email || ""}`);
+//         }
+//       } catch (emailError) {
+//         console.error("Error sending  email:", emailError);
+//         // Don't fail the entire request if email fails
+//       }
+//     }
+
+    // return NextResponse.json({
+    //   success: true,
+    //   data: screeningCall,
+    //   message: isDraft 
+    //     ? "" 
+    //     : "Screening call data saved successfully, application stage updated, and payment email sent",
+    // });
   } catch (error: any) {
     console.error("Error saving screening call:", error);
     return NextResponse.json(

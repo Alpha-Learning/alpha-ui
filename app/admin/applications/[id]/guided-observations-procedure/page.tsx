@@ -8,6 +8,8 @@ import { FormField, Input, Textarea, FormSectionHeader } from "@/app/components/
 import { apiService } from "@/app/utils";
 import { guidedObservationSchema, type GuidedObservationFormData } from "@/app/lib/validations/guided-observation";
 import { useFormPersistence } from "@/app/hooks/useFormPersistence";
+import { getAutofillData } from "@/app/utils/autofillData";
+import { useAutoSave } from '@/app/hooks/useAutoSave';
 
 export default function GuidedObservationsProcedurePage() {
   const params = useParams<{ id: string }>();
@@ -104,6 +106,29 @@ export default function GuidedObservationsProcedurePage() {
     'admin-guided-observation',
     params.id as string
   );
+   useAutoSave(watch, {
+    saveEndpoint: '/api/admin/guided-observations-procedure',
+    applicationId: params.id as string,
+    debounceMs: 2000,
+    intervalMs: 30000,
+    transformData: (data: GuidedObservationFormData) => {
+      // Always return transformed data - let API handle validation
+      // This matches how other forms work (like initial-observation-form)
+      return {
+        ...data,
+        zoneAScore: data.zoneAScore ? parseInt(String(data.zoneAScore)) : null,
+        zoneBScore: data.zoneBScore ? parseInt(String(data.zoneBScore)) : null,
+        zoneCScore: data.zoneCScore ? parseInt(String(data.zoneCScore)) : null,
+        zoneDScore: data.zoneDScore ? parseInt(String(data.zoneDScore)) : null,
+        metaCuriosityScore: data.metaCuriosityScore ? parseInt(String(data.metaCuriosityScore)) : null,
+        metaSelfRegulationScore: data.metaSelfRegulationScore ? parseInt(String(data.metaSelfRegulationScore)) : null,
+        metaConfidenceScore: data.metaConfidenceScore ? parseInt(String(data.metaConfidenceScore)) : null,
+        metaCollaborationScore: data.metaCollaborationScore ? parseInt(String(data.metaCollaborationScore)) : null,
+        metaEmotionalAwarenessScore: data.metaEmotionalAwarenessScore ? parseInt(String(data.metaEmotionalAwarenessScore)) : null,
+        flagIndicators: data.flagIndicators && Array.isArray(data.flagIndicators) && data.flagIndicators.length > 0 ? data.flagIndicators.join(',') : '',
+      };
+    },
+  });
 
   // Load existing data
   useEffect(() => { 
@@ -226,6 +251,35 @@ export default function GuidedObservationsProcedurePage() {
     }
   };
 
+    const handleAutofill = () => {
+    const autofillData = getAutofillData('guidedObservation');
+    const currentValues = watch();
+    
+    // Preserve personal information fields
+    const personalInfoFields = ['childName', 'age', 'date', 'examiner'];
+    const preservedValues: Partial<GuidedObservationFormData> = {};
+    personalInfoFields.forEach(field => {
+      const fieldKey = field as keyof GuidedObservationFormData;
+      if (currentValues[fieldKey]) {
+        preservedValues[fieldKey] = currentValues[fieldKey] as any;
+      }
+    });
+
+    // Apply autofill data while preserving personal info
+    Object.keys(autofillData).forEach((key) => {
+      if (!personalInfoFields.includes(key)) {
+        setValue(key as keyof GuidedObservationFormData, autofillData[key as keyof typeof autofillData] as any);
+      }
+    });
+
+    // Restore preserved personal info
+    Object.keys(preservedValues).forEach((key) => {
+      setValue(key as keyof GuidedObservationFormData, preservedValues[key as keyof GuidedObservationFormData] as any);
+    });
+
+    setMessage({ type: 'success', text: 'Form autofilled successfully (personal information preserved)' });
+  };
+
   const onSubmit = async (formData: GuidedObservationFormData) => {
     try {
       setSaving(true);
@@ -234,6 +288,7 @@ export default function GuidedObservationsProcedurePage() {
       // Convert string scores to numbers for the API
       const payload = {
         applicationId: params.id,
+         isDraft: false,
         ...formData,
         zoneAScore: parseInt(formData.zoneAScore),
         zoneBScore: parseInt(formData.zoneBScore),
@@ -276,10 +331,25 @@ export default function GuidedObservationsProcedurePage() {
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <div className="text-xl font-bold text-slate-900">Examiner Form: Guided Observation</div>
         <div className="text-sm text-slate-600">Application ID: {params.id}</div>
-      </div>
+      </div> */}
+                <div className="mb-6">
+            <div className="flex justify-between items-start">
+              <div>
+                <div className="text-xl font-bold text-slate-900">Examiner Form: Guided Observation</div>
+                <div className="text-sm text-slate-600">Application ID: {params.id}</div>
+              </div>
+              <button
+                type="button"
+                onClick={handleAutofill}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+              >
+                Autofill Form
+              </button>
+            </div>
+          </div>
 
           {/* Basic Information */}
           <FormSectionHeader title="Basic Information" bgClassName="bg-teal-700" />
