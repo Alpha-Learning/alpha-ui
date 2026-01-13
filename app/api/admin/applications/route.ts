@@ -22,8 +22,8 @@ export async function GET(req: Request) {
     const q = (searchParams.get("q") || "").trim();
 
     const where: any = {};
-     if (status !== "rejected") {
-      where.status = { not: "rejected" };
+      if (status !== "rejected" && status !== "approved") {
+      where.status = { notIn: ["rejected", "approved"] };
     }
     if (status) where.status = status;
     // if (paid === 'true') where.isPaid = true;
