@@ -20,40 +20,80 @@ export async function GET(req: Request) {
     const status = searchParams.get("status") || undefined;
     const paid = searchParams.get("paid");
     const q = (searchParams.get("q") || "").trim();
+    const sortBy = searchParams.get("sortBy") || (paid === 'true' ? "paidAt" : "createdAt");
+    const sortOrder = searchParams.get("sortOrder") || "desc";
+    const dateFilter = searchParams.get("dateFilter");
 
     const where: any = {};
-      if (status !== "rejected" && status !== "approved") {
+    if (status !== "rejected" && status !== "approved") {
       where.status = { notIn: ["rejected", "approved"] };
     }
     if (status) where.status = status;
-    // if (paid === 'true') where.isPaid = true;
     if (paid === 'true') where.isPaid = true;
-if (paid === 'false') where.isPaid = false;
+    if (paid === 'false') where.isPaid = false;
+    
+    // Single date filter - filter payments done on that specific date
+    if (dateFilter) {
+      const filterDate = new Date(dateFilter);
+      const startOfDay = new Date(filterDate);
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(filterDate);
+      endOfDay.setHours(23, 59, 59, 999);
+      
+      where.paidAt = {
+        gte: startOfDay.toISOString(),
+        lte: endOfDay.toISOString(),
+      };
+    }
+    
+    // Search filter - includes amount
     if (q) {
       const query = q.toLowerCase();
-      where.OR = [
+      const searchConditions: any[] = [
         { parentFullName: { contains: query, mode: 'insensitive' } },
         { parentEmail: { contains: query, mode: 'insensitive' } },
         { childFullName: { contains: query, mode: 'insensitive' } },
         { childSchoolYear: { contains: query, mode: 'insensitive' } },
       ];
+      
+      // Check if query is a number (for amount search)
+      const amountValue = parseFloat(query);
+      if (!isNaN(amountValue)) {
+        searchConditions.push({ paymentAmount: amountValue });
+      }
+      
+      where.OR = searchConditions;
     }
+
+    // Map sortBy to Prisma field names
+    const sortFieldMap: Record<string, string> = {
+      parentFullName: "parentFullName",
+      parentEmail: "parentEmail",
+      childFullName: "childFullName",
+      status: "status",
+      paymentAmount: "paymentAmount",
+      paidAt: "paidAt",
+      createdAt: "createdAt",
+    };
+
+    const orderByField = sortFieldMap[sortBy] || (paid === 'true' ? "paidAt" : "createdAt");
+    const orderBy = {
+      [orderByField]: sortOrder === "asc" ? "asc" : "desc",
+    };
 
     const [applications, totalCount] = await Promise.all([
       prisma.application.findMany({
         where,
-        orderBy: { createdAt: "desc" },
+        orderBy,
         skip: (page - 1) * limit,
         take: limit,
       }),
       prisma.application.count({ where }),
     ]);
-    //const total = await prisma.application.count();
     const total = totalCount;
 
     return NextResponse.json({
       success: true,
-
       data: {
         applications,
         meta: {
@@ -71,5 +111,3 @@ if (paid === 'false') where.isPaid = false;
     return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });
   }
 }
-
-

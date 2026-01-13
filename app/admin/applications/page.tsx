@@ -4,6 +4,7 @@ import { apiService } from "@/app/utils";
 import Modal from "@/app/components/Modal";
 import DataTable, { TableColumn } from "react-data-table-component";
 import Link from "next/link"; 
+import toast from "react-hot-toast";
  
 type AdminApp = {
   id: string;
@@ -50,6 +51,14 @@ export default function AdminApplicationsPage() {
   const limit = 10;
   const [sheet, setSheet] = useState<{ id: string; open: boolean }>({ id: "", open: false });
   const [saving, setSaving] = useState(false);
+  const [paymentModal, setPaymentModal] = useState<{ id: string; open: boolean }>({ id: "", open: false });
+const [paymentData, setPaymentData] = useState({
+  isPaid: false,
+  paymentAmount: 150,
+  paidAt: "",
+});
+const [savingPayment, setSavingPayment] = useState(false);
+const [sendingReminder, setSendingReminder] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     // When doing API-side search/filtering, just show items as-is
@@ -78,29 +87,36 @@ export default function AdminApplicationsPage() {
       ),
       sortable: true,
     },
-    {
-      name: "Payment",
-      cell: (row) => (
-        <div className="flex items-center justify-center">
-          {row.isPaid ? (
-            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 whitespace-nowrap">
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Paid
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800 whitespace-nowrap">
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-              Unpaid
-            </span>
-          )}
-        </div>
-      ),
-      width: "110px",
-    },
+  {
+  name: "Payment",
+  cell: (row) => getPaymentStatusBadge(row.isPaid ?? false),
+  width: "110px",
+  sortable: true,
+},
+{
+  name: "Payment Actions",
+  cell: (row) => (
+    <div className="flex items-center gap-2">
+      <button
+        onClick={() => openPaymentModal(row)}
+        className="px-3 py-1.5 rounded-md text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors whitespace-nowrap"
+      >
+        Update
+      </button>
+      {!row.isPaid && (
+        <button
+          onClick={() => handleSendReminder(row.id)}
+          disabled={sendingReminder === row.id}
+          className="px-3 py-1.5 rounded-md text-xs font-medium bg-orange-600 text-white hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+        >
+          {sendingReminder === row.id ? "Sending..." : "Remind"}
+        </button>
+      )}
+    </div>
+  ),
+  ignoreRowClick: true,
+  width: "180px",
+},
     // {
     //   name: "Forms",
     //   cell: (row) => {
@@ -209,7 +225,8 @@ export default function AdminApplicationsPage() {
       ),
       ignoreRowClick: true,
     },
-  ], []);
+  // ], []);
+  ], [sendingReminder]);
 
   const load = async () => {
     try {
@@ -276,6 +293,83 @@ if (paymentFilter === 'unpaid') params.set('paid', 'false');
       setSaving(false);
     }
   };
+  const openPaymentModal = (item: AdminApp) => {
+  setPaymentModal({ id: item.id, open: true });
+  setPaymentData({
+    isPaid: item.isPaid ?? false,
+    paymentAmount: (item as any).paymentAmount ?? 150,
+    paidAt: (item as any).paidAt ? new Date((item as any).paidAt).toISOString().split('T')[0] : "",
+  });
+};
+
+const closePaymentModal = () => {
+  setPaymentModal({ id: "", open: false });
+  setPaymentData({
+    isPaid: false,
+    paymentAmount: 150,
+    paidAt: "",
+  });
+};
+
+const handleSavePayment = async () => {
+  try {
+    setSavingPayment(true);
+    setError(null);
+    const payload: any = {
+      isPaid: paymentData.isPaid,
+      paymentAmount: paymentData.paymentAmount,
+    };
+    
+    if (paymentData.isPaid) {
+      if (paymentData.paidAt) {
+        const now = new Date();
+        const localDateString = `${paymentData.paidAt}T${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+        const localDate = new Date(localDateString);
+        payload.paidAt = localDate.toISOString();
+      } else {
+        payload.paidAt = new Date().toISOString();
+      }
+    } else {
+      payload.paidAt = null;
+    }
+      const res = await apiService.post(`/api/admin/payments/${paymentModal.id}`, payload);
+    if (res.success) {
+      closePaymentModal();
+      toast.success('Payment status updated successfully!');
+      load();
+    } else {
+      setError(res.message || 'Failed to update payment');
+      toast.error(res.message || 'Failed to update payment');
+    }
+  } catch (e: any) {
+    setError(e?.message || 'Failed to update payment');
+    toast.error(e?.message || 'Failed to update payment');
+  } finally {
+    setSavingPayment(false);
+  }
+};
+
+const handleSendReminder = async (applicationId: string) => {
+  try {
+    setSendingReminder(applicationId);
+    setError(null);
+    const res = await apiService.post(`/api/admin/payments/${applicationId}/reminder`, {});
+    if (res.success) {
+      toast.success('Payment reminder email sent successfully!');
+    } else {
+      const errorMsg = res.message || 'Failed to send reminder email';
+      setError(errorMsg);
+      toast.error(errorMsg);
+    }
+  } catch (e: any) {
+    const errorMsg = e?.message || 'Failed to send reminder email';
+    setError(errorMsg);
+    toast.error(errorMsg);
+  } finally {
+    setSendingReminder(null);
+  }
+};
+
 
   return (
     <div className="space-y-6">
@@ -370,6 +464,87 @@ if (paymentFilter === 'unpaid') params.set('paid', 'false');
         </Modal>
       )}
 
+      {paymentModal.open && (
+  <Modal isOpen={paymentModal.open} onClose={closePaymentModal} title="Update Payment Status">
+    <div className="p-5 space-y-4 text-slate-900">
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-2">
+          Payment Status
+        </label>
+        <div className="flex items-center gap-4">
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              checked={paymentData.isPaid === true}
+              onChange={() => setPaymentData({ ...paymentData, isPaid: true })}
+              className="h-4 w-4 text-blue-600"
+            />
+            <span className="text-slate-700">Paid</span>
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              checked={paymentData.isPaid === false}
+              onChange={() => setPaymentData({ ...paymentData, isPaid: false })}
+              className="h-4 w-4 text-blue-600"
+            />
+            <span className="text-slate-700">Unpaid</span>
+          </label>
+           </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-2">
+          Payment Amount ($)
+        </label>
+        <input
+          type="number"
+          value={paymentData.paymentAmount}
+          onChange={(e) => setPaymentData({ ...paymentData, paymentAmount: parseFloat(e.target.value) || 0 })}
+          className="w-full border border-slate-300 rounded-lg px-3 py-2 text-slate-900"
+          min="0"
+          step="0.01"
+        />
+      </div>
+
+      {paymentData.isPaid && (
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-2">
+            Paid Date
+          </label>
+          <input
+           type="date"
+            value={paymentData.paidAt}
+            onChange={(e) => setPaymentData({ ...paymentData, paidAt: e.target.value })}
+            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-slate-900"
+          />
+          {/* <p className="text-xs text-slate-500 mt-1">
+            Leave empty to use current date
+          </p> */}
+        </div>
+      )}
+
+      <div className="flex justify-end gap-3 pt-4">
+        <button
+          onClick={closePaymentModal}
+          className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50"
+          disabled={savingPayment}
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleSavePayment}
+          disabled={savingPayment}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {savingPayment ? "Saving..." : "Save Payment"}
+        </button>
+         </div>
+    </div>
+  </Modal>
+)}
+    
+
       {sheet.open && (
         <div className="fixed inset-0 z-50" onClick={() => setSheet({ id: '', open: false })}>
           <div className="absolute inset-0 bg-black/40" />
@@ -430,5 +605,27 @@ function getStatusClasses(status: string): string {
       return 'bg-slate-100 text-slate-800';
   }
 }
+
+const getPaymentStatusBadge = (isPaid: boolean) => {
+  if (isPaid) {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 whitespace-nowrap">
+        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        </svg>
+        Paid
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800 whitespace-nowrap">
+      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+      </svg>
+      Unpaid
+    </span>
+  );
+};
+
 
 
