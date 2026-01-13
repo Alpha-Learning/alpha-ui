@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { apiService } from "@/app/utils";
 import AlsLoginModal from "@/app/components/AlsLoginModal";
 import toast from "react-hot-toast";
+import Modal from "@/app/components/Modal";
 
 // Stage 3 Dropdown Component
 // function Stage3Dropdown({ applicationId, isCompleted, stageTitle }: { 
@@ -17,6 +18,7 @@ function Stage3Dropdown({ applicationId, isCompleted, stageTitle, isArchived = f
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
+
 
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
   const forms = [
@@ -575,6 +577,13 @@ export default function AdminApplicationDetailPage() {
   const [rejecting, setRejecting] = useState(false);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
   const [isAlsLoggedIn, setIsAlsLoggedIn] = useState(false);
+    const [paymentModal, setPaymentModal] = useState(false);
+const [paymentData, setPaymentData] = useState({
+  isPaid: false,
+  paymentAmount: 150,
+  paidAt: "",
+});
+const [savingPayment, setSavingPayment] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -911,6 +920,66 @@ export default function AdminApplicationDetailPage() {
       setRejecting(false);
     }
   };
+  const openPaymentModal = () => {
+  if (!data) return;
+  setPaymentModal(true);
+  setPaymentData({
+    isPaid: data.isPaid ?? false,
+    paymentAmount: data.paymentAmount ?? 150,
+    paidAt: data.paidAt ? new Date(data.paidAt).toISOString().split('T')[0] : "",
+  });
+};
+
+const closePaymentModal = () => {
+  setPaymentModal(false);
+  setPaymentData({
+    isPaid: false,
+    paymentAmount: 150,
+    paidAt: "",
+  });
+};
+
+const handleSavePayment = async () => {
+  if (!data) return;
+  try {
+    setSavingPayment(true);
+    setError(null);
+    const payload: any = {
+      isPaid: paymentData.isPaid,
+      paymentAmount: paymentData.paymentAmount,
+    };
+    
+    if (paymentData.isPaid) {
+      if (paymentData.paidAt) {
+        const now = new Date();
+        const localDateString = `${paymentData.paidAt}T${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+        const localDate = new Date(localDateString);
+        payload.paidAt = localDate.toISOString();
+      } else {
+              payload.paidAt = new Date().toISOString();
+      }
+    } else {
+      payload.paidAt = null;
+    }
+
+    const res = await apiService.post(`/api/admin/payments/${data.id}`, payload);
+    if (res.success) {
+      closePaymentModal();
+      toast.success('Payment status updated successfully!');
+      // Reload application data
+      const refreshRes = await apiService.get(`/api/admin/applications/${params.id}`);
+      if (refreshRes.success) setData(refreshRes.data);
+    } else {
+      setError(res.message || 'Failed to update payment');
+      toast.error(res.message || 'Failed to update payment');
+    }
+  } catch (e: any) {
+    setError(e?.message || 'Failed to update payment');
+    toast.error(e?.message || 'Failed to update payment');
+  } finally {
+    setSavingPayment(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50 py-6">
@@ -965,27 +1034,40 @@ export default function AdminApplicationDetailPage() {
             
             {/* Payment Status & Odoo Actions */}
             <div className="lg:text-right space-y-3">
-              <div>
-                <div className="text-sm text-gray-600 mb-1">Payment Status</div>
-                {data.isPaid ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="text-green-700 font-semibold">
-                      Paid ${data.paymentAmount ?? 150}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                    <span className="text-red-700 font-semibold">Unpaid</span>
-                  </div>
-                )}
-                {data.paidAt && (
-                  <div className="text-xs text-gray-500 mt-1">
-                    {new Date(data.paidAt).toLocaleDateString()}
-                  </div>
-                )}
-              </div>
+             <div>
+    {/* <div className="text-sm text-gray-600 mb-1">Payment Status</div> */}
+    {data.isPaid ? (
+      <div className="flex items-center gap-2">
+        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+        <span className="text-green-700 font-semibold">
+          Paid
+          {/* Paid ${data.paymentAmount ?? 150} */}
+        </span>
+      </div>
+    ) : (
+      <div className="flex items-center gap-2">
+        <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+        <span className="text-red-700 font-semibold">Unpaid</span>
+      </div>
+    )}
+    {/* {data.paidAt && (
+      <div className="text-xs text-gray-500 mt-1">
+        {new Date(data.paidAt).toLocaleDateString()}
+      </div>
+    )} */}
+  </div>
+   {/* Payment Update Button */}
+  <div>
+    <button
+      onClick={openPaymentModal}
+      className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2 text-sm"
+    >
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+      </svg>
+      Update Payment
+    </button>
+  </div>
               
               {/* ALS Approve/Logout/Sync Buttons */}
               {allFormsCompleted && data.status === 'completed'  && (
@@ -1329,6 +1411,85 @@ export default function AdminApplicationDetailPage() {
             </div>
           </div>
         )}
+
+        {paymentModal && (
+  <Modal isOpen={paymentModal} onClose={closePaymentModal} title="Update Payment Status">
+    <div className="p-5 space-y-4 text-slate-900">
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-2">
+          Payment Status
+        </label>
+        <div className="flex items-center gap-4">
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              checked={paymentData.isPaid === true}
+              onChange={() => setPaymentData({ ...paymentData, isPaid: true })}
+              className="h-4 w-4 text-blue-600"
+            />
+            <span className="text-slate-700">Paid</span>
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              checked={paymentData.isPaid === false}
+              onChange={() => setPaymentData({ ...paymentData, isPaid: false })}
+              className="h-4 w-4 text-blue-600"
+            />
+            <span className="text-slate-700">Unpaid</span>
+          </label>
+        </div>
+      </div>
+  <div>
+        <label className="block text-sm font-medium text-slate-700 mb-2">
+          Payment Amount ($)
+        </label>
+        <input
+          type="number"
+          value={paymentData.paymentAmount}
+          onChange={(e) => setPaymentData({ ...paymentData, paymentAmount: parseFloat(e.target.value) || 0 })}
+          className="w-full border border-slate-300 rounded-lg px-3 py-2 text-slate-900"
+          min="0"
+          step="0.01"
+        />
+      </div>
+
+      {paymentData.isPaid && (
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-2">
+            Paid Date
+          </label>
+          <input
+            type="date"
+            value={paymentData.paidAt}
+            onChange={(e) => setPaymentData({ ...paymentData, paidAt: e.target.value })}
+            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-slate-900"
+          />
+              {/* <p className="text-xs text-slate-500 mt-1">
+            Leave empty to use current date
+          </p> */}
+        </div>
+      )}
+
+      <div className="flex justify-end gap-3 pt-4">
+        <button
+          onClick={closePaymentModal}
+          className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50"
+          disabled={savingPayment}
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleSavePayment}
+          disabled={savingPayment}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {savingPayment ? "Saving..." : "Save Payment"}
+        </button>
+      </div>
+    </div>
+  </Modal>
+)}
       </div>
     </div>
   );

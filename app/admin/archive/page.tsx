@@ -10,6 +10,7 @@ type AdminApp = {
   adminComment?: string | null;
   createdAt: string;
   updatedAt: string;
+  syncedAt?: string | null;
   parentFullName: string;
   parentEmail: string;
   childFullName: string;
@@ -17,7 +18,10 @@ type AdminApp = {
   childSchoolYear?: string | null;
 };
 
+type TabType = "rejected" | "approved";
+
 export default function AdminArchivePage() {
+  const [activeTab, setActiveTab] = useState<TabType>("approved");
   const [items, setItems] = useState<AdminApp[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,16 +51,14 @@ export default function AdminArchivePage() {
     { 
       name: "Age", 
       selector: (row: AdminApp) => String(row.childAge ?? ""), 
-     // width: "80px" 
     },
     { 
       name: "Year", 
       selector: (row: AdminApp) => row.childSchoolYear ?? "", 
-      sortable: true ,
-      // width: "180px",
+      sortable: true,
     },
-      {
-      name: "Rejection Date",
+    {
+      name: activeTab === "rejected" ? "Rejection Date" : "Approval Date",
       selector: (row: AdminApp) => {
         const date = new Date(row.updatedAt);
         const day = String(date.getDate()).padStart(2, '0');
@@ -65,8 +67,19 @@ export default function AdminArchivePage() {
         return `${day}/${month}/${year}`;
       },
       sortable: true,
-     //width: "180px",
     },
+    // ...(activeTab === "approved" ? [{
+    //   name: "Synced to ALS",
+    //   selector: (row: AdminApp) => {
+    //     if (!row.syncedAt) return "Not synced";
+    //     const date = new Date(row.syncedAt);
+    //     const day = String(date.getDate()).padStart(2, '0');
+    //     const month = String(date.getMonth() + 1).padStart(2, '0');
+    //     const year = date.getFullYear();
+    //     return `${day}/${month}/${year}`;
+    //   },
+    //   sortable: true,
+    // }] : []),
     {
       name: "View",
       cell: (row: AdminApp) => (
@@ -78,9 +91,8 @@ export default function AdminArchivePage() {
         </Link>
       ),
       ignoreRowClick: true,
-      //width: "100px",
     },
-  ], []);
+  ], [activeTab]);
 
   const load = async () => {
     try {
@@ -90,6 +102,7 @@ export default function AdminArchivePage() {
       if (search.trim()) params.set('q', search.trim());
       params.set('page', String(pageIndex + 1));
       params.set('limit', String(limit));
+      params.set('status', activeTab); // Add status parameter
       const qs = params.toString() ? `?${params.toString()}` : "";
       const res = await apiService.get(`/api/admin/applications/archive${qs}`);
       if (res.success) {
@@ -106,56 +119,95 @@ export default function AdminArchivePage() {
   };
 
   useEffect(() => { 
+    setPageIndex(0); // Reset to first page when tab changes
     load(); 
-  }, [search, pageIndex]);
+  }, [search, pageIndex, activeTab]);
 
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
         <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Archive</h1>
-          <p className="text-sm text-slate-500 mt-1">Rejected applications archive</p>
-        </div>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Archive</h1>
+            <p className="text-sm text-slate-500 mt-1">
+              {activeTab === "rejected" 
+                ? "Rejected applications archive" 
+                : "Approved applications archive (moved to ALS)"}
+            </p>
+          </div>
           <div className="flex items-center gap-2">
-          <input
-            type="text"
-            value={search}
+            <input
+              type="text"
+              value={search}
               onChange={(e) => { setPageIndex(0); setSearch(e.target.value); }}
-            placeholder="Search by parent, email, child..."
-            className="w-56 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 placeholder:text-slate-400"
-          />
+              placeholder="Search by parent, email, child..."
+              className="w-56 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 placeholder:text-slate-400"
+            />
+          </div>
         </div>
-      </div>
 
-      {error && (
+        {/* Tabs */}
+        <div className="border-b border-slate-200 mb-4">
+          <nav className="flex space-x-8" aria-label="Tabs">
+            <button
+              onClick={() => setActiveTab("approved")}
+              className={`
+                py-4 px-1 border-b-2 font-medium text-sm transition-colors
+                ${
+                  activeTab === "approved"
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+                }
+              `}
+            >
+              Approved Applications
+            </button>
+            <button
+              onClick={() => setActiveTab("rejected")}
+              className={`
+                py-4 px-1 border-b-2 font-medium text-sm transition-colors
+                ${
+                  activeTab === "rejected"
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+                }
+              `}
+            >
+              Rejected Applications
+            </button>
+          </nav>
+        </div>
+
+        {error && (
           <div className="mb-4 text-red-600 bg-red-50 p-3 rounded-lg">{error}</div>
-      )}
+        )}
 
         <div className="mt-4">
-        <DataTable
-          columns={columns}
-          data={items}
-          progressPending={loading}
-          highlightOnHover
-          pointerOnHover
-          customStyles={{
-            headRow: { style: { backgroundColor: '#f1f5f9' } },
-            headCells: { style: { fontWeight: 600, color: '#0f172a' } },
-            rows: { style: { color: '#0f172a' } },
-          }}
-          pagination
-          paginationServer
-          paginationTotalRows={total}
-          paginationPerPage={limit}
-          paginationDefaultPage={pageIndex + 1}
-          onChangePage={(p) => setPageIndex(p - 1)}
-          noDataComponent={
-            <div className="py-8 text-center text-slate-500">
-              No rejected applications found in archive.
-            </div>
-          }
-        />
+          <DataTable
+            columns={columns}
+            data={items}
+            progressPending={loading}
+            highlightOnHover
+            pointerOnHover
+            customStyles={{
+              headRow: { style: { backgroundColor: '#f1f5f9' } },
+              headCells: { style: { fontWeight: 600, color: '#0f172a' } },
+              rows: { style: { color: '#0f172a' } },
+            }}
+            pagination
+            paginationServer
+            paginationTotalRows={total}
+            paginationPerPage={limit}
+            paginationDefaultPage={pageIndex + 1}
+            onChangePage={(p) => setPageIndex(p - 1)}
+            noDataComponent={
+              <div className="py-8 text-center text-slate-500">
+                {activeTab === "rejected" 
+                  ? "No rejected applications found in archive."
+                  : "No approved applications found in archive."}
+              </div>
+            }
+          />
         </div>
       </div>
     </div>

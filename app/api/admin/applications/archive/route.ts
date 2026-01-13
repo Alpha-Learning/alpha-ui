@@ -18,10 +18,13 @@ export async function GET(req: Request) {
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const q = (searchParams.get("q") || "").trim();
+    const status = searchParams.get("status") || "rejected"; // Default to rejected for backward compatibility
 
     const where: any = {
-      status: "rejected", // Only rejected applications
+      status: status, // Filter by status: "rejected" or "approved"
     };
+
+  
 
     if (q) {
       const query = q.toLowerCase();
@@ -36,7 +39,7 @@ export async function GET(req: Request) {
     const [applications, totalCount] = await Promise.all([
       prisma.application.findMany({
         where,
-        orderBy: { updatedAt: "desc" }, // Order by rejection date (updatedAt when status changed to rejected)
+        orderBy: { updatedAt: "desc" }, // Order by approval/rejection date
         skip: (page - 1) * limit,
         take: limit,
       }),

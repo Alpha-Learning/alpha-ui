@@ -3,61 +3,28 @@ import React, { useEffect, useMemo, useState } from "react";
 import { apiService } from "@/app/utils";
 import DataTable, { TableColumn } from "react-data-table-component";
 import Link from "next/link";
-import Modal from "@/app/components/Modal";
-import toast from "react-hot-toast";
 
-type PaymentItem = {
+type PaymentTransaction = {
   id: string;
   parentFullName: string;
   parentEmail: string;
   childFullName: string;
-  childAge?: number | null;
   status: string;
-  isPaid: boolean;
   paymentAmount?: number | null;
   paidAt?: string | null;
-  createdAt: string;
 };
 
-export default function PaymentsPage() {
-  const [items, setItems] = useState<PaymentItem[]>([]);
+export default function PaymentTransactionsPage() {
+  const [items, setItems] = useState<PaymentTransaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState("");
-  const [paymentFilter, setPaymentFilter] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<string>("");
-  const [modal, setModal] = useState<{ id: string; open: boolean }>({ id: "", open: false });
-  const [paymentData, setPaymentData] = useState({
-    isPaid: false,
-    paymentAmount: 150,
-    paidAt: "",
-  });
-  const [saving, setSaving] = useState(false);
+  const [sortColumn, setSortColumn] = useState<string>("paidAt");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const [dateFilter, setDateFilter] = useState<string>("");
   const limit = 10;
-  const [sendingReminder, setSendingReminder] = useState<string | null>(null);
-
-  const getPaymentStatusBadge = (isPaid: boolean) => {
-    if (isPaid) {
-      return (
-        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 whitespace-nowrap">
-          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-          Paid
-        </span>
-      );
-    }
-    return (
-      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800 whitespace-nowrap">
-        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-        Unpaid
-      </span>
-    );
-  };
 
   const getStatusClasses = (status: string) => {
     const classes: Record<string, string> = {
@@ -69,24 +36,89 @@ export default function PaymentsPage() {
     return classes[status] || "bg-gray-100 text-gray-800";
   };
 
-  const columns = useMemo<TableColumn<PaymentItem>[]>(() => [
-    { name: "Parent", selector: r => r.parentFullName, sortable: true, grow: 1 },
-    { name: "Email", selector: r => r.parentEmail, sortable: true, grow: 1 },
-    { name: "Child", selector: r => r.childFullName, sortable: true },
-    { name: "Age", selector: r => String(r.childAge ?? ""), width: "80px" },
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) return "-";
+    
+    const date = new Date(dateString);
+    
+    // Validate the date
+    if (isNaN(date.getTime())) {
+      return "-";
+    }
+    
+    // Format date: DD/MM/YYYY
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear());
+    
+    return `${day}/${month}/${year}`;
+  };
+
+  const formatTime = (dateString: string | null | undefined) => {
+    if (!dateString) return "-";
+    
+    const date = new Date(dateString);
+    
+    // Validate the date
+    if (isNaN(date.getTime())) {
+      return "-";
+    }
+    
+    // Format time: HH:MM AM/PM (12-hour format)
+    let hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    // Convert to 12-hour format
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    
+    return `${String(hours).padStart(2, '0')}:${minutes} ${ampm}`;
+  };
+
+  const columns = useMemo<TableColumn<PaymentTransaction>[]>(() => [
+    { 
+      name: "Parent Name", 
+      selector: r => r.parentFullName, 
+      sortable: true,
+      id: "parentFullName",
+      grow: 1 
+    },
+    { 
+      name: "Parent Email", 
+      selector: r => r.parentEmail, 
+      sortable: true,
+      id: "parentEmail",
+      grow: 1 
+    },
+    { 
+      name: "Child Name", 
+      selector: r => r.childFullName, 
+      sortable: true,
+      id: "childFullName"
+    },
     {
-      name: "Status",
+      name: "Application Status",
       cell: (row) => (
         <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusClasses(row.status)}`}>
           {row.status}
         </span>
       ),
       sortable: true,
+      id: "status",
     },
     {
       name: "Payment Status",
-      cell: (row) => getPaymentStatusBadge(row.isPaid),
-      sortable: true,
+      cell: () => (
+        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 whitespace-nowrap">
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          Paid
+        </span>
+      ),
+      sortable: false,
+      width: "120px",
     },
     {
       name: "Amount",
@@ -96,73 +128,32 @@ export default function PaymentsPage() {
         </span>
       ),
       sortable: true,
+      id: "paymentAmount",
+      width: "100px",
     },
-{
-  name: "Paid At",
-  cell: (row) => {
-    if (!row.paidAt) return <span className="text-sm text-slate-600">-</span>;
-    
-    const date = new Date(row.paidAt);
-    
-    // Validate the date
-    if (isNaN(date.getTime())) {
-      return <span className="text-sm text-slate-600">-</span>;
-    }
-    
-    // Use LOCAL time methods (not UTC) to display in user's timezone
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = String(date.getFullYear()).slice(-2);
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    
-    return (
-      <span className="text-sm text-slate-600">
-        {`${day}/${month}/${year} ${hours}:${minutes}`}
-      </span>
-    );
-  },
-  sortable: true,
-},
-    // {
-    //   name: "Actions",
-    //   cell: (row) => (
-    //     <button
-    //       onClick={() => openModal(row)}
-    //       className="px-3 py-1 my-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-    //     >
-    //       Update Payment
-    //     </button>
-    //   ),
-    //   ignoreRowClick: true,
-    //   width: "150px",
-    // },
     {
-  name: "Actions",
-  cell: (row) => (
-    <div className="flex items-center gap-2">
-      <button
-        onClick={() => openModal(row)}
-        className="px-3 py-1.5 rounded-md text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors whitespace-nowrap"
-      >
-        Update
-      </button>
-      {!row.isPaid && (
-        <button
-          onClick={() => handleSendReminder(row.id)}
-          disabled={sendingReminder === row.id}
-          className="px-3 py-1.5 rounded-md text-xs font-medium bg-orange-600 text-white hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
-        >
-          {sendingReminder === row.id ? "Sending..." : "Remind"}
-        </button>
-      )}
-    </div>
-  ),
-  ignoreRowClick: true,
-  width: "180px",
-},
+      name: "Date",
+      cell: (row) => (
+        <span className="text-sm text-slate-600">
+          {formatDate(row.paidAt)}
+        </span>
+      ),
+      sortable: true,
+      id: "paidAt",
+      width: "110px",
+    },
     {
-      name: "View Applicatoin",
+      name: "Time",
+      cell: (row) => (
+        <span className="text-sm text-slate-600">
+          {formatTime(row.paidAt)}
+        </span>
+      ),
+      sortable: false,
+      width: "100px",
+    },
+    {
+      name: "View Application",
       cell: (row) => (
         <Link
           className="text-blue-600 hover:underline text-sm"
@@ -172,11 +163,18 @@ export default function PaymentsPage() {
         </Link>
       ),
       ignoreRowClick: true,
-      width: "80px",
+      width: "120px",
     },
-    ], [sendingReminder]);
-  // ], []);
+  ], []);
 
+  const handleSort = (column: TableColumn<PaymentTransaction>, sortDirection: "asc" | "desc") => {
+    const sortField = (column as any).id;
+    if (sortField) {
+      setSortColumn(sortField);
+      setSortDirection(sortDirection);
+      setPageIndex(0); // Reset to first page on sort
+    }
+  };
 
   const load = async () => {
     try {
@@ -185,28 +183,32 @@ export default function PaymentsPage() {
       const params = new URLSearchParams();
       params.set('page', String(pageIndex + 1));
       params.set('limit', String(limit));
-      if (search.trim()) params.set('q', search.trim());
-      if (paymentFilter === 'paid') params.set('paid', 'true');
-      if (paymentFilter === 'unpaid') {
-        // We'll filter on client side or add API support
+      params.set('paid', 'true'); // Only fetch paid transactions
+      params.set('sortBy', sortColumn);
+      params.set('sortOrder', sortDirection);
+      
+      if (search.trim()) {
+        params.set('q', search.trim());
       }
-      // Only set status filter if it's not empty, and never include rejected
-      // The API will exclude rejected by default when status is not "rejected"
-      if (statusFilter) params.set('status', statusFilter);
+      
+      if (dateFilter) {
+        params.set('dateFilter', dateFilter);
+      }
+      
       const qs = params.toString() ? `?${params.toString()}` : "";
       const res = await apiService.get(`/api/admin/applications${qs}`);
+      
       if (res.success) {
         let applications = res.data.applications || [];
-        // Always filter out rejected applications (safety check)
-        applications = applications.filter((app: PaymentItem) => app.status !== 'rejected');
-        // Filter unpaid if needed
-        if (paymentFilter === 'unpaid') {
-          applications = applications.filter((app: PaymentItem) => !app.isPaid);
-        }
+        
+        // Filter to only include paid transactions (safety check)
+        applications = applications.filter((app: PaymentTransaction) => {
+          // Ensure it's paid and not rejected
+          return (app as any).isPaid === true && app.status !== 'rejected';
+        });
+        
         setItems(applications);
-        // Recalculate total after filtering
-        const filteredTotal = applications.length;
-        setTotal(filteredTotal);
+        setTotal(res.data.meta?.total ?? applications.length);
       } else {
         setError(res.message || 'Failed to load');
       }
@@ -217,136 +219,43 @@ export default function PaymentsPage() {
     }
   };
 
-  useEffect(() => { load(); }, [pageIndex, search, paymentFilter, statusFilter]);
-
-  const openModal = (item: PaymentItem) => {
-    setModal({ id: item.id, open: true });
-    setPaymentData({
-      isPaid: item.isPaid,
-      paymentAmount: item.paymentAmount ?? 150,
-      paidAt: item.paidAt ? new Date(item.paidAt).toISOString().split('T')[0] : "",
-    });
-  };
-
-  const closeModal = () => {
-    setModal({ id: "", open: false });
-    setPaymentData({
-      isPaid: false,
-      paymentAmount: 150,
-      paidAt: "",
-    });
-  };
-
-  const handleSavePayment = async () => {
-    try {
-      setSaving(true);
-      setError(null);
-      const payload: any = {
-        isPaid: paymentData.isPaid,
-        paymentAmount: paymentData.paymentAmount,
-      };
-      
-      // if (paymentData.isPaid) {
-      //   if (paymentData.paidAt) {
-      //     payload.paidAt = new Date(paymentData.paidAt).toISOString();
-      //   } else {
-      //     payload.paidAt = new Date().toISOString();
-      //   }
-      // } 
-      
-      // else {
-      //   payload.paidAt = null;
-      // }
-
-if (paymentData.isPaid) {
-  if (paymentData.paidAt) {
-    // Create date string with time in local timezone
-    // paymentData.paidAt is in format "YYYY-MM-DD" from date input
-    const now = new Date();
-    const localDateString = `${paymentData.paidAt}T${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-    // Create date object in local timezone, then convert to ISO
-    const localDate = new Date(localDateString);
-    payload.paidAt = localDate.toISOString();
-  } else {
-    payload.paidAt = new Date().toISOString();
-  }
-} else {
-  payload.paidAt = null;
-}
-
-      const res = await apiService.post(`/api/admin/payments/${modal.id}`, payload);
-      if (res.success) {
-        closeModal();
-        load();
-      } else {
-        setError(res.message || 'Failed to update payment');
-      }
-    } catch (e: any) {
-      setError(e?.message || 'Failed to update payment');
-    } finally {
-      setSaving(false);
-    }
-  };
-
-const handleSendReminder = async (applicationId: string) => {
-  try {
-    setSendingReminder(applicationId);
-    setError(null);
-    const res = await apiService.post(`/api/admin/payments/${applicationId}/reminder`, {});
-    if (res.success) {
-      toast.success('Payment reminder email sent successfully!');
-    } else {
-      const errorMsg = res.message || 'Failed to send reminder email';
-      setError(errorMsg);
-      toast.error(errorMsg);
-    }
-  } catch (e: any) {
-    const errorMsg = e?.message || 'Failed to send reminder email';
-    setError(errorMsg);
-    toast.error(errorMsg);
-  } finally {
-    setSendingReminder(null);
-  }
-};
+  useEffect(() => { 
+    load(); 
+  }, [pageIndex, search, sortColumn, sortDirection, dateFilter]);
 
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6">
         <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
-          <h1 className="text-2xl font-bold text-slate-900">Payment Management</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Payment Transactions</h1>
           <div className="flex items-center gap-3 flex-wrap">
+            <input
+              type="date"
+              value={dateFilter}
+              onChange={(e) => { setPageIndex(0); setDateFilter(e.target.value); }}
+              className="border border-slate-300 rounded-lg px-3 py-2 text-slate-900 text-sm"
+              placeholder="Filter by date"
+            />
             <input
               value={search}
               onChange={(e) => { setPageIndex(0); setSearch(e.target.value); }}
-              placeholder="Search by parent, email, child..."
+              placeholder="Search by parent, email, child, or amount..."
               className="w-56 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 placeholder:text-slate-400"
             />
+            {dateFilter && (
+              <button
+                onClick={() => { setPageIndex(0); setDateFilter(""); }}
+                className="px-3 py-2 text-sm bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition-colors whitespace-nowrap"
+              >
+                Clear Date
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="flex items-center gap-3 flex-wrap mb-4">
-          <select
-            value={paymentFilter}
-            onChange={(e) => { setPageIndex(0); setPaymentFilter(e.target.value); }}
-            className="border border-slate-300 rounded-lg px-3 py-2 text-slate-900 bg-white"
-          >
-            <option value="">All Payments</option>
-            <option value="paid">Paid</option>
-            <option value="unpaid">Unpaid</option>
-          </select>
-          <select
-            value={statusFilter}
-            onChange={(e) => { setPageIndex(0); setStatusFilter(e.target.value); }}
-            className="border border-slate-300 rounded-lg px-3 py-2 text-slate-900 bg-white"
-          >
-            <option value="">All Statuses</option>
-            <option value="submitted">Submitted</option>
-            <option value="processing">Processing</option>
-            <option value="completed">Completed</option>
-          </select>
-        </div>
-
-        {error && <div className="mb-4 text-red-600 bg-red-50 p-3 rounded-lg">{error}</div>}
+        {error && (
+          <div className="mb-4 text-red-600 bg-red-50 p-3 rounded-lg">{error}</div>
+        )}
 
         <DataTable
           columns={columns}
@@ -354,6 +263,10 @@ const handleSendReminder = async (applicationId: string) => {
           progressPending={loading}
           highlightOnHover
           pointerOnHover
+          onSort={handleSort}
+          sortServer
+          defaultSortFieldId="paidAt"
+          defaultSortAsc={false}
           customStyles={{
             headRow: { style: { backgroundColor: '#f1f5f9' } },
             headCells: { style: { fontWeight: 600, color: '#0f172a' } },
@@ -365,88 +278,13 @@ const handleSendReminder = async (applicationId: string) => {
           paginationPerPage={limit}
           paginationDefaultPage={pageIndex + 1}
           onChangePage={(p) => setPageIndex(p - 1)}
+          noDataComponent={
+            <div className="py-8 text-center text-slate-500">
+              No paid transactions found
+            </div>
+          }
         />
       </div>
-
-      {modal.open && (
-        <Modal isOpen={modal.open} onClose={closeModal} title="Update Payment Status">
-          <div className="p-5 space-y-4 text-slate-900">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Payment Status
-              </label>
-              <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    checked={paymentData.isPaid === true}
-                    onChange={() => setPaymentData({ ...paymentData, isPaid: true })}
-                    className="h-4 w-4 text-blue-600"
-                  />
-                  <span className="text-slate-700">Paid</span>
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    checked={paymentData.isPaid === false}
-                    onChange={() => setPaymentData({ ...paymentData, isPaid: false })}
-                    className="h-4 w-4 text-blue-600"
-                  />
-                  <span className="text-slate-700">Unpaid</span>
-                </label>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Payment Amount ($)
-              </label>
-              <input
-                type="number"
-                value={paymentData.paymentAmount}
-                onChange={(e) => setPaymentData({ ...paymentData, paymentAmount: parseFloat(e.target.value) || 0 })}
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-slate-900"
-                min="0"
-                step="0.01"
-              />
-            </div>
-
-            {paymentData.isPaid && (
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Paid Date
-                </label>
-                <input
-                  type="date"
-                  value={paymentData.paidAt}
-                  onChange={(e) => setPaymentData({ ...paymentData, paidAt: e.target.value })}
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-slate-900"
-                />
-                <p className="text-xs text-slate-500 mt-1">
-                  Leave empty to use current date
-                </p>
-              </div>
-            )}
-
-            <div className="flex justify-end gap-3 pt-4">
-              <button
-                onClick={closeModal}
-                className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50"
-                disabled={saving}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSavePayment}
-                disabled={saving}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {saving ? "Saving..." : "Save Payment"}
-              </button>
-            </div>
-          </div>
-        </Modal>
-      )}
     </div>
   );
 }
